@@ -8,6 +8,53 @@ import { _tours, _jobs, _courses } from '../../../_data/mock';
 export const PageLinks = [
   {
     order: '1',
+    subheader: 'About',
+    cover: 'https://zone-assets-api.vercel.app/assets/images/menu/menu_marketing.jpg',
+    items: [
+      { title: 'Landing', path: Routes.marketing.landing },
+      // { title: 'Services', path: Routes.marketing.services },
+      // { title: 'Case Studies', path: Routes.marketing.caseStudies },
+      // { title: 'Case Study', path: Routes.marketing.caseStudy('case-study-01') },
+      // { title: 'Blog Posts', path: Routes.marketing.posts },
+      // { title: 'Blog Post', path: Routes.marketing.post('post-01') },
+      // { title: 'About', path: Routes.marketing.about },
+      // { title: 'Contact', path: Routes.marketing.contact },
+    ],
+  },
+  {
+    order: '2',
+    subheader: 'Collections',
+    cover: 'https://zone-assets-api.vercel.app/assets/images/menu/menu_marketing.jpg',
+    items: [
+      { title: 'Landing', path: Routes.marketing.landing },
+      // { title: 'Services', path: Routes.marketing.services },
+      // { title: 'Case Studies', path: Routes.marketing.caseStudies },
+      // { title: 'Case Study', path: Routes.marketing.caseStudy('case-study-01') },
+      // { title: 'Blog Posts', path: Routes.marketing.posts },
+      // { title: 'Blog Post', path: Routes.marketing.post('post-01') },
+      // { title: 'About', path: Routes.marketing.about },
+      // { title: 'Contact', path: Routes.marketing.contact },
+    ],
+  },
+  {
+    order: '3',
+    subheader: 'My Page',
+    cover: 'https://zone-assets-api.vercel.app/assets/images/menu/menu_marketing.jpg',
+    items: [
+      { title: 'Landing', path: Routes.marketing.landing },
+      // { title: 'Services', path: Routes.marketing.services },
+      // { title: 'Case Studies', path: Routes.marketing.caseStudies },
+      // { title: 'Case Study', path: Routes.marketing.caseStudy('case-study-01') },
+      // { title: 'Blog Posts', path: Routes.marketing.posts },
+      // { title: 'Blog Post', path: Routes.marketing.post('post-01') },
+      // { title: 'About', path: Routes.marketing.about },
+      // { title: 'Contact', path: Routes.marketing.contact },
+    ],
+  }
+]
+export const PageLinks_old = [
+  {
+    order: '1',
     subheader: 'Marketing',
     cover: 'https://zone-assets-api.vercel.app/assets/images/menu/menu_marketing.jpg',
     items: [
@@ -95,13 +142,28 @@ export const PageLinks = [
   },
 ];
 
+// export const navConfig = [
+//   { title: 'Home', path: '/' },
+//   { title: 'Components', path: Routes.componentsUI },
+//   {
+//     title: 'Pages',
+//     path: Routes.pages,
+//     children: [PageLinks[0], PageLinks[4], PageLinks[1], PageLinks[3], PageLinks[2], PageLinks[5]],
+//   },
+//   { title: 'Documentation', path: Routes.docs },
+// ];
+
+
 export const navConfig = [
-  { title: 'Home', path: '/' },
-  { title: 'Components', path: Routes.componentsUI },
-  {
-    title: 'Pages',
-    path: Routes.pages,
-    children: [PageLinks[0], PageLinks[4], PageLinks[1], PageLinks[3], PageLinks[2], PageLinks[5]],
-  },
-  { title: 'Documentation', path: Routes.docs },
+  // { title: 'Home', path: '/' },
+  { title: 'About', path: Routes.eternalEditions.about },
+  { title: 'Tickets', path: Routes.eternalEditions.tickets },
+  { title: 'Help', path: Routes.eternalEditions.help },
+  // { title: 'Components', path: Routes.componentsUI },
+  // {
+  //   title: 'Pages',
+  //   path: Routes.pages,
+  //   children: [PageLinks_old[0], PageLinks_old[4], PageLinks_old[1], PageLinks_old[3], PageLinks_old[2], PageLinks_old[5]],
+  // },
+  // { title: 'Documentation', path: Routes.docs },
 ];

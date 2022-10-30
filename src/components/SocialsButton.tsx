@@ -30,7 +30,7 @@ export default function SocialsButton({
 }: SocialsButtonProps) {
   const SOCIALS = [
     {
-      name: 'FaceBook',
+      name: 'Discord',
       icon: logoFacebook,
       socialColor: '#1877F2',
       path: links.facebook || '#facebook-link',
@@ -40,12 +40,6 @@ export default function SocialsButton({
       icon: logoInstagram,
       socialColor: '#E02D69',
       path: links.instagram || '#instagram-link',
-    },
-    {
-      name: 'Linkedin',
-      icon: logoLinkedin,
-      socialColor: '#007EBB',
-      path: links.linkedin || '#linkedin-link',
     },
     {
       name: 'Twitter',

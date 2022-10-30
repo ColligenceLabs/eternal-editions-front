@@ -45,3 +45,11 @@ export const defaultSettings = {
 export const HEADER_MOBILE_HEIGHT = 64;
 export const HEADER_DESKTOP_HEIGHT = 96;
 export const DRAWER_WIDTH = 280;
+
+
+// WEB3
+// ----------------------------------------------------------------------
+
+export const WALLET_METAMASK = 'METAMASK';
+export const WALLET_KAIKAS = 'KAIKAS';
+export const WALLET_KLIP = 'KLIP';

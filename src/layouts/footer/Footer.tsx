@@ -1,4 +1,6 @@
 import { useState } from 'react';
+// next
+import NextLink from 'next/link';
 // icons
 import chevronDown from '@iconify/icons-carbon/chevron-down';
 import chevronRight from '@iconify/icons-carbon/chevron-right';
@@ -25,6 +27,7 @@ import { useResponsive } from '../../hooks';
 import { Logo, Iconify, SocialsButton, AppStoreButton } from '../../components';
 //
 import { PageLinks } from '../nav/NavConfig';
+import Routes from "../../routes";
 
 // ----------------------------------------------------------------------
 
@@ -54,6 +57,7 @@ export default function Footer() {
     <>
       <Divider />
       <Container sx={{ py: { xs: 8, md: 10 } }}>
+
         <Grid container spacing={3} justifyContent={{ md: 'space-between' }}>
           <Grid item xs={12} md={4}>
             <Stack spacing={{ xs: 3, md: 5 }}>
@@ -65,17 +69,13 @@ export default function Footer() {
                 </Typography>
               </Stack>
 
-              <Stack spacing={2}>
-                <Typography variant="h6">Social</Typography>
-                <SocialsButton />
-              </Stack>
 
-              <Stack alignItems="flex-start">
-                <Typography variant="h6">Documentation</Typography>
-                <LinkStyle href="#">Documentation</LinkStyle>
-                <LinkStyle href="#">Changelog</LinkStyle>
-                <LinkStyle href="#">Contributing</LinkStyle>
-              </Stack>
+              {/*<Stack alignItems="flex-start">*/}
+              {/*  <Typography variant="h6">Documentation</Typography>*/}
+              {/*  <LinkStyle href="#">Documentation</LinkStyle>*/}
+              {/*  <LinkStyle href="#">Changelog</LinkStyle>*/}
+              {/*  <LinkStyle href="#">Contributing</LinkStyle>*/}
+              {/*</Stack>*/}
 
               <Stack spacing={2}>
                 <Stack spacing={1}>
@@ -108,6 +108,11 @@ export default function Footer() {
           </Grid>
 
           <Grid item xs={12} md={6}>
+            <Stack spacing={2} sx={{mb: 5}}>
+              <Typography variant="h6">Social</Typography>
+              <SocialsButton />
+            </Stack>
+
             {isDesktop ? (
               <Masonry columns={3} spacing={3}>
                 {renderLists.map((list) => (
@@ -135,15 +140,19 @@ export default function Footer() {
           sx={{ py: 3, textAlign: 'center' }}
         >
           <Typography variant="body3" sx={{ color: 'text.secondary' }}>
-            © 2021. All rights reserved
+            © 2022. Eternal Editions, All rights reserved.
           </Typography>
           <Stack direction="row" spacing={3} justifyContent="center">
-            <Link variant="body3" sx={{ color: 'text.secondary' }}>
-              Help Center
-            </Link>
+            <NextLink href={Routes.eternalEditions.terms} passHref>
             <Link variant="body3" sx={{ color: 'text.secondary' }}>
               Terms of Service
             </Link>
+            </NextLink>
+            <NextLink href={Routes.eternalEditions.privacy} passHref>
+            <Link variant="body3" sx={{ color: 'text.secondary' }}>
+              Privacy Policy
+            </Link>
+            </NextLink>
           </Stack>
         </Stack>
       </Container>

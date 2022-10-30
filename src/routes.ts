@@ -1,6 +1,15 @@
 // ----------------------------------------------------------------------
 
 const Routes = {
+  // EternalEditions
+  eternalEditions: {
+    about: '/ee/about-us',
+    tickets: '/ee/tickets',
+    ticket: (slug: string) => `/ee/tickets/${slug}`,
+    help: '/ee/support',
+    privacy: '/ee/privacy',
+    terms: '/ee/terms',
+  },
   // Marketing
   marketing: {
     landing: '/marketing',

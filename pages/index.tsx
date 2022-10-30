@@ -1,50 +1,50 @@
-import { ReactElement } from 'react';
+import {ReactElement} from 'react';
 // _data
-import { _pricingHome } from '../_data/mock';
+import {_pricingHome} from '../_data/mock';
 // layouts
 import Layout from '../src/layouts';
 // components
-import { Page } from '../src/components';
+import {Page} from '../src/components';
 // sections
-import { PricingHome } from '../src/sections/pricing';
+import {PricingHome} from '../src/sections/pricing';
 import {
-  HomeHero,
-  // HomeFAQs,
-  HomeNewStart,
-  // HomeDemoPages,
-  HomeForDesigner,
-  HomeCombination,
-  HomeAdvertisement,
-  HomeFeatureHighlights,
-  HomeFlexibleComponents,
-} from '../src/sections/home';
+    MainHero
+} from '../src/sections/main';
+import MainFeaturedPosts from "../src/sections/@eternaledtions/main/MainFeaturedPosts";
+import {getAllPosts} from "../src/utils/get-mardown/marketing/posts";
+import {BlogPostProps} from "../src/@types/blog";
+import {Container} from "@mui/material";
+import {BlogMarketingPostList} from "../src/sections/blog";
+import MainAbout from "../src/sections/@eternaledtions/main/MainAbout";
 
 // ----------------------------------------------------------------------
+type Props = {
+    posts: BlogPostProps[];
+};
 
-export default function HomePage() {
-  return (
-    <Page title="The starting point for your next project">
-      <HomeHero />
+export default function HomePage({posts}: Props) {
+    return (
+        <Page title="Main">
 
-      <HomeNewStart />
+            <MainFeaturedPosts posts={posts.slice(-5)}/>
+            {/*<MainHero />*/}
+            <MainAbout/>
 
-      <HomeFlexibleComponents />
-
-      <HomeFeatureHighlights />
-
-      <HomeForDesigner />
-
-      <PricingHome plans={_pricingHome} />
-
-      <HomeCombination />
-
-      <HomeAdvertisement />
-    </Page>
-  );
+        </Page>
+    );
 }
 
 // ----------------------------------------------------------------------
 
 HomePage.getLayout = function getLayout(page: ReactElement) {
-  return <Layout simpleFooter>{page}</Layout>;
+    return <Layout>{page}</Layout>;
 };
+
+
+export async function getStaticProps() {
+    return {
+        props: {
+            posts: getAllPosts(),
+        },
+    };
+}
