@@ -109,7 +109,7 @@ export default function WalletPopover({}) {
                                 </Typography>
                             </Box>
 
-                            <NextLink href={Routes.eternalEditions.paymentPoint} passHref>
+                            <NextLink href={Routes.eternalEditions.payment.point} passHref>
                                 <Button>포인트 구매</Button>
                             </NextLink>
                             {/*<Chip variant="outlined" color="primary" size="small"   label={2}/>*/}
@@ -125,7 +125,7 @@ export default function WalletPopover({}) {
                                 </Typography>
                             </Box>
 
-                            <NextLink href={Routes.eternalEditions.paymentMatic} passHref>
+                            <NextLink href={Routes.eternalEditions.payment.matic} passHref>
                                 <Button>심플렉스 구매 (추후 진행)</Button>
                             </NextLink>
                             {/*<Chip variant="outlined" color="primary" size="small"   label={2}/>*/}

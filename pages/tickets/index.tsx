@@ -11,8 +11,14 @@ import {BlogPostProps} from '../../src/@types/blog';
 // layouts
 import Layout from '../../src/layouts';
 // components
-import {Page} from '../../src/components';
-import {Container} from "@mui/material";
+import {Iconify, Page} from '../../src/components';
+import {Button, Container, Stack} from "@mui/material";
+import TicketPostItem from "../../src/sections/@eternaledtions/tickets/TicketPostItem";
+import Masonry from "@mui/lab/Masonry";
+import arrowDown from "@iconify/icons-carbon/arrow-down";
+import {getAllCaseStudies} from "../../src/utils/get-mardown/marketing/case-studies";
+import {CaseStudyProps} from "../../src/@types/marketing";
+import TicketsFilter from "../../src/sections/@eternaledtions/tickets/TicketsFilter";
 // sections
 
 // ----------------------------------------------------------------------
@@ -28,14 +34,17 @@ const RootStyle = styled('div')(({theme}) => ({
 
 type Props = {
     posts: BlogPostProps[];
+    caseStudies: CaseStudyProps[];
 };
 
-export default function EEAboutUsPage({posts}: Props) {
+export default function EEAboutUsPage({posts, caseStudies}: Props) {
     return (
         <Page title="Tickets">
             <RootStyle>
-                <Container>
-                    이용약관
+                <Container sx={{mt: 3}}>
+
+                    <TicketsFilter posts={posts} caseStudies={caseStudies}/>
+
                 </Container>
             </RootStyle>
         </Page>
@@ -54,6 +63,7 @@ export async function getStaticProps() {
     return {
         props: {
             posts: getAllPosts(),
+            caseStudies: getAllCaseStudies(),
         },
     };
 }

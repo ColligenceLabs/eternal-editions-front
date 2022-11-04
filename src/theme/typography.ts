@@ -40,7 +40,7 @@ declare module '@mui/material/Typography' {
   }
 }
 
-const FONT_PRIMARY = 'Poppins, sans-serif';
+const FONT_PRIMARY = "'Kommon Grotesk', sans-serif";
 const FONT_SECONDARY = 'Barlow, sans-serif';
 
 const typography = {

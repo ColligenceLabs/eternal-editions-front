@@ -2,23 +2,17 @@ import {ReactElement} from 'react';
 // @mui
 import {styled} from '@mui/material/styles';
 // config
-import {HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT} from '../../../src/config';
+import {HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT} from '../src/config';
 // utils
-import {getAllPosts} from '../../../src/utils/get-mardown/travel/posts';
+import {getAllPosts} from '../src/utils/get-mardown/travel/posts';
 // @types
-import {BlogPostProps} from '../../../src/@types/blog';
+import {BlogPostProps} from '../src/@types/blog';
 // _data
 // layouts
-import Layout from '../../../src/layouts';
+import Layout from '../src/layouts';
 // components
-import {Iconify, Page} from '../../../src/components';
-import {Button, Container, Stack} from "@mui/material";
-import TicketPostItem from "../../../src/sections/@eternaledtions/tickets/TicketPostItem";
-import Masonry from "@mui/lab/Masonry";
-import arrowDown from "@iconify/icons-carbon/arrow-down";
-import {getAllCaseStudies} from "../../../src/utils/get-mardown/marketing/case-studies";
-import {CaseStudyProps} from "../../../src/@types/marketing";
-import TicketsFilter from "../../../src/sections/@eternaledtions/tickets/TicketsFilter";
+import {Page} from '../src/components';
+import {Container} from "@mui/material";
 // sections
 
 // ----------------------------------------------------------------------
@@ -34,17 +28,14 @@ const RootStyle = styled('div')(({theme}) => ({
 
 type Props = {
     posts: BlogPostProps[];
-    caseStudies: CaseStudyProps[];
 };
 
-export default function EEAboutUsPage({posts, caseStudies}: Props) {
+export default function EEAboutUsPage({posts}: Props) {
     return (
         <Page title="Tickets">
             <RootStyle>
-                <Container sx={{mt: 3}}>
-
-                    <TicketsFilter posts={posts} caseStudies={caseStudies}/>
-
+                <Container>
+                    이용약관
                 </Container>
             </RootStyle>
         </Page>
@@ -63,7 +54,6 @@ export async function getStaticProps() {
     return {
         props: {
             posts: getAllPosts(),
-            caseStudies: getAllCaseStudies(),
         },
     };
 }

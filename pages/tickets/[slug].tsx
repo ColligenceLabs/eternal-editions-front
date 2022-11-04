@@ -5,15 +5,15 @@ import {Button, Container, Divider, Grid, Stack} from '@mui/material';
 // routes
 // utils
 // config
-import {HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT} from '../../../src/config';
+import {HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT} from '../../src/config';
 // @types
 // layouts
-import Layout from '../../../src/layouts';
+import Layout from '../../src/layouts';
 // components
-import {Page} from '../../../src/components';
+import {Page} from '../../src/components';
 // sections
 import {useRouter} from "next/router";
-import {useResponsive} from "../../../src/hooks";
+import {useResponsive} from "../../src/hooks";
 
 // ----------------------------------------------------------------------
 

@@ -3,14 +3,16 @@
 const Routes = {
   // EternalEditions
   eternalEditions: {
-    about: '/ee/about-us',
-    tickets: '/ee/tickets',
-    ticket: (slug: string) => `/ee/tickets/${slug}`,
-    help: '/ee/support',
-    privacy: '/ee/privacy',
-    terms: '/ee/terms',
-    paymentPoint: '/ee/payment-point',
-    paymentMatic: '/ee/payment-matic',
+    about: '/about-us',
+    tickets: '/tickets',
+    ticket: (slug: string) => `/tickets/${slug}`,
+    help: '/support',
+    privacy: '/privacy',
+    terms: '/terms',
+    payment:{
+      point: '/ee/payment-point',
+      matic: '/ee/payment-matic',
+    },
     my: {
       account: '/my/account',
       tickets: '/my/tickets',

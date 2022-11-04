@@ -156,9 +156,9 @@ export const PageLinks_old = [
 
 export const navConfig = [
   // { title: 'Home', path: '/' },
-  { title: 'About', path: Routes.eternalEditions.about },
-  { title: 'Tickets', path: Routes.eternalEditions.tickets },
-  { title: 'Help', path: Routes.eternalEditions.help },
+  { title: 'ABOUT', path: Routes.eternalEditions.about },
+  { title: 'TICKET', path: Routes.eternalEditions.tickets },
+  { title: 'HELP', path: Routes.eternalEditions.help },
   // { title: 'Components', path: Routes.componentsUI },
   // {
   //   title: 'Pages',

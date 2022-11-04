@@ -2,16 +2,16 @@ import {ReactElement} from 'react';
 // @mui
 import {styled} from '@mui/material/styles';
 // config
-import {HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT} from '../../src/config';
+import {HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT} from '../src/config';
 // utils
-import {getAllPosts} from '../../src/utils/get-mardown/travel/posts';
+import {getAllPosts} from '../src/utils/get-mardown/travel/posts';
 // @types
-import {BlogPostProps} from '../../src/@types/blog';
+import {BlogPostProps} from '../src/@types/blog';
 // _data
 // layouts
-import Layout from '../../src/layouts';
+import Layout from '../src/layouts';
 // components
-import {Page} from '../../src/components';
+import {Page} from '../src/components';
 import {Container} from "@mui/material";
 // sections
 

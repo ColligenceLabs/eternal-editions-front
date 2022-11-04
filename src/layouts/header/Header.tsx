@@ -132,7 +132,7 @@ export default function Header({transparent}: Props) {
                                                 md: 160
                                             }
                                         }}>
-                                        Connect Wallet
+                                        CONNECT WALLET
                                     </Button>
                                 }
                             </Stack>
