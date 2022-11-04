@@ -69,7 +69,7 @@ export default function TicketsFilter({posts, caseStudies}: Props) {
                 <TicketSortByFilter filterSortBy={filters.filterSortBy} onChangeSortBy={handleChangeSortBy} />
             </Stack>
 
-            <Masonry columns={{xs: 2, sm: 4}} spacing={2}>
+            <Masonry columns={{xs: 1, md: 2}} spacing={2}>
                 {posts.map((post, index) => (
                     <TicketPostItem key={index} post={post}/>
                 ))}

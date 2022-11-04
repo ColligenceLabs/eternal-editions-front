@@ -5,16 +5,37 @@ import Image from "../Image";
 import * as React from "react";
 import useWallets from "../../hooks/useWallets";
 import {getIconByType} from "../../utils/wallet";
-import {WALLET_KAIKAS, WALLET_KLIP, WALLET_METAMASK} from "../../config";
+import {WALLET_COINBASE, WALLET_KAIKAS, WALLET_KLIP, WALLET_METAMASK} from "../../config";
 
 // ----------------------------------------------------------------------
 
 const MetaMaskButton = styled(Button)({
     width: '100% !important',
     fontSize: 12,
-    // backgroundColor: '#f1f2f5',
-    // borderColor: '#f1f2f5',
-    // color: '#000000',
+    backgroundColor: '#f1f2f5',
+    borderColor: '#f1f2f5',
+    color: '#000000',
+    boxShadow: 'none',
+    '&:hover': {
+        backgroundColor: 'background.paper',
+        borderColor: 'background.paper',
+        color: '#ffffff',
+        boxShadow: 'none',
+    },
+    '&:active': {
+        boxShadow: 'none',
+        backgroundColor: 'background.paper',
+        borderColor: 'background.paper',
+        color: '#ffffff',
+    }
+});
+
+const CoinbaseButton = styled(Button)({
+    width: '100% !important',
+    fontSize: 12,
+    backgroundColor: '#f1f2f5',
+    borderColor: '#f1f2f5',
+    color: '#000000',
     boxShadow: 'none',
     '&:hover': {
         backgroundColor: 'background.paper',
@@ -55,21 +76,44 @@ export default function ConnectWallet({onClose, ...other}) {
             <Divider/>
 
             <Stack spacing={2} sx={{mt: 4}}>
-                <>
-                    <MetaMaskButton variant="contained"
-                                    onClick={() => {
-                                        connectMetamask();
-                                        onClose();
-                                    }}
-                                    startIcon={<Image
-                                        alt="metamask icon"
-                                        src={getIconByType(WALLET_METAMASK)}
-                                        sx={{width: 24, height: 24}}
-                                    />}>
-                        CONNECT TO METAMASK WALLET
-                    </MetaMaskButton>
+                <Stack spacing={1}>
+                    <Stack>
+                        <MetaMaskButton variant="contained"
+                                        onClick={() => {
+                                            connectMetamask();
+                                            onClose();
+                                        }}
+                                        startIcon={<Image
+                                            alt="metamask icon"
+                                            src={getIconByType(WALLET_METAMASK)}
+                                            sx={{width: 24, height: 24}}
+                                        />}>
+                            CONNECT TO METAMASK WALLET
+                        </MetaMaskButton>
+                    </Stack>
+                    <Stack>
+                        <CoinbaseButton variant="contained"
+                                        onClick={() => {
+                                            // connectMetamask();
+                                            onClose();
+                                        }}
+                                        startIcon={<Image
+                                            alt="metamask icon"
+                                            src={getIconByType(WALLET_COINBASE)}
+                                            sx={{width: 24, height: 24}}
+                                        />}>
+                            CONNECT TO COINBASE WALLET
+                        </CoinbaseButton>
 
-                </>
+                    </Stack>
+                </Stack>
+                <Divider/>
+                <Stack>
+                    <Stack>
+                        <Button variant="contained">Google Login</Button>
+                    </Stack>
+                </Stack>
+
             </Stack>
         </Stack>
     );

@@ -20,6 +20,7 @@ import useWallets from "../../hooks/useWallets";
 import {getIconByType} from "../../utils/wallet";
 import React from "react";
 import {ConnectWallet, DisconnectWallet} from "../../components/wallet";
+import WalletPopover from "../../components/WalletPopover";
 
 const modalStyle = {
     position: 'absolute',
@@ -136,16 +137,12 @@ export default function Header({transparent}: Props) {
                                 {/*</Button>*/}
 
                                 {/* 지갑 연동 */}
+
                                 {account ?
                                     <>
-                                        <Button onClick={() => {
-                                            handleDisconnectOpen()
-                                        }}>{accountShot}
-                                            <Image src={getIconByType(type)} sx={{width: 23, ml: 1}}/>
-                                        </Button>
-                                    </> :
+                                        <WalletPopover/>
 
-                                    <Button variant="contained"  onClick={() => handleConnectOpen()}>
+                                    </> : <Button variant="contained" onClick={() => handleConnectOpen()}>
                                         Connect Wallet
                                     </Button>
                                 }

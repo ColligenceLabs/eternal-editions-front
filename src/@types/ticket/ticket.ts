@@ -19,7 +19,10 @@ import { MDXRemoteSerializeResult } from 'next-mdx-remote';
 
 export type TicketProps = {
     slug: string;
-    content: MDXRemoteSerializeResult;
-    title: string;
-    description: string;
+    tokenId: string;
+    content?: MDXRemoteSerializeResult;
+    title?: string;
+    subtitle?: string;
+    description?: string;
+    status?: string;
 };
