@@ -47,27 +47,27 @@ export default function TicketsFilter({posts, caseStudies}: Props) {
     };
     return (
         <>
-            <Stack direction="row">
-                <Box
-                    sx={{
-                        pb: {xs: 2, md: 3},
-                    }}
-                >
-                    <Tabs
-                        value={selected}
-                        scrollButtons="auto"
-                        variant="scrollable"
-                        allowScrollButtonsMobile
-                        onChange={handleChangeCategory}
-                    >
-                        {categories.map((category) => (
-                            <Tab key={category} value={category} label={category}/>
-                        ))}
-                    </Tabs>
-                </Box>
+            {/*<Stack direction="row">*/}
+            {/*    <Box*/}
+            {/*        sx={{*/}
+            {/*            pb: {xs: 2, md: 3},*/}
+            {/*        }}*/}
+            {/*    >*/}
+            {/*        <Tabs*/}
+            {/*            value={selected}*/}
+            {/*            scrollButtons="auto"*/}
+            {/*            variant="scrollable"*/}
+            {/*            allowScrollButtonsMobile*/}
+            {/*            onChange={handleChangeCategory}*/}
+            {/*        >*/}
+            {/*            {categories.map((category) => (*/}
+            {/*                <Tab key={category} value={category} label={category}/>*/}
+            {/*            ))}*/}
+            {/*        </Tabs>*/}
+            {/*    </Box>*/}
 
-                <TicketSortByFilter filterSortBy={filters.filterSortBy} onChangeSortBy={handleChangeSortBy} />
-            </Stack>
+            {/*    <TicketSortByFilter filterSortBy={filters.filterSortBy} onChangeSortBy={handleChangeSortBy} />*/}
+            {/*</Stack>*/}
 
             <Masonry columns={{xs: 1, md: 2}} spacing={2}>
                 {posts.map((post, index) => (

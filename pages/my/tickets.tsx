@@ -63,6 +63,7 @@ export default function MyTicketPage({}: Props) {
                     <Stack sx={{mb: 3}}>
 
                         <MyTicketList tickets={tickets}/>
+
                     </Stack>
                 </Container>
             </RootStyle>

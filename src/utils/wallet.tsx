@@ -1,4 +1,4 @@
-import {WALLET_COINBASE, WALLET_KAIKAS, WALLET_KLIP, WALLET_METAMASK} from '../config';
+import {WALLET_COINBASE, WALLET_KAIKAS, WALLET_KLIP, WALLET_METAMASK, WALLET_WALLECTCONNECT} from '../config';
 // @ts-ignore
 import Promise from "lodash/_Promise";
 import Web3 from "web3";
@@ -11,6 +11,8 @@ export function getShotAddress(address: string) {
 
 export function getIconByType(type: string) {
     switch (type) {
+        case WALLET_WALLECTCONNECT:
+            return '/assets/icons/wallet/walletconnect-alternative.webp';
         case WALLET_COINBASE:
             return '/assets/icons/wallet/walletlink-alternative.webp';
         case WALLET_KAIKAS:
@@ -60,7 +62,7 @@ export const KOVAN_VERSION = '0x2a';
 export const MATIC_VERSION = '0x89';
 export const MUMBAI_VERSION = '0x13881';
 
-export function toChain(version:string) {
+export function toChain(version: string) {
     switch (version) {
         case ETH_VERSION:
             return {
@@ -133,7 +135,7 @@ export function toSymbolImage(version: string, sx?: SxProps) {
     }
 }
 
-export function toChainObj(version:string) {
+export function toChainObj(version: string) {
     switch (version) {
         case ETH_VERSION:
             return {
@@ -217,3 +219,43 @@ export function toChainObj(version:string) {
             };
     }
 }
+
+export function ClipboardCopy(text: string, message: string) {
+
+    // 흐음 1.
+    if (navigator.clipboard) {
+        // (IE는 사용 못하고, 크롬은 66버전 이상일때 사용 가능합니다.)
+        navigator.clipboard
+            .writeText(text)
+            .then(() => {
+                alert(message);
+            })
+            .catch(() => {
+                alert("복사를 다시 시도해주세요.");
+            });
+    } else {
+        // 흐름 2.
+        if (!document.queryCommandSupported("copy")) {
+            return alert("복사하기가 지원되지 않는 브라우저입니다.");
+        }
+
+        // 흐름 3.
+        const textarea = document.createElement("textarea");
+        textarea.value = text;
+        textarea.style.top = String(0);
+        textarea.style.left = String(0);
+        textarea.style.position = "fixed";
+
+        // 흐름 4.
+        document.body.appendChild(textarea);
+        // focus() -> 사파리 브라우저 서포팅
+        textarea.focus();
+        // select() -> 사용자가 입력한 내용을 영역을 설정할 때 필요
+        textarea.select();
+        // 흐름 5.
+        document.execCommand("copy");
+        // 흐름 6.
+        document.body.removeChild(textarea);
+        alert(message);
+    }
+};

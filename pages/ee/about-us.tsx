@@ -1,25 +1,25 @@
-import { ReactElement } from 'react';
+import {ReactElement} from 'react';
 // @mui
-import { styled } from '@mui/material/styles';
+import {styled} from '@mui/material/styles';
 // config
-import { HEADER_MOBILE_HEIGHT, HEADER_DESKTOP_HEIGHT } from '../../src/config';
+import {HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT} from '../../src/config';
 // utils
-import { getAllPosts } from '../../src/utils/get-mardown/travel/posts';
+import {getAllPosts} from '../../src/utils/get-mardown/travel/posts';
 // @types
-import { BlogPostProps } from '../../src/@types/blog';
+import {BlogPostProps} from '../../src/@types/blog';
 // _data
-import { _testimonials, _members, _brands } from '../../_data/mock';
+import {_brands, _members, _testimonials} from '../../_data/mock';
 // layouts
 import Layout from '../../src/layouts';
 // components
-import { Page } from '../../src/components';
+import {Page} from '../../src/components';
 // sections
-import { NewsletterTravel } from '../../src/sections/newsletter';
-import { BlogTravelLatestPosts } from '../../src/sections/blog';
-import { TestimonialsTravel } from '../../src/sections/testimonials';
-import { TeamTravelAbout } from '../../src/sections/team';
-import { OurClientsTravel } from '../../src/sections/our-clients';
-import { TravelAbout, TravelAboutOurVision } from '../../src/sections/@eternaledtions';
+import {NewsletterTravel} from '../../src/sections/newsletter';
+import {TestimonialsTravel} from '../../src/sections/testimonials';
+import {TeamTravelAbout} from '../../src/sections/team';
+import {OurClientsTravel} from '../../src/sections/our-clients';
+import {TravelAbout, TravelAboutOurVision} from '../../src/sections/@eternaledtions';
+import {Container} from "@mui/material";
 
 // ----------------------------------------------------------------------
 
@@ -40,19 +40,9 @@ export default function EEAboutUsPage({ posts }: Props) {
   return (
     <Page title="About Us">
       <RootStyle>
-        <TravelAbout />
-
-        <TravelAboutOurVision />
-
-        <TeamTravelAbout members={_members} />
-
-        <TestimonialsTravel testimonials={_testimonials} />
-
-        <OurClientsTravel brands={_brands} />
-
-        <BlogTravelLatestPosts posts={posts.slice(0, 4)} />
-
-        <NewsletterTravel />
+        <Container>
+          About
+        </Container>
       </RootStyle>
     </Page>
   );

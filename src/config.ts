@@ -32,7 +32,7 @@ export const defaultLocale = 'en';
 
 export const defaultSettings = {
   // light | dark
-  themeMode: 'light',
+  themeMode: 'dark',
   // ltr | rtl
   themeDirection: 'ltr',
   //  default | blueOrange | greenOrange | purpleTeal | cyanYellow | pinkCyan
@@ -50,6 +50,7 @@ export const DRAWER_WIDTH = 280;
 // WEB3
 // ----------------------------------------------------------------------
 
+export const WALLET_WALLECTCONNECT = 'WALLETCONNECT';
 export const WALLET_COINBASE = 'COINBASE';
 export const WALLET_METAMASK = 'METAMASK';
 export const WALLET_KAIKAS = 'KAIKAS';

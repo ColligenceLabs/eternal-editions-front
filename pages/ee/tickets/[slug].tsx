@@ -10,12 +10,10 @@ import {HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT} from '../../../src/config';
 // layouts
 import Layout from '../../../src/layouts';
 // components
-import {Image, Page} from '../../../src/components';
+import {Page} from '../../../src/components';
 // sections
-import {TicketProps} from "../../../src/@types/ticket/ticket";
 import {useRouter} from "next/router";
 import {useResponsive} from "../../../src/hooks";
-import {TravelTourReserveForm} from "../../../src/sections/@travel";
 
 // ----------------------------------------------------------------------
 

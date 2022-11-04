@@ -5,7 +5,7 @@ import Image from "../Image";
 import * as React from "react";
 import useWallets from "../../hooks/useWallets";
 import {getIconByType} from "../../utils/wallet";
-import {WALLET_COINBASE, WALLET_KAIKAS, WALLET_KLIP, WALLET_METAMASK} from "../../config";
+import {WALLET_COINBASE, WALLET_KAIKAS, WALLET_KLIP, WALLET_METAMASK, WALLET_WALLECTCONNECT} from "../../config";
 
 // ----------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ const MetaMaskButton = styled(Button)({
     }
 });
 
-const CoinbaseButton = styled(Button)({
+const WalletConnectButton = styled(Button)({
     width: '100% !important',
     fontSize: 12,
     backgroundColor: '#f1f2f5',
@@ -92,27 +92,27 @@ export default function ConnectWallet({onClose, ...other}) {
                         </MetaMaskButton>
                     </Stack>
                     <Stack>
-                        <CoinbaseButton variant="contained"
+                        <WalletConnectButton variant="contained"
                                         onClick={() => {
                                             // connectMetamask();
                                             onClose();
                                         }}
                                         startIcon={<Image
                                             alt="metamask icon"
-                                            src={getIconByType(WALLET_COINBASE)}
+                                            src={getIconByType(WALLET_WALLECTCONNECT)}
                                             sx={{width: 24, height: 24}}
                                         />}>
-                            CONNECT TO COINBASE WALLET
-                        </CoinbaseButton>
+                            CONNECT TO WALLET CONNECT
+                        </WalletConnectButton>
 
                     </Stack>
                 </Stack>
-                <Divider/>
-                <Stack>
-                    <Stack>
-                        <Button variant="contained">Google Login</Button>
-                    </Stack>
-                </Stack>
+                {/*<Divider/>*/}
+                {/*<Stack>*/}
+                {/*    <Stack>*/}
+                {/*        <Button variant="contained">Google Login</Button>*/}
+                {/*    </Stack>*/}
+                {/*</Stack>*/}
 
             </Stack>
         </Stack>

@@ -142,7 +142,8 @@ export default function Header({transparent}: Props) {
                                     <>
                                         <WalletPopover/>
 
-                                    </> : <Button variant="contained" onClick={() => handleConnectOpen()}>
+                                    </> :
+                                    <Button variant="contained" onClick={() => handleConnectOpen()}>
                                         Connect Wallet
                                     </Button>
                                 }

@@ -10,7 +10,7 @@ import {Box, Button, Divider, List, ListSubheader, MenuItem, Stack, Typography} 
 // components
 import MenuPopover from './MenuPopover';
 import useWallets from "../hooks/useWallets";
-import {getIconByType} from "../utils/wallet";
+import {ClipboardCopy, getIconByType, MATIC_VERSION, toChain} from "../utils/wallet";
 import Image from "./Image";
 import Routes from "../routes";
 import {Iconify} from "./index";
@@ -39,8 +39,10 @@ export default function WalletPopover({}) {
 
     return (
         <>
-            <Button onClick={handleOpen}>{accountShot} <Image src={getIconByType(type)}
-                                                              sx={{width: 23, ml: 1}}/></Button>
+            <Button onClick={handleOpen}>{accountShot}
+                <Image src={getIconByType(type)} sx={{width: 23, ml: 1}}/>
+            </Button>
+
             <MenuPopover
                 open={Boolean(open)}
                 anchorEl={open}
@@ -72,13 +74,19 @@ export default function WalletPopover({}) {
                         <Box sx={{flexGrow: 1}}>
                             <Typography variant="body2" noWrap>
                                 {/*{toChain(chainId).name}*/}
-                                {'Polygon Chain'}
+                                {toChain(MATIC_VERSION).name}
                             </Typography>
                         </Box>
 
                         <Button
+                            onClick={() => ClipboardCopy(account, "지갑주소가 복사되었습니다.")}
+                        >
+                            Copy
+                        </Button>
+
+                        <Button
                             target="_blank"
-                            href={'https://polygonscan.com/address/0x42a3de92cfc64290fa0de53d6ecb3319120506c4'}
+                            href={'https://polygonscan.com/address/' + account}
                         >
                             Explore
                         </Button>
@@ -89,6 +97,7 @@ export default function WalletPopover({}) {
                     </Typography>
 
                 </Box>
+
                 <Divider sx={{borderStyle: 'dashed'}}/>
 
                 <Stack sx={{my: 1.5, px: 2.5, mt: 2, mb: 2}} spacing={1}>
