@@ -58,10 +58,10 @@ const RootLinkStyle = styled(Link, {
       textDecoration: 'none',
     },
     ...(active && {
-      ...dotActiveStyle,
-      color: theme.palette.text.primary,
+      // ...dotActiveStyle,
+      color: theme.palette.primary.main,
       ...(transparent && { color: theme.palette.common.white }),
-      ...(scrolling && { color: theme.palette.text.primary }),
+      ...(scrolling && { color: theme.palette.primary.main }),
     }),
     ...(open && {
       color: theme.palette.primary.main,
@@ -76,15 +76,21 @@ export default function NavDesktop({ isScrolling, isTransparent, navConfig }: Na
     <Stack
       direction="row"
       spacing={6}
+      alignItems="center"
+      justifyContent="flex-end"
       sx={{
         ml: 6,
-        color: 'text.secondary',
+        mr: 6,
+        color: 'common.white',
         ...(isTransparent && {
           color: 'inherit',
         }),
         ...(isScrolling && {
-          color: 'text.secondary',
+          color: 'common.white',
         }),
+        width: {
+          md: '100%'
+        }
       }}
     >
       {navConfig.map((link) => (
