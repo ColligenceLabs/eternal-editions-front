@@ -5,7 +5,18 @@ import Image from "../Image";
 import * as React from "react";
 import useWallets from "../../hooks/useWallets";
 import {getIconByType} from "../../utils/wallet";
-import {WALLET_COINBASE, WALLET_KAIKAS, WALLET_KLIP, WALLET_METAMASK, WALLET_WALLECTCONNECT} from "../../config";
+import {
+    ChainId,
+    WALLET_COINBASE,
+    WALLET_KAIKAS,
+    WALLET_KLIP,
+    WALLET_METAMASK,
+    WALLET_WALLECTCONNECT
+} from "../../config";
+import {useWeb3React} from "@web3-react/core";
+import {setupNetwork} from '../../utils/network';
+import {injected, walletconnect} from "../../hooks/connectors";
+import env from '../../env';
 
 // ----------------------------------------------------------------------
 
@@ -53,8 +64,39 @@ const WalletConnectButton = styled(Button)({
 // ----------------------------------------------------------------------
 
 export default function ConnectWallet({onClose, ...other}) {
+    const context = useWeb3React();
+    const { activate, chainId, account } = context;
+    // const dispatch = useDispatch();
 
     const {connectKaikas, connectMetamask, connectKlip, disconnect, requestKey, message, type} = useWallets();
+
+    const connectWallet = async (id) => {
+        try {
+            const targetNetwork = env.REACT_APP_TARGET_NETWORK ?? ChainId.MUMBAI;
+            try {
+                if (id === WALLET_METAMASK && chainId !== targetNetwork) {
+                    await setupNetwork(targetNetwork);
+                }
+            } catch (e) {
+                console.log('change network error', e);
+            }
+            if (id === WALLET_METAMASK) {
+                await activate(injected, undefined, true);
+                // dispatch(setActivatingConnector(injected));
+                window.localStorage.setItem('wallet', WALLET_METAMASK);
+            } else if (id === WALLET_WALLECTCONNECT) {
+                console.log('=====111');
+                const wc = walletconnect(true);
+                console.log('=====222');
+                await activate(wc, undefined, true);
+                console.log('=====333');
+                window.localStorage.setItem('wallet', WALLET_WALLECTCONNECT);
+            }
+        } catch (e) {
+            console.log('connect wallet error', e);
+            alert(e);
+        }
+    }
 
     const modalStyle = {
         position: 'absolute',
@@ -79,8 +121,9 @@ export default function ConnectWallet({onClose, ...other}) {
                 <Stack spacing={1}>
                     <Stack>
                         <MetaMaskButton variant="contained"
-                                        onClick={() => {
-                                            connectMetamask();
+                                        onClick={async () => {
+                                            await connectWallet(WALLET_METAMASK);
+                                            // await connectMetamask();
                                             onClose();
                                         }}
                                         startIcon={<Image
@@ -93,8 +136,8 @@ export default function ConnectWallet({onClose, ...other}) {
                     </Stack>
                     <Stack>
                         <WalletConnectButton variant="contained"
-                                        onClick={() => {
-                                            // connectMetamask();
+                                        onClick={async () => {
+                                            await connectWallet(WALLET_WALLECTCONNECT);
                                             onClose();
                                         }}
                                         startIcon={<Image

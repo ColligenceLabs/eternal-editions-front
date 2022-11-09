@@ -21,6 +21,7 @@ import {getIconByType} from "../../utils/wallet";
 import React from "react";
 import {ConnectWallet, DisconnectWallet} from "../../components/wallet";
 import WalletPopover from "../../components/WalletPopover";
+import {useWeb3React} from "@web3-react/core";
 
 const modalStyle = {
     position: 'absolute',
@@ -52,7 +53,8 @@ export default function Header({transparent}: Props) {
     const handleDisconnectOpen = () => setDisconnectOpen(true);
     const handleDisconnectClose = () => setDisconnectOpen(false);
 
-    const {account, accountShot, type, disconnect} = useWallets();
+    // const {account, accountShot, type, disconnect} = useWallets();
+    const {account} = useWeb3React();
 
     const isLight = theme.palette.mode === 'light';
 

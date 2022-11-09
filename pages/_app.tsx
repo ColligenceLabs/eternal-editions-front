@@ -16,6 +16,8 @@ import 'react-lazy-load-image-component/src/effects/black-and-white.css';
 // ----------------------------------------------------------------------
 
 import {ReactElement, ReactNode} from 'react';
+import { ethers } from 'ethers';
+import { Web3ReactProvider } from '@web3-react/core';
 // next
 import Head from 'next/head';
 import {NextPage} from 'next';
@@ -38,6 +40,12 @@ import MotionLazyContainer from '../src/components/animate/MotionLazyContainer';
 import {WalletProvider} from "../src/contexts/WalletContext";
 
 // ----------------------------------------------------------------------
+function getLibrary(provider: any) {
+    // const library = new Web3Provider(provider);
+    const library = new ethers.providers.Web3Provider(provider);
+    library.pollingInterval = 12000;
+    return library;
+}
 
 type NextPageWithLayout = NextPage & {
     getLayout?: (page: ReactElement) => ReactNode;
@@ -64,15 +72,17 @@ export default function MyApp(props: MyAppProps) {
                 <WalletProvider>
                     <SettingsProvider>
                         <ThemeProvider>
-                            <ThemeColorPresets>
-                                <MotionLazyContainer>
-                                    <RtlLayout>
-                                        <Settings/>
-                                        <ProgressBar/>
-                                        {getLayout(<Component {...pageProps} />)}
-                                    </RtlLayout>
-                                </MotionLazyContainer>
-                            </ThemeColorPresets>
+                            <Web3ReactProvider getLibrary={getLibrary}>
+                                <ThemeColorPresets>
+                                    <MotionLazyContainer>
+                                        <RtlLayout>
+                                            <Settings/>
+                                            <ProgressBar/>
+                                            {getLayout(<Component {...pageProps} />)}
+                                        </RtlLayout>
+                                    </MotionLazyContainer>
+                                </ThemeColorPresets>
+                            </Web3ReactProvider>
                         </ThemeProvider>
                     </SettingsProvider>
                 </WalletProvider>

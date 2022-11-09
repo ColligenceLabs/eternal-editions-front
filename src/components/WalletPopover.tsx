@@ -1,5 +1,5 @@
 import {useSnackbar} from 'notistack';
-import {useState} from 'react';
+import {useEffect, useState} from 'react';
 // next
 import NextLink from 'next/link';
 import {useRouter} from 'next/router';
@@ -10,21 +10,35 @@ import {Box, Button, Divider, List, ListSubheader, MenuItem, Stack, Typography} 
 // components
 import MenuPopover from './MenuPopover';
 import useWallets from "../hooks/useWallets";
-import {ClipboardCopy, getIconByType, MATIC_VERSION, toChain} from "../utils/wallet";
+import {ClipboardCopy, getIconByType, getShotAddress, MATIC_VERSION, toChain} from "../utils/wallet";
 import Image from "./Image";
 import Routes from "../routes";
 import {Iconify} from "./index";
 import launchIcon from "@iconify/icons-carbon/launch";
+import {useWeb3React} from "@web3-react/core";
+import {WALLET_METAMASK, WALLET_WALLECTCONNECT} from "../config";
 
 
 // ----------------------------------------------------------------------
 WalletPopover.propTypes = {};
 
 export default function WalletPopover({}) {
-    const {account, accountShot, type, disconnect, switchChainNetwork, chainId, balance} = useWallets();
+    // const {account, accountShot, type, disconnect, switchChainNetwork, chainId, balance} = useWallets();
 
+    const {account, deactivate, chainId, library} = useWeb3React();
+    const [accountShot, setAccountShot] = useState('');
+    const [type, setType] = useState('');
     const router = useRouter();
 
+    useEffect(() => {
+        if (account) {
+            setAccountShot(getShotAddress(account));
+            if (library.connection.url === 'metamask')
+                setType(WALLET_METAMASK);
+            else if (library.connection.url === 'eip-1193:')
+                setType(WALLET_WALLECTCONNECT);
+        }
+    }, [account, library]);
     // const {enqueueSnackbar} = useSnackbar();
 
     const [open, setOpen] = useState<HTMLElement | null>(null);
@@ -190,7 +204,8 @@ export default function WalletPopover({}) {
                     disablePadding
                     sx={{mt: 1}}
                 >
-                    <MenuItem onClick={() => disconnect()} sx={{m: 0}}>
+                    {/*<MenuItem onClick={() => disconnect()} sx={{m: 0}}>*/}
+                    <MenuItem onClick={() => deactivate()} sx={{m: 0}}>
                         <Typography variant="subtitle1">Disconnect</Typography>
                     </MenuItem>
                 </List>
