@@ -205,7 +205,15 @@ export default function WalletPopover({}) {
                     sx={{mt: 1}}
                 >
                     {/*<MenuItem onClick={() => disconnect()} sx={{m: 0}}>*/}
-                    <MenuItem onClick={() => deactivate()} sx={{m: 0}}>
+                    <MenuItem onClick={async () =>
+                    {
+                        try {
+                            await deactivate();
+                        } catch (e) {
+                            console.log(e);
+                            alert(e);
+                        }
+                    }} sx={{m: 0}}>
                         <Typography variant="subtitle1">Disconnect</Typography>
                     </MenuItem>
                 </List>

@@ -85,11 +85,9 @@ export default function ConnectWallet({onClose, ...other}) {
                 // dispatch(setActivatingConnector(injected));
                 window.localStorage.setItem('wallet', WALLET_METAMASK);
             } else if (id === WALLET_WALLECTCONNECT) {
-                console.log('=====111');
+                window.localStorage.removeItem('walletconnect');
                 const wc = walletconnect(true);
-                console.log('=====222');
                 await activate(wc, undefined, true);
-                console.log('=====333');
                 window.localStorage.setItem('wallet', WALLET_WALLECTCONNECT);
             }
         } catch (e) {
