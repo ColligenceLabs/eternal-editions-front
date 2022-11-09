@@ -5,17 +5,17 @@ type ENV = {
 
 const development: ENV = {
   REACT_APP_TARGET_NETWORK: 80001, // mumbai
-  REACT_APP_TARGET_NETWORK_MSG: ''
+  REACT_APP_TARGET_NETWORK_MSG: '',
 };
 
 const staging: ENV = {
   REACT_APP_TARGET_NETWORK: 80001, // mumbai
-  REACT_APP_TARGET_NETWORK_MSG: ''
+  REACT_APP_TARGET_NETWORK_MSG: '',
 };
 
 const production: ENV = {
   REACT_APP_TARGET_NETWORK: 137, // mainnet
-  REACT_APP_TARGET_NETWORK_MSG: ''
+  REACT_APP_TARGET_NETWORK_MSG: '',
 };
 
 const env =
