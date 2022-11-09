@@ -18,7 +18,6 @@ import launchIcon from "@iconify/icons-carbon/launch";
 import {useWeb3React} from "@web3-react/core";
 import {WALLET_METAMASK, WALLET_WALLECTCONNECT} from "../config";
 
-
 // ----------------------------------------------------------------------
 WalletPopover.propTypes = {};
 
@@ -93,7 +92,7 @@ export default function WalletPopover({}) {
                         </Box>
 
                         <Button
-                            onClick={() => ClipboardCopy(account, "지갑주소가 복사되었습니다.")}
+                            onClick={() => ClipboardCopy(account ?? '', "지갑주소가 복사되었습니다.")}
                         >
                             Copy
                         </Button>

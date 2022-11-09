@@ -17,6 +17,8 @@ import {useWeb3React} from "@web3-react/core";
 import {setupNetwork} from '../../utils/network';
 import {injected, walletconnect} from "../../hooks/connectors";
 import env from '../../env';
+import useCreateToken from '../../hooks/useCreateToken';
+import {useEffect, useState} from "react";
 
 // ----------------------------------------------------------------------
 
@@ -65,10 +67,20 @@ const WalletConnectButton = styled(Button)({
 
 export default function ConnectWallet({onClose, ...other}) {
     const context = useWeb3React();
-    const { activate, chainId, account } = context;
+    const { activate, chainId, account, deactivate } = context;
+    const [doSign, setDoSign] = useState(false);
+    const tokenGenerator = useCreateToken();
     // const dispatch = useDispatch();
-
     const {connectKaikas, connectMetamask, connectKlip, disconnect, requestKey, message, type} = useWallets();
+
+    useEffect(() => {
+        async function createToken() {
+            const result = await tokenGenerator.createToken(setDoSign);
+            if (result) onClose();
+            else await deactivate();
+        }
+        if (account) createToken();
+    }, [account]);
 
     const connectWallet = async (id) => {
         try {
@@ -122,7 +134,7 @@ export default function ConnectWallet({onClose, ...other}) {
                                         onClick={async () => {
                                             await connectWallet(WALLET_METAMASK);
                                             // await connectMetamask();
-                                            onClose();
+                                            // onClose();
                                         }}
                                         startIcon={<Image
                                             alt="metamask icon"
@@ -136,7 +148,7 @@ export default function ConnectWallet({onClose, ...other}) {
                         <WalletConnectButton variant="contained"
                                         onClick={async () => {
                                             await connectWallet(WALLET_WALLECTCONNECT);
-                                            onClose();
+                                            // onClose();
                                         }}
                                         startIcon={<Image
                                             alt="metamask icon"
