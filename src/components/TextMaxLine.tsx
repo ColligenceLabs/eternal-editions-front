@@ -29,6 +29,7 @@ const TextMaxLine = forwardRef<HTMLAnchorElement, Props>(
       display: '-webkit-box',
       WebkitLineClamp: line,
       WebkitBoxOrient: 'vertical',
+      lineHeight: '1.1em',
       ...(persistent && {
         height: lineHeight * line,
       }),

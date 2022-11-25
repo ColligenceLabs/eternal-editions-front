@@ -6,6 +6,7 @@ import { CloseIcon } from './CustomIcons';
 // ----------------------------------------------------------------------
 
 export default function Chip(theme: Theme) {
+  const isLight = theme.palette.mode === 'light';
   return {
     MuiChip: {
       defaultProps: {
@@ -15,7 +16,10 @@ export default function Chip(theme: Theme) {
       styleOverrides: {
         root: {
           ...theme.typography.body3,
-          borderRadius: theme.shape.borderRadius,
+          // borderRadius: theme.shape.borderRadius,
+          borderRadius: 60,
+          height: 24,
+          borderColor: isLight ? 'black' : 'white'
         },
         colorDefault: {
           color: theme.palette.text.secondary,
@@ -24,7 +28,8 @@ export default function Chip(theme: Theme) {
           },
         },
         outlined: {
-          borderColor: theme.palette.grey[500_32],
+          borderColor: isLight ? 'black' : 'white',
+          color: isLight ? 'black' : 'white',
           '&.MuiChip-colorPrimary': {
             borderColor: theme.palette.primary.main,
           },

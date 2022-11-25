@@ -17,7 +17,11 @@ export default function Button(theme: Theme) {
                         color: '#fff',
                         backdropFilter: 'blur(50px)',
                         borderRadius: '60px',
-                        background: 'rgba(0, 0, 0, 0.3)'
+                        background: 'rgba(0, 0, 0, 0.3)',
+                        '&:hover': {
+                            color: isLight ? 'white' : 'black',
+                            backgroundColor: isLight ? theme.palette.grey[700] : theme.palette.primary.main,
+                        },
                     },
                 },
             ],

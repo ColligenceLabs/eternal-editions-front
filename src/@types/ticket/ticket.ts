@@ -28,6 +28,7 @@ export type TicketProps = {
     status?: string;
     createdAt?: Date | string | number;
     background?: string;
+    author?: string;
 };
 
 export type CategoryProps = {

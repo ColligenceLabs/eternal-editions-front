@@ -47,38 +47,37 @@ export default function TicketsFilter({tickets, categories}: Props) {
     return (
         <>
             <Stack direction="row" sx={{display: 'flex', alignItems: 'center', width: '100%'}}>
-                <Box
-                    sx={{
-                        pb: {xs: 2, md: 3},
-                        flexGrow: 1,
-                    }}
-                >
+                <Box sx={{
+                    pb: {xs: 2, md: 3},
+                    flexGrow: 1,
+                }}>
                     <Tabs
                         value={selected}
                         scrollButtons="auto"
                         variant="scrollable"
                         allowScrollButtonsMobile
-                        onChange={handleChangeCategory}
+                        onChange={handleChangeCategory}>
 
-                    >
                         {categories.map((category) => (
                             <Tab
                                 key={category}
                                 value={category}
-                                label={<Typography variant="body2" sx={{fontSize:'14px'}}>{category}</Typography>}
+                                label={<Typography variant="body2" sx={{fontSize: '14px'}}>{category}</Typography>}
                             />
                         ))}
+
                     </Tabs>
                 </Box>
 
                 {/*<TicketSortByFilter filterSortBy={filters.filterSortBy} onChangeSortBy={handleChangeSortBy}/>*/}
             </Stack>
 
-            <Masonry columns={{xs: 1, md: 2}} spacing={2}>
-                {tickets.map((ticket, index) => (
-                    <TicketPostItem key={index} ticket={ticket}/>
-                ))}
-            </Masonry>
+            {tickets &&
+                <Masonry columns={{xs: 1, md: 2}} spacing={2}>
+                    {tickets.map((ticket, index) => (
+                        <TicketPostItem key={index} ticket={ticket}/>
+                    ))}
+                </Masonry>}
 
             <Stack
                 alignItems="center"
@@ -92,8 +91,9 @@ export default function TicketsFilter({tickets, categories}: Props) {
                     color="inherit"
                     variant="outlined"
                     endIcon={<Iconify icon={arrowDown} sx={{width: 20, height: 20}}/>}
+                    sx={{color : 'common.white'}}
                 >
-                    Load more
+                    LOAD MORE
                 </Button>
             </Stack>
         </>

@@ -139,11 +139,6 @@ export default function WalletPopover({}) {
                 </Typography>
               </Box>
 
-{/*<<<<<<< HEAD*/}
-{/*                        <Button onClick={() => ClipboardCopy(account, "지갑주소가 복사되었습니다.")} >*/}
-{/*                            Copy*/}
-{/*                        </Button>*/}
-{/*=======*/}
               <NextLink href={Routes.eternalEditions.payment.point} passHref>
                 <Button>포인트 구매</Button>
               </NextLink>
@@ -162,7 +157,6 @@ export default function WalletPopover({}) {
                   [MATIC] : 1234
                 </Typography>
               </Box>
-{/*>>>>>>> 1ba9a926a8fcf7e03e03040f1fcb5aa3a969623b*/}
 
               <NextLink href={Routes.eternalEditions.payment.matic} passHref>
                 <Button>심플렉스 구매 (추후 진행)</Button>
