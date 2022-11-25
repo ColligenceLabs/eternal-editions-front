@@ -259,3 +259,10 @@ export function ClipboardCopy(text: string, message: string) {
         alert(message);
     }
 };
+
+export const checkKaikas = (library: any) => {
+    return library.provider.isWalletConnect
+        ? false
+        : library.connection.url !== 'metamask' ||
+        library.connection.url === 'eip-1193:';
+};

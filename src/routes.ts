@@ -9,15 +9,17 @@ const Routes = {
     help: '/support',
     privacy: '/privacy',
     terms: '/terms',
-    payment:{
+    payment: {
       point: '/ee/payment-point',
       matic: '/ee/payment-matic',
     },
     my: {
       account: '/my/account',
       tickets: '/my/tickets',
-      transaction: '/my/transaction'
-    }
+      transaction: '/my/transaction',
+    },
+    faq: '/faq',
+    notice: '/notice',
   },
   // Marketing
   marketing: {

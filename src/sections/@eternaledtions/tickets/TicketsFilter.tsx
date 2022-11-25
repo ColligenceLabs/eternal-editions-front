@@ -1,6 +1,6 @@
 import {useState} from 'react';
 // @mui
-import {Box, Button, Stack, Tab, Tabs} from '@mui/material';
+import {Box, Button, Stack, Tab, Tabs, Typography} from '@mui/material';
 // @types
 import {CaseStudyProps} from '../../../@types/marketing';
 //
@@ -12,26 +12,25 @@ import arrowDown from "@iconify/icons-carbon/arrow-down";
 import {TicketsFiltersProps} from "../../../@types/eternaleditions/tickets";
 import TicketSortByFilter from "./TicketSortByFilter";
 import {SelectChangeEvent} from "@mui/material/Select";
+import {CategoryProps, TicketProps} from "../../../@types/ticket/ticket";
+import {useTheme} from "@mui/material/styles";
 
 // ----------------------------------------------------------------------
 
 type Props = {
-    posts: BlogPostProps[];
-    caseStudies: CaseStudyProps[];
+    tickets: TicketProps[];
+    categories: string[];
 };
 
 const defaultValues = {
     filterSortBy: '',
 };
 
-export default function TicketsFilter({posts, caseStudies}: Props) {
+export default function TicketsFilter({tickets, categories}: Props) {
+
+    const theme = useTheme();
     const [selected, setSelected] = useState('All');
-
-    const getCategories = caseStudies.map((project) => project.frontmatter.category);
-
-    const categories = ['All', ...Array.from(new Set(getCategories))];
-
-    const filtered = applyFilter(caseStudies, selected);
+    categories = ['All', ...Array.from(new Set(categories))];
 
     const [filters, setFilters] = useState<TicketsFiltersProps>(defaultValues);
 
@@ -47,31 +46,37 @@ export default function TicketsFilter({posts, caseStudies}: Props) {
     };
     return (
         <>
-            {/*<Stack direction="row">*/}
-            {/*    <Box*/}
-            {/*        sx={{*/}
-            {/*            pb: {xs: 2, md: 3},*/}
-            {/*        }}*/}
-            {/*    >*/}
-            {/*        <Tabs*/}
-            {/*            value={selected}*/}
-            {/*            scrollButtons="auto"*/}
-            {/*            variant="scrollable"*/}
-            {/*            allowScrollButtonsMobile*/}
-            {/*            onChange={handleChangeCategory}*/}
-            {/*        >*/}
-            {/*            {categories.map((category) => (*/}
-            {/*                <Tab key={category} value={category} label={category}/>*/}
-            {/*            ))}*/}
-            {/*        </Tabs>*/}
-            {/*    </Box>*/}
+            <Stack direction="row" sx={{display: 'flex', alignItems: 'center', width: '100%'}}>
+                <Box
+                    sx={{
+                        pb: {xs: 2, md: 3},
+                        flexGrow: 1,
+                    }}
+                >
+                    <Tabs
+                        value={selected}
+                        scrollButtons="auto"
+                        variant="scrollable"
+                        allowScrollButtonsMobile
+                        onChange={handleChangeCategory}
 
-            {/*    <TicketSortByFilter filterSortBy={filters.filterSortBy} onChangeSortBy={handleChangeSortBy} />*/}
-            {/*</Stack>*/}
+                    >
+                        {categories.map((category) => (
+                            <Tab
+                                key={category}
+                                value={category}
+                                label={<Typography variant="body2" sx={{fontSize:'14px'}}>{category}</Typography>}
+                            />
+                        ))}
+                    </Tabs>
+                </Box>
+
+                {/*<TicketSortByFilter filterSortBy={filters.filterSortBy} onChangeSortBy={handleChangeSortBy}/>*/}
+            </Stack>
 
             <Masonry columns={{xs: 1, md: 2}} spacing={2}>
-                {posts.map((post, index) => (
-                    <TicketPostItem key={index} post={post}/>
+                {tickets.map((ticket, index) => (
+                    <TicketPostItem key={index} ticket={ticket}/>
                 ))}
             </Masonry>
 
@@ -96,10 +101,3 @@ export default function TicketsFilter({posts, caseStudies}: Props) {
 }
 
 // ----------------------------------------------------------------------
-
-function applyFilter(arr: CaseStudyProps[], category: string) {
-    if (category !== 'All') {
-        arr = arr.filter((project) => project.frontmatter.category === category);
-    }
-    return arr;
-}

@@ -57,11 +57,11 @@ export const contrastText = {
 };
 
 const PRIMARY = {
-  lighter: '#71ff59',
-  light: '#71ff59',
+  lighter: '#C2FFC3',
+  light: '#77FB79',
   main: '#08FF0C',
-  dark: '#00ca00',
-  darker: '#00ca00',
+  dark: '#005000',
+  darker: '#001E00',
   contrastText: contrastText.black,
 };
 const SECONDARY = {
