@@ -78,9 +78,7 @@ export default function WalletPopover({}) {
                             </Typography>
                         </Box>
 
-                        <Button
-                            onClick={() => ClipboardCopy(account, "지갑주소가 복사되었습니다.")}
-                        >
+                        <Button onClick={() => ClipboardCopy(account, "지갑주소가 복사되었습니다.")} >
                             Copy
                         </Button>
 
