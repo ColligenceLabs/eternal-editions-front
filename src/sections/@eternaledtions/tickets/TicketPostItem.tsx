@@ -9,10 +9,10 @@ import Routes from '../../../routes';
 // utils
 import {fDate} from '../../../utils/formatTime';
 // @types
-import {BlogPostProps} from '../../../@types/blog';
 // components
 import {BgOverlay, Image, TextMaxLine} from '../../../components';
 import {varHover, varTranHover} from '../../../components/animate';
+import {TicketProps} from "../../../@types/ticket/ticket";
 
 // ----------------------------------------------------------------------
 
@@ -27,12 +27,11 @@ const DotStyle = styled('span')(({theme}) => ({
 // ----------------------------------------------------------------------
 
 type Props = {
-    post: BlogPostProps;
+    ticket: TicketProps;
 };
 
-export default function TicketPostItem({post}: Props) {
-    const {slug, frontmatter} = post;
-    const {title, duration, coverImg, author, createdAt} = frontmatter;
+export default function TicketPostItem({ticket}: Props) {
+    const {slug, tokenId, content, title, background, subtitle,description, status, createdAt} = ticket;
 
     return (
         <Stack
@@ -42,8 +41,10 @@ export default function TicketPostItem({post}: Props) {
             transition={varTranHover()}
             sx={{borderRadius: 2, overflow: 'hidden', position: 'relative'}}
         >
+
+            <Avatar>TTT</Avatar>
             <m.div variants={varHover(1.25)} transition={varTranHover()}>
-                <Image src={coverImg} alt={title} ratio="3/4"/>
+                <Image src={background} alt={title} ratio="6/4"/>
             </m.div>
 
             <Stack
@@ -58,9 +59,9 @@ export default function TicketPostItem({post}: Props) {
             >
                 <Stack spacing={2}>
                     <Stack direction="row" alignItems="center" sx={{opacity: 0.72, typography: 'caption'}}>
-                        {/*{fDate(createdAt)}*/}
-                        {/*<DotStyle/>*/}
-                        {duration}
+                        {fDate(createdAt)}
+                        <DotStyle/>
+                        {'duration'}
                     </Stack>
 
                     {/*

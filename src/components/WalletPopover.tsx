@@ -204,9 +204,26 @@ export default function WalletPopover({}) {
                 <Box sx={{ flexGrow: 1 }}>
                   <Typography variant="subtitle1">Transaction</Typography>
                 </Box>
+              </Box>
+            </MenuItem>
+          </NextLink>
 
-                {/*<Chip variant="outlined" color="primary" size="small"   label={2}/>*/}
-                {/*<Typography variant="caption" color="primary" size="small" sx={{pr: 1}}>2</Typography>*/}
+          <NextLink href={Routes.eternalEditions.faq} passHref>
+            <MenuItem onClick={handleClose}>
+              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                <Box sx={{ flexGrow: 1 }}>
+                  <Typography variant="subtitle1">FAQ</Typography>
+                </Box>
+              </Box>
+            </MenuItem>
+          </NextLink>
+
+          <NextLink href={Routes.eternalEditions.notice} passHref>
+            <MenuItem onClick={handleClose}>
+              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                <Box sx={{ flexGrow: 1 }}>
+                  <Typography variant="subtitle1">Notice</Typography>
+                </Box>
               </Box>
             </MenuItem>
           </NextLink>

@@ -18,6 +18,8 @@ const Routes = {
       tickets: '/my/tickets',
       transaction: '/my/transaction',
     },
+    faq: '/faq',
+    notice: '/notice',
   },
   // Marketing
   marketing: {
