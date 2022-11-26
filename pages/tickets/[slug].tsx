@@ -46,7 +46,13 @@ export default function TicketDetailPage() {
     const {tokenId, title, subtitle, author, description, status, createdAt, background} = TICKET.ticket;
 
     return (
-        <Page title={`${slug} - Ticket`} sx={{backgroundImage: `url(${background})`}}>
+        <Page title={`${slug} - Ticket`} sx={{
+            backgroundImage: `url(${background})`,
+            height: '100%',
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover'
+        }}>
             <RootStyle>
 
                 <Container>
@@ -105,10 +111,11 @@ export default function TicketDetailPage() {
 
                                     <Stack>
                                         <LineItem icon={<></>} label="Reserve Price" value={'$37.45 (Ξ 0.02871)'}/>
-                                        <LineItem icon={<></>} label="Location" value={'HQ Beercade Nashville Nashville, TN'}/>
+                                        <LineItem icon={<></>} label="Location"
+                                                  value={'HQ Beercade Nashville Nashville, TN'}/>
                                     </Stack>
 
-                                    <Stack sx={{pb:4}}>
+                                    <Stack sx={{pb: 4}}>
                                         <Button size={"large"} fullWidth={true} variant="contained">Payment</Button>
                                     </Stack>
 
@@ -120,13 +127,19 @@ export default function TicketDetailPage() {
 
                                     <Divider/>
                                     <Stack>
-                                        <Typography variant={"subtitle2"} sx={{mb:1}}>Title area 2</Typography>
-                                        <TextMaxLine line={5}>Unleash your inner warrior and get ready to battle with Ibutsu NFT! If you're looking to be a part of an immersive dojo-style world, then you can't go wrong by having your very own Ibutsu fighter. Join our community to make friends, have fun and collect $APE!</TextMaxLine>
+                                        <Typography variant={"subtitle2"} sx={{mb: 1}}>Title area 2</Typography>
+                                        <TextMaxLine line={5}>Unleash your inner warrior and get ready to battle with
+                                            Ibutsu NFT! If you're looking to be a part of an immersive dojo-style world,
+                                            then you can't go wrong by having your very own Ibutsu fighter. Join our
+                                            community to make friends, have fun and collect $APE!</TextMaxLine>
                                     </Stack>
                                     <Divider/>
                                     <Stack>
-                                        <Typography variant={"subtitle2"} sx={{mb:1}}>Title area 2</Typography>
-                                        <TextMaxLine line={5}>Unleash your inner warrior and get ready to battle with Ibutsu NFT! If you're looking to be a part of an immersive dojo-style world, then you can't go wrong by having your very own Ibutsu fighter. Join our community to make friends, have fun and collect $APE!</TextMaxLine>
+                                        <Typography variant={"subtitle2"} sx={{mb: 1}}>Title area 2</Typography>
+                                        <TextMaxLine line={5}>Unleash your inner warrior and get ready to battle with
+                                            Ibutsu NFT! If you're looking to be a part of an immersive dojo-style world,
+                                            then you can't go wrong by having your very own Ibutsu fighter. Join our
+                                            community to make friends, have fun and collect $APE!</TextMaxLine>
                                     </Stack>
 
                                 </Stack>
@@ -175,7 +188,13 @@ function LineItem({icon, label, value}: LineItemProps) {
                     <Typography sx={{fontSize: '14px'}}>{label}</Typography>
                     <Typography
                         variant="subtitle2"
-                        sx={{color: 'text.primary', flexGrow: 1, textAlign: 'right', fontSize: '16px', fontWeight: 'bold'}}
+                        sx={{
+                            color: 'text.primary',
+                            flexGrow: 1,
+                            textAlign: 'right',
+                            fontSize: '16px',
+                            fontWeight: 'bold'
+                        }}
                     >
                         {value}
                     </Typography>
