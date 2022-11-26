@@ -1,24 +1,25 @@
-import {ReactElement} from 'react';
+import React, {ReactElement} from 'react';
 // @mui
 import {styled} from '@mui/material/styles';
-import {Box, Button, Card, Container, Divider, Grid, Stack, Typography} from '@mui/material';
-// routes
-// utils
+import {Box, Button, Container, Divider, Grid, Modal, SelectChangeEvent, Stack, Typography} from '@mui/material';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 // config
 import {HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT} from '../../src/config';
 // @types
 // layouts
 import Layout from '../../src/layouts';
 // components
-import {Page, TextIconLabel, TextMaxLine} from '../../src/components';
+import {Iconify, Page, TextIconLabel, TextMaxLine} from '../../src/components';
 // sections
 import {useRouter} from "next/router";
 import {useResponsive} from "../../src/hooks";
 import EECard from "../../src/components/EECard";
 import EEAvatar from "../../src/components/EEAvatar";
 import {fDate} from "../../src/utils/formatTime";
-import {TicketProps} from "../../src/@types/ticket/ticket";
 import TICKET from "../../src/sample/ticket";
+import searchIcon from "@iconify/icons-carbon/search";
 
 // ----------------------------------------------------------------------
 
@@ -34,16 +35,43 @@ const RootStyle = styled('div')(({theme}) => ({
 
 // ----------------------------------------------------------------------
 
-// type Props = {
-//   ticket: TicketProps;
-//   tickets: TicketProps[];
-// };
+const modalStyle = {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)',
+    width: 450,
+    bgcolor: 'common.white',
+    color: 'common.black',
+    border: 'none',
+    borderRadius: '24px',
+    boxShadow: 24,
+    pt: 2,
+    pb: 2,
+    pl: 3,
+    pr: 3,
+};
 
 export default function TicketDetailPage() {
     const isDesktop = useResponsive('up', 'md');
     const router = useRouter();
     const {slug} = router.query;
     const {tokenId, title, subtitle, author, description, status, createdAt, background} = TICKET.ticket;
+
+    const [option1, setOption1] = React.useState('');
+    const [option2, setOption2] = React.useState('');
+
+    const [open, setOpen] = React.useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+
+    const handleOption1Change = (event: SelectChangeEvent) => {
+        setOption1(event.target.value);
+    };
+
+    const handleOption2Change = (event: SelectChangeEvent) => {
+        setOption2(event.target.value);
+    };
 
     return (
         <Page title={`${slug} - Ticket`} sx={{
@@ -115,8 +143,29 @@ export default function TicketDetailPage() {
                                                   value={'HQ Beercade Nashville Nashville, TN'}/>
                                     </Stack>
 
+                                    <Stack>
+
+                                        <FormControl>
+                                            <Select
+                                                value={option1}
+                                                onChange={handleOption1Change}
+                                                displayEmpty
+                                                fullWidth
+                                                inputProps={{'aria-label': 'optione1'}}
+                                            >
+                                                <MenuItem value="">
+                                                    <em>None</em>
+                                                </MenuItem>
+                                                <MenuItem value={1}>item1</MenuItem>
+                                                <MenuItem value={2}>item2</MenuItem>
+                                                <MenuItem value={3}>item3</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </Stack>
+
                                     <Stack sx={{pb: 4}}>
-                                        <Button size={"large"} fullWidth={true} variant="contained">Payment</Button>
+                                        <Button onClick={handleOpen} size={"large"} fullWidth={true}
+                                                variant="contained">Payment</Button>
                                     </Stack>
 
                                     <Divider/>
@@ -154,6 +203,44 @@ export default function TicketDetailPage() {
                 </Container>
 
             </RootStyle>
+
+            <Modal
+                open={open}
+                onClose={handleClose}
+                aria-labelledby="modal-modal-title"
+                aria-describedby="modal-modal-description"
+            >
+                <Box sx={modalStyle}>
+                    <Stack spacing={2}>
+                        <Stack sx={{pr: 3}}>
+                            <Typography id="modal-modal-title" variant="h6" component="h2">
+                                Buy NFT Ticket
+                            </Typography>
+                            <Typography id="modal-modal-description" sx={{mt: 2, color: '#999999', width: '80%', lineHeight: '1.1em'}}>
+                                NFT tickets can be purchased as EDC points or Matic tokens.
+                            </Typography>
+                        </Stack>
+                        <Stack spacing={1} sx={{pt:3}}>
+
+                            <Stack>
+                                <Box onClick={() => {alert('EDC 구매하기')}}>
+                                <LineItemByModal icon={<Iconify icon={searchIcon} sx={{color:'common.black'}}/>} label="1,000 EDC" value={'PAY WITH EDC'}/>
+                                </Box>
+                                <Box onClick={() => {alert('MATIC 구매하기')}}>
+                                <LineItemByModal icon={<Iconify icon={searchIcon} sx={{color:'common.black'}}/>} label="1,000 MATIC" value={'PAY WITH MATIC'}/>
+                                </Box>
+                            </Stack>
+
+                            {/*<Button onClick={() => {alert('EDC 구매하기')}} size={"large"} fullWidth={true}*/}
+                            {/*        variant="contained">Payment</Button>*/}
+                            {/*<Button onClick={() => {alert('MATIC 구매하기')}} size={"large"} fullWidth={true}*/}
+                            {/*        variant="contained">Payment</Button>*/}
+                        </Stack>
+
+                    </Stack>
+                </Box>
+            </Modal>
+
         </Page>
     );
 }
@@ -203,6 +290,44 @@ function LineItem({icon, label, value}: LineItemProps) {
             sx={{
                 color: 'text.primary',
                 '& svg': {mr: 1, width: 24, height: 24},
+            }}
+        />
+    );
+}
+
+function LineItemByModal({icon, label, value}: LineItemProps) {
+    return (
+        <TextIconLabel
+            icon={icon}
+            value={
+                <>
+                    <Typography sx={{fontSize: '14px', color: 'common.black'}}>{label}</Typography>
+                    <Typography
+                        variant="subtitle2"
+                        sx={{
+                            color: 'text.primary',
+                            flexGrow: 1,
+                            textAlign: 'right',
+                            color: 'common.black',
+                            fontSize: '16px',
+                            fontWeight: 'bold'
+                        }}
+                    >
+                        {value}
+                    </Typography>
+                </>
+            }
+            sx={{
+                color: 'text.primary',
+                cursor: 'pointer',
+                '& svg': {mr: 1, width: 24, height: 24},
+                mb:1,
+                padding: '14px 24px',
+                borderRadius: '50px',
+                bgcolor: '#F5F5F5',
+                '&:hover': {
+                    bgcolor: 'primary.main' ,
+                }
             }}
         />
     );

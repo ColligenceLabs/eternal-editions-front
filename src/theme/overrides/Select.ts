@@ -9,5 +9,11 @@ export default function Select() {
         IconComponent: InputSelectIcon,
       },
     },
+    styleOverrides: {
+      root: {
+        background: ['white']
+      },
+
+    }
   };
 }
