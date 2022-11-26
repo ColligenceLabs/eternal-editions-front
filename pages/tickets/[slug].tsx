@@ -171,7 +171,7 @@ export default function TicketDetailPage() {
                                     <Divider/>
 
                                     <Stack>
-
+                                        구매한 유저들
                                     </Stack>
 
                                     <Divider/>
@@ -216,18 +216,25 @@ export default function TicketDetailPage() {
                             <Typography id="modal-modal-title" variant="h6" component="h2">
                                 Buy NFT Ticket
                             </Typography>
-                            <Typography id="modal-modal-description" sx={{mt: 2, color: '#999999', width: '80%', lineHeight: '1.1em'}}>
+                            <Typography id="modal-modal-description"
+                                        sx={{mt: 2, color: '#999999', width: '80%', lineHeight: '1.1em'}}>
                                 NFT tickets can be purchased as EDC points or Matic tokens.
                             </Typography>
                         </Stack>
-                        <Stack spacing={1} sx={{pt:3}}>
+                        <Stack spacing={1} sx={{pt: 3}}>
 
                             <Stack>
-                                <Box onClick={() => {alert('EDC 구매하기')}}>
-                                <LineItemByModal icon={<Iconify icon={searchIcon} sx={{color:'common.black'}}/>} label="1,000 EDC" value={'PAY WITH EDC'}/>
+                                <Box onClick={() => {
+                                    alert('EDC 구매하기')
+                                }}>
+                                    <LineItemByModal icon={<Iconify icon={searchIcon} sx={{color: 'common.black'}}/>}
+                                                     label="1,000 EDC" value={'PAY WITH EDC'}/>
                                 </Box>
-                                <Box onClick={() => {alert('MATIC 구매하기')}}>
-                                <LineItemByModal icon={<Iconify icon={searchIcon} sx={{color:'common.black'}}/>} label="1,000 MATIC" value={'PAY WITH MATIC'}/>
+                                <Box onClick={() => {
+                                    alert('MATIC 구매하기')
+                                }}>
+                                    <LineItemByModal icon={<Iconify icon={searchIcon} sx={{color: 'common.black'}}/>}
+                                                     label="1,000 MATIC" value={'PAY WITH MATIC'}/>
                                 </Box>
                             </Stack>
 
@@ -321,12 +328,12 @@ function LineItemByModal({icon, label, value}: LineItemProps) {
                 color: 'text.primary',
                 cursor: 'pointer',
                 '& svg': {mr: 1, width: 24, height: 24},
-                mb:1,
+                mb: 1,
                 padding: '14px 24px',
                 borderRadius: '50px',
                 bgcolor: '#F5F5F5',
                 '&:hover': {
-                    bgcolor: 'primary.main' ,
+                    bgcolor: 'primary.main',
                 }
             }}
         />
