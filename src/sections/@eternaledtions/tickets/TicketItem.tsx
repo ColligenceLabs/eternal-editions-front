@@ -8,8 +8,10 @@ import {Box, Button, Stack, Typography} from '@mui/material';
 import {MYTicketProps} from "../../../@types/ticket/ticket";
 import EECard from "../../../components/EECard";
 import {m} from "framer-motion";
-import {Image, TextIconLabel, varHover, varTranHover} from "../../../components";
+import {Image, TextIconLabel, TextMaxLine, varHover, varTranHover} from "../../../components";
 import React, {ReactElement} from "react";
+import EEAvatar from "../../../components/EEAvatar";
+import {fDate} from "../../../utils/formatTime";
 
 
 // ----------------------------------------------------------------------
@@ -72,14 +74,37 @@ export default function TicketItem({ticket}: Props) {
 
             <Box
                 component={"div"}
-                variants={varHover(1.25)}
-                transition={varTranHover()}
                 sx={{
                     width: {
                         sm: '55%'
                     }
                 }}
             >
+                <Stack spacing={1}
+                       sx={{position: 'absolute', zIndex: 999, left:20 ,top:20}}>
+                    <Stack direction="row" spacing={1} alignItems="center" sx={{opacity: 0.72, typography: 'caption'}}>
+
+                        <EEAvatar account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
+                                  sx={{mr: 0, width: 24, height: 24}}/>
+
+                        <Typography>{author}</Typography>
+                    </Stack>
+
+                    <TextMaxLine variant="h3" sx={{width: '80%'}}>
+                        {title}
+                    </TextMaxLine>
+                    <Typography
+                        variant="body1"
+                        sx={{
+                            mb: 1,
+                            mt: {xs: 1, sm: 0.5},
+                            color: 'common.white',
+                        }}
+                    >
+                        {createdAt && fDate(createdAt)}
+                    </Typography>
+                </Stack>
+
                 <Image src={background} alt={title} ratio="6/4"/>
             </Box>
 
