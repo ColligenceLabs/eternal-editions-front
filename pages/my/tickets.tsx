@@ -9,8 +9,9 @@ import {Page} from '../../src/components';
 import {Container, Stack, Typography} from "@mui/material";
 import {styled} from "@mui/material/styles";
 import {HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT} from "../../src/config";
-import {RegisterForm} from "../../src/sections/auth";
 import MyTicketList from "../../src/sections/@my/MyTicketList";
+import TICKET from "../../src/sample/ticket";
+import PageHeader from "../../src/components/common/PageHeader";
 // sections
 
 // ----------------------------------------------------------------------
@@ -26,43 +27,23 @@ type Props = {};
 
 export default function MyTicketPage({}: Props) {
 
-    const [tickets, setTickets] = useState([]);
+    // const [tickets, setTickets] = useState([]);
 
     useEffect(() => {
-        let _tickets = [];
-
-        // 임시 데이터
-        const ticket1 = {
-            slug: 'ticket1',
-            title: 'Waterbomb',
-        }
-        const ticket2 = {
-            slug: 'ticket1',
-            title: 'Waterbomb',
-        }
-        const ticket3 = {
-            slug: 'ticket1',
-            title: 'Waterbomb',
-        }
-        _tickets.push(ticket1);
-        _tickets.push(ticket2);
-        _tickets.push(ticket3);
-
-        // @ts-ignore
-        setTickets(_tickets);
+        // setTickets();
     }, []);
 
     return (
         <Page title="Account">
             <RootStyle>
-                <Container maxWidth={"lg"}>
-                    <Typography variant="h3" paragraph>
-                        My Ticket
-                    </Typography>
+                <Container sx={{mt:3}}>
+
+                    <PageHeader title="My Ticket"/>
+
 
                     <Stack sx={{mb: 3}}>
 
-                        <MyTicketList tickets={tickets}/>
+                        <MyTicketList loading={false} tickets={TICKET.myTickets}/>
 
                     </Stack>
                 </Container>

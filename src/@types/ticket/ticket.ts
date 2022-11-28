@@ -1,5 +1,4 @@
-import { MDXRemoteSerializeResult } from 'next-mdx-remote';
-import {CaseStudyFrontmatter} from "../marketing";
+import {MDXRemoteSerializeResult} from 'next-mdx-remote';
 //
 
 // ----------------------------------------------------------------------
@@ -36,3 +35,16 @@ export type CategoryProps = {
     title: string;
 };
 
+
+export type MYTicketProps = {
+    slug: string;
+    tokenId: string;
+    content?: MDXRemoteSerializeResult;
+    title?: string;
+    subtitle?: string;
+    description?: string;
+    status?: string;
+    createdAt?: Date | string | number;
+    background?: string;
+    author?: string;
+};
