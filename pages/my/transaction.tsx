@@ -15,6 +15,9 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import NFTTransactionGrid from "../../src/sections/@my/NFTTransactionGrid";
+import PageHeader from "../../src/components/common/PageHeader";
+import NFTTransactionNFT from '../../src/sections/@my/NFTTransactionNFT';
+import NFTTransactionPoint from '../../src/sections/@my/NFTTransactionPoint';
 // import PointTransactionGrid from "../../src/sections/@my/PointTransactionGrid";
 
 // ----------------------------------------------------------------------
@@ -72,10 +75,10 @@ export default function TransactionPage({}) {
     return (
         <Page title="Account">
             <RootStyle>
-                <Container maxWidth={"lg"}>
-                    <Typography variant="h3" paragraph>
-                        Transaction
-                    </Typography>
+                <Container sx={{mt:3}}>
+
+                    <PageHeader title="Transaction"/>
+
                     <Box sx={{ borderBottom: 1, borderColor: 'divider' }} component={'div'}>
                         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
                             <Tab label="Ticket (NFT)" {...a11yProps(0)} />
@@ -83,11 +86,10 @@ export default function TransactionPage({}) {
                         </Tabs>
                     </Box>
                     <TabPanel value={value} index={0}>
-                        <NFTTransactionGrid />
+                        <NFTTransactionNFT />
                     </TabPanel>
                     <TabPanel value={value} index={1}>
-                        {/*<PointTransactionGrid />*/}
-                        2
+                        <NFTTransactionPoint />
                     </TabPanel>
 
 
