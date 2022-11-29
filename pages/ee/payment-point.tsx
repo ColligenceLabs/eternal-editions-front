@@ -13,6 +13,7 @@ import {RegisterForm} from "../../src/sections/auth";
 import NextLink from "next/link";
 import Routes from "../../src/routes";
 import PaymentPoint from "../../src/sections/@my/PaymentPoint";
+import EECard from "../../src/components/EECard";
 // sections
 
 // ----------------------------------------------------------------------
@@ -32,12 +33,15 @@ export default function PaymentPointPage({}: Props) {
             <RootStyle>
                 <Container maxWidth={"sm"}>
 
+                    <Stack spacing={2}>
 
-                    <Typography variant="h3" paragraph>
-                        포인트 구매
-                    </Typography>
+                        <Typography variant="h3" paragraph sx={{textAlign: 'center'}}>
+                            Buy with Debit <br/>or Credit Card
+                        </Typography>
 
-                   <PaymentPoint/>
+
+                            <PaymentPoint/>
+                    </Stack>
                 </Container>
             </RootStyle>
         </Page>
