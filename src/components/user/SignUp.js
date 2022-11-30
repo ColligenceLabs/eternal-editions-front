@@ -203,7 +203,7 @@ export default function SignUp({onClose, ...other}) {
                             onClick={async () => {
                                 await connectWallet(WALLET_METAMASK);
                                 // await connectMetamask();
-                                // onClose();
+                                onClose();
                             }}
                             startIcon={
                                 <Image
@@ -221,7 +221,7 @@ export default function SignUp({onClose, ...other}) {
                             variant="contained"
                             onClick={async () => {
                                 await connectWallet(WALLET_WALLECTCONNECT);
-                                // onClose();
+                                onClose();
                             }}
                             startIcon={
                                 <Image

@@ -226,7 +226,7 @@ export default function Header({ transparent }: Props) {
       >
         <Fade in={joinOpen}>
           <Box sx={modalStyle}>
-            <SignUp onClose={handleDisconnectClose}/>
+            <SignUp onClose={handleJoinClose}/>
           </Box>
         </Fade>
       </Modal>
