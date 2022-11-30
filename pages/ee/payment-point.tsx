@@ -39,8 +39,7 @@ export default function PaymentPointPage({}: Props) {
                             Buy with Debit <br/>or Credit Card
                         </Typography>
 
-
-                            <PaymentPoint/>
+                        <PaymentPoint/>
 
                     </Stack>
                 </Container>

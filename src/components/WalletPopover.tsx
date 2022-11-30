@@ -86,6 +86,8 @@ export default function WalletPopover({}) {
         anchorEl={open}
         onClose={handleClose}
         sx={{
+          bgcolor: 'common.white',
+          color: 'common.black',
           width: 320,
           p: 0,
           mt: 1.5,
