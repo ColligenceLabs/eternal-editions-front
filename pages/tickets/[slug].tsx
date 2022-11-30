@@ -161,6 +161,7 @@ export default function TicketDetailPage() {
                                                 <MenuItem value={3}>item3</MenuItem>
                                             </Select>
                                         </FormControl>
+
                                     </Stack>
 
                                     <Stack sx={{pb: 4}}>
@@ -312,7 +313,6 @@ function LineItemByModal({icon, label, value}: LineItemProps) {
                     <Typography
                         variant="subtitle2"
                         sx={{
-                            color: 'text.primary',
                             flexGrow: 1,
                             textAlign: 'right',
                             color: 'common.black',

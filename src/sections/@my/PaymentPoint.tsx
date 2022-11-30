@@ -6,6 +6,7 @@ import {yupResolver} from '@hookform/resolvers/yup';
 import {LoadingButton} from '@mui/lab';
 import {Box, Divider, Stack, TextField, Typography} from '@mui/material';
 import EECard from "../../components/EECard";
+import {useTheme} from "@mui/material/styles";
 // components
 
 // ----------------------------------------------------------------------
@@ -21,7 +22,7 @@ type FormValuesProps = {
 };
 
 export default function PaymentPoint() {
-
+    const theme = useTheme();
     const {
         reset,
         control,
@@ -67,6 +68,7 @@ export default function PaymentPoint() {
                                                 label="결제 금액"
                                                 error={Boolean(error)}
                                                 helperText={error?.message}
+                                                inputProps={{ style: { color: theme.palette.grey[900], width: '100%' } }}
                                             />
                                         )}
                                     />
@@ -78,6 +80,7 @@ export default function PaymentPoint() {
                             </Box>
                         </Stack>
                         <Stack>
+
                             <Box sx={{display: 'flex', alignItems: 'center', width: '100%'}}>
                                 <Box sx={{flexGrow: 1}}>
                                     <Controller
@@ -89,11 +92,11 @@ export default function PaymentPoint() {
                                                 label="포인트 구매 수량"
                                                 error={Boolean(error)}
                                                 helperText={error?.message}
+                                                inputProps={{ style: { color: theme.palette.grey[900], width: '100%' } }}
                                             />
                                         )}
                                     />
                                 </Box>
-
 
                                 <Typography>EDC</Typography>
 

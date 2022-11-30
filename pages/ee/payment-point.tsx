@@ -33,7 +33,7 @@ export default function PaymentPointPage({}: Props) {
             <RootStyle>
                 <Container maxWidth={"sm"}>
 
-                    <Stack spacing={2}>
+                    <Stack spacing={2} sx={{mb:10}}>
 
                         <Typography variant="h3" paragraph sx={{textAlign: 'center'}}>
                             Buy with Debit <br/>or Credit Card
@@ -41,6 +41,7 @@ export default function PaymentPointPage({}: Props) {
 
 
                             <PaymentPoint/>
+
                     </Stack>
                 </Container>
             </RootStyle>
