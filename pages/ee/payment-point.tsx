@@ -35,7 +35,7 @@ export default function PaymentPointPage({}: Props) {
 
                     <Stack spacing={2} sx={{mb:10}}>
 
-                        <Typography variant="h3" paragraph sx={{textAlign: 'center'}}>
+                        <Typography variant="h3" sx={{textAlign: 'center'}}>
                             Buy with Debit <br/>or Credit Card
                         </Typography>
 

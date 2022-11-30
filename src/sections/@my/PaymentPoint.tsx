@@ -43,15 +43,7 @@ export default function PaymentPoint() {
     };
 
     return (
-        <EECard sx={{
-            borderRadius: '24px',
-            backgroundColor: 'common.white',
-            color: 'common.black',
-            p: 3,
-            mb: 3,
-            backdropFilter: 'blur(50px)',
-            WebkitBackdropFilter: 'blur(50px)'
-        }}>
+        <EECard bgColor="common.white" color="common.black">
             <Stack >
                 <form onSubmit={handleSubmit(onSubmit)}>
 
