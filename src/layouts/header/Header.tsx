@@ -31,6 +31,7 @@ import useWallets from '../../hooks/useWallets';
 import { getIconByType } from '../../utils/wallet';
 import React from 'react';
 import { ConnectWallet, DisconnectWallet } from '../../components/wallet';
+import { SignUp } from '../../components/user';
 import WalletPopover from '../../components/WalletPopover';
 import { useWeb3React } from '@web3-react/core';
 import { useEagerConnect, useInactiveListener } from '../../hooks/useEagerConnect';
@@ -41,9 +42,11 @@ const modalStyle = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 400,
-  bgcolor: 'background.paper',
+  bgcolor: 'common.white',
+  color: 'common.black',
   boxShadow: 24,
   p: 4,
+  borderRadius: '24px'
 };
 
 // ----------------------------------------------------------------------
@@ -64,6 +67,10 @@ export default function Header({ transparent }: Props) {
   const [disconnectOpen, setDisconnectOpen] = React.useState(false);
   const handleDisconnectOpen = () => setDisconnectOpen(true);
   const handleDisconnectClose = () => setDisconnectOpen(false);
+
+  const [joinOpen, setJoinOpen] = React.useState(false);
+  const handleJoinOpen = () => setJoinOpen(true);
+  const handleJoinClose = () => setJoinOpen(false);
 
   // const {account, accountShot, type, disconnect} = useWallets();
   const { account } = useWeb3React();
@@ -140,19 +147,18 @@ export default function Header({ transparent }: Props) {
                   <>
                     <WalletPopover />
                   </>
-                ) : (
-                  <Button
-                    variant="contained"
-                    onClick={() => handleConnectOpen()}
-                    sx={{
-                      width: {
-                        md: 160,
-                      },
-                    }}
-                  >
-                    CONNECT WALLET
-                  </Button>
-                )}
+                ) : (<>
+                      <Button
+                        variant="contained"
+                        onClick={() => handleJoinOpen()}
+                        sx={{
+                          width: {
+                            md: 120,
+                          },
+                        }}>
+                        SIGN UP
+                      </Button>
+                    </>)}
               </Stack>
             )}
           </Stack>
@@ -203,6 +209,24 @@ export default function Header({ transparent }: Props) {
         <Fade in={disconnectOpen}>
           <Box sx={modalStyle}>
             <DisconnectWallet onClose={handleDisconnectClose} />
+          </Box>
+        </Fade>
+      </Modal>
+
+      <Modal
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          open={joinOpen}
+          onClose={handleJoinClose}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+      >
+        <Fade in={joinOpen}>
+          <Box sx={modalStyle}>
+            <SignUp onClose={handleJoinClose}/>
           </Box>
         </Fade>
       </Modal>

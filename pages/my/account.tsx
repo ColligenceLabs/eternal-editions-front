@@ -6,11 +6,12 @@ import {ReactElement} from 'react';
 import Layout from '../../src/layouts';
 // components
 import {Page} from '../../src/components';
-import {Container, Typography} from "@mui/material";
+import {Container, Stack, Typography} from "@mui/material";
 import {styled} from "@mui/material/styles";
 import {HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT} from "../../src/config";
 import {RegisterForm} from "../../src/sections/auth";
 import AccountForm from "../../src/sections/@my/AccountForm";
+import * as React from "react";
 // sections
 
 // ----------------------------------------------------------------------
@@ -29,10 +30,17 @@ export default function MyAccountPage({}: Props) {
         <Page title="Account">
             <RootStyle>
                 <Container maxWidth={"sm"}>
-                    <Typography variant="h3" paragraph>
-                        Account
-                    </Typography>
-                    <AccountForm />
+                    <Stack spacing={2} sx={{mb: 10}}>
+                        <Typography variant="h3"  sx={{textAlign: 'center'}}>
+                            ACCOUNT
+                        </Typography>
+                        <Typography>
+                            계정관리에 필요한 사항<br/>
+                            - 본인인증 통한 <br/>
+                            - 본명 / 생년월일 / (국가)모바일번호
+                        </Typography>
+                        <AccountForm/>
+                    </Stack>
                 </Container>
             </RootStyle>
         </Page>
