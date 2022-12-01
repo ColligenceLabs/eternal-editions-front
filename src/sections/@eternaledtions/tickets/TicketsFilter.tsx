@@ -17,6 +17,7 @@ import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
 import { getTicketsService } from '../../../services/services';
 import { SUCCESS } from '../../../config';
+import { TicketInfoTypes } from '../../../@types/ticket/ticketTypes';
 
 // ----------------------------------------------------------------------
 
@@ -31,7 +32,11 @@ const defaultValues = {
 
 export default function TicketsFilter({ tickets, categories }: Props) {
   const theme = useTheme();
+  const [curPage, setCurPage] = useState(1);
+  const [perPage, setPerPage] = useState(5);
+  const [lastPage, setLastPage] = useState(0);
   const [selected, setSelected] = useState('All');
+  const [ticketInfoList, setTicketInfoList] = useState<TicketInfoTypes[]>([]);
   categories = ['All', ...Array.from(new Set(categories))];
 
   const [filters, setFilters] = useState<TicketsFiltersProps>(defaultValues);
@@ -48,14 +53,28 @@ export default function TicketsFilter({ tickets, categories }: Props) {
   };
 
   const getTickets = async () => {
-    const res = await getTicketsService(1, 5, selected);
-    if (res.data.status === SUCCESS) {
-      console.log(res);
+    const res = await getTicketsService(1, perPage, selected);
+    if (res.status === 200) {
+      setTicketInfoList(res.data.list);
+      setLastPage(res.data.headers.x_pages_count);
     }
   };
+
+  const getMoreTickets = async () => {
+    const res = await getTicketsService(curPage, perPage, selected);
+    if (res.status === 200) {
+      setTicketInfoList((cur) => [...cur, ...res.data.list]);
+    }
+  };
+
   useEffect(() => {
+    setCurPage(1);
     getTickets();
   }, [selected]);
+
+  useEffect(() => {
+    if (curPage !== 1) getMoreTickets();
+  }, [curPage]);
 
   return (
     <>
@@ -90,31 +109,44 @@ export default function TicketsFilter({ tickets, categories }: Props) {
         {/*<TicketSortByFilter filterSortBy={filters.filterSortBy} onChangeSortBy={handleChangeSortBy}/>*/}
       </Stack>
 
-      {tickets && (
+      {ticketInfoList && (
         <Masonry columns={{ xs: 1, md: 2 }} spacing={2}>
-          {tickets.map((ticket, index) => (
+          {ticketInfoList.map((ticket, index) => (
             <TicketPostItem key={index} ticket={ticket} />
           ))}
         </Masonry>
       )}
 
-      <Stack
-        alignItems="center"
-        sx={{
-          pt: 8,
-          pb: { xs: 8, md: 10 },
-        }}
-      >
-        <Button
-          size="large"
-          color="inherit"
-          variant="outlined"
-          endIcon={<Iconify icon={arrowDown} sx={{ width: 20, height: 20 }} />}
-          sx={{ color: 'common.white' }}
+      {/*{ticketInfoList && (*/}
+      {/*  <Masonry columns={{ xs: 1, md: 2 }} spacing={2}>*/}
+      {/*    {ticketInfoList.map((ticket, index) => (*/}
+      {/*      <TicketPostItem key={index} ticketInfo={ticket} />*/}
+      {/*    ))}*/}
+      {/*  </Masonry>*/}
+      {/*)}*/}
+
+      {curPage < lastPage && (
+        <Stack
+          alignItems="center"
+          sx={{
+            pt: 8,
+            pb: { xs: 8, md: 10 },
+          }}
         >
-          LOAD MORE
-        </Button>
-      </Stack>
+          <Button
+            size="large"
+            color="inherit"
+            variant="outlined"
+            endIcon={<Iconify icon={arrowDown} sx={{ width: 20, height: 20 }} />}
+            sx={{ color: 'common.white' }}
+            onClick={() => {
+              setCurPage((cur) => cur + 1);
+            }}
+          >
+            LOAD MORE
+          </Button>
+        </Stack>
+      )}
     </>
   );
 }
