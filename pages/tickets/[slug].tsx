@@ -96,7 +96,7 @@ export default function TicketDetailPage() {
 
 
                         <Grid item xs={12} md={7} lg={6}>
-                            <EECard>
+                            <EECard >
 
                                 <Stack spacing={3}>
                                     <Stack
@@ -104,7 +104,7 @@ export default function TicketDetailPage() {
                                         sx={{
                                             height: 1,
                                             zIndex: 9,
-                                            color: 'common.white',
+                                            color: 'common.black',
                                         }}
                                     >
                                         <Stack spacing={1}>
@@ -126,7 +126,7 @@ export default function TicketDetailPage() {
                                                 sx={{
                                                     mb: 1,
                                                     mt: {xs: 1, sm: 0.5},
-                                                    color: 'common.white',
+                                                    color: 'common.black',
                                                     fontSize: '1em'
                                                 }}
                                             >
@@ -152,6 +152,7 @@ export default function TicketDetailPage() {
                                                 displayEmpty
                                                 fullWidth
                                                 inputProps={{'aria-label': 'optione1'}}
+                                                sx={{color: 'common.black'}}
                                             >
                                                 <MenuItem value="">
                                                     <em>None</em>
@@ -280,11 +281,11 @@ function LineItem({icon, label, value}: LineItemProps) {
             icon={icon}
             value={
                 <>
-                    <Typography sx={{fontSize: '14px'}}>{label}</Typography>
+                    <Typography sx={{fontSize: '14px', color: 'common.black'}}>{label}</Typography>
                     <Typography
                         variant="subtitle2"
                         sx={{
-                            color: 'text.primary',
+                            color: 'common.black',
                             flexGrow: 1,
                             textAlign: 'right',
                             fontSize: '16px',
