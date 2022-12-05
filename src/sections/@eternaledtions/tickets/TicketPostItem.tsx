@@ -138,7 +138,7 @@ export default function TicketPostItem({ ticket }: Props) {
         <NextLink
           passHref
           // as={Routes.eternalEditions.ticket(id.toString())}
-          as={Routes.eternalEditions.ticket(mysteryboxItems[0].id.toString())}
+          as={Routes.eternalEditions.ticket(id.toString())}
           href={Routes.eternalEditions.ticket('[slug]')}
         >
           <Button size="large" variant="contained" fullWidth={true}>
