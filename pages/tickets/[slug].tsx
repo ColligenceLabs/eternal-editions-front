@@ -32,6 +32,7 @@ import TICKET from '../../src/sample/ticket';
 import searchIcon from '@iconify/icons-carbon/search';
 import { getTicketInfoService } from '../../src/services/services';
 import { TicketInfoTypes } from '../../src/@types/ticket/ticketTypes';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -75,6 +76,8 @@ export default function TicketDetailPage() {
   const [ticketInfo, setTicketInfo] = useState<TicketInfoTypes | null>(null);
   const [option1, setOption1] = React.useState('');
   const [option2, setOption2] = React.useState('');
+  const [klayPrice, setKlayPrice] = useState(0);
+  const [maticPrice, setMaticPrice] = useState(0);
 
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
@@ -94,6 +97,29 @@ export default function TicketDetailPage() {
       if (ticketInfoRes.data.status === SUCCESS) setTicketInfo(ticketInfoRes.data.data);
     }
   };
+
+  const getCoinPrice = () => {
+    const url = 'https://bcn-api.talken.io/coinmarketcap/cmcQuotes?cmcIds=4256,3890';
+    try {
+      if (klayPrice === 0 || maticPrice === 0) {
+        axios(url).then((response) => {
+          const klayUsd = response.data.data[4256].quote.USD.price;
+          const klayKrw = response.data.data[4256].quote.KRW.price;
+          const maticUsd = response.data.data[3890].quote.USD.price;
+          const maticKrw = response.data.data[3890].quote.KRW.price;
+          setKlayPrice(parseFloat(klayUsd));
+          setMaticPrice(parseFloat(maticUsd));
+          console.log(klayUsd, maticUsd);
+        });
+      }
+    } catch (error: any) {
+      console.log(new Error(error));
+    }
+  };
+
+  useEffect(() => {
+    getCoinPrice();
+  }, []);
 
   useEffect(() => {
     fetchTicketInfo();
@@ -171,7 +197,13 @@ export default function TicketDetailPage() {
                   <Divider />
 
                   <Stack>
-                    <LineItem icon={<></>} label="Reserve Price" value={'$37.45 (Ξ 0.02871)'} />
+                    <LineItem
+                      icon={<></>}
+                      label="Reserve Price"
+                      value={`$${((ticketInfo?.price ?? 0) * maticPrice).toFixed(4)} (Ξ ${
+                        ticketInfo?.price
+                      })`}
+                    />
                     <LineItem
                       icon={<></>}
                       label="Location"
@@ -287,7 +319,7 @@ export default function TicketDetailPage() {
                 >
                   <LineItemByModal
                     icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
-                    label="1,000 MATIC"
+                    label={`${ticketInfo?.price} ${ticketInfo?.quote.toUpperCase()}`}
                     value={'PAY WITH MATIC'}
                   />
                 </Box>
