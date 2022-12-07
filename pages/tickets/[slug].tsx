@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import {
   Box,
   Button,
+  CircularProgress,
   Container,
   Divider,
   Grid,
@@ -38,6 +39,7 @@ import contracts from '../../src/config/constants/contracts';
 import useActiveWeb3React from '../../src/hooks/useActiveWeb3React';
 import { parseEther } from 'ethers/lib/utils';
 import { buyItem } from '../../src/utils/transactions';
+import CSnackbar from '../../src/components/common/CSnackbar';
 
 // ----------------------------------------------------------------------
 
@@ -86,9 +88,32 @@ export default function TicketDetailPage() {
   const [option2, setOption2] = React.useState('');
   const [klayPrice, setKlayPrice] = useState(0);
   const [maticPrice, setMaticPrice] = useState(0);
-
+  const [isBuyingWithMatic, setIsBuyingWithMatic] = useState(false);
   const [open, setOpen] = React.useState(false);
-  const handleOpen = () => setOpen(true);
+  const [openSnackbar, setOpenSnackbar] = useState({
+    open: false,
+    type: '',
+    message: '',
+  });
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar({
+      open: false,
+      type: '',
+      message: '',
+    });
+  };
+
+  const handleOpen = () => {
+    if (selectedTicketItem) setOpen(true);
+    else {
+      setOpenSnackbar({
+        open: true,
+        type: 'error',
+        message: 'Item not selected',
+      });
+    }
+  };
   const handleClose = () => setOpen(false);
 
   const handleOption1Change = (event: SelectChangeEvent) => {
@@ -104,9 +129,9 @@ export default function TicketDetailPage() {
   };
 
   const handleBuyWithMatic = async () => {
-    console.log(selectedTicketItem);
     if (selectedTicketItem) {
-      console.log('handleBuyWithMatic');
+      setIsBuyingWithMatic(true);
+
       // Collection
       const contract = ticketInfo?.boxContractAddress;
       const quote = ticketInfo?.quote;
@@ -121,7 +146,6 @@ export default function TicketDetailPage() {
       }
 
       try {
-        console.log('before');
         const result = await buyItem(
           contract,
           index,
@@ -132,7 +156,7 @@ export default function TicketDetailPage() {
           library,
           false
         );
-        console.log(result);
+
         if (result.status === SUCCESS) {
           // const left = await getItemAmount(
           //   contract,
@@ -160,18 +184,34 @@ export default function TicketDetailPage() {
             //   message: 'Success',
             // });
             console.log('success');
-            return true;
+            setOpenSnackbar({
+              open: true,
+              type: 'success',
+              message: 'Purchase completed!',
+            });
+            // return true;
           } else {
-            return false;
+            // setIsBuyingWithMatic(false);
+            // return false;
           }
         } else {
-          return false;
+          // setIsBuyingWithMatic(false);
+          // return false;
         }
       } catch (e: any) {
+        setIsBuyingWithMatic(false);
         console.log(e);
         // if (e.code == '-32603') setErrMsg('Not sufficient Klay balance!');
-        return false;
+        // return false;
+        setOpenSnackbar({
+          open: true,
+          type: 'error',
+          message: 'Purchase faield!',
+        });
       }
+      setIsBuyingWithMatic(false);
+    } else {
+      console.log('Item not selected');
     }
   };
 
@@ -312,7 +352,9 @@ export default function TicketDetailPage() {
                         {/*<MenuItem value={2}>item2</MenuItem>*/}
                         {/*<MenuItem value={3}>item3</MenuItem>*/}
                         {ticketInfo?.mysteryboxItems.map((item) => (
-                          <MenuItem value={item.id}>{item.name}</MenuItem>
+                          <MenuItem key={item.id} value={item.id}>
+                            {item.name}
+                          </MenuItem>
                         ))}
                       </Select>
                     </FormControl>
@@ -394,14 +436,38 @@ export default function TicketDetailPage() {
                     icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
                     label="1,000 EDC"
                     value={'PAY WITH EDC'}
+                    isBuying={false}
                   />
                 </Box>
                 <Box onClick={handleBuyWithMatic}>
-                  <LineItemByModal
-                    icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
-                    label={`${ticketInfo?.price} ${ticketInfo?.quote.toUpperCase()}`}
-                    value={'PAY WITH MATIC'}
-                  />
+                  {isBuyingWithMatic ? (
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: 'text.primary',
+                        cursor: 'pointer',
+                        // '& svg': { mr: 1, width: 24, height: 24 },
+                        mb: 1,
+                        padding: '14px 24px',
+                        borderRadius: '50px',
+                        bgcolor: '#F5F5F5',
+                        '&:hover': {
+                          bgcolor: 'primary.main',
+                        },
+                      }}
+                    >
+                      <CircularProgress size={25} color="secondary" />
+                    </Box>
+                  ) : (
+                    <LineItemByModal
+                      icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
+                      label={`${ticketInfo?.price} ${ticketInfo?.quote.toUpperCase()}`}
+                      value={'PAY WITH MATIC'}
+                      isBuying={isBuyingWithMatic}
+                    />
+                  )}
                 </Box>
               </Stack>
 
@@ -413,6 +479,12 @@ export default function TicketDetailPage() {
           </Stack>
         </Box>
       </Modal>
+      <CSnackbar
+        open={openSnackbar.open}
+        type={openSnackbar.type}
+        message={openSnackbar.message}
+        handleClose={handleCloseSnackbar}
+      />
     </Page>
   );
 }
@@ -435,6 +507,7 @@ type LineItemProps = {
   icon: ReactElement;
   label: string;
   value: any;
+  isBuying?: boolean;
 };
 
 function LineItem({ icon, label, value }: LineItemProps) {
@@ -466,7 +539,7 @@ function LineItem({ icon, label, value }: LineItemProps) {
   );
 }
 
-function LineItemByModal({ icon, label, value }: LineItemProps) {
+function LineItemByModal({ icon, label, value, isBuying }: LineItemProps) {
   return (
     <TextIconLabel
       icon={icon}
