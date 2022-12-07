@@ -13,5 +13,5 @@ export const getTicketInfoService = (id: string) => {
 };
 
 export const registerBuy = async (data: any) => {
-  return await axios.post('/api/service/drops', data);
+  return await axios.post(`${API_URL}/service/drops`, data);
 };
