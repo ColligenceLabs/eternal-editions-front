@@ -69,7 +69,7 @@ export const RPC_URLS = {
 // export const IPFS_URL = 'https://ipfs.io/ipfs/';
 // export const ALT_URL = env.REACT_APP_ALT_URL;
 export const SUCCESS = 1;
-// export const FAILURE = 0;
+export const FAILURE = 0;
 //
 // export const targetNetwork = env.REACT_APP_TARGET_NETWORK_KLAY;
 export const targetNetworkMsg = env.REACT_APP_TARGET_NETWORK_MSG;
@@ -83,3 +83,5 @@ export const SCAN_URL = {
   [ChainId.POLYGON]: 'https://polygonscan.com/',
   [ChainId.MUMBAI]: 'https://mumbai.polygonscan.com/',
 };
+
+export const targetNetwork = ChainId.MUMBAI;

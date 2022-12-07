@@ -11,3 +11,7 @@ export const getTicketsService = (page: number, perPage: number, category: strin
 export const getTicketInfoService = (id: string) => {
   return axios.get(`${API_URL}/service/mysterybox/${id}`);
 };
+
+export const registerBuy = async (data: any) => {
+  return await axios.post('/api/service/drops', data);
+};

@@ -18,6 +18,7 @@ import Select from '@mui/material/Select';
 // config
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT, SUCCESS } from '../../src/config';
 // @types
+import { BigNumber } from 'ethers';
 // layouts
 import Layout from '../../src/layouts';
 // components
@@ -30,9 +31,13 @@ import EEAvatar from '../../src/components/EEAvatar';
 import { fDate } from '../../src/utils/formatTime';
 import TICKET from '../../src/sample/ticket';
 import searchIcon from '@iconify/icons-carbon/search';
-import { getTicketInfoService } from '../../src/services/services';
-import { TicketInfoTypes } from '../../src/@types/ticket/ticketTypes';
+import { getTicketInfoService, registerBuy } from '../../src/services/services';
+import { TicketInfoTypes, TicketItemTypes } from '../../src/@types/ticket/ticketTypes';
 import axios from 'axios';
+import contracts from '../../src/config/constants/contracts';
+import useActiveWeb3React from '../../src/hooks/useActiveWeb3React';
+import { parseEther } from 'ethers/lib/utils';
+import { buyItem } from '../../src/utils/transactions';
 
 // ----------------------------------------------------------------------
 
@@ -68,12 +73,15 @@ const modalStyle = {
 export default function TicketDetailPage() {
   const isDesktop = useResponsive('up', 'md');
   const router = useRouter();
+  const { account, library, chainId } = useActiveWeb3React();
   const { slug } = router.query;
 
   const { tokenId, title, subtitle, author, description, status, createdAt, background } =
     TICKET.ticket;
 
   const [ticketInfo, setTicketInfo] = useState<TicketInfoTypes | null>(null);
+  const [selectedTicketItem, setSelectedTicketItem] = useState<TicketItemTypes | null>(null);
+
   const [option1, setOption1] = React.useState('');
   const [option2, setOption2] = React.useState('');
   const [klayPrice, setKlayPrice] = useState(0);
@@ -85,10 +93,86 @@ export default function TicketDetailPage() {
 
   const handleOption1Change = (event: SelectChangeEvent) => {
     setOption1(event.target.value);
+    const result = ticketInfo?.mysteryboxItems.find(
+      (item: TicketItemTypes) => item.id.toString() === event.target.value.toString()
+    );
+    if (result) setSelectedTicketItem(result);
   };
 
   const handleOption2Change = (event: SelectChangeEvent) => {
     setOption2(event.target.value);
+  };
+
+  const handleBuyWithMatic = async () => {
+    console.log(selectedTicketItem);
+    if (selectedTicketItem) {
+      console.log('handleBuyWithMatic');
+      // Collection
+      const contract = ticketInfo?.boxContractAddress;
+      const quote = ticketInfo?.quote;
+      const index = selectedTicketItem.no - 1 ?? 0;
+      const amount = 1;
+
+      let quoteToken: string;
+      let payment: BigNumber;
+      if (quote === 'matic' || quote === 'wmatic') {
+        quoteToken = quote === 'matic' ? contracts.matic[chainId] : contracts.wmatic[chainId];
+        payment = parseEther(ticketInfo?.price.toString() ?? '0').mul(amount);
+      }
+
+      try {
+        console.log('before');
+        const result = await buyItem(
+          contract,
+          index,
+          1,
+          payment!.toString(),
+          quoteToken!,
+          account,
+          library,
+          false
+        );
+        console.log(result);
+        if (result.status === SUCCESS) {
+          // const left = await getItemAmount(
+          //   contract,
+          //   index,
+          //   collectionItemInfo?.collectionInfo?.isCollection === true ? 2 : 1,
+          //   account,
+          //   library
+          // );
+
+          const data = {
+            mysterybox_id: ticketInfo?.id,
+            buyer: '',
+            buyer_address: account,
+            isSent: true,
+            txHash: result?.txHash,
+            price: ticketInfo?.price,
+            itemId: selectedTicketItem?.id,
+          };
+
+          const res = await registerBuy(data);
+          if (res.data.status === SUCCESS) {
+            // setOpenSnackbar({
+            //   open: true,
+            //   type: 'success',
+            //   message: 'Success',
+            // });
+            console.log('success');
+            return true;
+          } else {
+            return false;
+          }
+        } else {
+          return false;
+        }
+      } catch (e: any) {
+        console.log(e);
+        // if (e.code == '-32603') setErrMsg('Not sufficient Klay balance!');
+        return false;
+      }
+    }
   };
 
   const fetchTicketInfo = async () => {
@@ -312,11 +396,7 @@ export default function TicketDetailPage() {
                     value={'PAY WITH EDC'}
                   />
                 </Box>
-                <Box
-                  onClick={() => {
-                    alert('MATIC 구매하기');
-                  }}
-                >
+                <Box onClick={handleBuyWithMatic}>
                   <LineItemByModal
                     icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
                     label={`${ticketInfo?.price} ${ticketInfo?.quote.toUpperCase()}`}
