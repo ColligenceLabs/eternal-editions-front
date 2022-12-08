@@ -46,6 +46,14 @@ const FONT_SECONDARY = 'Barlow, sans-serif';
 const typography = {
   fontFamily: FONT_PRIMARY,
   fontWeightSemiBold: 600,
+  banner1: {
+    fontFamily: FONT_PRIMARY,
+    fontWeight: 800,
+    lineHeight: 132 / 148,
+    fontSize: pxToRem(80),
+    textTransform: 'uppercase',
+    ...responsiveFontSizes({ sm: 64, md: 98, lg: 148 }),
+  },
   h1: {
     fontFamily: FONT_SECONDARY,
     fontWeight: 700,

@@ -5,7 +5,7 @@ import NextLink from 'next/link';
 import chevronDown from '@iconify/icons-carbon/chevron-down';
 import chevronRight from '@iconify/icons-carbon/chevron-right';
 // @mui
-import { styled } from '@mui/material/styles';
+import {styled, useTheme} from '@mui/material/styles';
 import Masonry from '@mui/lab/Masonry';
 import {
   Box,
@@ -24,10 +24,17 @@ import {
 // hooks
 import { useResponsive } from '../../hooks';
 // components
-import { Logo, Iconify, SocialsButton, AppStoreButton } from '../../components';
+import { Logo, Iconify, SocialsButton, AppStoreButton, Image } from '../../components';
 //
 import { PageLinks } from '../nav/NavConfig';
 import Routes from "../../routes";
+
+const ICONS = [
+  '/assets/icons/icon-instagram.svg',
+  '/assets/icons/icon-gitbook.svg',
+  '/assets/icons/icon-discord.svg',
+  '/assets/icons/icon-twitter.svg',
+]
 
 // ----------------------------------------------------------------------
 
@@ -45,6 +52,7 @@ const LinkStyle = styled((props: LinkProps) => <Link target="_blank" rel="noopen
 // ----------------------------------------------------------------------
 
 export default function Footer() {
+  const theme = useTheme();
   const isDesktop = useResponsive('up', 'md');
 
   const lists = PageLinks.filter((list) => list.subheader !== 'Coming Soon');
@@ -55,108 +63,71 @@ export default function Footer() {
 
   return (
     <>
-      <Divider />
-      <Container sx={{ py: { xs: 8, md: 10 } }}>
+      <Container
+        sx={{
+          py: { xs: '14px', md: '26px' },
+          px: { xs: '12px', md: '24px' },
+          borderRadius: '24px',
+          background: theme.palette.primary.main,
+          color: theme.palette.grey[800],
+        }}
+        maxWidth={false}
+      >
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            mb: '18px',
+            [theme.breakpoints.up('md')]: {
+              flexDirection: 'row',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              mb: '16px',
+            }
+          }}
+        >
+          <Image
+            sx={{
+              width: '122px',
+              mb: '50px',
+              [theme.breakpoints.up('md')]: {
+                mb: 0,
+              }
+            }}
+            src='/assets/img/footer-logo.svg'
+          />
 
-        Footer
-        {/*<Grid container spacing={3} justifyContent={{ md: 'space-between' }}>*/}
-        {/*  <Grid item xs={12} md={4}>*/}
-        {/*    <Stack spacing={{ xs: 3, md: 5 }}>*/}
-        {/*      <Stack alignItems="flex-start" spacing={3}>*/}
-        {/*        <Logo />*/}
-        {/*        <Typography variant="body3" sx={{ color: 'text.secondary' }}>*/}
-        {/*          The starting point for your next project based on easy-to-customize Material-UI ©*/}
-        {/*          helps you build apps faster and better.*/}
-        {/*        </Typography>*/}
-        {/*      </Stack>*/}
-
-
-        {/*      /!*<Stack alignItems="flex-start">*!/*/}
-        {/*      /!*  <Typography variant="h6">Documentation</Typography>*!/*/}
-        {/*      /!*  <LinkStyle href="#">Documentation</LinkStyle>*!/*/}
-        {/*      /!*  <LinkStyle href="#">Changelog</LinkStyle>*!/*/}
-        {/*      /!*  <LinkStyle href="#">Contributing</LinkStyle>*!/*/}
-        {/*      /!*</Stack>*!/*/}
-
-        {/*      <Stack spacing={2}>*/}
-        {/*        <Stack spacing={1}>*/}
-        {/*          <Typography variant="h6">Let’s stay in touch</Typography>*/}
-        {/*          <Typography variant="caption" sx={{ color: 'text.secondary' }}>*/}
-        {/*            Ubscribe to our newsletter to receive latest articles to your inbox weekly.*/}
-        {/*          </Typography>*/}
-        {/*        </Stack>*/}
-        {/*        <FilledInput*/}
-        {/*          placeholder="Email address"*/}
-        {/*          endAdornment={*/}
-        {/*            <InputAdornment position="end">*/}
-        {/*              <Button variant="contained" size="small" sx={{ py: '9px' }}>*/}
-        {/*                Subscribe*/}
-        {/*              </Button>*/}
-        {/*            </InputAdornment>*/}
-        {/*          }*/}
-        {/*          sx={{*/}
-        {/*            pr: 0.5,*/}
-        {/*            '& .MuiFilledInput-input': { py: '14px' },*/}
-        {/*          }}*/}
-        {/*        />*/}
-        {/*      </Stack>*/}
-
-        {/*      <Stack spacing={2}>*/}
-        {/*        <Typography variant="h6">Apps</Typography>*/}
-        {/*        <AppStoreButton />*/}
-        {/*      </Stack>*/}
-        {/*    </Stack>*/}
-        {/*  </Grid>*/}
-
-        {/*  <Grid item xs={12} md={6}>*/}
-        {/*    <Stack spacing={2} sx={{mb: 5}}>*/}
-        {/*      <Typography variant="h6">Social</Typography>*/}
-        {/*      <SocialsButton />*/}
-        {/*    </Stack>*/}
-
-        {/*    {isDesktop ? (*/}
-        {/*      <Masonry columns={3} spacing={3}>*/}
-        {/*        {renderLists.map((list) => (*/}
-        {/*          <ListDesktop key={list.subheader} list={list} />*/}
-        {/*        ))}*/}
-        {/*      </Masonry>*/}
-        {/*    ) : (*/}
-        {/*      <Stack spacing={1.5}>*/}
-        {/*        {renderLists.map((list) => (*/}
-        {/*          <ListMobile key={list.subheader} list={list} />*/}
-        {/*        ))}*/}
-        {/*      </Stack>*/}
-        {/*    )}*/}
-        {/*  </Grid>*/}
-        {/*</Grid>*/}
+          <Box
+            sx={{
+              display: 'flex',
+              alignItems: 'center',
+              'a + a': {
+                ml: '22px',
+              }
+            }}
+          >
+            {ICONS.map((src, index) => (
+              <Link href="#" key={index}>
+                <Image sx={{ width: '20px' }} src={src} />
+              </Link>
+            ))}
+          </Box>
+        </Box>
+        <Box component="p" sx={{
+          typography: 'caption',
+          mb: '16px',
+        }}>
+          Eternal Editions CEO icksoo Han<br />
+          7th floor, 14, Teheran-ro 26 gil, Gangnam-gu, Seoul<br />
+          Republic of Korea
+        </Box>
+        <Box
+          component="p"
+          sx={ {
+            typography: 'caption',
+          }}
+        >COPYRIGHT ⓒ Eternal Editions. ALL RIGHTS RESERVED</Box>
       </Container>
-
-      {/*<Divider />*/}
-
-      {/*<Container>*/}
-      {/*  <Stack*/}
-      {/*    direction={{ xs: 'column', md: 'row' }}*/}
-      {/*    spacing={2.5}*/}
-      {/*    justifyContent="space-between"*/}
-      {/*    sx={{ py: 3, textAlign: 'center' }}*/}
-      {/*  >*/}
-      {/*    <Typography variant="body3" sx={{ color: 'text.secondary' }}>*/}
-      {/*      © 2022. Eternal Editions, All rights reserved.*/}
-      {/*    </Typography>*/}
-      {/*    <Stack direction="row" spacing={3} justifyContent="center">*/}
-      {/*      <NextLink href={Routes.eternalEditions.terms} passHref>*/}
-      {/*      <Link variant="body3" sx={{ color: 'text.secondary' }}>*/}
-      {/*        Terms of Service*/}
-      {/*      </Link>*/}
-      {/*      </NextLink>*/}
-      {/*      <NextLink href={Routes.eternalEditions.privacy} passHref>*/}
-      {/*      <Link variant="body3" sx={{ color: 'text.secondary' }}>*/}
-      {/*        Privacy Policy*/}
-      {/*      </Link>*/}
-      {/*      </NextLink>*/}
-      {/*    </Stack>*/}
-      {/*  </Stack>*/}
-      {/*</Container>*/}
     </>
   );
 }
@@ -184,54 +155,6 @@ function ListDesktop({ list }: ListProps) {
           {link.title}
         </LinkStyle>
       ))}
-    </Stack>
-  );
-}
-
-// ----------------------------------------------------------------------
-
-function ListMobile({ list }: ListProps) {
-  const { subheader, items } = list;
-
-  const [expand, setExpand] = useState(false);
-
-  const onExpand = () => {
-    setExpand(!expand);
-  };
-
-  return (
-    <Stack spacing={1.5} alignItems="flex-start">
-      <Typography
-        variant="h6"
-        onClick={onExpand}
-        sx={{ cursor: 'pointer', display: 'flex', alignItems: 'center' }}
-      >
-        {subheader}
-        <Iconify
-          icon={expand ? chevronDown : chevronRight}
-          sx={{ width: 20, height: 20, ml: 0.5 }}
-        />
-      </Typography>
-
-      <Collapse in={expand} sx={{ width: 1 }}>
-        <Box
-          sx={{
-            display: 'grid',
-            rowGap: 1,
-            columnGap: 3,
-            gridTemplateColumns: {
-              xs: 'repeat(1, 1fr)',
-              sm: 'repeat(2, 1fr)',
-            },
-          }}
-        >
-          {items?.map((link) => (
-            <LinkStyle key={link.title} href={link.path}>
-              {link.title}
-            </LinkStyle>
-          ))}
-        </Box>
-      </Collapse>
     </Stack>
   );
 }

@@ -76,7 +76,8 @@ export default function MyApp(props: MyAppProps) {
                 <ThemeColorPresets>
                   <MotionLazyContainer>
                     <RtlLayout>
-                      <Settings />
+                      {/*세팅 아이콘*/}
+                      {/*<Settings />*/}
                       <ProgressBar />
                       {getLayout(<Component {...pageProps} />)}
                     </RtlLayout>

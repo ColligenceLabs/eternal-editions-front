@@ -46,13 +46,13 @@ export function pxToRem(value: number) {
 
 export function responsiveFontSizes({ sm, md, lg }: { sm: number; md: number; lg: number }) {
   return {
-    '@media (min-width:600px)': {
+    '@media (min-width:320px)': {
       fontSize: pxToRem(sm),
     },
-    '@media (min-width:900px)': {
+    '@media (min-width:768px)': {
       fontSize: pxToRem(md),
     },
-    '@media (min-width:1200px)': {
+    '@media (min-width:1025px)': {
       fontSize: pxToRem(lg),
     },
   };
