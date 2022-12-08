@@ -1,17 +1,11 @@
 // icons
 // @mui
 import {styled} from '@mui/material/styles';
-import {Box, Chip, Container, Typography, Link} from '@mui/material';
+import {Box, Container} from '@mui/material';
 import React from "react";
 import {useTheme} from "@mui/system";
-import { Image } from '../../components';
 // hooks
-import useResponsive from "../../hooks/useResponsive";
 import PageHeader from "../../components/common/PageHeader";
-import Masonry from "@mui/lab/Masonry";
-import TicketPostItem from "../@eternaledtions/tickets/TicketPostItem";
-import {TicketProps} from "../../@types/ticket/ticket";
-import TICKET from "../../sample/ticket";
 // routes
 // components
 
