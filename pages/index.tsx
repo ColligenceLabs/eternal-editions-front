@@ -8,10 +8,9 @@ import {Page} from '../src/components';
 import {getAllPosts} from "../src/utils/get-mardown/marketing/posts";
 import {BlogPostProps} from "../src/@types/blog";
 import {styled} from "@mui/material/styles";
-import {HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT} from "../src/config";
-import {Container} from "@mui/material";
 import HomeHero from "../src/sections/@home/HomeHero";
 import HomeEvent from "../src/sections/@home/HomeEvent";
+import HomeNowEvent from "../src/sections/@home/HomeNowEvent";
 import HomeEternalEditions from "../src/sections/@home/HomeEternalEditions";
 import HomeTeam from "../src/sections/@home/HomeTeam";
 import HomeContact from "../src/sections/@home/HomeContact";
@@ -22,10 +21,12 @@ type Props = {
 };
 
 const RootStyle = styled('div')(({theme}) => ({
-  // paddingTop: HEADER_MOBILE_HEIGHT,
-  // [theme.breakpoints.up('md')]: {
-  //     paddingTop: HEADER_DESKTOP_HEIGHT,
-  // }
+}));
+
+const HomeBackground = styled('div')(() => ({
+  background: 'url("/assets/background/bg-main.jpg") no-repeat top center',
+  backgroundSize: 'cover',
+  borderRadius: '24px',
 }));
 
 export default function HomePage({posts}: Props) {
@@ -34,9 +35,12 @@ export default function HomePage({posts}: Props) {
       <RootStyle>
         <HomeHero/>
         <HomeEvent/>
-        <HomeEternalEditions/>
-        <HomeTeam/>
-        <HomeContact/>
+        <HomeNowEvent/>
+        <HomeBackground>
+          <HomeEternalEditions/>
+          <HomeTeam/>
+          <HomeContact/>
+        </HomeBackground>
       </RootStyle>
     </Page>
   );
