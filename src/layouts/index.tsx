@@ -37,7 +37,6 @@ export default function Layout({
           )}
         </>
       )}
-
       {children}
 
       {disabledFooter ? null : <>{simpleFooter ? <FooterSimple /> : <Footer />}</>}

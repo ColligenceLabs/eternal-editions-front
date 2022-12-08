@@ -18,41 +18,41 @@ import HomeContact from "../src/sections/@home/HomeContact";
 
 // ----------------------------------------------------------------------
 type Props = {
-    posts: BlogPostProps[];
+  posts: BlogPostProps[];
 };
 
 const RootStyle = styled('div')(({theme}) => ({
-    // paddingTop: HEADER_MOBILE_HEIGHT,
-    // [theme.breakpoints.up('md')]: {
-    //     paddingTop: HEADER_DESKTOP_HEIGHT,
-    // }
+  // paddingTop: HEADER_MOBILE_HEIGHT,
+  // [theme.breakpoints.up('md')]: {
+  //     paddingTop: HEADER_DESKTOP_HEIGHT,
+  // }
 }));
 
 export default function HomePage({posts}: Props) {
-    return (
-        <Page title="Main">
-            <RootStyle>
-                <HomeHero />
-                <HomeEvent />
-                <HomeEternalEditions />
-                <HomeTeam />
-                <HomeContact />
-            </RootStyle>
-        </Page>
-    );
+  return (
+    <Page title="Main">
+      <RootStyle>
+        <HomeHero/>
+        <HomeEvent/>
+        <HomeEternalEditions/>
+        <HomeTeam/>
+        <HomeContact/>
+      </RootStyle>
+    </Page>
+  );
 }
 
 // ----------------------------------------------------------------------
 
 HomePage.getLayout = function getLayout(page: ReactElement) {
-    return <Layout>{page}</Layout>;
+  return <Layout>{page}</Layout>;
 };
 
 
 export async function getStaticProps() {
-    return {
-        props: {
-            posts: getAllPosts(),
-        },
-    };
+  return {
+    props: {
+      posts: getAllPosts(),
+    },
+  };
 }
