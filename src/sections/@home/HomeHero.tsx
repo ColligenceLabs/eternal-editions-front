@@ -1,11 +1,8 @@
-import React, {useRef} from 'react';
+import React from 'react';
 // icons
 // @mui
 import {styled, useTheme} from '@mui/material/styles';
-import {Container, Stack, Typography, Box, Button} from '@mui/material';
-// hooks
-import {useBoundingClientRect} from '../../hooks';
-// routes
+import {Box, Button} from '@mui/material';
 // components
 import {Swiper, SwiperSlide} from 'swiper/react';
 // styles
@@ -14,11 +11,24 @@ import 'swiper/swiper.min.css';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({theme}) => ({
-  overflow: 'hidden',
   position: 'relative',
+  overflow: 'hidden',
   borderRadius: 24,
   [theme.breakpoints.up('md')]: {
     height: '100vh',
+  },
+}));
+
+const BgCover = styled('div')(() => ({
+  position: 'relative',
+  '&:before': {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    content: '""',
+    backgroundColor: 'rgba(0,0,0,0.34)',
   },
 }));
 
@@ -32,8 +42,6 @@ const BANNERS = [
 // ----------------------------------------------------------------------
 
 export default function HomeHero() {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const container = useBoundingClientRect(containerRef);
   const theme = useTheme();
 
   return (
@@ -41,24 +49,14 @@ export default function HomeHero() {
       <Swiper>
         {BANNERS.map((src, index) => (
           <SwiperSlide key={index}>
-            <Box
+            <BgCover
               sx={{
-                position: 'relative',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',
                 height: '100vh',
                 background: `url(${src}) no-repeat center`,
                 backgroundSize: 'cover',
-                '&:before': {
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: 1,
-                  height: 1,
-                  content: '""',
-                  backgroundColor: 'rgba(0,0,0,0.2)',
-                },
               }}
             >
               <Box sx={{ position: 'relative', textAlign: 'center' }}>
@@ -91,8 +89,8 @@ export default function HomeHero() {
                 >
                   BUY TICKET
                 </Button>
-            </Box>
-            </Box>
+              </Box>
+            </BgCover>
           </SwiperSlide>
         ))}
       </Swiper>
