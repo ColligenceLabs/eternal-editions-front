@@ -12,14 +12,17 @@ import Layout from '../src/layouts';
 import {Page} from '../src/components';
 // sections
 import AboutHeader from "../src/sections/@about/AboutHeader";
+import AboutVideo from "../src/sections/@about/AboutVideo";
 import AboutWhyEE from "../src/sections/@about/AboutWhyEE";
-import AboutHowTo from "../src/sections/@about/AboutHowTo";
 import AboutIFSo from "../src/sections/@about/AboutIFSo";
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,
+  background: 'url("/assets/background/bg-about.jpg") no-repeat top center',
+  backgroundSize: 'cover',
+  borderRadius: '24px',
   [theme.breakpoints.up('md')]: {
     paddingTop: HEADER_DESKTOP_HEIGHT,
   },
@@ -35,8 +38,8 @@ export default function EEAboutUsPage({ }: Props) {
     <Page title="About Us">
       <RootStyle>
         <AboutHeader />
+        <AboutVideo />
         <AboutWhyEE />
-        <AboutHowTo />
         <AboutIFSo />
       </RootStyle>
     </Page>

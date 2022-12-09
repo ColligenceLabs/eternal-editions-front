@@ -39,7 +39,7 @@ export default function PageHeader({title, description, link, ...other}: Props) 
   return (
     <RootStyle {...other}>
       {!link ? (
-        <Typography variant={"h1"} sx={{color: theme.palette.primary.main, lineHeight: 1,}}>{title}</Typography>
+        <Typography variant={"h1"} sx={{color: theme.palette.primary.main, lineHeight: 1, whiteSpace: 'pre-line', textTransform: 'uppercase' }}>{title}</Typography>
       ) : (
         <Link
           variant={"h1"}
@@ -47,6 +47,8 @@ export default function PageHeader({title, description, link, ...other}: Props) 
           sx={{
             color: theme.palette.primary.main,
             lineHeight: 1,
+            whiteSpace: 'pre-line',
+            textTransform: 'uppercase',
             '&:hover': {
               textDecoration: 'none'
             },
@@ -56,7 +58,7 @@ export default function PageHeader({title, description, link, ...other}: Props) 
           <IconArrow>&gt;</IconArrow>
         </Link>
       )}
-      {description && <Typography>{description}</Typography>}
+      {description && <Typography sx={{ whiteSpace: 'pre-line' }}>{description}</Typography>}
     </RootStyle>
   );
 }
