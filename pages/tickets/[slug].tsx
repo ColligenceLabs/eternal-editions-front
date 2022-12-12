@@ -391,27 +391,22 @@ export default function TicketDetailPage() {
                   <Divider />
                   <Stack>
                     <Typography variant={'subtitle2'} sx={{ mb: 1 }}>
-                      Title area 2
+                      Description
                     </Typography>
-                    <TextMaxLine line={5}>
-                      Unleash your inner warrior and get ready to battle with Ibutsu NFT! If you're
-                      looking to be a part of an immersive dojo-style world, then you can't go wrong
-                      by having your very own Ibutsu fighter. Join our community to make friends,
-                      have fun and collect $APE!
-                    </TextMaxLine>
+                    <TextMaxLine line={5}>{ticketInfo?.introduction.en}</TextMaxLine>
                   </Stack>
                   <Divider />
-                  <Stack>
-                    <Typography variant={'subtitle2'} sx={{ mb: 1 }}>
-                      Title area 2
-                    </Typography>
-                    <TextMaxLine line={5}>
-                      Unleash your inner warrior and get ready to battle with Ibutsu NFT! If you're
-                      looking to be a part of an immersive dojo-style world, then you can't go wrong
-                      by having your very own Ibutsu fighter. Join our community to make friends,
-                      have fun and collect $APE!
-                    </TextMaxLine>
-                  </Stack>
+                  {/*<Stack>*/}
+                  {/*  <Typography variant={'subtitle2'} sx={{ mb: 1 }}>*/}
+                  {/*    Title area 2*/}
+                  {/*  </Typography>*/}
+                  {/*  <TextMaxLine line={5}>*/}
+                  {/*    Unleash your inner warrior and get ready to battle with Ibutsu NFT! If you're*/}
+                  {/*    looking to be a part of an immersive dojo-style world, then you can't go wrong*/}
+                  {/*    by having your very own Ibutsu fighter. Join our community to make friends,*/}
+                  {/*    have fun and collect $APE!*/}
+                  {/*  </TextMaxLine>*/}
+                  {/*</Stack>*/}
                 </Stack>
               </EECard>
             </Grid>
