@@ -26,11 +26,9 @@ import Layout from '../../src/layouts';
 import { Iconify, Page, TextIconLabel, TextMaxLine } from '../../src/components';
 // sections
 import { useRouter } from 'next/router';
-import { useResponsive } from '../../src/hooks';
 import EECard from '../../src/components/EECard';
 import EEAvatar from '../../src/components/EEAvatar';
 import { fDate } from '../../src/utils/formatTime';
-import TICKET from '../../src/sample/ticket';
 import searchIcon from '@iconify/icons-carbon/search';
 import { getTicketInfoService, registerBuy } from '../../src/services/services';
 import { TicketInfoTypes, TicketItemTypes } from '../../src/@types/ticket/ticketTypes';
@@ -73,19 +71,14 @@ const modalStyle = {
 };
 
 export default function TicketDetailPage() {
-  const isDesktop = useResponsive('up', 'md');
   const router = useRouter();
   const { account, library, chainId } = useActiveWeb3React();
   const { slug } = router.query;
 
-  const { tokenId, title, subtitle, author, description, status, createdAt, background } =
-    TICKET.ticket;
-
   const [ticketInfo, setTicketInfo] = useState<TicketInfoTypes | null>(null);
   const [selectedTicketItem, setSelectedTicketItem] = useState<TicketItemTypes | null>(null);
 
-  const [option1, setOption1] = React.useState('');
-  const [option2, setOption2] = React.useState('');
+  const [selectedItem, setSelectedItem] = React.useState('');
   const [klayPrice, setKlayPrice] = useState(0);
   const [maticPrice, setMaticPrice] = useState(0);
   const [isBuyingWithMatic, setIsBuyingWithMatic] = useState(false);
@@ -116,16 +109,12 @@ export default function TicketDetailPage() {
   };
   const handleClose = () => setOpen(false);
 
-  const handleOption1Change = (event: SelectChangeEvent) => {
-    setOption1(event.target.value);
+  const handleItemChange = (event: SelectChangeEvent) => {
+    setSelectedItem(event.target.value);
     const result = ticketInfo?.mysteryboxItems.find(
       (item: TicketItemTypes) => item.id.toString() === event.target.value.toString()
     );
     if (result) setSelectedTicketItem(result);
-  };
-
-  const handleOption2Change = (event: SelectChangeEvent) => {
-    setOption2(event.target.value);
   };
 
   const handleBuyWithMatic = async () => {
@@ -328,18 +317,30 @@ export default function TicketDetailPage() {
                         ticketInfo?.price
                       })`}
                     />
-                    <LineItem
-                      icon={<></>}
-                      label="Location"
-                      value={'HQ Beercade Nashville Nashville, TN'}
-                    />
+                    {/*<LineItem*/}
+                    {/*  icon={<></>}*/}
+                    {/*  label="Location"*/}
+                    {/*  value={'HQ Beercade Nashville Nashville, TN'}*/}
+                    {/*/>*/}
+                    {ticketInfo &&
+                      ticketInfo.mysteryboxItems[0].properties &&
+                      ticketInfo.mysteryboxItems[0].properties.map((item: any) => (
+                        <LineItem
+                          key={item.id}
+                          icon={<></>}
+                          label={item.type.replace(/\b[a-z]/g, (char: string) =>
+                            char.toUpperCase()
+                          )}
+                          value={item.name}
+                        />
+                      ))}
                   </Stack>
 
                   <Stack>
                     <FormControl>
                       <Select
-                        value={option1}
-                        onChange={handleOption1Change}
+                        value={selectedItem}
+                        onChange={handleItemChange}
                         displayEmpty
                         fullWidth
                         inputProps={{ 'aria-label': 'optione1' }}
