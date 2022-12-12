@@ -30,7 +30,7 @@ import EECard from '../../src/components/EECard';
 import EEAvatar from '../../src/components/EEAvatar';
 import { fDate } from '../../src/utils/formatTime';
 import searchIcon from '@iconify/icons-carbon/search';
-import { getTicketInfoService, registerBuy } from '../../src/services/services';
+import { getBuyersService, getTicketInfoService, registerBuy } from '../../src/services/services';
 import { TicketInfoTypes, TicketItemTypes } from '../../src/@types/ticket/ticketTypes';
 import axios from 'axios';
 import contracts from '../../src/config/constants/contracts';
@@ -38,6 +38,7 @@ import useActiveWeb3React from '../../src/hooks/useActiveWeb3React';
 import { parseEther } from 'ethers/lib/utils';
 import { buyItem } from '../../src/utils/transactions';
 import CSnackbar from '../../src/components/common/CSnackbar';
+import { BuyerTypes } from '../../src/@types/buyer/buyer';
 
 // ----------------------------------------------------------------------
 
@@ -77,7 +78,7 @@ export default function TicketDetailPage() {
 
   const [ticketInfo, setTicketInfo] = useState<TicketInfoTypes | null>(null);
   const [selectedTicketItem, setSelectedTicketItem] = useState<TicketItemTypes | null>(null);
-
+  const [buyers, setBuyers] = useState<BuyerTypes[] | null>(null);
   const [selectedItem, setSelectedItem] = React.useState('');
   const [klayPrice, setKlayPrice] = useState(0);
   const [maticPrice, setMaticPrice] = useState(0);
@@ -211,6 +212,13 @@ export default function TicketDetailPage() {
     }
   };
 
+  const fetchBuyersList = async () => {
+    if (slug && typeof slug === 'string') {
+      const buyersListRes = await getBuyersService(slug);
+      if (buyersListRes.data.status === SUCCESS) setBuyers(buyersListRes.data.data);
+    }
+  };
+
   const getCoinPrice = () => {
     const url = 'https://bcn-api.talken.io/coinmarketcap/cmcQuotes?cmcIds=4256,3890';
     try {
@@ -236,6 +244,7 @@ export default function TicketDetailPage() {
 
   useEffect(() => {
     fetchTicketInfo();
+    fetchBuyersList();
   }, [slug]);
 
   return (
@@ -375,7 +384,10 @@ export default function TicketDetailPage() {
                   <Divider />
 
                   <Stack>구매한 유저들</Stack>
-
+                  {buyers &&
+                    buyers.map((buyer: BuyerTypes) => (
+                      <Box key={buyer.id}>{buyer.buyerAddress}</Box>
+                    ))}
                   <Divider />
                   <Stack>
                     <Typography variant={'subtitle2'} sx={{ mb: 1 }}>
