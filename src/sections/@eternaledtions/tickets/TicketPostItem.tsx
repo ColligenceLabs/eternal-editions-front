@@ -24,21 +24,7 @@ type Props = {
 };
 
 export default function TicketPostItem({ ticket }: Props) {
-  console.log(ticket);
-  const {
-    id,
-    title,
-    // author,
-    // tokenId,
-    // content,
-    packageImage,
-    categoriesStr,
-    introduction,
-    // status,
-    featured,
-    createdAt,
-    mysteryboxItems,
-  } = ticket;
+  const { id, title, packageImage, categoriesStr, featured, createdAt } = ticket;
 
   const { push } = useRouter();
   const theme = useTheme();
@@ -117,7 +103,9 @@ export default function TicketPostItem({ ticket }: Props) {
         {categoriesStr && categoriesStr.split(',').length > 0
           ? categoriesStr
               .split(',')
-              .map((category: string) => <Chip label={category.toUpperCase()} variant="outlined" />)
+              .map((category: string, index) => (
+                <Chip key={index} label={category.toUpperCase()} variant="outlined" />
+              ))
           : null}
       </Stack>
 
