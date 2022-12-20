@@ -14,7 +14,6 @@ import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import NFTTransactionGrid from "../../src/sections/@my/NFTTransactionGrid";
 import PageHeader from "../../src/components/common/PageHeader";
 import NFTTransactionNFT from '../../src/sections/@my/NFTTransactionNFT';
 import NFTTransactionPoint from '../../src/sections/@my/NFTTransactionPoint';
