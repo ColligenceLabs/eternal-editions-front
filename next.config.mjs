@@ -1,7 +1,11 @@
 // ----------------------------------------------------------------------
 
 const nextConfig = {
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
   trailingSlash: true,
+  assetPrefix: '.',
   env: {
     DEV_API: 'http://localhost:8888',
     PRODUCTION_API: 'https://zone-assets-api.vercel.app',

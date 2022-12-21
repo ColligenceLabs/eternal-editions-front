@@ -1,6 +1,6 @@
 // @mui
 import {Box, Pagination, Stack, Tab, Tabs, Typography} from '@mui/material';
-import TicketItem from "../@eternaledtions/tickets/TicketItem";
+// import TicketItem from "../@eternaledtions/tickets/TicketItem";
 import {JobItemSkeleton} from "../../components";
 import {MYTicketProps, TicketProps} from "../../@types/ticket/ticket";
 import {useState} from "react";
@@ -61,11 +61,11 @@ export default function MyTicketList({tickets, loading}: Props) {
 
 
                 {!loading ?? <JobItemSkeleton />}
-                {tickets.map((ticket, index) => {
+                {/* {tickets.map((ticket, index) => {
                         console.log(ticket, 'ticket - ' + index);
                         return <TicketItem key={ticket.slug} ticket={ticket}/>;
                     }
-                )}
+                )} */}
             </Stack>
         </>
     );
