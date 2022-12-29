@@ -7,7 +7,7 @@ const nextConfig = {
   // trailingSlash: true,
   assetPrefix: '.',
   env: {
-    DEV_API: 'http://localhost:8888',
+    DEV_API: 'https://dev.nftapi.eternaleditions.io',
     PRODUCTION_API: 'https://zone-assets-api.vercel.app',
     GOOGLE_API: '',
   },
