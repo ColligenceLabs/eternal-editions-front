@@ -8,7 +8,7 @@ const nextConfig = {
   assetPrefix: '.',
   env: {
     DEV_API: 'https://dev.nftapi.eternaleditions.io',
-    PRODUCTION_API: 'https://zone-assets-api.vercel.app',
+    PRODUCTION_API: 'https://dev.nftapi.eternaleditions.io',
     GOOGLE_API: '',
   },
   images: {
