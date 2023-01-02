@@ -13,6 +13,8 @@ import {
   Modal,
   Backdrop,
   Fade,
+  Input,
+  TextField,
 } from '@mui/material';
 // hooks
 import { useOffSetTop, useResponsive } from '../../hooks';
@@ -29,7 +31,7 @@ import { NavMobile, NavDesktop, navConfig } from '../nav';
 import { ToolbarStyle, ToolbarShadowStyle } from './HeaderToolbarStyle';
 import useWallets from '../../hooks/useWallets';
 import { getIconByType } from '../../utils/wallet';
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { ConnectWallet, DisconnectWallet } from '../../components/wallet';
 import { SignUp } from '../../components/user';
 import WalletPopover from '../../components/WalletPopover';
@@ -85,6 +87,28 @@ export default function Header({ transparent }: Props) {
   const handleDisconnectClose = () => setDisconnectOpen(false);
 
   const [joinOpen, setJoinOpen] = React.useState(false);
+  const [abcOpen, setAbcOpen] = React.useState(false);
+  const [abcToken, setAbcToken] = React.useState('');
+
+  const handleAbcConfirmClick = () => {
+    console.log(`abc token : ${abcToken}`);
+  };
+
+  const handleAbcTokenChange = (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const { value } = event.target;
+    setAbcToken(value);
+    console.log(value);
+  };
+  const handleAbcClose = () => {
+    setAbcToken('');
+    setAbcOpen(false);
+  };
+
+  const handleAbcOpen = () => {
+    setAbcOpen(true);
+  };
+
   const handleJoinOpen = async () => {
     setJoinOpen(true);
 
@@ -265,6 +289,17 @@ export default function Header({ transparent }: Props) {
                     </Button>
                   </>
                 )}
+                <Button
+                  variant="contained"
+                  onClick={handleAbcOpen}
+                  sx={{
+                    width: {
+                      md: 120,
+                    },
+                  }}
+                >
+                  ABC Test
+                </Button>
               </Stack>
             )}
           </Stack>
@@ -333,6 +368,60 @@ export default function Header({ transparent }: Props) {
         <Fade in={joinOpen}>
           <Box sx={modalStyle}>
             <SignUp onClose={handleJoinClose} />
+          </Box>
+        </Fade>
+      </Modal>
+
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={abcOpen}
+        onClose={handleAbcClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={abcOpen}>
+          <Box sx={modalStyle}>
+            <Input
+              sx={{ color: 'black' }}
+              fullWidth={true}
+              id="outlined-basic"
+              value={abcToken}
+              onChange={handleAbcTokenChange}
+            />
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: '10px' }}>
+              <Button
+                variant="outlined"
+                size="medium"
+                sx={{
+                  width: '100% !important',
+                  height: '36px',
+                  fontSize: 12,
+                  backgroundColor: '#f1f2f5',
+                  borderColor: '#f1f2f5',
+                  color: '#000000',
+                  boxShadow: 'none',
+                  '&:hover': {
+                    backgroundColor: '#08FF0C',
+                    borderColor: '#08FF0C',
+                    color: '#ffffff',
+                    boxShadow: 'none',
+                  },
+                  '&:active': {
+                    boxShadow: 'none',
+                    backgroundColor: 'background.paper',
+                    borderColor: 'background.paper',
+                    color: '#ffffff',
+                  },
+                }}
+                onClick={handleAbcConfirmClick}
+              >
+                확인
+              </Button>
+            </Box>
           </Box>
         </Fade>
       </Modal>
