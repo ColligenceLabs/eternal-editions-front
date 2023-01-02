@@ -41,13 +41,7 @@ import { useEagerConnect, useInactiveListener } from '../../hooks/useEagerConnec
 // TODO : dkeys WASM Go Initialize...
 import '../../abc/sandbox/index';
 
-import {
-  controllers,
-  accountRestApi,
-  services,
-  providerConnManager,
-  nonceTracker,
-} from '../../abc/background/init';
+import { controllers, accountRestApi, services, nonceTracker } from '../../abc/background/init';
 import { AbcLoginDto, AbcLoginResult } from '../../abc/main/abc/interface';
 import { setAbcAuth } from '../../store/slices/abcAuth';
 import { useDispatch, useSelector } from 'react-redux';
@@ -81,7 +75,7 @@ type Props = {
 
 export default function Header({ transparent }: Props) {
   const { abcController, accountController } = controllers;
-  const { mpcService, n } = services;
+  const { mpcService, providerService, providerConnManager } = services;
   const dispatch = useDispatch();
 
   const theme = useTheme();
@@ -204,16 +198,18 @@ export default function Header({ transparent }: Props) {
 
     // 11. Broadcast signed raw Tx to the chain
     const txHash = await providerConnManager.broadcastTx(rawTx, undefined, undefined);
-    console.log('=====> result ===>', txHash);
+    console.log('=====> result: txHash ===>', txHash);
 
-    handleAbcClose();
+    // TODO : 왜 await 가 안되고 바로 null 이 return 될까?
+    // const receipt = await providerService.getTransactionReceipt(txHash, txParams.chainId);
+    // console.log('=====> result: receipt ===>', receipt);
   };
 
   const handleAbcTokenChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const { value } = event.target;
     setAbcToken(value);
-    console.log(value);
+    // console.log(value);
   };
   const handleAbcClose = () => {
     setAbcToken('');
