@@ -95,6 +95,8 @@ export default function Header({ transparent }: Props) {
   const [abcToken, setAbcToken] = React.useState('');
   const [user, setUser] = React.useState([]);
 
+  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
   const handleAbcConfirmClick = async () => {
     // console.log(`abc token : ${abcToken}`);
 
@@ -102,7 +104,8 @@ export default function Header({ transparent }: Props) {
 
     // 1. 블록체인 네트워크 연결
     const networks = DekeyData.DEFAULT_NETWORKS;
-    await providerConnManager.connect(networks[3], '');
+    await providerService.connect(networks[3], '');
+    // await providerConnManager.connect(networks[3], '');
 
     // 2. Active Account
     const account = user.accounts[0];
@@ -201,8 +204,9 @@ export default function Header({ transparent }: Props) {
     console.log('=====> result: txHash ===>', txHash);
 
     // TODO : 왜 await 가 안되고 바로 null 이 return 될까?
-    // const receipt = await providerService.getTransactionReceipt(txHash, txParams.chainId);
-    // console.log('=====> result: receipt ===>', receipt);
+    await sleep(3000);
+    const receipt = await providerService.getTransactionReceipt(txHash, txParams.chainId);
+    console.log('=====> result: receipt ===>', receipt);
   };
 
   const handleAbcTokenChange = (event: ChangeEvent<HTMLInputElement>) => {
