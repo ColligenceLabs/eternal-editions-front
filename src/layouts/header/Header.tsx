@@ -41,7 +41,13 @@ import { useEagerConnect, useInactiveListener } from '../../hooks/useEagerConnec
 // TODO : dkeys WASM Go Initialize...
 import '../../abc/sandbox/index';
 
-import { controllers, accountRestApi, services } from '../../abc/background/init';
+import {
+  controllers,
+  accountRestApi,
+  services,
+  providerConnManager,
+  nonceTracker,
+} from '../../abc/background/init';
 import { AbcLoginDto, AbcLoginResult } from '../../abc/main/abc/interface';
 import { setAbcAuth } from '../../store/slices/abcAuth';
 import { useDispatch, useSelector } from 'react-redux';
@@ -49,6 +55,10 @@ import { ethers } from 'ethers';
 import TransactionUtil from '../../abc/utils/transaction';
 import KlaytnUtil from '../../abc/utils/klaytn';
 import { isKlaytn } from '../../abc/utils/network';
+import { DekeyData } from '../../abc/dekeyData';
+import { makeTxData } from '../../utils/makeTxData';
+
+import tokenAbi from '../../config/abi/ERC20Token.json';
 
 const modalStyle = {
   position: 'absolute',
@@ -71,7 +81,7 @@ type Props = {
 
 export default function Header({ transparent }: Props) {
   const { abcController, accountController } = controllers;
-  const { mpcService } = services;
+  const { mpcService, n } = services;
   const dispatch = useDispatch();
 
   const theme = useTheme();
@@ -89,9 +99,114 @@ export default function Header({ transparent }: Props) {
   const [joinOpen, setJoinOpen] = React.useState(false);
   const [abcOpen, setAbcOpen] = React.useState(false);
   const [abcToken, setAbcToken] = React.useState('');
+  const [user, setUser] = React.useState([]);
 
-  const handleAbcConfirmClick = () => {
-    console.log(`abc token : ${abcToken}`);
+  const handleAbcConfirmClick = async () => {
+    // console.log(`abc token : ${abcToken}`);
+
+    // TODO : AbcWallet Test => Transfer 0.01 USDC to a wallet
+
+    // 1. 블록체인 네트워크 연결
+    const networks = DekeyData.DEFAULT_NETWORKS;
+    await providerConnManager.connect(networks[3], '');
+
+    // 2. Active Account
+    const account = user.accounts[0];
+    console.log('=== account ===>', account);
+
+    // 3. Target Smart Contract
+    const to = '0x273b95a65856b7a7755471f9f3f109e8ae721e30'; // Test USDC Smart Contract
+
+    // 4. 트랜잭션 Data 생성
+    // const data = makeTxData(tokenAbi, 'approve', [
+    //   '0x1716C4d49E9D81c17608CD9a45b1023ac9DF6c73',
+    //   '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
+    // ]);
+    const data = makeTxData(tokenAbi, 'transfer', [
+      '0x1716C4d49E9D81c17608CD9a45b1023ac9DF6c73', // Recipient
+      ethers.utils.parseUnits('0.01', 6), // Amount, USDC decimal = 6
+    ]); // Method name & arguments
+    console.log('====>', data);
+
+    // 5. nonce 확인
+    const { nextNonce } = await nonceTracker.getNetworkNonce(account.ethAddress);
+    console.log('==== nextNonce ===>', nextNonce);
+
+    // 6. unSignedTx 생성
+    const txParams = {
+      chainId: 1001,
+      data,
+      gasLimit: '0x010cd2',
+      gasPrice: '0x0ba43b7400',
+      to,
+      nonce: nextNonce,
+    };
+
+    // const txParams = {
+    //   chainId: 1001,
+    //   data: '0x4e71d92d',
+    //   // from: '0xbef6de269b0f4aa8435f7f4d345be68131ba14c3',
+    //   // gas: '0x44819',
+    //   gasLimit: '0x0440af',
+    //   gasPrice: '0x0ba43b7400',
+    //   to: '0xa97d236bb35a26b1bf329e096aa18d40ea337342',
+    //   nonce: nextNonce,
+    // };
+    // const unSignedTx = {
+    //   chainId: 1001,
+    //   gasLimit: '0x04cfe8',
+    //   gasPrice: '0x0ba43b7400',
+    //   data: '0x85be1b3b00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001',
+    //   to: '0xf8e62f89bb0c37e0fa12fda659add38f7f42bc98',
+    //   value: '0x11fc51222ce8000',
+    //   nonce: '0x0b',
+    // };
+
+    // 7. 구글 OTP -> mpcToken 획득
+    const twofaToken = abcToken;
+    const mpcToken = await accountController.verifyTwofactorForMpcSign({
+      twofaToken,
+      jsonUnsignedTx: JSON.stringify(txParams),
+    });
+    console.log('===== mpcToken ===>', mpcToken);
+
+    // 8. Target Sign Message
+    const messageHash =
+      isKlaytn(txParams.chainId) && txParams?.type
+        ? KlaytnUtil.createTxHash(txParams)
+        : TransactionUtil.createTxHash(txParams);
+    console.log('=== messageHash ===>', messageHash);
+
+    // 9. TX Signing
+    const sResult = await mpcService.sign({
+      txHash: messageHash.slice(2),
+      mpcToken,
+      accountId: account.id,
+    });
+    console.log('=== sResult ===>', sResult);
+
+    const { r, s, vsource } = sResult;
+    const v = TransactionUtil.calculateV({
+      r,
+      s,
+      vsource,
+      hash: messageHash,
+      address: account.ethAddress,
+      chainId: txParams.chainId,
+    });
+
+    // 10. signed Raw Tx
+    const rawTx =
+      isKlaytn(txParams.chainId) && txParams?.type
+        ? await KlaytnUtil.createRawTx({ txParams, v, r, s })
+        : TransactionUtil.createRawTx({ txParams, v, r, s });
+    console.log('==== rawTx ===>', rawTx);
+
+    // 11. Broadcast signed raw Tx to the chain
+    const txHash = await providerConnManager.broadcastTx(rawTx, undefined, undefined);
+    console.log('=====> result ===>', txHash);
+
+    handleAbcClose();
   };
 
   const handleAbcTokenChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -119,82 +234,13 @@ export default function Header({ transparent }: Props) {
 
     window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
 
-    const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid();
-    console.log('==user, wallets ===>', user, wallets);
+    const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
+    setUser(user);
 
     await accountController.recoverShare(
       { password: '!owdin001', user, wallets, undefined },
       dispatch
     );
-
-    const txParams = {
-      chainId: 1001,
-      data: '0x4e71d92d',
-      // from: '0xbef6de269b0f4aa8435f7f4d345be68131ba14c3',
-      // gas: '0x44819',
-      gasLimit: '0x0440af',
-      gasPrice: '0x0ba43b7400',
-      to: '0xa97d236bb35a26b1bf329e096aa18d40ea337342',
-      nonce: '0x0c',
-    };
-
-    // const unSignedTx = {
-    //   chainId: 1001,
-    //   gasLimit: '0x04cfe8',
-    //   gasPrice: '0x0ba43b7400',
-    //   data: '0x85be1b3b00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001',
-    //   to: '0xf8e62f89bb0c37e0fa12fda659add38f7f42bc98',
-    //   value: '0x11fc51222ce8000',
-    //   nonce: '0x0b',
-    // };
-
-    const twofaToken = '889067';
-    const mpcToken = await accountController.verifyTwofactorForMpcSign({
-      twofaToken,
-      jsonUnsignedTx: JSON.stringify(txParams),
-    });
-
-    console.log('===== mpcToken ===>', mpcToken);
-
-    // const ABI = ['function transfer(address to, uint amount)'];
-    // const iFace = new ethers.utils.Interface(ABI);
-    // const data = iFace.encodeFunctionData('transfer', [
-    //   '0x1234567890123456789012345678901234567890',
-    //   ethers.utils.parseEther('1.0'),
-    // ]);
-    // data = '0xa9059cbb00000000000000000000000012345678901234567890123456789012345678900000000000000000000000000000000000000000000000000de0b6b3a7640000'
-
-    const messageHash =
-      isKlaytn(txParams.chainId) && txParams?.type
-        ? KlaytnUtil.createTxHash(txParams)
-        : TransactionUtil.createTxHash(txParams);
-    console.log('=== messageHash ===>', messageHash);
-
-    const account = user.accounts[0];
-    console.log('=== account ===>', account);
-
-    const sResult = await mpcService.sign({
-      txHash: messageHash.slice(2),
-      mpcToken,
-      accountId: account.id,
-    });
-    console.log('=== sResult ===>', sResult);
-
-    const { r, s, vsource } = sResult;
-    const v = TransactionUtil.calculateV({
-      r,
-      s,
-      vsource,
-      hash: messageHash,
-      address: account.ethAddress,
-      chainId: txParams.chainId,
-    });
-
-    const rawTx =
-      isKlaytn(txParams.chainId) && txParams?.type
-        ? await KlaytnUtil.createRawTx({ txParams, v, r, s })
-        : TransactionUtil.createRawTx({ txParams, v, r, s });
-    console.log('==== rawTx ===>', rawTx);
   };
 
   const handleJoinClose = () => setJoinOpen(false);
@@ -385,6 +431,7 @@ export default function Header({ transparent }: Props) {
       >
         <Fade in={abcOpen}>
           <Box sx={modalStyle}>
+            구글 OTP 인증 :
             <Input
               sx={{ color: 'black' }}
               fullWidth={true}

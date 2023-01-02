@@ -68,4 +68,4 @@ const dappController = new DappController(
 
 const controllers = { abcController, accountController, dappController };
 
-export { controllers, services, accountRestApi };
+export { controllers, services, accountRestApi, providerConnManager, nonceTracker };
