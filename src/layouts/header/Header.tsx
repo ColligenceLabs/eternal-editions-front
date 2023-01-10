@@ -207,6 +207,9 @@ export default function Header({ transparent }: Props) {
     await sleep(3000);
     const receipt = await providerService.getTransactionReceipt(txHash, txParams.chainId);
     console.log('=====> result: receipt ===>', receipt);
+
+    setAbcToken('');
+    setAbcOpen(false);
   };
 
   const handleAbcTokenChange = (event: ChangeEvent<HTMLInputElement>) => {
