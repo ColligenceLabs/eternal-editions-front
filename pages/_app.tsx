@@ -39,6 +39,8 @@ import ThemeColorPresets from '../src/components/ThemeColorPresets';
 import MotionLazyContainer from '../src/components/animate/MotionLazyContainer';
 import { WalletProvider } from '../src/contexts/WalletContext';
 
+import { wrapper } from '../src/store/store';
+
 // ----------------------------------------------------------------------
 function getLibrary(provider: any) {
   // const library = new Web3Provider(provider);
@@ -55,7 +57,7 @@ interface MyAppProps extends AppProps {
   Component: NextPageWithLayout;
 }
 
-export default function MyApp(props: MyAppProps) {
+function MyApp(props: MyAppProps) {
   const { Component, pageProps } = props;
 
   const getLayout = Component.getLayout ?? ((page) => page);
@@ -91,3 +93,5 @@ export default function MyApp(props: MyAppProps) {
     </>
   );
 }
+
+export default wrapper.withRedux(MyApp);
