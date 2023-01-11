@@ -4,7 +4,15 @@ import Layout from '../src/layouts';
 import SupportPage from './support';
 import { Page } from '../src/components';
 import { Box, Button, Checkbox, FormControlLabel } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../src/config';
 
+const RootStyle = styled('div')(({ theme }) => ({
+  paddingTop: HEADER_MOBILE_HEIGHT,
+  [theme.breakpoints.up('md')]: {
+    paddingTop: HEADER_DESKTOP_HEIGHT,
+  },
+}));
 export default function Register(effect: React.EffectCallback, deps?: React.DependencyList) {
   const [isCheck, setIsCheck] = useState({
     check1: false,
@@ -52,54 +60,56 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
 
   return (
     <Page title="Register">
-      <Box>
-        <Box>Register</Box>
+      <RootStyle>
         <Box>
-          <FormControlLabel
-            control={<Checkbox checked={isCheckAll} onClick={handleCheckAll} />}
-            label="전체동의"
-          />
+          <Box>Register</Box>
+          <Box>
+            <FormControlLabel
+              control={<Checkbox checked={isCheckAll} onClick={handleCheckAll} />}
+              label="전체동의"
+            />
+          </Box>
+          <Box>
+            <FormControlLabel
+              control={
+                <Checkbox checked={isCheck.check1} onClick={() => handleCheckItem('check1')} />
+              }
+              label="약관1"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox checked={isCheck.check2} onClick={() => handleCheckItem('check2')} />
+              }
+              label="약관2"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox checked={isCheck.check3} onClick={() => handleCheckItem('check3')} />
+              }
+              label="약관3"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox checked={isCheck.check4} onClick={() => handleCheckItem('check4')} />
+              }
+              label="약관4"
+            />
+          </Box>
+          <Box>
+            <Button
+              onClick={handleClickRegister}
+              disabled={!isCheck.check1 || !isCheck.check2 || !isCheck.check3 || !isCheck.check4}
+              variant={'outlined'}
+            >
+              가입
+            </Button>
+          </Box>
         </Box>
-        <Box>
-          <FormControlLabel
-            control={
-              <Checkbox checked={isCheck.check1} onClick={() => handleCheckItem('check1')} />
-            }
-            label="약관1"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox checked={isCheck.check2} onClick={() => handleCheckItem('check2')} />
-            }
-            label="약관2"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox checked={isCheck.check3} onClick={() => handleCheckItem('check3')} />
-            }
-            label="약관3"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox checked={isCheck.check4} onClick={() => handleCheckItem('check4')} />
-            }
-            label="약관4"
-          />
-        </Box>
-        <Box>
-          <Button
-            onClick={handleClickRegister}
-            disabled={!isCheck.check1 || !isCheck.check2 || !isCheck.check3 || !isCheck.check4}
-            variant={'outlined'}
-          >
-            가입
-          </Button>
-        </Box>
-      </Box>
+      </RootStyle>
     </Page>
   );
 }
 
-SupportPage.getLayout = function getLayout(page: ReactElement) {
+Register.getLayout = function getLayout(page: ReactElement) {
   return <Layout>{page}</Layout>;
 };
