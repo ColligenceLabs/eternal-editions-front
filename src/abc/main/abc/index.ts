@@ -99,7 +99,7 @@ class AbcController extends EventEmitter {
   }
 
   async snsLogin(token: string, service: string): AbcLoginResult {
-    return await this.abcService.login(token, service);
+    return await this.abcService.snsLogin(token, service);
   }
 
   async searchBlacklist(dto: AbcSearchBlacklistDto) {
