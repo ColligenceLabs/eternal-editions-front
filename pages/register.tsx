@@ -1,11 +1,11 @@
 import { ReactElement, useEffect, useState } from 'react';
-import { getSession } from '../src/services/services';
+import { getSession, userRegister } from '../src/services/services';
 import Layout from '../src/layouts';
 import SupportPage from './support';
 import { Page } from '../src/components';
 import { Box, Button, Checkbox, FormControlLabel } from '@mui/material';
 
-export default function Register() {
+export default function Register(effect: React.EffectCallback, deps?: React.DependencyList) {
   const [isCheck, setIsCheck] = useState({
     check1: false,
     check2: false,
@@ -29,7 +29,13 @@ export default function Register() {
   };
 
   const handleClickRegister = async () => {
-    console.log('Register');
+    const res = await userRegister();
+    console.log(res);
+    if (res.status === 200) {
+      // 성공. 리다이렉트..
+      alert('가입이 완료되었습니다. 다시 로그인 해주세요.');
+      location.replace('/');
+    }
   };
 
   useEffect(() => {
