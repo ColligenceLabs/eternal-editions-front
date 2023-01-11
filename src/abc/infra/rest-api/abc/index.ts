@@ -20,6 +20,7 @@ import {
   AbcSearchBlackDomainDto,
   AbcSearchBlacklistDto,
   AbcSendEmailAuthCodeDto,
+  AbcSnsAddUserDto,
   AbcVerifyEmailAuthCodeDto,
 } from '../../../main/abc/interface';
 import {
@@ -48,6 +49,28 @@ export class AbcRestApi {
         headers: {
           'content-type': 'application/x-www-form-urlencoded',
           'Secure-Channel': channelid,
+        },
+        data: queryString.stringify(dto),
+      });
+
+      if (res.status !== 201) {
+        throw new Error();
+      }
+
+      return res.data;
+    } catch (error) {
+      throw error?.response?.data;
+    }
+  };
+
+  snsAddUser = async (dto: AbcSnsAddUserDto): Promise<any> => {
+    try {
+      const res = await axios.request({
+        url: memberBaseURL + '/user-management/join',
+        method: 'post',
+        // adapter: fetchAdapter,
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
         },
         data: queryString.stringify(dto),
       });

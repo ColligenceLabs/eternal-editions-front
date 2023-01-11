@@ -23,6 +23,7 @@ import { setUser } from '../../../store/slices/user';
 import { setWallet } from '../../../store/slices/wallet';
 import { DekeyError, DekeyErrorTypes } from '../../utils/errorTypes';
 import { CustomError } from '../../utils/error';
+import { TwofaResetDto } from '../../schema/account';
 
 class AccountController extends EventEmitter {
   // platform: ExtensionPlatform;
@@ -161,6 +162,91 @@ class AccountController extends EventEmitter {
         throw new CustomError(DekeyError.invalidUnsignedTxToHash(error.message));
       }
       throw new CustomError(DekeyError.twofaVerifyForMpcSign(error.message));
+    }
+  }
+
+  async generateTwoFactor(dto) {
+    try {
+      return this.accountRestApi.generateTwoFactor(dto);
+    } catch (error) {
+      throw new CustomError(DekeyError.twofaGenQrcode(error.message));
+    }
+  }
+
+  async verifyTwoFactorGen(payload: { token: string }) {
+    try {
+      // const state = this.dekeyStore.getState();
+
+      const { twofaResetCode, user } = await this.accountRestApi.verifyTwofactorGen(payload);
+
+      // this.dekeyStore.updateStore({
+      //   user: {
+      //     ...state.user,
+      //     ...user,
+      //     // twoFactorEnabled: true,
+      //   },
+      // });
+
+      return twofaResetCode;
+
+      // TODO: user.twoFactorEnabled 서버에서 받은 값을 넣을지 아니면 true를 바로 넣을지 결정
+      // this.accountService.updateUserTwoFactorEnabled(user);
+    } catch (error) {
+      throw new CustomError(DekeyError.twofaGenVerify(error.message));
+    }
+  }
+
+  async verifyTwoFactorGenReset(payload: { token: string; twofaResetAccessToken: string }) {
+    try {
+      // const state = this.dekeyStore.getState();
+
+      const { twofaResetCode, user } = await this.accountRestApi.verifyTwoFactorResetGenVerify(
+        payload
+      );
+
+      // this.dekeyStore.updateStore({
+      //   user: {
+      //     ...state.user,
+      //     ...user,
+      //   },
+      // });
+
+      return twofaResetCode;
+    } catch (error) {
+      throw new CustomError(DekeyError.twofaGenVerify(error.message));
+    }
+  }
+
+  async resetTwoFa(dto: TwofaResetDto) {
+    try {
+      // const state = this.dekeyStore.getState();
+
+      const { success, user, accessToken } = await this.accountRestApi.resetTwofactor(dto);
+
+      // TODO: user.twoFactorEnabled 서버로 부터 받은 값을 넣을지 아니면 false를 바로 넣을지 결정
+      // this.accountService.updateUserTwoFactorEnabled(user);
+
+      // TODO : Peter H. Nahm 확인 필요함....
+      // this.accountService.updateUser(user);
+
+      if (!success) {
+        throw new Error();
+      }
+
+      return {
+        accessToken,
+        user,
+        // success,
+        // data: {
+        //   resetRetryCount: user.twoFactorResetRetryCount,
+        //   retryFreezeEndTime: user.twoFactorRetryFreezeEndTime,
+        // },
+      };
+    } catch (error) {
+      throw error;
+      // return {
+      //   success: false,
+      // };
     }
   }
 }

@@ -10,9 +10,10 @@ import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../src/config';
 
 // TODO : dkeys WASM Go Initialize...
 import '../src/abc/sandbox/index';
-import { controllers } from '../src/abc/background/init';
-import { AbcLoginResult } from '../src/abc/main/abc/interface';
+import { controllers, accountRestApi } from '../src/abc/background/init';
+import { AbcLoginResult, AbcSnsAddUserDto } from '../src/abc/main/abc/interface';
 import { setAbcAuth } from '../src/store/slices/abcAuth';
+import { setTwoFa } from '../src/store/slices/twoFa';
 
 const RootStyle = styled('div')(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,
@@ -22,18 +23,23 @@ const RootStyle = styled('div')(({ theme }) => ({
 }));
 export default function Register(effect: React.EffectCallback, deps?: React.DependencyList) {
   const dispatch = useDispatch();
-  const { abcController } = controllers;
+  const { abcController, accountController } = controllers;
   const [isCheck, setIsCheck] = useState({
     check1: false,
     check2: false,
     check3: false,
     check4: false,
+    check5: false,
   });
   const [isCheckAll, setIsCheckAll] = useState(isCheck.check1 && isCheck.check2 && isCheck.check3);
   const [idToken, setIdToken] = useState('');
   const [service, setService] = useState('');
+  const [email, setEmail] = useState('');
+  const [otpToken, setOtpToken] = useState('');
+  const [qrCode, setQrCode] = useState('');
+  const [qrSecret, setQrSecret] = useState('');
 
-  const handleCheckItem = (check: 'check1' | 'check2' | 'check3' | 'check4') => {
+  const handleCheckItem = (check: 'check1' | 'check2' | 'check3' | 'check4' | 'check5') => {
     const newCheck = { ...isCheck, [check]: !isCheck[check] };
     setIsCheck(newCheck);
   };
@@ -45,6 +51,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       check2: !isCheckAll,
       check3: !isCheckAll,
       check4: !isCheckAll,
+      check5: !isCheckAll,
     });
   };
 
@@ -57,10 +64,49 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     //   location.replace('/');
     // }
     console.log('Register');
-    const abcAuth: AbcLoginResult = await abcController.snsLogin(idToken, service);
+    let abcAuth: AbcLoginResult = await abcController.snsLogin(idToken, service);
     console.log('==========> ', abcAuth);
+    // email code 가 return 된 경우는 신규 가입이 필요한 사용자
+    const flCreate = abcAuth?.code ? true : false;
+
+    if (flCreate) {
+      const dto: AbcSnsAddUserDto = {
+        username: email,
+        code: abcAuth?.code,
+        overage: isCheck.check1 ? 1 : 0,
+        agree: isCheck.check2 ? 1 : 0,
+        collect: isCheck.check3 ? 1 : 0,
+        advertise: isCheck.check4 ? 1 : 0,
+        thirdparty: isCheck.check5 ? 1 : 0,
+      };
+      await abcController.snsAddUser(dto);
+
+      abcAuth = await abcController.snsLogin(idToken, service);
+      console.log('==========> ', abcAuth);
+    }
     await dispatch(setAbcAuth(abcAuth));
     window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
+
+    // Recover wallet
+    const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
+
+    await accountController.recoverShare(
+      { password: '!owdin001', user, wallets, undefined },
+      dispatch
+    );
+
+    if (flCreate) {
+      const { qrcode, secret } = await accountController.generateTwoFactor({ reset: false });
+      setQrCode(qrcode);
+      setQrSecret(secret);
+
+      // TODO 준호 : 화먄에 qrCode 및 qrSecret 표시 후 otp 값을 입력 받아야 함.
+      // <img className="QRCode" src={qrCode} alt="qrapp" />
+
+      // optToken : 입력 받은 OTP 값을 입력 받은 후 아래 코드 실행
+      const twofaResetCode = await accountController.verifyTwoFactorGen({ token: otpToken });
+      dispatch(setTwoFa({ secret, reset: twofaResetCode }));
+    }
   };
 
   useEffect(() => {
@@ -71,9 +117,11 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         console.log('=====> ', res.data?.providerAuthInfo);
         const id_token = res.data?.providerAuthInfo?.provider_token;
         const service = res.data?.providerAuthInfo?.provider;
-        console.log(service, id_token);
+        const data = JSON.parse(res.data?.providerAuthInfo?.provider_data);
+        console.log(service, id_token, data.email);
         setIdToken(id_token);
         setService(service);
+        setEmail(data.email);
       }
     };
     fetchSession();
@@ -116,6 +164,12 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                 <Checkbox checked={isCheck.check4} onClick={() => handleCheckItem('check4')} />
               }
               label="약관4"
+            />
+            <FormControlLabel
+              control={
+                <Checkbox checked={isCheck.check5} onClick={() => handleCheckItem('check5')} />
+              }
+              label="약관5"
             />
           </Box>
           <Box>

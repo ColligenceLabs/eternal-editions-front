@@ -18,6 +18,17 @@ export interface AbcAddUserDto {
   thirdparty: number;
 }
 
+export interface AbcSnsAddUserDto {
+  username: string;
+  code: string;
+  serviceid?: string;
+  overage: number;
+  agree: number;
+  collect: number;
+  advertise: number;
+  thirdparty: number;
+}
+
 export interface AbcGetUserDto {
   email: string;
   successIfUserExist: boolean;

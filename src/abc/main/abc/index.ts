@@ -23,6 +23,7 @@ import {
   AbcSearchBlackDomainDto,
   AbcSearchBlacklistDto,
   AbcSendEmailAuthCodeDto,
+  AbcSnsAddUserDto,
   AbcVerifyEmailAuthCodeDto,
 } from './interface';
 // import { AppStore } from '../../../store/store';
@@ -47,6 +48,13 @@ class AbcController extends EventEmitter {
       },
       channelid
     );
+  }
+
+  async snsAddUser(dto: AbcSnsAddUserDto) {
+    return this.restApi.snsAddUser({
+      ...dto,
+      serviceid: process.env.ABC_SERVICE_ID,
+    });
   }
 
   async getUser(dto: AbcGetUserDto) {
