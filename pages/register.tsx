@@ -8,12 +8,9 @@ import { styled } from '@mui/material/styles';
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../src/config';
 
 // TODO : dkeys WASM Go Initialize...
-import '../src/abc/sandbox/index';
-import { controllers, accountRestApi, services, nonceTracker } from '../src/abc/background/init';
-import { AbcLoginResult } from '../src/abc/main/abc/interface';
-
-export default function Register() {
-  const { abcController } = controllers;
+// import '../src/abc/sandbox/index';
+// import { controllers } from '../src/abc/background/init';
+// import { AbcLoginResult } from '../src/abc/main/abc/interface';
 
 const RootStyle = styled('div')(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,
@@ -22,6 +19,7 @@ const RootStyle = styled('div')(({ theme }) => ({
   },
 }));
 export default function Register(effect: React.EffectCallback, deps?: React.DependencyList) {
+  // const { abcController } = controllers;
   const [isCheck, setIsCheck] = useState({
     check1: false,
     check2: false,
@@ -48,16 +46,16 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   };
 
   const handleClickRegister = async () => {
-    const res = await userRegister();
-    console.log(res);
-    if (res.status === 200) {
-      // 성공. 리다이렉트..
-      alert('가입이 완료되었습니다. 다시 로그인 해주세요.');
-      location.replace('/');
-    }
-    console.log('Register');
-    const abcAuth: AbcLoginResult = await abcController.snsLogin(idToken, service);
-    console.log('==========> ', abcAuth);
+    // const res = await userRegister();
+    // console.log(res);
+    // if (res.status === 200) {
+    //   // 성공. 리다이렉트..
+    //   alert('가입이 완료되었습니다. 다시 로그인 해주세요.');
+    //   location.replace('/');
+    // }
+    // console.log('Register');
+    // const abcAuth: AbcLoginResult = await abcController.snsLogin(idToken, service);
+    // console.log('==========> ', abcAuth);
   };
 
   useEffect(() => {
