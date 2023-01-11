@@ -7,7 +7,7 @@
  ******************************************************************************/
 
 import axios from 'axios';
-import fetchAdapter from '@vespaiach/axios-fetch-adapter';
+// import fetchAdapter from '@vespaiach/axios-fetch-adapter';
 
 export async function jsonRpcRequest(rpcUrl, rpcMethod, rpcParams = []) {
   let fetchUrl = rpcUrl;
@@ -18,12 +18,10 @@ export async function jsonRpcRequest(rpcUrl, rpcMethod, rpcParams = []) {
     'Content-Type': 'application/json',
   };
   // Convert basic auth URL component to Authorization header
-  const {origin, pathname, username, password, search} = new URL(rpcUrl);
+  const { origin, pathname, username, password, search } = new URL(rpcUrl);
   // URLs containing username and password needs special processing
   if (username && password) {
-    const encodedAuth = Buffer.from(`${username}:${password}`).toString(
-      'base64'
-    );
+    const encodedAuth = Buffer.from(`${username}:${password}`).toString('base64');
     headers.Authorization = `Basic ${encodedAuth}`;
     fetchUrl = `${origin}${pathname}${search}`;
   }
@@ -31,7 +29,7 @@ export async function jsonRpcRequest(rpcUrl, rpcMethod, rpcParams = []) {
   const jsonRpcResponse = await axios.request({
     url: fetchUrl,
     method: 'post',
-    adapter: fetchAdapter,
+    // adapter: fetchAdapter,
     data: {
       id: Date.now().toString(),
       jsonrpc: '2.0',
@@ -55,14 +53,10 @@ export async function jsonRpcRequest(rpcUrl, rpcMethod, rpcParams = []) {
   // );
   // console.log(jsonRpcResponse);
 
-  if (
-    !jsonRpcResponse ||
-    Array.isArray(jsonRpcResponse) ||
-    typeof jsonRpcResponse !== 'object'
-  ) {
+  if (!jsonRpcResponse || Array.isArray(jsonRpcResponse) || typeof jsonRpcResponse !== 'object') {
     throw new Error(`RPC endpoint ${rpcUrl} returned non-object response.`);
   }
-  const {status, data} = jsonRpcResponse;
+  const { status, data } = jsonRpcResponse;
 
   // if (error) {
   //   throw new Error(error?.message || error);

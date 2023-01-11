@@ -7,13 +7,9 @@
  ******************************************************************************/
 
 import axios from 'axios';
-import fetchAdapter from '@vespaiach/axios-fetch-adapter';
+// import fetchAdapter from '@vespaiach/axios-fetch-adapter';
 
-import {
-  EtherscanTokenTx,
-  FetchTokenTxResult,
-  FetchTokenTxs,
-} from '../../../main/erc20/interface';
+import { EtherscanTokenTx, FetchTokenTxResult, FetchTokenTxs } from '../../../main/erc20/interface';
 import {
   getApiKey,
   getEtherscanApiUrl,
@@ -248,9 +244,9 @@ export const ERC20_ABI = [
 export const KIP_ABI = [
   {
     constant: true,
-    inputs: [{name: 'interfaceId', type: 'bytes4'}],
+    inputs: [{ name: 'interfaceId', type: 'bytes4' }],
     name: 'supportsInterface',
-    outputs: [{name: '', type: 'bool'}],
+    outputs: [{ name: '', type: 'bool' }],
     payable: false,
     stateMutability: 'view',
     type: 'function',
@@ -259,7 +255,7 @@ export const KIP_ABI = [
     constant: true,
     inputs: [],
     name: 'name',
-    outputs: [{name: '', type: 'string'}],
+    outputs: [{ name: '', type: 'string' }],
     payable: false,
     stateMutability: 'view',
     type: 'function',
@@ -267,18 +263,18 @@ export const KIP_ABI = [
   {
     constant: false,
     inputs: [
-      {name: 'spender', type: 'address'},
-      {name: 'value', type: 'uint256'},
+      { name: 'spender', type: 'address' },
+      { name: 'value', type: 'uint256' },
     ],
     name: 'approve',
-    outputs: [{name: '', type: 'bool'}],
+    outputs: [{ name: '', type: 'bool' }],
     payable: false,
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
     constant: false,
-    inputs: [{name: 'owner', type: 'address'}],
+    inputs: [{ name: 'owner', type: 'address' }],
     name: 'setOwner',
     outputs: [],
     payable: false,
@@ -289,7 +285,7 @@ export const KIP_ABI = [
     constant: true,
     inputs: [],
     name: 'totalSupply',
-    outputs: [{name: '', type: 'uint256'}],
+    outputs: [{ name: '', type: 'uint256' }],
     payable: false,
     stateMutability: 'view',
     type: 'function',
@@ -297,12 +293,12 @@ export const KIP_ABI = [
   {
     constant: false,
     inputs: [
-      {name: 'sender', type: 'address'},
-      {name: 'recipient', type: 'address'},
-      {name: 'amount', type: 'uint256'},
+      { name: 'sender', type: 'address' },
+      { name: 'recipient', type: 'address' },
+      { name: 'amount', type: 'uint256' },
     ],
     name: 'transferFrom',
-    outputs: [{name: '', type: 'bool'}],
+    outputs: [{ name: '', type: 'bool' }],
     payable: false,
     stateMutability: 'nonpayable',
     type: 'function',
@@ -311,7 +307,7 @@ export const KIP_ABI = [
     constant: true,
     inputs: [],
     name: 'decimals',
-    outputs: [{name: '', type: 'uint8'}],
+    outputs: [{ name: '', type: 'uint8' }],
     payable: false,
     stateMutability: 'view',
     type: 'function',
@@ -320,7 +316,7 @@ export const KIP_ABI = [
     constant: true,
     inputs: [],
     name: 'isInitialized',
-    outputs: [{name: '', type: 'bool'}],
+    outputs: [{ name: '', type: 'bool' }],
     payable: false,
     stateMutability: 'view',
     type: 'function',
@@ -330,8 +326,8 @@ export const KIP_ABI = [
     inputs: [],
     name: '_version',
     outputs: [
-      {name: 'name', type: 'string'},
-      {name: 'version', type: 'string'},
+      { name: 'name', type: 'string' },
+      { name: 'version', type: 'string' },
     ],
     payable: false,
     stateMutability: 'view',
@@ -340,8 +336,8 @@ export const KIP_ABI = [
   {
     constant: false,
     inputs: [
-      {name: 'recipient', type: 'address'},
-      {name: 'amount', type: 'uint256'},
+      { name: 'recipient', type: 'address' },
+      { name: 'amount', type: 'uint256' },
     ],
     name: 'safeTransfer',
     outputs: [],
@@ -352,9 +348,9 @@ export const KIP_ABI = [
   {
     constant: false,
     inputs: [
-      {name: 'sender', type: 'address'},
-      {name: 'recipient', type: 'address'},
-      {name: 'amount', type: 'uint256'},
+      { name: 'sender', type: 'address' },
+      { name: 'recipient', type: 'address' },
+      { name: 'amount', type: 'uint256' },
     ],
     name: 'safeTransferFrom',
     outputs: [],
@@ -366,7 +362,7 @@ export const KIP_ABI = [
     constant: true,
     inputs: [],
     name: '_minter',
-    outputs: [{name: '', type: 'address'}],
+    outputs: [{ name: '', type: 'address' }],
     payable: false,
     stateMutability: 'view',
     type: 'function',
@@ -374,20 +370,20 @@ export const KIP_ABI = [
   {
     constant: false,
     inputs: [
-      {name: 'spender', type: 'address'},
-      {name: 'value', type: 'uint256'},
+      { name: 'spender', type: 'address' },
+      { name: 'value', type: 'uint256' },
     ],
     name: 'decreaseApproval',
-    outputs: [{name: '', type: 'bool'}],
+    outputs: [{ name: '', type: 'bool' }],
     payable: false,
     stateMutability: 'nonpayable',
     type: 'function',
   },
   {
     constant: true,
-    inputs: [{name: 'account', type: 'address'}],
+    inputs: [{ name: 'account', type: 'address' }],
     name: 'balanceOf',
-    outputs: [{name: '', type: 'uint256'}],
+    outputs: [{ name: '', type: 'uint256' }],
     payable: false,
     stateMutability: 'view',
     type: 'function',
@@ -396,7 +392,7 @@ export const KIP_ABI = [
     constant: true,
     inputs: [],
     name: 'symbol',
-    outputs: [{name: '', type: 'string'}],
+    outputs: [{ name: '', type: 'string' }],
     payable: false,
     stateMutability: 'view',
     type: 'function',
@@ -404,11 +400,11 @@ export const KIP_ABI = [
   {
     constant: false,
     inputs: [
-      {name: 'recipient', type: 'address'},
-      {name: 'amount', type: 'uint256'},
+      { name: 'recipient', type: 'address' },
+      { name: 'amount', type: 'uint256' },
     ],
     name: 'transfer',
-    outputs: [{name: '', type: 'bool'}],
+    outputs: [{ name: '', type: 'bool' }],
     payable: false,
     stateMutability: 'nonpayable',
     type: 'function',
@@ -417,7 +413,7 @@ export const KIP_ABI = [
     constant: true,
     inputs: [],
     name: '_owner',
-    outputs: [{name: '', type: 'address'}],
+    outputs: [{ name: '', type: 'address' }],
     payable: false,
     stateMutability: 'view',
     type: 'function',
@@ -425,10 +421,10 @@ export const KIP_ABI = [
   {
     constant: false,
     inputs: [
-      {name: 'sender', type: 'address'},
-      {name: 'recipient', type: 'address'},
-      {name: 'amount', type: 'uint256'},
-      {name: 'data', type: 'bytes'},
+      { name: 'sender', type: 'address' },
+      { name: 'recipient', type: 'address' },
+      { name: 'amount', type: 'uint256' },
+      { name: 'data', type: 'bytes' },
     ],
     name: 'safeTransferFrom',
     outputs: [],
@@ -439,11 +435,11 @@ export const KIP_ABI = [
   {
     constant: false,
     inputs: [
-      {name: 'spender', type: 'address'},
-      {name: 'value', type: 'uint256'},
+      { name: 'spender', type: 'address' },
+      { name: 'value', type: 'uint256' },
     ],
     name: 'increaseApproval',
-    outputs: [{name: '', type: 'bool'}],
+    outputs: [{ name: '', type: 'bool' }],
     payable: false,
     stateMutability: 'nonpayable',
     type: 'function',
@@ -451,8 +447,8 @@ export const KIP_ABI = [
   {
     constant: false,
     inputs: [
-      {name: 'tokenName', type: 'string'},
-      {name: 'tokenSymbol', type: 'string'},
+      { name: 'tokenName', type: 'string' },
+      { name: 'tokenSymbol', type: 'string' },
     ],
     name: 'setTokenInfo',
     outputs: [],
@@ -463,11 +459,11 @@ export const KIP_ABI = [
   {
     constant: true,
     inputs: [
-      {name: 'owner', type: 'address'},
-      {name: 'spender', type: 'address'},
+      { name: 'owner', type: 'address' },
+      { name: 'spender', type: 'address' },
     ],
     name: 'allowance',
-    outputs: [{name: '', type: 'uint256'}],
+    outputs: [{ name: '', type: 'uint256' }],
     payable: false,
     stateMutability: 'view',
     type: 'function',
@@ -475,9 +471,9 @@ export const KIP_ABI = [
   {
     constant: false,
     inputs: [
-      {name: 'recipient', type: 'address'},
-      {name: 'amount', type: 'uint256'},
-      {name: 'data', type: 'bytes'},
+      { name: 'recipient', type: 'address' },
+      { name: 'amount', type: 'uint256' },
+      { name: 'data', type: 'bytes' },
     ],
     name: 'safeTransfer',
     outputs: [],
@@ -487,7 +483,7 @@ export const KIP_ABI = [
   },
   {
     constant: false,
-    inputs: [{name: 'minter', type: 'address'}],
+    inputs: [{ name: 'minter', type: 'address' }],
     name: 'setMinter',
     outputs: [],
     payable: false,
@@ -496,9 +492,9 @@ export const KIP_ABI = [
   },
   {
     inputs: [
-      {name: 'owner', type: 'address'},
-      {name: 'minter', type: 'address'},
-      {name: 'decimals', type: 'uint8'},
+      { name: 'owner', type: 'address' },
+      { name: 'minter', type: 'address' },
+      { name: 'decimals', type: 'uint8' },
     ],
     payable: false,
     stateMutability: 'nonpayable',
@@ -506,21 +502,21 @@ export const KIP_ABI = [
   },
   {
     anonymous: false,
-    inputs: [{indexed: false, name: 'owner', type: 'address'}],
+    inputs: [{ indexed: false, name: 'owner', type: 'address' }],
     name: 'SetOwner',
     type: 'event',
   },
   {
     anonymous: false,
-    inputs: [{indexed: false, name: 'minter', type: 'address'}],
+    inputs: [{ indexed: false, name: 'minter', type: 'address' }],
     name: 'SetMinter',
     type: 'event',
   },
   {
     anonymous: false,
     inputs: [
-      {indexed: false, name: 'name', type: 'string'},
-      {indexed: false, name: 'symbol', type: 'string'},
+      { indexed: false, name: 'name', type: 'string' },
+      { indexed: false, name: 'symbol', type: 'string' },
     ],
     name: 'SetTokenInfo',
     type: 'event',
@@ -528,9 +524,9 @@ export const KIP_ABI = [
   {
     anonymous: false,
     inputs: [
-      {indexed: true, name: 'from', type: 'address'},
-      {indexed: true, name: 'to', type: 'address'},
-      {indexed: false, name: 'amount', type: 'uint256'},
+      { indexed: true, name: 'from', type: 'address' },
+      { indexed: true, name: 'to', type: 'address' },
+      { indexed: false, name: 'amount', type: 'uint256' },
     ],
     name: 'Transfer',
     type: 'event',
@@ -538,33 +534,29 @@ export const KIP_ABI = [
   {
     anonymous: false,
     inputs: [
-      {indexed: true, name: 'holder', type: 'address'},
-      {indexed: true, name: 'spender', type: 'address'},
-      {indexed: false, name: 'amount', type: 'uint256'},
+      { indexed: true, name: 'holder', type: 'address' },
+      { indexed: true, name: 'spender', type: 'address' },
+      { indexed: false, name: 'amount', type: 'uint256' },
     ],
     name: 'Approval',
     type: 'event',
   },
 ];
 
-export const SINGLE_CALL_BALANCES_ADDRESS =
-  '0xb1f8e55c7f64d203c1400b9d8555d050f94adf39';
-export const SINGLE_CALL_BALANCES_ADDRESS_RINKEBY =
-  '0x9f510b19f1ad66f0dcf6e45559fab0d6752c1db7';
-export const SINGLE_CALL_BALANCES_ADDRESS_ROPSTEN =
-  '0xb8e671734ce5c8d7dfbbea5574fa4cf39f7a54a4';
-export const SINGLE_CALL_BALANCES_ADDRESS_KOVAN =
-  '0xb1d3fbb2f83aecd196f474c16ca5d9cffa0d0ffc';
+export const SINGLE_CALL_BALANCES_ADDRESS = '0xb1f8e55c7f64d203c1400b9d8555d050f94adf39';
+export const SINGLE_CALL_BALANCES_ADDRESS_RINKEBY = '0x9f510b19f1ad66f0dcf6e45559fab0d6752c1db7';
+export const SINGLE_CALL_BALANCES_ADDRESS_ROPSTEN = '0xb8e671734ce5c8d7dfbbea5574fa4cf39f7a54a4';
+export const SINGLE_CALL_BALANCES_ADDRESS_KOVAN = '0xb1d3fbb2f83aecd196f474c16ca5d9cffa0d0ffc';
 
 export const SINGLE_CALL_BALANCES_ABI = [
   {
     constant: true,
     inputs: [
-      {name: 'user', type: 'address'},
-      {name: 'token', type: 'address'},
+      { name: 'user', type: 'address' },
+      { name: 'token', type: 'address' },
     ],
     name: 'tokenBalance',
-    outputs: [{name: '', type: 'uint256'}],
+    outputs: [{ name: '', type: 'uint256' }],
     payable: false,
     stateMutability: 'view',
     type: 'function',
@@ -572,23 +564,21 @@ export const SINGLE_CALL_BALANCES_ABI = [
   {
     constant: true,
     inputs: [
-      {name: 'users', type: 'address[]'},
-      {name: 'tokens', type: 'address[]'},
+      { name: 'users', type: 'address[]' },
+      { name: 'tokens', type: 'address[]' },
     ],
     name: 'balances',
-    outputs: [{name: '', type: 'uint256[]'}],
+    outputs: [{ name: '', type: 'uint256[]' }],
     payable: false,
     stateMutability: 'view',
     type: 'function',
   },
-  {payable: true, stateMutability: 'payable', type: 'fallback'},
+  { payable: true, stateMutability: 'payable', type: 'fallback' },
 ];
 
-const fetchTokenTxsFromEtherscan = async (
-  dto: FetchTokenTxs
-): Promise<FetchTokenTxResult> => {
+const fetchTokenTxsFromEtherscan = async (dto: FetchTokenTxs): Promise<FetchTokenTxResult> => {
   try {
-    const {contractAddress, myAddress, startblock, chainId} = dto;
+    const { contractAddress, myAddress, startblock, chainId } = dto;
 
     const url = getEtherscanApiUrl(chainId);
 
@@ -604,7 +594,7 @@ const fetchTokenTxsFromEtherscan = async (
     const res = await axios.request({
       url,
       method: 'get',
-      adapter: fetchAdapter,
+      // adapter: fetchAdapter,
       params,
     });
 
@@ -614,17 +604,13 @@ const fetchTokenTxsFromEtherscan = async (
         txs: res.data.result as EtherscanTokenTx[],
       };
     }
-    return {success: false};
+    return { success: false };
   } catch (error) {
-    return {success: false};
+    return { success: false };
   }
 };
 
-const getAbi = async (
-  contractAddress: string,
-  url: string,
-  chainId: number
-) => {
+const getAbi = async (contractAddress: string, url: string, chainId: number) => {
   try {
     if (isKlaytn(chainId)) {
       return JSON.stringify(KIP_ABI);
@@ -642,7 +628,7 @@ const getAbi = async (
     const res = await axios.request({
       url,
       method: 'get',
-      adapter: fetchAdapter,
+      // adapter: fetchAdapter,
       params,
     });
 
@@ -669,7 +655,7 @@ const fetchKlaytnTokenTxs = async (
     const res = await axios.request({
       url: `https://th-api.klaytnapi.com/v2/transfer/account/${address}`,
       method: 'get',
-      adapter: fetchAdapter,
+      // adapter: fetchAdapter,
       ...config,
     });
 

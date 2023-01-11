@@ -7,14 +7,14 @@
  ******************************************************************************/
 
 import axios from 'axios';
-import {BigNumber} from '@ethersproject/bignumber';
-import {utils} from 'ethers';
-import fetchAdapter from '@vespaiach/axios-fetch-adapter';
+import { BigNumber } from '@ethersproject/bignumber';
+import { utils } from 'ethers';
+// import fetchAdapter from '@vespaiach/axios-fetch-adapter';
 
-import {GasFeeEstimates} from './gasFee';
+import { GasFeeEstimates } from './gasFee';
 import GasUtil from '../../utils/gas';
-import {CustomError} from '../../utils/error';
-import {DekeyError} from '../../utils/errorTypes';
+import { CustomError } from '../../utils/error';
+import { DekeyError } from '../../utils/errorTypes';
 // import {gweiDecToWEIBN, weiHexToGweiDec} from '../../main/util';
 
 // metamask gas controller code
@@ -30,14 +30,12 @@ export async function fetchGasEstimates(url: string): Promise<GasFeeEstimates> {
     const axiosResult = await axios.request({
       url,
       method: 'get',
-      adapter: fetchAdapter,
+      // adapter: fetchAdapter,
     });
 
     // const axiosResult = await axiosClient.get(url);
     if (axiosResult.status !== 200) {
-      throw new Error(
-        `fetching gas estimates status code: ${axiosResult.status}`
-      );
+      throw new Error(`fetching gas estimates status code: ${axiosResult.status}`);
     }
     const estimates: GasFeeEstimates = axiosResult.data;
     const normalizedEstimates: GasFeeEstimates = {
@@ -47,27 +45,21 @@ export async function fetchGasEstimates(url: string): Promise<GasFeeEstimates> {
         suggestedMaxPriorityFeePerGas: normalizeGWEIDecimalNumbers(
           estimates.low.suggestedMaxPriorityFeePerGas
         ),
-        suggestedMaxFeePerGas: normalizeGWEIDecimalNumbers(
-          estimates.low.suggestedMaxFeePerGas
-        ),
+        suggestedMaxFeePerGas: normalizeGWEIDecimalNumbers(estimates.low.suggestedMaxFeePerGas),
       },
       medium: {
         ...estimates.medium,
         suggestedMaxPriorityFeePerGas: normalizeGWEIDecimalNumbers(
           estimates.medium.suggestedMaxPriorityFeePerGas
         ),
-        suggestedMaxFeePerGas: normalizeGWEIDecimalNumbers(
-          estimates.medium.suggestedMaxFeePerGas
-        ),
+        suggestedMaxFeePerGas: normalizeGWEIDecimalNumbers(estimates.medium.suggestedMaxFeePerGas),
       },
       high: {
         ...estimates.high,
         suggestedMaxPriorityFeePerGas: normalizeGWEIDecimalNumbers(
           estimates.high.suggestedMaxPriorityFeePerGas
         ),
-        suggestedMaxFeePerGas: normalizeGWEIDecimalNumbers(
-          estimates.high.suggestedMaxFeePerGas
-        ),
+        suggestedMaxFeePerGas: normalizeGWEIDecimalNumbers(estimates.high.suggestedMaxFeePerGas),
       },
     };
     return normalizedEstimates;
@@ -77,9 +69,7 @@ export async function fetchGasEstimates(url: string): Promise<GasFeeEstimates> {
 }
 
 const historicalBlocks = 10;
-export async function fetchAlchemyGasPriceEstimate(
-  web3Alchemy: any
-): Promise<GasFeeEstimates> {
+export async function fetchAlchemyGasPriceEstimate(web3Alchemy: any): Promise<GasFeeEstimates> {
   try {
     const feeHistory = await web3Alchemy.eth.getFeeHistory(
       historicalBlocks,
@@ -89,49 +79,32 @@ export async function fetchAlchemyGasPriceEstimate(
 
     // alchemy document example
     const blocks = _formatFeeHistory(feeHistory, false);
-    const slow = _avg(blocks.map(b => b.priorityFeePerGas[0]));
-    const average = _avg(blocks.map(b => b.priorityFeePerGas[1]));
-    const fast = _avg(blocks.map(b => b.priorityFeePerGas[2]));
+    const slow = _avg(blocks.map((b) => b.priorityFeePerGas[0]));
+    const average = _avg(blocks.map((b) => b.priorityFeePerGas[1]));
+    const fast = _avg(blocks.map((b) => b.priorityFeePerGas[2]));
 
     const block = await web3Alchemy.eth.getBlock('pending');
     const baseFeePerGas = Number(block.baseFeePerGas);
 
     const normalizedEstimates: GasFeeEstimates = {
-      estimatedBaseFee: Number(
-        utils.formatUnits(baseFeePerGas, 'gwei')
-      ).toFixed(2),
+      estimatedBaseFee: Number(utils.formatUnits(baseFeePerGas, 'gwei')).toFixed(2),
       low: {
         maxWaitTimeEstimate: 60000,
         minWaitTimeEstimate: 15000,
-        suggestedMaxPriorityFeePerGas: Number(
-          utils.formatUnits(slow, 'gwei')
-        ).toFixed(2),
-        suggestedMaxFeePerGas: _calculateMaxPriorityFeePerGas(
-          baseFeePerGas,
-          slow
-        ),
+        suggestedMaxPriorityFeePerGas: Number(utils.formatUnits(slow, 'gwei')).toFixed(2),
+        suggestedMaxFeePerGas: _calculateMaxPriorityFeePerGas(baseFeePerGas, slow),
       },
       medium: {
         maxWaitTimeEstimate: 45000,
         minWaitTimeEstimate: 15000,
-        suggestedMaxPriorityFeePerGas: Number(
-          utils.formatUnits(average, 'gwei')
-        ).toFixed(2),
-        suggestedMaxFeePerGas: _calculateMaxPriorityFeePerGas(
-          baseFeePerGas,
-          average
-        ),
+        suggestedMaxPriorityFeePerGas: Number(utils.formatUnits(average, 'gwei')).toFixed(2),
+        suggestedMaxFeePerGas: _calculateMaxPriorityFeePerGas(baseFeePerGas, average),
       },
       high: {
         maxWaitTimeEstimate: 30000,
         minWaitTimeEstimate: 15000,
-        suggestedMaxPriorityFeePerGas: Number(
-          utils.formatUnits(fast, 'gwei')
-        ).toFixed(2),
-        suggestedMaxFeePerGas: _calculateMaxPriorityFeePerGas(
-          baseFeePerGas,
-          fast
-        ),
+        suggestedMaxPriorityFeePerGas: Number(utils.formatUnits(fast, 'gwei')).toFixed(2),
+        suggestedMaxFeePerGas: _calculateMaxPriorityFeePerGas(baseFeePerGas, fast),
       },
     };
 
@@ -141,10 +114,7 @@ export async function fetchAlchemyGasPriceEstimate(
   }
 }
 
-function _calculateMaxPriorityFeePerGas(
-  baseFeePerGas: number,
-  maxPriorityFeePerGas: number
-) {
+function _calculateMaxPriorityFeePerGas(baseFeePerGas: number, maxPriorityFeePerGas: number) {
   const SQRT_GWEI = Math.round(Math.sqrt(1000000000));
 
   const baseFeeBuffer = BigNumber.from(Math.round(Math.sqrt(+baseFeePerGas)))
@@ -168,7 +138,7 @@ function _formatFeeHistory(result, includePending) {
       number: blockNum,
       baseFeePerGas: Number(result.baseFeePerGas[index]),
       gasUsedRatio: Number(result.gasUsedRatio[index]),
-      priorityFeePerGas: result.reward[index].map(x => Number(x)),
+      priorityFeePerGas: result.reward[index].map((x) => Number(x)),
     });
     blockNum += 1;
     index += 1;

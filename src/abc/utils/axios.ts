@@ -7,7 +7,7 @@
  ******************************************************************************/
 
 import axios from 'axios';
-import fetchAdapter from '@vespaiach/axios-fetch-adapter';
+// import fetchAdapter from '@vespaiach/axios-fetch-adapter';
 import queryString from 'query-string';
 
 // import { dekeyStore } from '../background/init';
@@ -16,7 +16,7 @@ import { AbcLoginResponse } from '../schema/account';
 export const apiClient = axios.create({
   baseURL: `${process.env.APP_SERVER_ADDRESS_PROTOCOL}://${process.env.APP_SERVER_ADDRESS}/api/`,
   // timeout: 1000,
-  adapter: fetchAdapter,
+  // adapter: fetchAdapter,
 });
 
 apiClient.interceptors.request.use((cfg) => {
@@ -68,7 +68,7 @@ apiClient.interceptors.response.use(
           .request({
             url: 'https://dev-api.id.myabcwallet.com/auth/auth-service/refresh',
             method: 'post',
-            adapter: fetchAdapter,
+            // adapter: fetchAdapter,
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
             data: queryString.stringify({
               grant_type: 'refresh_token',
@@ -108,11 +108,11 @@ apiClient.interceptors.response.use(
 
 export const coingeckoClient = axios.create({
   baseURL: `https://api.coingecko.com/api/v3`,
-  adapter: fetchAdapter,
+  // adapter: fetchAdapter,
 });
 
 export const abcAdminApiClient = axios.create({
-  adapter: fetchAdapter,
+  // adapter: fetchAdapter,
   timeout: 3000,
 });
 abcAdminApiClient.interceptors.request.use((cfg) => {
@@ -154,7 +154,7 @@ abcAdminApiClient.interceptors.response.use(
           .request({
             url: 'https://dev-api.id.myabcwallet.com/auth/auth-service/refresh',
             method: 'post',
-            adapter: fetchAdapter,
+            // adapter: fetchAdapter,
             headers: { 'content-type': 'application/x-www-form-urlencoded' },
             data: queryString.stringify({
               grant_type: 'refresh_token',

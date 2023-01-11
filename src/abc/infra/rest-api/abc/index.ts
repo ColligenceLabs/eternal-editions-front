@@ -8,7 +8,7 @@
 
 import axios from 'axios';
 import queryString from 'query-string';
-import fetchAdapter from '@vespaiach/axios-fetch-adapter';
+// import fetchAdapter from '@vespaiach/axios-fetch-adapter';
 import {
   AbcAddUserDto,
   AbcChangePasswordDto,
@@ -44,7 +44,7 @@ export class AbcRestApi {
       const res = await axios.request({
         url: memberBaseURL + '/user-management/users/adduser',
         method: 'post',
-        adapter: fetchAdapter,
+        // adapter: fetchAdapter,
         headers: {
           'content-type': 'application/x-www-form-urlencoded',
           'Secure-Channel': channelid,
@@ -70,7 +70,7 @@ export class AbcRestApi {
         url:
           memberBaseURL + `/user-management/users/${email}?serviceid=${process.env.ABC_SERVICE_ID}`,
         method: 'get',
-        adapter: fetchAdapter,
+        // adapter: fetchAdapter,
       });
 
       if (res.status !== 200) {
@@ -92,7 +92,7 @@ export class AbcRestApi {
           memberBaseURL +
           `/mail-service/${email}/sendcode?serviceid=${process.env.ABC_SERVICE_ID}&lang=${lang}`,
         method: 'get',
-        adapter: fetchAdapter,
+        // adapter: fetchAdapter,
       });
 
       if (res.status !== 200) {
@@ -112,7 +112,7 @@ export class AbcRestApi {
       const res = await axios.request({
         url: memberBaseURL + `/mail-service/${email}/verifycode`,
         method: 'post',
-        adapter: fetchAdapter,
+        // adapter: fetchAdapter,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data: queryString.stringify({ code }),
       });
@@ -132,7 +132,7 @@ export class AbcRestApi {
       const res = await axios.request({
         url: memberBaseURL + `/user-management/users/changepassword`,
         method: 'patch',
-        adapter: fetchAdapter,
+        // adapter: fetchAdapter,
         headers: {
           'content-type': 'application/x-www-form-urlencoded',
           'Secure-Channel': channelid,
@@ -155,7 +155,7 @@ export class AbcRestApi {
       const res = await axios.request({
         url: memberBaseURL + `/user-management/users/initpassword`,
         method: 'patch',
-        adapter: fetchAdapter,
+        // adapter: fetchAdapter,
         headers: {
           'content-type': 'application/x-www-form-urlencoded',
           'Secure-Channel': channelid,
@@ -182,7 +182,7 @@ export class AbcRestApi {
       const res = await axios.request({
         url: authBaseURL + `/auth-service/login`,
         method: 'post',
-        adapter: fetchAdapter,
+        // adapter: fetchAdapter,
         headers: {
           'content-type': 'application/x-www-form-urlencoded',
           'Secure-Channel': channelid,
@@ -218,7 +218,7 @@ export class AbcRestApi {
       const res = await axios.request({
         url: authBaseURL + `/auth-service/token/login`,
         method: 'post',
-        adapter: fetchAdapter,
+        // adapter: fetchAdapter,
         headers: {
           'content-type': 'application/x-www-form-urlencoded',
         },
@@ -254,7 +254,7 @@ export class AbcRestApi {
       const res = await axios.request({
         url: `https://dev-api.id.myabcwallet.com/secure/channel/create`,
         method: 'post',
-        adapter: fetchAdapter,
+        // adapter: fetchAdapter,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
         data: queryString.stringify({
           pubkey,
@@ -277,7 +277,7 @@ export class AbcRestApi {
       const res = await abcAdminApiClient.request({
         url: `https://dev-api.id.myabcwallet.com/query/v1/filter/address`,
         method: 'post',
-        adapter: fetchAdapter,
+        // adapter: fetchAdapter,
         headers: {
           'content-type': 'application/json',
         },
@@ -299,7 +299,7 @@ export class AbcRestApi {
       const res = await abcAdminApiClient.request({
         url: `https://dev-api.id.myabcwallet.com/query/v1/filter/domain`,
         method: 'post',
-        adapter: fetchAdapter,
+        // adapter: fetchAdapter,
         headers: {
           'content-type': 'application/json',
         },

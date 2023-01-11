@@ -8,7 +8,7 @@
 
 import axios from 'axios';
 import log from 'loglevel';
-import fetchAdapter from '@vespaiach/axios-fetch-adapter';
+// import fetchAdapter from '@vespaiach/axios-fetch-adapter';
 
 import {
   EtherscanTx,
@@ -16,10 +16,10 @@ import {
   NetworkModel,
   RequestTxApprovalInput,
 } from '../../../main/transactions/interface';
-import {apiClient} from '../../../utils/axios';
-import {CustomError} from '../../../utils/error';
-import {DekeyError} from '../../../utils/errorTypes';
-import {isBinance, isMatic} from '../../../utils/network';
+import { apiClient } from '../../../utils/axios';
+import { CustomError } from '../../../utils/error';
+import { DekeyError } from '../../../utils/errorTypes';
+import { isBinance, isMatic } from '../../../utils/network';
 
 // const getEstimatedFee = async () => {
 //   log.debug('getEstimatedFee');
@@ -60,10 +60,7 @@ import {isBinance, isMatic} from '../../../utils/network';
 //   }
 // };
 
-const getMpcJwt = async (dto: {
-  signType?: string;
-  message: string;
-}): Promise<string> => {
+const getMpcJwt = async (dto: { signType?: string; message: string }): Promise<string> => {
   try {
     const res = await apiClient.post('/v1/address/auth/gen', {
       signType: dto.signType,
@@ -76,7 +73,7 @@ const getMpcJwt = async (dto: {
 };
 
 const getTransactions = async (dto): Promise<EtherscanTx[]> => {
-  const {address, url, blockNumber, chainId} = dto;
+  const { address, url, blockNumber, chainId } = dto;
   try {
     let apikey: string;
     if (isBinance(chainId)) {
@@ -112,7 +109,7 @@ const getTransactions = async (dto): Promise<EtherscanTx[]> => {
     const res = await axios.request({
       url,
       method: 'get',
-      adapter: fetchAdapter,
+      // adapter: fetchAdapter,
       ...config,
     });
 
@@ -127,11 +124,7 @@ const getTransactions = async (dto): Promise<EtherscanTx[]> => {
   }
 };
 
-const getKlaytnTransactions = async (
-  address: string,
-  chainId: string,
-  fromTimestamp: number
-) => {
+const getKlaytnTransactions = async (address: string, chainId: string, fromTimestamp: number) => {
   // log.debug('getKlaytnTransactions', {fromTimestamp});
   try {
     const params = fromTimestamp
@@ -152,13 +145,13 @@ const getKlaytnTransactions = async (
         password: process.env.KLAYTN_API_PASSWORD,
         Authorization: 'Basic AUTHORIZATION',
       },
-      headers: {'x-chain-id': chainId, 'Content-Type': 'application/json'},
+      headers: { 'x-chain-id': chainId, 'Content-Type': 'application/json' },
     };
 
     const res = await axios.request({
       url: `https://th-api.klaytnapi.com/v2/transfer/account/${address}`,
       method: 'get',
-      adapter: fetchAdapter,
+      // adapter: fetchAdapter,
       ...config,
     });
 
@@ -255,7 +248,7 @@ const getCoingeckoEthereumPrice = async (ids: string) => {
     const res = await axios.request({
       url: 'https://api.coingecko.com/api/v3/simple/price',
       method: 'get',
-      adapter: fetchAdapter,
+      // adapter: fetchAdapter,
       ...config,
     });
 
