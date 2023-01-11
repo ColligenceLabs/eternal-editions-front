@@ -1,4 +1,5 @@
 import { ReactElement, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { getSession, userRegister } from '../src/services/services';
 import Layout from '../src/layouts';
 import SupportPage from './support';
@@ -11,6 +12,7 @@ import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../src/config';
 import '../src/abc/sandbox/index';
 import { controllers } from '../src/abc/background/init';
 import { AbcLoginResult } from '../src/abc/main/abc/interface';
+import { setAbcAuth } from '../src/store/slices/abcAuth';
 
 const RootStyle = styled('div')(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,
@@ -19,6 +21,7 @@ const RootStyle = styled('div')(({ theme }) => ({
   },
 }));
 export default function Register(effect: React.EffectCallback, deps?: React.DependencyList) {
+  const dispatch = useDispatch();
   const { abcController } = controllers;
   const [isCheck, setIsCheck] = useState({
     check1: false,
@@ -56,6 +59,8 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     console.log('Register');
     const abcAuth: AbcLoginResult = await abcController.snsLogin(idToken, service);
     console.log('==========> ', abcAuth);
+    await dispatch(setAbcAuth(abcAuth));
+    window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
   };
 
   useEffect(() => {
