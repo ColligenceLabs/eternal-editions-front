@@ -39,6 +39,13 @@ class AbcService extends EventEmitter {
     return lResult;
   }
 
+  async snsLogin(token: string, service: string): Promise<AbcLoginResult> {
+    const lResult = await this.restApi.snsLogin(token, service);
+
+    console.log('===>', lResult);
+    return lResult;
+  }
+
   async createSecureChannel() {
     const plain = 'testplaintext';
     const ec = new EC('p256');
