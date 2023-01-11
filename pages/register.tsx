@@ -5,7 +5,14 @@ import SupportPage from './support';
 import { Page } from '../src/components';
 import { Box, Button, Checkbox, FormControlLabel } from '@mui/material';
 
+// TODO : dkeys WASM Go Initialize...
+import '../src/abc/sandbox/index';
+import { controllers, accountRestApi, services, nonceTracker } from '../src/abc/background/init';
+import { AbcLoginResult } from '../src/abc/main/abc/interface';
+
 export default function Register() {
+  const { abcController } = controllers;
+
   const [isCheck, setIsCheck] = useState({
     check1: false,
     check2: false,
@@ -13,6 +20,9 @@ export default function Register() {
     check4: false,
   });
   const [isCheckAll, setIsCheckAll] = useState(isCheck.check1 && isCheck.check2 && isCheck.check3);
+  const [idToken, setIdToken] = useState('');
+  const [service, setService] = useState('');
+
   const handleCheckItem = (check: 'check1' | 'check2' | 'check3' | 'check4') => {
     const newCheck = { ...isCheck, [check]: !isCheck[check] };
     setIsCheck(newCheck);
@@ -30,6 +40,8 @@ export default function Register() {
 
   const handleClickRegister = async () => {
     console.log('Register');
+    const abcAuth: AbcLoginResult = await abcController.snsLogin(idToken, service);
+    console.log('==========> ', abcAuth);
   };
 
   useEffect(() => {
@@ -37,8 +49,12 @@ export default function Register() {
       const res = await getSession();
       console.log('session res::::', res);
       if (res.data?.providerAuthInfo) {
-        const id_token = JSON.parse(res.data?.providerAuthInfo?.provider_token);
-        console.log(id_token);
+        console.log('=====> ', res.data?.providerAuthInfo);
+        const id_token = res.data?.providerAuthInfo?.provider_token;
+        const service = res.data?.providerAuthInfo?.provider;
+        console.log(service, id_token);
+        setIdToken(id_token);
+        setService(service);
       }
     };
     fetchSession();
