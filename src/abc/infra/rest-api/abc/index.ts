@@ -214,7 +214,6 @@ export class AbcRestApi {
 
   snsLogin = async (token: string, service: string): Promise<AbcLoginResult> => {
     try {
-      const { username, password } = dto;
       const res = await axios.request({
         url: authBaseURL + `/auth-service/token/login`,
         method: 'post',
