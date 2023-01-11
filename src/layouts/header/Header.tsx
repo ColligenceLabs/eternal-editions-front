@@ -104,8 +104,8 @@ export default function Header({ transparent }: Props) {
 
     // 1. 블록체인 네트워크 연결
     const networks = DekeyData.DEFAULT_NETWORKS;
-    await providerService.connect(networks[3], '');
-    // await providerConnManager.connect(networks[3], '');
+    await providerService.connect(networks[7], ''); // use Polygon Testnet
+    // await providerConnManager.connect(networks[7], '');
 
     // 2. Active Account
     const account = user.accounts[0];
