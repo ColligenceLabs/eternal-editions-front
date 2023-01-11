@@ -98,6 +98,10 @@ class AbcController extends EventEmitter {
     return await this.abcService.login(dto);
   }
 
+  async snsLogin(token: string, service: string): AbcLoginResult {
+    return await this.abcService.login(token, service);
+  }
+
   async searchBlacklist(dto: AbcSearchBlacklistDto) {
     try {
       // const { abcAuth } = this.dekeyStore.getState();

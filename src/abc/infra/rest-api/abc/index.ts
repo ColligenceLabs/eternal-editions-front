@@ -212,6 +212,41 @@ export class AbcRestApi {
     }
   };
 
+  snsLogin = async (token: string, service: string): Promise<AbcLoginResult> => {
+    try {
+      const { username, password } = dto;
+      const res = await axios.request({
+        url: authBaseURL + `/auth-service/token/login`,
+        method: 'post',
+        adapter: fetchAdapter,
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded',
+        },
+        data: queryString.stringify({
+          token,
+          service,
+          audience: process.env.ABC_SERVICE_ID,
+        }),
+      });
+
+      if (res.status !== 200) {
+        throw new Error();
+      }
+
+      const resData = AbcLoginResponse.parse(res.data);
+      console.log('== snsLogin ==> ', resData);
+
+      return {
+        accessToken: resData.access_token,
+        refreshToken: resData.refresh_token,
+        tokenType: resData.token_type,
+        expiresIn: resData.expire_in,
+      };
+    } catch (error) {
+      throw error?.response?.data;
+    }
+  };
+
   createSecureChannel = async (dto: { pubkey: string; plain: string }) => {
     try {
       const { pubkey, plain } = dto;
