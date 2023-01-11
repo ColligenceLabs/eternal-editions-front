@@ -78,7 +78,9 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     <Page title="Register">
       <RootStyle>
         <Box>
-          <Box>Register</Box>
+          <Box>
+            <h1>Register</h1>
+          </Box>
           <Box>
             <FormControlLabel
               control={<Checkbox checked={isCheckAll} onClick={handleCheckAll} />}
