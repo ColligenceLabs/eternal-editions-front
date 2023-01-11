@@ -43,8 +43,8 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       const res = await getSession();
       console.log('session res::::', res);
       if (res.data?.providerAuthInfo) {
-        const _provider = JSON.parse(res.data?.providerAuthInfo?.provider_data);
-        console.log(_provider);
+        const id_token = JSON.parse(res.data?.providerAuthInfo?.provider_token);
+        console.log(id_token);
       }
     };
     fetchSession();
