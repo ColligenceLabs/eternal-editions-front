@@ -24,3 +24,7 @@ export const getBuyersService = async (id: any) => {
 export const getSession = async () => {
   return await apiAuthAxios.get('/auth/getSession');
 };
+
+export const userRegister = async () => {
+  return await apiAuthAxios.post('/auth/register/eternals');
+};
