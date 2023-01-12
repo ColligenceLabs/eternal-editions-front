@@ -250,21 +250,18 @@ export class AbcRestApi {
           audience: process.env.ABC_SERVICE_ID,
         }),
       });
-
       if (res.status !== 200) {
         throw new Error();
       }
 
       const resData = AbcLoginResponse.parse(res.data);
-      console.log('== snsLogin ==> ', resData);
-
       return {
         accessToken: resData.access_token,
         refreshToken: resData.refresh_token,
         tokenType: resData.token_type,
         expiresIn: resData.expire_in,
       };
-    } catch (error) {
+    } catch (error: any) {
       throw error?.response?.data;
     }
   };

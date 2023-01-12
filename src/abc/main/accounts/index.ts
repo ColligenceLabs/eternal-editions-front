@@ -88,6 +88,14 @@ class AccountController extends EventEmitter {
     // });
   }
 
+  async createMpcBaseAccount(data: AddAccountDto) {
+    try {
+      await this.accountService.createMpcBaseAccount(data, this.mpcService);
+    } catch (err) {
+      throw err;
+    }
+  }
+
   async recoverShare(
     dto: {
       password: string;

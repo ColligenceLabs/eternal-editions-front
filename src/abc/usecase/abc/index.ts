@@ -41,8 +41,6 @@ class AbcService extends EventEmitter {
 
   async snsLogin(token: string, service: string): Promise<AbcLoginResult> {
     const lResult = await this.restApi.snsLogin(token, service);
-
-    console.log('== SNS Login Result ==>', lResult);
     return lResult;
   }
 

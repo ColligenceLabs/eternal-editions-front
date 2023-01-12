@@ -1,6 +1,6 @@
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { getSession, userRegister } from '../src/services/services';
+import { abcLogin, getSession, userRegister } from '../src/services/services';
 import Layout from '../src/layouts';
 import SupportPage from './support';
 import { Page } from '../src/components';
@@ -56,56 +56,73 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   };
 
   const handleClickRegister = async () => {
-    // const res = await userRegister();
-    // console.log(res);
-    // if (res.status === 200) {
-    //   // 성공. 리다이렉트..
-    //   alert('가입이 완료되었습니다. 다시 로그인 해주세요.');
-    //   location.replace('/');
-    // }
-    console.log('Register');
-    let abcAuth: AbcLoginResult = await abcController.snsLogin(idToken, service);
-    console.log('==========> ', abcAuth);
-    // email code 가 return 된 경우는 신규 가입이 필요한 사용자
-    const flCreate = abcAuth?.code ? true : false;
+    const result = await abcLogin({
+      token: idToken,
+      service,
+      audience: 'https://mw.myabcwallet.com',
+    });
+    console.log('=== abcLogin ===>', result.data.msg);
+    const flCreate = result.data.msg !== undefined ? true : false;
 
+    let abcAuth: AbcLoginResult;
     if (flCreate) {
+      const sixCode = JSON.parse(result.data.msg).sixcode;
+      console.log('=== sixcode ===>', sixCode);
       const dto: AbcSnsAddUserDto = {
         username: email,
-        code: abcAuth?.code,
+        code: sixCode,
         overage: isCheck.check1 ? 1 : 0,
         agree: isCheck.check2 ? 1 : 0,
         collect: isCheck.check3 ? 1 : 0,
         advertise: isCheck.check4 ? 1 : 0,
         thirdparty: isCheck.check5 ? 1 : 0,
       };
-      await abcController.snsAddUser(dto);
-
-      abcAuth = await abcController.snsLogin(idToken, service);
-      console.log('==========> ', abcAuth);
+      const newAccount = await abcController.snsAddUser(dto);
+      console.log('== created account =>', newAccount);
     }
+
+    abcAuth = await abcController.snsLogin(idToken, service);
+    console.log('==========> ', abcAuth);
+
     await dispatch(setAbcAuth(abcAuth));
     window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
 
-    // Recover wallet
-    const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
-
-    await accountController.recoverShare(
-      { password: '!owdin001', user, wallets, undefined },
-      dispatch
-    );
-
     if (flCreate) {
+      await accountController.createMpcBaseAccount({
+        accountName: email,
+        password: '!owdin001',
+        email: email,
+      });
+
       const { qrcode, secret } = await accountController.generateTwoFactor({ reset: false });
       setQrCode(qrcode);
       setQrSecret(secret);
 
       // TODO 준호 : 화먄에 qrCode 및 qrSecret 표시 후 otp 값을 입력 받아야 함.
+      console.log('=== reCode ===>', qrCode);
       // <img className="QRCode" src={qrCode} alt="qrapp" />
 
-      // optToken : 입력 받은 OTP 값을 입력 받은 후 아래 코드 실행
-      const twofaResetCode = await accountController.verifyTwoFactorGen({ token: otpToken });
-      dispatch(setTwoFa({ secret, reset: twofaResetCode }));
+      // // optToken : 입력 받은 OTP 값을 입력 받은 후 아래 코드 실행
+      // const twofaResetCode = await accountController.verifyTwoFactorGen({ token: otpToken });
+      // dispatch(setTwoFa({ secret, reset: twofaResetCode }));
+    } else {
+      // Recover wallet
+      const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
+      console.log('====== user =====>', user);
+
+      await accountController.recoverShare(
+        { password: '!owdin001', user, wallets, undefined },
+        dispatch
+      );
+    }
+
+    // TODO : ABC Wallet 가입 성공하면... 우리 쪽 가입 실행
+    const res = await userRegister();
+    console.log(res);
+    if (res.status === 200) {
+      // 성공. 리다이렉트..
+      alert('가입이 완료되었습니다. 다시 로그인 해주세요.');
+      location.replace('/');
     }
   };
 
