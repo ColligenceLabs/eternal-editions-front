@@ -28,3 +28,7 @@ export const getSession = async () => {
 export const userRegister = async () => {
   return await apiAuthAxios.post('/auth/register/eternals');
 };
+
+export const abcLogin = async (data: any) => {
+  return await customAxios.post(`api/abc/login`, data);
+};
