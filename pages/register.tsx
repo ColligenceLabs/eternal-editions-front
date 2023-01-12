@@ -1,10 +1,10 @@
-import { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getSession, userRegister } from '../src/services/services';
 import Layout from '../src/layouts';
 import SupportPage from './support';
 import { Page } from '../src/components';
-import { Box, Button, Checkbox, FormControlLabel } from '@mui/material';
+import { Box, Button, Checkbox, FormControlLabel, Input } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../src/config';
 
@@ -130,7 +130,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   return (
     <Page title="Register">
       <RootStyle>
-        <Box>
+        <Box sx={{ border: '1px solid white', borderRadius: '15px', p: 2 }}>
           <Box>
             <h1>Register</h1>
           </Box>
@@ -182,6 +182,50 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
             </Button>
           </Box>
         </Box>
+        {!qrCode && (
+          <Box sx={{ border: '1px solid white', borderRadius: '15px', p: 2, my: 2 }}>
+            <Box>
+              <img className="QRCode" src={qrCode} alt="qrapp" />
+            </Box>
+            <Box sx={{ display: 'flex', gap: 1 }}>
+              <Input
+                sx={{ color: 'white' }}
+                // fullWidth={true}
+                id="outlined-basic"
+                // value={abcToken}
+                // onChange={handleAbcTokenChange}
+              />
+              <Button
+                variant="outlined"
+                size="medium"
+                sx={{
+                  // width: '100% !important',
+                  height: '36px',
+                  fontSize: 12,
+                  backgroundColor: '#f1f2f5',
+                  borderColor: '#f1f2f5',
+                  color: '#000000',
+                  boxShadow: 'none',
+                  '&:hover': {
+                    backgroundColor: '#08FF0C',
+                    borderColor: '#08FF0C',
+                    color: '#ffffff',
+                    boxShadow: 'none',
+                  },
+                  '&:active': {
+                    boxShadow: 'none',
+                    backgroundColor: 'background.paper',
+                    borderColor: 'background.paper',
+                    color: '#ffffff',
+                  },
+                }}
+                // onClick={handleAbcConfirmClick}
+              >
+                확인
+              </Button>
+            </Box>
+          </Box>
+        )}
       </RootStyle>
     </Page>
   );
