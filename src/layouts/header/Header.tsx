@@ -103,13 +103,13 @@ export default function Header({ transparent }: Props) {
 
   const abcSnsLogin = async () => {
     // ABC Wallet Test
-    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
-    const dto: AbcLoginDto = { username: 'hwnahm@gmail.com', password: '!owdin001' };
-    const abcAuth: AbcLoginResult = await abcController.login(dto);
-    // const abcAuth: AbcLoginResult = await abcController.snsLogin(
-    //   webUser?.user?.session?.providerAuthInfo?.provider_token,
-    //   webUser?.user?.session?.providerAuthInfo?.provider
-    // );
+    console.log('!! start sns login !!');
+    // const dto: AbcLoginDto = { username: 'hwnahm@gmail.com', password: '!owdin001' };
+    // const abcAuth: AbcLoginResult = await abcController.login(dto);
+    const abcAuth: AbcLoginResult = await abcController.snsLogin(
+      webUser?.user?.session?.providerAuthInfo?.provider_token,
+      webUser?.user?.session?.providerAuthInfo?.provider
+    );
     await dispatch(setAbcAuth(abcAuth));
 
     window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
@@ -124,8 +124,6 @@ export default function Header({ transparent }: Props) {
   };
 
   useEffect(() => {
-    console.log('&&&&&&&&&&&&&&&', checkWasm());
-
     if (webUser?.user?.session?.providerAuthInfo?.provider_token !== '' && temp) {
       abcSnsLogin();
     }
@@ -275,7 +273,6 @@ export default function Header({ transparent }: Props) {
 
   const handleJoinOpen = async () => {
     setJoinOpen(true);
-    console.log('&&&&&&&&&&&&&&&', checkWasm());
   };
 
   const handleJoinClose = () => setJoinOpen(false);
