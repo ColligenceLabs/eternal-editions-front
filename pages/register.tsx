@@ -36,6 +36,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   const [service, setService] = useState('');
   const [email, setEmail] = useState('');
   const [otpToken, setOtpToken] = useState('');
+  const [resetCode, setResetCode] = useState('');
   const [qrCode, setQrCode] = useState('');
   const [qrSecret, setQrSecret] = useState('');
 
@@ -52,6 +53,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     // // optToken : 입력 받은 OTP 값을 입력 받은 후 아래 코드 실행
     const twofaResetCode = await accountController.verifyTwoFactorGen({ token: otpToken });
     dispatch(setTwoFa({ secret: qrSecret, reset: twofaResetCode }));
+    setResetCode(twofaResetCode);
   };
 
   const handleCheckItem = (check: 'check1' | 'check2' | 'check3' | 'check4' | 'check5') => {
@@ -255,6 +257,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                 확인
               </Button>
             </Box>
+            {resetCode && <Box>{resetCode}</Box>}
           </Box>
         )}
       </RootStyle>
