@@ -74,11 +74,11 @@ export class AbcRestApi {
         },
         data: queryString.stringify(dto),
       });
-
+      console.log('=== snsAdduser ===>', res.data);
       if (res.status !== 201) {
         throw new Error();
       }
-
+      console.log('=== snsAdduser ===>', res.data);
       return res.data;
     } catch (error) {
       throw error?.response?.data;

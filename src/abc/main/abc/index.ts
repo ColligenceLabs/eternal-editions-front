@@ -53,6 +53,7 @@ class AbcController extends EventEmitter {
   async snsAddUser(dto: AbcSnsAddUserDto) {
     return this.restApi.snsAddUser({
       ...dto,
+      joinpath: 'https://colligence.io',
       serviceid: process.env.ABC_SERVICE_ID,
     });
   }
