@@ -56,8 +56,6 @@ if (!WebAssembly.instantiateStreaming) {
     const source = await (await resp).arrayBuffer();
     return await WebAssembly.instantiate(source, importObject);
   };
-  console.log('#######################################111');
-  window.localStorage.setItem('wasm', 'true');
 }
 WebAssembly.instantiateStreaming(fetch('wasm/dkeyswasm.wasm'), go.importObject).then(
   async (result) => {
@@ -65,8 +63,6 @@ WebAssembly.instantiateStreaming(fetch('wasm/dkeyswasm.wasm'), go.importObject).
     inst = result.instance;
 
     await go.run(inst);
-    console.log('#######################################222');
-    window.localStorage.setItem('wasm', 'true');
   }
 );
 // }
