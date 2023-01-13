@@ -7,26 +7,29 @@
  ******************************************************************************/
 
 import EventEmitter from 'events';
-import {MPC_COMMANDS} from '../usecase/mpc';
+import { MPC_COMMANDS } from '../usecase/mpc';
 // import UCWasm from './uc-wasm';
-import {InitiateShares, Unlock, Sign} from './worker';
+import { InitiateShares, Unlock, Sign, CheckWasm } from './worker';
 
 // const uCWasm = new UCWasm();
 
-const keygen = dto => {
+const keygen = (dto) => {
   // return execute(dto, 'generateKeyShare', MPC_COMMANDS.generateKeyShare);
   return InitiateShares(dto);
 };
 
-const unlock = dto => {
+const unlock = (dto) => {
   return Unlock(dto);
 };
 
-const sign = dto => {
+const sign = (dto) => {
   return Sign(dto);
 };
 
-export {keygen, unlock, sign};
+const checkWasm = () => {
+  return CheckWasm();
+};
+export { keygen, unlock, sign, checkWasm };
 
 // window.addEventListener('message', event => {
 //   const command = event.data.command;

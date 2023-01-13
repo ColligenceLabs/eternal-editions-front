@@ -56,6 +56,8 @@ if (!WebAssembly.instantiateStreaming) {
     const source = await (await resp).arrayBuffer();
     return await WebAssembly.instantiate(source, importObject);
   };
+  console.log('#######################################111');
+  window.localStorage.setItem('wasm', 'true');
 }
 WebAssembly.instantiateStreaming(fetch('wasm/dkeyswasm.wasm'), go.importObject).then(
   async (result) => {
@@ -63,6 +65,8 @@ WebAssembly.instantiateStreaming(fetch('wasm/dkeyswasm.wasm'), go.importObject).
     inst = result.instance;
 
     await go.run(inst);
+    console.log('#######################################222');
+    window.localStorage.setItem('wasm', 'true');
   }
 );
 // }
@@ -95,6 +99,11 @@ function ConnectTo(addr, path, useTLS, skipInsecureTLS, token) {
   } catch (err) {
     console.log('=== ConnectTo error ===>', err);
   }
+}
+
+function CheckWasm() {
+  if (inst !== undefined) return true;
+  return false;
 }
 
 function InitiateShares(dto) {
@@ -860,4 +869,12 @@ function _handleSuccess({ csws, resolve, result }) {
   resolve(result);
 }
 
-export { InitiateShares, Unlock, Sign, ChangeActiveAccount, EmSeedRequest, RecoverShare };
+export {
+  InitiateShares,
+  Unlock,
+  Sign,
+  ChangeActiveAccount,
+  EmSeedRequest,
+  RecoverShare,
+  CheckWasm,
+};

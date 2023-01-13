@@ -53,6 +53,7 @@ import { DekeyData } from '../../abc/dekeyData';
 import { makeTxData } from '../../utils/makeTxData';
 
 import tokenAbi from '../../config/abi/ERC20Token.json';
+import { checkWasm } from '../../abc/sandbox';
 
 const modalStyle = {
   position: 'absolute',
@@ -74,6 +75,7 @@ type Props = {
 };
 
 export default function Header({ transparent }: Props) {
+  window.localStorage.setItem('wasm', 'false');
   const { abcController, accountController } = controllers;
   const { mpcService, providerService, providerConnManager } = services;
   const dispatch = useDispatch();
@@ -100,12 +102,13 @@ export default function Header({ transparent }: Props) {
 
   const abcSnsLogin = async () => {
     // ABC Wallet Test
-    // const dto: AbcLoginDto = { username: 'hwnahm@gmail.com', password: '!owdin001' };
-    // const abcAuth: AbcLoginResult = await abcController.login(dto);
-    const abcAuth: AbcLoginResult = await abcController.snsLogin(
-      webUser?.user?.session?.providerAuthInfo?.provider_token,
-      webUser?.user?.session?.providerAuthInfo?.provider
-    );
+    console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+    const dto: AbcLoginDto = { username: 'hwnahm@gmail.com', password: '!owdin001' };
+    const abcAuth: AbcLoginResult = await abcController.login(dto);
+    // const abcAuth: AbcLoginResult = await abcController.snsLogin(
+    //   webUser?.user?.session?.providerAuthInfo?.provider_token,
+    //   webUser?.user?.session?.providerAuthInfo?.provider
+    // );
     await dispatch(setAbcAuth(abcAuth));
 
     window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
@@ -120,8 +123,9 @@ export default function Header({ transparent }: Props) {
   };
 
   useEffect(() => {
+    console.log('&&&&&&&&&&&&&&&', checkWasm());
+
     if (webUser?.user?.session?.providerAuthInfo?.provider_token !== '') {
-      console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
       abcSnsLogin();
     }
   }, [webUser]);
@@ -141,7 +145,7 @@ export default function Header({ transparent }: Props) {
     console.log('=== account ===>', account);
 
     // 3. Target Smart Contract
-    const to = '0x273b95a65856b7a7755471f9f3f109e8ae721e30'; // Test USDC Smart Contract
+    const to = '0xaF07aC23189718a3b570C73Ccd9cD9C82B16b867'; // Test USDC Smart Contract
 
     // 4. 트랜잭션 Data 생성
     // const data = makeTxData(tokenAbi, 'approve', [
@@ -258,6 +262,7 @@ export default function Header({ transparent }: Props) {
 
   const handleJoinOpen = async () => {
     setJoinOpen(true);
+    console.log('&&&&&&&&&&&&&&&', checkWasm());
   };
 
   const handleJoinClose = () => setJoinOpen(false);
