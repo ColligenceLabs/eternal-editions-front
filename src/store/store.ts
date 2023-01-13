@@ -1,5 +1,6 @@
 import { applyMiddleware, createStore, compose } from 'redux';
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+// import logger from 'redux-logger';
 import { createWrapper } from 'next-redux-wrapper';
 import { persistedReducer, rootReducers } from './rootReducers';
 import storage from 'redux-persist';
@@ -30,7 +31,12 @@ import wallet from './slices/wallet';
 // };
 //
 // const persistedReducer = persistReducer(persistConfig, RootReducers);
-const makeConfiguredStore = (reducer: any) => createStore(reducer, undefined);
+// const makeConfiguredStore = (reducer) => createStore(reducer, undefined, applyMiddleware(logger));
+const makeConfiguredStore = (reducer: any) =>
+  configureStore({
+    reducer: reducer,
+    devTools: true,
+  });
 const makeStore = () => {
   const isServer = typeof window === 'undefined';
 
