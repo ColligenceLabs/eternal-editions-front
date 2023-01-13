@@ -97,6 +97,8 @@ export default function Header({ transparent }: Props) {
   const [abcOpen, setAbcOpen] = React.useState(false);
   const [abcToken, setAbcToken] = React.useState('');
   const [user, setUser] = React.useState([]);
+  const [temp, setTemp] = React.useState(false);
+  const [intervalTime, setIntervalTime] = React.useState(1000);
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -125,10 +127,22 @@ export default function Header({ transparent }: Props) {
   useEffect(() => {
     console.log('&&&&&&&&&&&&&&&', checkWasm());
 
-    if (webUser?.user?.session?.providerAuthInfo?.provider_token !== '') {
+    if (webUser?.user?.session?.providerAuthInfo?.provider_token !== '' && temp) {
       abcSnsLogin();
     }
-  }, [webUser]);
+  }, [webUser, temp]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      if (!temp) {
+        const result = checkWasm();
+        setTemp(result);
+        setIntervalTime(86400000);
+      }
+    }, intervalTime);
+
+    return () => clearInterval(timer);
+  }, [intervalTime]);
 
   const handleAbcConfirmClick = async () => {
     // console.log(`abc token : ${abcToken}`);
