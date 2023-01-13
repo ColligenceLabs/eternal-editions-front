@@ -1,4 +1,4 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { abcLogin, getSession, userRegister } from '../src/services/services';
 import Layout from '../src/layouts';
@@ -38,6 +38,18 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   const [otpToken, setOtpToken] = useState('');
   const [qrCode, setQrCode] = useState('');
   const [qrSecret, setQrSecret] = useState('');
+  const [abcToken, setAbcToken] = useState('');
+
+  const handleAbcTokenChange = (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const { value } = event.target;
+    setAbcToken(value);
+    // console.log(value);
+  };
+
+  const handleAbcConfirmClick = () => {
+    console.log('click confirm.');
+  };
 
   const handleCheckItem = (check: 'check1' | 'check2' | 'check3' | 'check4' | 'check5') => {
     const newCheck = { ...isCheck, [check]: !isCheck[check] };
@@ -201,18 +213,19 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
             </Button>
           </Box>
         </Box>
-        {!qrCode && (
+        {qrCode && (
           <Box sx={{ border: '1px solid white', borderRadius: '15px', p: 2, my: 2 }}>
             <Box>
               <img className="QRCode" src={qrCode} alt="qrapp" />
+              <Box>{qrSecret}</Box>
             </Box>
             <Box sx={{ display: 'flex', gap: 1 }}>
               <Input
                 sx={{ color: 'white' }}
                 // fullWidth={true}
                 id="outlined-basic"
-                // value={abcToken}
-                // onChange={handleAbcTokenChange}
+                value={abcToken}
+                onChange={handleAbcTokenChange}
               />
               <Button
                 variant="outlined"
@@ -238,7 +251,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                     color: '#ffffff',
                   },
                 }}
-                // onClick={handleAbcConfirmClick}
+                onClick={handleAbcConfirmClick}
               >
                 확인
               </Button>
