@@ -103,8 +103,8 @@ export default function Header({ transparent }: Props) {
     // const dto: AbcLoginDto = { username: 'hwnahm@gmail.com', password: '!owdin001' };
     // const abcAuth: AbcLoginResult = await abcController.login(dto);
     const abcAuth: AbcLoginResult = await abcController.snsLogin(
-      webUser.user.session.providerAuthInfo.provider_token,
-      webUser.user.session.providerAuthInfo.provider
+      webUser?.user?.session?.providerAuthInfo?.provider_token,
+      webUser?.user?.session?.providerAuthInfo?.provider
     );
     await dispatch(setAbcAuth(abcAuth));
 
@@ -120,7 +120,7 @@ export default function Header({ transparent }: Props) {
   };
 
   useEffect(() => {
-    if (webUser.user.session.providerAuthInfo.provider_token !== '') {
+    if (webUser?.user?.session?.providerAuthInfo?.provider_token !== '') {
       console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
       abcSnsLogin();
     }
