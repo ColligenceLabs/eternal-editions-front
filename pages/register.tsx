@@ -14,6 +14,7 @@ import { controllers, accountRestApi } from '../src/abc/background/init';
 import { AbcLoginResult, AbcSnsAddUserDto } from '../src/abc/main/abc/interface';
 import { setAbcAuth } from '../src/store/slices/abcAuth';
 import { setTwoFa } from '../src/store/slices/twoFa';
+import { setProvider } from '../src/store/slices/webUser';
 
 const RootStyle = styled('div')(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,
@@ -154,6 +155,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         setIdToken(id_token);
         setService(service);
         setEmail(data.email);
+        dispatch(setProvider({ id_token, service }));
       }
     };
     fetchSession();

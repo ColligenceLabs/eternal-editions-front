@@ -18,6 +18,8 @@ const initialState = {
     createdAt: '',
     updatedAt: '',
     session: {},
+    id_token: '',
+    service: '',
   },
 };
 
@@ -43,6 +45,8 @@ const userSlice = createSlice({
         createdAt: '',
         updatedAt: '',
         session: {},
+        id_token: '',
+        service: '',
       };
     },
     setWebUser: (state, action) => {
@@ -54,9 +58,16 @@ const userSlice = createSlice({
       const nftapiJwtToken = action.payload.session?.dropsUser?.nftapiJwtToken;
       if (nftapiJwtToken) localStorage.setItem('nftapiJwtToken', nftapiJwtToken);
     },
+    setProvider: (state, action) => {
+      state.user = {
+        ...state.user,
+        provider_id: action.payload.id_token,
+        service: action.payload.service,
+      };
+    },
   },
 });
 
-export const { initWebUser, setWebUser } = userSlice.actions;
+export const { initWebUser, setWebUser, setProvider } = userSlice.actions;
 
 export default userSlice.reducer;
