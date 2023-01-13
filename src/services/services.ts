@@ -32,3 +32,7 @@ export const userRegister = async () => {
 export const abcLogin = async (data: any) => {
   return await customAxios.post(`api/abc/login`, data);
 };
+
+export const getUser = async () => {
+  return await apiAuthAxios.get('/api/users/getUser');
+};

@@ -15,7 +15,7 @@ import 'react-lazy-load-image-component/src/effects/black-and-white.css';
 
 // ----------------------------------------------------------------------
 
-import { ReactElement, ReactNode } from 'react';
+import { ReactElement, ReactNode, useEffect } from 'react';
 import { ethers } from 'ethers';
 import { Web3ReactProvider } from '@web3-react/core';
 // next
@@ -40,6 +40,9 @@ import MotionLazyContainer from '../src/components/animate/MotionLazyContainer';
 import { WalletProvider } from '../src/contexts/WalletContext';
 
 import { wrapper } from '../src/store/store';
+import { useDispatch } from 'react-redux';
+import { getUser } from '../src/services/services';
+import { initWebUser, setWebUser } from '../src/store/slices/webUser';
 
 // ----------------------------------------------------------------------
 function getLibrary(provider: any) {
@@ -58,11 +61,23 @@ interface MyAppProps extends AppProps {
 }
 
 function MyApp(props: MyAppProps) {
+  const dispatch = useDispatch();
   const { Component, pageProps } = props;
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
   console.info('[INFO] baseAPI', axios.defaults.baseURL);
+
+  const updateUserRedux = async () => {
+    const userRes = await getUser();
+    console.log(userRes);
+    if (userRes.status === 200 && userRes.data.status != 0) dispatch(setWebUser(userRes.data.user));
+    else dispatch(initWebUser()); // 서버에 세션 없으면 초기화
+  };
+
+  useEffect(() => {
+    updateUserRedux();
+  }, []);
 
   return (
     <>
