@@ -38,17 +38,20 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   const [otpToken, setOtpToken] = useState('');
   const [qrCode, setQrCode] = useState('');
   const [qrSecret, setQrSecret] = useState('');
-  const [abcToken, setAbcToken] = useState('');
 
   const handleAbcTokenChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
     const { value } = event.target;
-    setAbcToken(value);
+    setOtpToken(value);
     // console.log(value);
   };
 
-  const handleAbcConfirmClick = () => {
+  const handleAbcConfirmClick = async () => {
     console.log('click confirm.');
+
+    // // optToken : 입력 받은 OTP 값을 입력 받은 후 아래 코드 실행
+    const twofaResetCode = await accountController.verifyTwoFactorGen({ token: otpToken });
+    dispatch(setTwoFa({ secret: qrSecret, reset: twofaResetCode }));
   };
 
   const handleCheckItem = (check: 'check1' | 'check2' | 'check3' | 'check4' | 'check5') => {
@@ -115,10 +118,6 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       // TODO 준호 : 화먄에 qrCode 및 qrSecret 표시 후 otp 값을 입력 받아야 함.
       // console.log('=== qrCode ===>', qrCode);
       // <img className="QRCode" src={qrCode} alt="qrapp" />
-
-      // // optToken : 입력 받은 OTP 값을 입력 받은 후 아래 코드 실행
-      // const twofaResetCode = await accountController.verifyTwoFactorGen({ token: otpToken });
-      // dispatch(setTwoFa({ secret, reset: twofaResetCode }));
     } else {
       // Recover wallet
       const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
@@ -224,7 +223,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                 sx={{ color: 'white' }}
                 // fullWidth={true}
                 id="outlined-basic"
-                value={abcToken}
+                value={otpToken}
                 onChange={handleAbcTokenChange}
               />
               <Button
