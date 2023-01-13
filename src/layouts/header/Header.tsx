@@ -31,7 +31,7 @@ import { NavMobile, NavDesktop, navConfig } from '../nav';
 import { ToolbarStyle, ToolbarShadowStyle } from './HeaderToolbarStyle';
 import useWallets from '../../hooks/useWallets';
 import { getIconByType } from '../../utils/wallet';
-import React, { ChangeEvent } from 'react';
+import React, { ChangeEvent, useEffect } from 'react';
 import { ConnectWallet, DisconnectWallet } from '../../components/wallet';
 import { SignUp } from '../../components/user';
 import WalletPopover from '../../components/WalletPopover';
@@ -77,6 +77,7 @@ export default function Header({ transparent }: Props) {
   const { abcController, accountController } = controllers;
   const { mpcService, providerService, providerConnManager } = services;
   const dispatch = useDispatch();
+  const webUser = useSelector((state: any) => state.webUser);
 
   const theme = useTheme();
 
@@ -96,6 +97,34 @@ export default function Header({ transparent }: Props) {
   const [user, setUser] = React.useState([]);
 
   const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+  const abcSnsLogin = async () => {
+    // ABC Wallet Test
+    // const dto: AbcLoginDto = { username: 'hwnahm@gmail.com', password: '!owdin001' };
+    // const abcAuth: AbcLoginResult = await abcController.login(dto);
+    const abcAuth: AbcLoginResult = await abcController.snsLogin(
+      webUser.user.session.providerAuthInfo.provider_token,
+      webUser.user.session.providerAuthInfo.provider
+    );
+    await dispatch(setAbcAuth(abcAuth));
+
+    window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
+
+    const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
+    setUser(user);
+
+    await accountController.recoverShare(
+      { password: '!owdin001', user, wallets, undefined },
+      dispatch
+    );
+  };
+
+  useEffect(() => {
+    if (webUser.user.session.providerAuthInfo.provider_token !== '') {
+      console.log('!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!');
+      abcSnsLogin();
+    }
+  }, [webUser]);
 
   const handleAbcConfirmClick = async () => {
     // console.log(`abc token : ${abcToken}`);
@@ -229,29 +258,6 @@ export default function Header({ transparent }: Props) {
 
   const handleJoinOpen = async () => {
     setJoinOpen(true);
-
-    const webUser = useSelector((state: any) => state.webUser);
-
-    if (webUser.id_token !== '') {
-      // ABC Wallet Test
-      // const dto: AbcLoginDto = { username: 'hwnahm@gmail.com', password: '!owdin001' };
-      // const abcAuth: AbcLoginResult = await abcController.login(dto);
-      const abcAuth: AbcLoginResult = await abcController.snsLogin(
-        webUser.id_token,
-        webUser.service
-      );
-      await dispatch(setAbcAuth(abcAuth));
-
-      window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
-
-      const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
-      setUser(user);
-
-      await accountController.recoverShare(
-        { password: '!owdin001', user, wallets, undefined },
-        dispatch
-      );
-    }
   };
 
   const handleJoinClose = () => setJoinOpen(false);
