@@ -19,7 +19,7 @@ const persistConfig = {
   // blacklist -> 그것만 제외합니다
 };
 
-const RootReducers = combineReducers({
+export const rootReducers = combineReducers({
   abcAuth,
   user,
   webUser,
@@ -27,5 +27,6 @@ const RootReducers = combineReducers({
   twoFa,
 });
 
+export const persistedReducer = persistReducer(persistConfig, rootReducers);
 // export default RootReducers;
-export default persistReducer(persistConfig, RootReducers);
+// export  persistReducer(persistConfig, rootReducers);

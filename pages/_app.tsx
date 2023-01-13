@@ -13,6 +13,8 @@ import 'react-lazy-load-image-component/src/effects/blur.css';
 import 'react-lazy-load-image-component/src/effects/opacity.css';
 import 'react-lazy-load-image-component/src/effects/black-and-white.css';
 
+import { PersistGate } from 'redux-persist/integration/react';
+
 // ----------------------------------------------------------------------
 
 import { ReactElement, ReactNode, useEffect } from 'react';
@@ -43,6 +45,9 @@ import { wrapper } from '../src/store/store';
 import { useDispatch } from 'react-redux';
 import { getUser } from '../src/services/services';
 import { initWebUser, setWebUser } from '../src/store/slices/webUser';
+import { persistStore } from 'redux-persist';
+import { createStore } from 'redux';
+import { persistedReducer } from '../src/store/rootReducers';
 
 // ----------------------------------------------------------------------
 function getLibrary(provider: any) {
@@ -61,6 +66,8 @@ interface MyAppProps extends AppProps {
 }
 
 function MyApp(props: MyAppProps) {
+  const store = createStore(persistedReducer);
+  const persistor = persistStore(store);
   const dispatch = useDispatch();
   const { Component, pageProps } = props;
 
@@ -80,7 +87,7 @@ function MyApp(props: MyAppProps) {
   }, []);
 
   return (
-    <>
+    <PersistGate persistor={persistor} loading={<div>loading...</div>}>
       <Head>
         <meta name="viewport" content="initial-scale=1, width=device-width" />
       </Head>
@@ -105,7 +112,7 @@ function MyApp(props: MyAppProps) {
           </SettingsProvider>
         </WalletProvider>
       </LocalizationProvider>
-    </>
+    </PersistGate>
   );
 }
 
