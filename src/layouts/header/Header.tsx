@@ -75,7 +75,6 @@ type Props = {
 };
 
 export default function Header({ transparent }: Props) {
-  window.localStorage.setItem('wasm', 'false');
   const { abcController, accountController } = controllers;
   const { mpcService, providerService, providerConnManager } = services;
   const dispatch = useDispatch();
