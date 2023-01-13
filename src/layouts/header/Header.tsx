@@ -230,20 +230,28 @@ export default function Header({ transparent }: Props) {
   const handleJoinOpen = async () => {
     setJoinOpen(true);
 
-    // ABC Wallet Test
-    const dto: AbcLoginDto = { username: 'hwnahm@gmail.com', password: '!owdin001' };
-    const abcAuth: AbcLoginResult = await abcController.login(dto);
-    await dispatch(setAbcAuth(abcAuth));
+    const webUser = useSelector((state: any) => state.webUser);
 
-    window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
+    if (webUser.id_token !== '') {
+      // ABC Wallet Test
+      // const dto: AbcLoginDto = { username: 'hwnahm@gmail.com', password: '!owdin001' };
+      // const abcAuth: AbcLoginResult = await abcController.login(dto);
+      const abcAuth: AbcLoginResult = await abcController.snsLogin(
+        webUser.id_token,
+        webUser.service
+      );
+      await dispatch(setAbcAuth(abcAuth));
 
-    const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
-    setUser(user);
+      window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
 
-    await accountController.recoverShare(
-      { password: '!owdin001', user, wallets, undefined },
-      dispatch
-    );
+      const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
+      setUser(user);
+
+      await accountController.recoverShare(
+        { password: '!owdin001', user, wallets, undefined },
+        dispatch
+      );
+    }
   };
 
   const handleJoinClose = () => setJoinOpen(false);

@@ -4,7 +4,7 @@ import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import { createWrapper } from 'next-redux-wrapper';
 import { persistedReducer, rootReducers } from './rootReducers';
 import storage from 'redux-persist';
-import { persistStore } from 'redux-persist';
+import { persistStore, FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER } from 'redux-persist';
 import storageSession from 'redux-persist/lib/storage/session';
 import abcAuth from './slices/abcAuth';
 import wallet from './slices/wallet';
@@ -36,6 +36,12 @@ const makeConfiguredStore = (reducer: any) =>
   configureStore({
     reducer: reducer,
     devTools: true,
+    middleware: (getDefaultMiddleware) =>
+      getDefaultMiddleware({
+        serializableCheck: {
+          ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+        },
+      }),
   });
 const makeStore = () => {
   const isServer = typeof window === 'undefined';
