@@ -38,6 +38,8 @@ import CoingeckoCoinList from '../../assets/data/coingecko_coin_list.json';
 import { CurrencyType } from '../../main/preference/interface';
 import { getCoingeckoNetworkName } from '../../utils/network';
 
+import secureLocalStorage from 'react-secure-storage';
+
 // export const NOTIFICATION_NAMES = {
 //   accountsChanged: 'metamask_accountsChanged',
 //   unlockStateChanged: 'metamask_unlockStateChanged',
@@ -61,7 +63,8 @@ export class AccountService extends EventEmitter {
       const { password, accountName, email } = data;
 
       // const { abcAuth } = this.dekeyStore.getState();
-      const abcAuth = JSON.parse(window.localStorage.getItem('abcAuth')!);
+      // const abcAuth = JSON.parse(window.localStorage.getItem('abcAuth')!);
+      const abcAuth = JSON.parse(secureLocalStorage.getItem('abcAuth')!);
 
       // if (!abcAuth?.accessToken) {
       //   throw new Error('No abc accessToken');

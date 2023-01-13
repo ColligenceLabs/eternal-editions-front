@@ -55,6 +55,9 @@ import { makeTxData } from '../../utils/makeTxData';
 import tokenAbi from '../../config/abi/ERC20Token.json';
 import { checkWasm } from '../../abc/sandbox';
 
+import secureLocalStorage from 'react-secure-storage';
+import { TxParams } from '../../abc/main/transactions/interface';
+
 const modalStyle = {
   position: 'absolute',
   top: '30%',
@@ -99,7 +102,7 @@ export default function Header({ transparent }: Props) {
   const [temp, setTemp] = React.useState(false);
   const [intervalTime, setIntervalTime] = React.useState(1000);
 
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const abcSnsLogin = async () => {
     // ABC Wallet Test
@@ -112,13 +115,14 @@ export default function Header({ transparent }: Props) {
     );
     await dispatch(setAbcAuth(abcAuth));
 
-    window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
+    // window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
+    secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
 
     const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
     setUser(user);
 
     await accountController.recoverShare(
-      { password: '!owdin001', user, wallets, undefined },
+      { password: '!owdin001', user, wallets, keepDB: false },
       dispatch
     );
   };
@@ -152,6 +156,7 @@ export default function Header({ transparent }: Props) {
     // await providerConnManager.connect(networks[7], '');
 
     // 2. Active Account
+    // @ts-ignore
     const account = user.accounts[0];
     console.log('=== account ===>', account);
 
@@ -174,7 +179,7 @@ export default function Header({ transparent }: Props) {
     console.log('==== nextNonce ===>', nextNonce);
 
     // 6. unSignedTx 생성
-    const txParams = {
+    const txParams: TxParams = {
       chainId: 80001,
       data,
       gasLimit: '0x010cd2',
@@ -237,6 +242,7 @@ export default function Header({ transparent }: Props) {
     });
 
     // 10. signed Raw Tx
+    // @ts-ignore
     const rawTx =
       isKlaytn(txParams.chainId) && txParams?.type
         ? await KlaytnUtil.createRawTx({ txParams, v, r, s })

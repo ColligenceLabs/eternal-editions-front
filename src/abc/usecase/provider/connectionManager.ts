@@ -242,7 +242,7 @@ export class ProviderConnectionManager extends EventEmitter {
     return BigNumber.from(result.toString(10)).toHexString();
   }
 
-  async broadcastTx(rawTx: string, txId: string, txModel: TxModel) {
+  async broadcastTx(rawTx: string, txId: string | undefined, txModel: TxModel | undefined) {
     // const { currentNetwork } = this.dekeyStore.getState();
     const currentNetwork = DekeyData.DEFAULT_NETWORKS[7];
     if (isKlaytn(currentNetwork.chainId) && txModel?.type) {

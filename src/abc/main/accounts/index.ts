@@ -25,11 +25,13 @@ import { DekeyError, DekeyErrorTypes } from '../../utils/errorTypes';
 import { CustomError } from '../../utils/error';
 import { TwofaResetDto } from '../../schema/account';
 
+import secureLocalStorage from 'react-secure-storage';
+
 class AccountController extends EventEmitter {
   // platform: ExtensionPlatform;
-  keyGenResult;
-  recoverData: RecoverResult;
-  password: string;
+  keyGenResult: undefined;
+  recoverData: RecoverResult | undefined;
+  password: string | undefined;
   // accountService: AccountService;
   // erc20Service: Erc20Service;
   // mpcService: MpcService;
@@ -104,11 +106,12 @@ class AccountController extends EventEmitter {
       keepDB: boolean;
     },
     dispatch: any
-  ): Promise<string> {
+  ): Promise<string | undefined> {
     try {
       const { password, user, wallets, keepDB } = dto;
       // const { abcAuth } = this.dekeyStore.getState();
-      const abcAuth = JSON.parse(window.localStorage.getItem('abcAuth')!);
+      // const abcAuth = JSON.parse(window.localStorage.getItem('abcAuth')!)
+      const abcAuth = JSON.parse(<string>secureLocalStorage.getItem('abcAuth')!);
 
       const sid = user.accounts[0].sid;
       const uid = user.uid;
@@ -152,6 +155,7 @@ class AccountController extends EventEmitter {
     }
   }
 
+  // @ts-ignore
   async verifyTwofactorForMpcSign({ twofaToken, jsonUnsignedTx }): Promise<string> {
     try {
       const { mpcToken } = await this.accountRestApi.verifyTwofactorForMpcSign({
@@ -173,10 +177,10 @@ class AccountController extends EventEmitter {
     }
   }
 
-  async generateTwoFactor(dto) {
+  async generateTwoFactor(dto: any) {
     try {
       return this.accountRestApi.generateTwoFactor(dto);
-    } catch (error) {
+    } catch (error: any) {
       throw new CustomError(DekeyError.twofaGenQrcode(error.message));
     }
   }
@@ -199,7 +203,7 @@ class AccountController extends EventEmitter {
 
       // TODO: user.twoFactorEnabled 서버에서 받은 값을 넣을지 아니면 true를 바로 넣을지 결정
       // this.accountService.updateUserTwoFactorEnabled(user);
-    } catch (error) {
+    } catch (error: any) {
       throw new CustomError(DekeyError.twofaGenVerify(error.message));
     }
   }
@@ -220,7 +224,7 @@ class AccountController extends EventEmitter {
       // });
 
       return twofaResetCode;
-    } catch (error) {
+    } catch (error: any) {
       throw new CustomError(DekeyError.twofaGenVerify(error.message));
     }
   }

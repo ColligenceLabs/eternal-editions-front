@@ -8,6 +8,8 @@ import { Box, Button, Checkbox, FormControlLabel, Input } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../src/config';
 
+import secureLocalStorage from 'react-secure-storage';
+
 // TODO : dkeys WASM Go Initialize...
 import '../src/abc/sandbox/index';
 import { controllers, accountRestApi } from '../src/abc/background/init';
@@ -100,6 +102,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       const dto: AbcSnsAddUserDto = {
         username: email,
         code: sixCode,
+        joinpath: 'https://colligence.io',
         overage: isCheck.check1 ? 1 : 0,
         agree: isCheck.check2 ? 1 : 0,
         collect: isCheck.check3 ? 1 : 0,
@@ -115,7 +118,8 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     console.log('==========> ', abcAuth);
 
     await dispatch(setAbcAuth(abcAuth));
-    window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
+    // window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
+    secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
 
     if (flCreate) {
       await accountController.createMpcBaseAccount({
@@ -138,7 +142,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       console.log('====== user =====>', user);
 
       await accountController.recoverShare(
-        { password: '!owdin001', user, wallets, undefined },
+        { password: '!owdin001', user, wallets, keepDB: false },
         dispatch
       );
     }

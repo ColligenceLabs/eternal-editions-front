@@ -28,8 +28,10 @@ import {
 } from './interface';
 // import { AppStore } from '../../../store/store';
 
+import secureLocalStorage from 'react-secure-storage';
+
 class AbcController extends EventEmitter {
-  autologinTimeout: NodeJS.Timeout;
+  autologinTimeout: NodeJS.Timeout | undefined;
 
   constructor(
     private restApi: AbcRestApi,
@@ -103,11 +105,11 @@ class AbcController extends EventEmitter {
     return this.restApi.initPassword({ ...dto, password: encrypted }, channelid);
   }
 
-  async login(dto: AbcLoginDto): AbcLoginResult {
+  async login(dto: AbcLoginDto): Promise<AbcLoginResult> {
     return await this.abcService.login(dto);
   }
 
-  async snsLogin(token: string, service: string): AbcLoginResult {
+  async snsLogin(token: string, service: string): Promise<AbcLoginResult> {
     return await this.abcService.snsLogin(token, service);
   }
 
@@ -115,10 +117,12 @@ class AbcController extends EventEmitter {
     try {
       // const { abcAuth } = this.dekeyStore.getState();
       // const { abcAuth } = AppStore.getState();
-      const abcAuth = JSON.parse(window.localStorage.getItem('abcAuth')!);
+      // const abcAuth = JSON.parse(window.localStorage.getItem('abcAuth')!);
+      const abcAuth = JSON.parse(<string>secureLocalStorage.getItem('abcAuth'));
       const result = await this.restApi.searchBlacklist(dto, abcAuth.accessToken);
 
       if (result?.filter_type_str === 'BLACK') {
+        // @ts-ignore
         throw new Error(result.description);
       }
     } catch (error) {
@@ -131,6 +135,7 @@ class AbcController extends EventEmitter {
       const result = await this.restApi.searchBlackDomain(dto);
 
       if (result?.filter_type_str === 'BLACK') {
+        // @ts-ignore
         throw new Error(result.description);
       }
     } catch (error) {

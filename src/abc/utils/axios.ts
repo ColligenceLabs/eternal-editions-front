@@ -10,6 +10,8 @@ import axios from 'axios';
 // import fetchAdapter from '@vespaiach/axios-fetch-adapter';
 import queryString from 'query-string';
 
+import secureLocalStorage from 'react-secure-storage';
+
 // import { dekeyStore } from '../background/init';
 import { AbcLoginResponse } from '../schema/account';
 
@@ -22,10 +24,13 @@ export const apiClient = axios.create({
 apiClient.interceptors.request.use((cfg) => {
   console.log('--- axios-- cfg--', cfg);
   // const { abcAuth } = dekeyStore.getState();
-  const abcAuth = JSON.parse(window.localStorage.getItem('abcAuth'));
+  // const abcAuth = JSON.parse(window.localStorage.getItem('abcAuth'));
+  const abcAuth = JSON.parse(<string>secureLocalStorage.getItem('abcAuth'));
 
-  if (!cfg.headers.authorization) {
+  // @ts-ignore
+  if (!cfg?.headers?.authorization) {
     console.log('---------------------->>>>>', abcAuth?.accessToken);
+    // @ts-ignore
     cfg.headers.authorization = `Bearer ${abcAuth?.accessToken}`;
   }
 
@@ -59,7 +64,8 @@ apiClient.interceptors.response.use(
     ) {
       originalRequest.retry = true;
       // const { abcAuth } = dekeyStore.getState();
-      const abcAuth = JSON.parse(window.localStorage.getItem('abcAuth'));
+      // const abcAuth = JSON.parse(window.localStorage.getItem('abcAuth'));
+      const abcAuth = JSON.parse(<string>secureLocalStorage.getItem('abcAuth'));
       const preRefreshToken = abcAuth.refreshToken;
 
       if (preRefreshToken) {
@@ -86,7 +92,8 @@ apiClient.interceptors.response.use(
             //     expiresIn: responseData.expire_in,
             //   },
             // });
-            window.localStorage.setItem('abcAuth', JSON.stringify(responseData));
+            // window.localStorage.setItem('abcAuth', JSON.stringify(responseData));
+            secureLocalStorage.setItem('abcAuth', JSON.stringify(responseData));
 
             originalRequest.headers.authorization = `Bearer ${responseData.access_token}`;
             return axios(originalRequest);
@@ -117,9 +124,12 @@ export const abcAdminApiClient = axios.create({
 });
 abcAdminApiClient.interceptors.request.use((cfg) => {
   // const { abcAuth } = dekeyStore.getState();
-  const abcAuth = JSON.parse(window.localStorage.getItem('abcAuth'));
+  // const abcAuth = JSON.parse(window.localStorage.getItem('abcAuth'));
+  const abcAuth = JSON.parse(<string>secureLocalStorage.getItem('abcAuth'));
 
-  if (!cfg.headers.authorization) {
+  // @ts-ignore
+  if (!cfg?.headers?.authorization) {
+    // @ts-ignore
     cfg.headers.authorization = `Bearer ${abcAuth?.accessToken}`;
   }
 
@@ -145,7 +155,8 @@ abcAdminApiClient.interceptors.response.use(
     ) {
       originalRequest.retry = true;
       // const { abcAuth } = dekeyStore.getState();
-      const abcAuth = JSON.parse(window.localStorage.getItem('abcAuth'));
+      // const abcAuth = JSON.parse(window.localStorage.getItem('abcAuth'));
+      const abcAuth = JSON.parse(<string>secureLocalStorage.getItem('abcAuth'));
       const preRefreshToken = abcAuth.refreshToken;
 
       if (preRefreshToken) {
@@ -172,7 +183,8 @@ abcAdminApiClient.interceptors.response.use(
             //     expiresIn: responseData.expire_in,
             //   },
             // });
-            window.localStorage.setItem('abcAuth', JSON.stringify(responseData));
+            // window.localStorage.setItem('abcAuth', JSON.stringify(responseData));
+            secureLocalStorage.setItem('abcAuth', JSON.stringify(responseData));
 
             originalRequest.headers.authorization = `Bearer ${responseData.access_token}`;
             return axios(originalRequest);
