@@ -22,6 +22,7 @@ export interface AbcSnsAddUserDto {
   username: string;
   code: string;
   serviceid?: string;
+  joinpath: string;
   overage: number;
   agree: number;
   collect: number;

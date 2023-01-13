@@ -131,7 +131,7 @@ export default function Header({ transparent }: Props) {
 
     // 6. unSignedTx 생성
     const txParams = {
-      chainId: 1001,
+      chainId: 80001,
       data,
       gasLimit: '0x010cd2',
       gasPrice: '0x0ba43b7400',

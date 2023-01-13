@@ -81,6 +81,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       console.log('== created account =>', newAccount);
     }
 
+    console.log('=== start to sns login =====');
     abcAuth = await abcController.snsLogin(idToken, service);
     console.log('==========> ', abcAuth);
 
@@ -95,11 +96,12 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       });
 
       const { qrcode, secret } = await accountController.generateTwoFactor({ reset: false });
+      console.log('!!!!!!!!!!!', qrcode, secret);
       setQrCode(qrcode);
       setQrSecret(secret);
 
       // TODO 준호 : 화먄에 qrCode 및 qrSecret 표시 후 otp 값을 입력 받아야 함.
-      console.log('=== reCode ===>', qrCode);
+      // console.log('=== qrCode ===>', qrCode);
       // <img className="QRCode" src={qrCode} alt="qrapp" />
 
       // // optToken : 입력 받은 OTP 값을 입력 받은 후 아래 코드 실행
@@ -116,14 +118,14 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       );
     }
 
-    // TODO : ABC Wallet 가입 성공하면... 우리 쪽 가입 실행
-    const res = await userRegister();
-    console.log(res);
-    if (res.status === 200) {
-      // 성공. 리다이렉트..
-      alert('가입이 완료되었습니다. 다시 로그인 해주세요.');
-      location.replace('/');
-    }
+    // // TODO : ABC Wallet 가입 성공하면... 우리 쪽 가입 실행
+    // const res = await userRegister();
+    // console.log(res);
+    // if (res.status === 200) {
+    //   // 성공. 리다이렉트..
+    //   alert('가입이 완료되었습니다. 다시 로그인 해주세요.');
+    //   location.replace('/');
+    // }
   };
 
   useEffect(() => {
