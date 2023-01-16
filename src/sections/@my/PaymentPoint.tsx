@@ -24,19 +24,29 @@ type FormValuesProps = {
 };
 
 export default function PaymentPoint() {
-  const [price, setPrice] = useState(0);
-  const [amount, setAmount] = useState(0);
+  const [price, setPrice] = useState('');
+  const [amount, setAmount] = useState('');
 
   const handleChangePrice = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    setPrice(parseInt(value));
-    setAmount(parseInt(value));
+    if (value) {
+      setPrice(value);
+      setAmount(value);
+    } else {
+      setPrice('');
+      setAmount('');
+    }
   };
 
   const handleChangeAmount = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    setPrice(parseInt(value));
-    setAmount(parseInt(value));
+    if (value) {
+      setPrice(value);
+      setAmount(value);
+    } else {
+      setPrice('');
+      setAmount('');
+    }
   };
   const theme = useTheme();
   const {
