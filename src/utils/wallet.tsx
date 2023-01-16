@@ -31,7 +31,7 @@ export function getIconByType(type: string) {
     case WALLET_METAMASK:
       return '/assets/icons/wallet/metamask.svg';
     case WALLET_ABC:
-      return '/assets/icons/wallet/metamask.svg';
+      return '/assets/icons/wallet/abc_icon.png';
   }
 }
 
