@@ -48,6 +48,7 @@ import { initWebUser, setWebUser } from '../src/store/slices/webUser';
 import { persistStore } from 'redux-persist';
 import { createStore } from 'redux';
 import { persistedReducer } from '../src/store/rootReducers';
+import {PayPalScriptProvider} from "@paypal/react-paypal-js";
 
 // ----------------------------------------------------------------------
 function getLibrary(provider: any) {
@@ -75,6 +76,12 @@ function MyApp(props: MyAppProps) {
 
   console.info('[INFO] baseAPI', axios.defaults.baseURL);
 
+  const initialOptions = {
+    'client-id': 'test',
+    currency: "USD",
+    intent: "capture",
+  };
+
   const updateUserRedux = async () => {
     const userRes = await getUser();
     console.log(userRes);
@@ -97,16 +104,18 @@ function MyApp(props: MyAppProps) {
           <SettingsProvider>
             <ThemeProvider>
               <Web3ReactProvider getLibrary={getLibrary}>
-                <ThemeColorPresets>
-                  <MotionLazyContainer>
-                    <RtlLayout>
-                      {/*세팅 아이콘*/}
-                      {/*<Settings />*/}
-                      <ProgressBar />
-                      {getLayout(<Component {...pageProps} />)}
-                    </RtlLayout>
-                  </MotionLazyContainer>
-                </ThemeColorPresets>
+                <PayPalScriptProvider options={initialOptions}>
+                  <ThemeColorPresets>
+                    <MotionLazyContainer>
+                      <RtlLayout>
+                        {/*세팅 아이콘*/}
+                        {/*<Settings />*/}
+                        <ProgressBar />
+                        {getLayout(<Component {...pageProps} />)}
+                      </RtlLayout>
+                    </MotionLazyContainer>
+                  </ThemeColorPresets>
+                </PayPalScriptProvider>
               </Web3ReactProvider>
             </ThemeProvider>
           </SettingsProvider>

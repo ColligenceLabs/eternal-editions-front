@@ -7,6 +7,8 @@ import {LoadingButton} from '@mui/lab';
 import {Box, Divider, Stack, TextField, Typography} from '@mui/material';
 import EECard from "../../components/EECard";
 import {useTheme} from "@mui/material/styles";
+import {PayPalButtons} from "@paypal/react-paypal-js";
+import React from "react";
 // components
 
 // ----------------------------------------------------------------------
@@ -96,6 +98,8 @@ export default function PaymentPoint() {
                         </Stack>
 
                         <Divider sx={{md: 3, pt: 3}}/>
+
+                        <PayPalButtons fundingSource={'paypal'}/>
 
                         <LoadingButton
                             fullWidth
