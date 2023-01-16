@@ -8,20 +8,19 @@ export default function useAccount() {
   const [account, setAccount] = useState<string | null | undefined>(null);
   const loginBy = window.localStorage.getItem('loginBy');
 
-  console.log(loginBy);
   useEffect(() => {
     if (loginBy === 'sns') {
       if (abcAccount && abcAccount.accounts) {
-        console.log('in');
         setAccount(abcAccount.accounts[0].ethAddress);
       }
     } else if (loginBy === 'wallet') {
-      if (walletAccount) setAccount(walletAccount);
+      if (walletAccount) {
+        setAccount(walletAccount);
+      }
     } else {
       setAccount(null);
     }
-  }, [abcAccount, walletAccount, loginBy]);
+  }, [walletAccount, abcAccount, loginBy]);
 
-  console.log(account);
-  return account;
+  return { account };
 }
