@@ -54,8 +54,8 @@ export default function WalletPopover({}) {
       if (logInBy == 'sns') {
         setType(WALLET_ABC);
       } else {
-        if (library.connection.url === 'metamask') setType(WALLET_METAMASK);
-        else if (library.connection.url === 'eip-1193:') setType(WALLET_WALLECTCONNECT);
+        if (library?.connection.url === 'metamask') setType(WALLET_METAMASK);
+        else if (library?.connection.url === 'eip-1193:') setType(WALLET_WALLECTCONNECT);
       }
     }
   }, [account, library]);
@@ -76,6 +76,7 @@ export default function WalletPopover({}) {
       await deactivate();
       window.localStorage.setItem('walletStatus', 'disconnected');
       window.localStorage.removeItem('jwtToken');
+      window.localStorage.removeItem('loginBy');
     } catch (e) {
       console.log(e);
       alert(e);

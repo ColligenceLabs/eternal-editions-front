@@ -16,10 +16,12 @@ export default function useAccount() {
         console.log('in');
         setAccount(abcAccount.accounts[0].ethAddress);
       }
-    } else {
+    } else if (loginBy === 'wallet') {
       if (walletAccount) setAccount(walletAccount);
+    } else {
+      setAccount(null);
     }
-  }, [abcAccount, walletAccount]);
+  }, [abcAccount, walletAccount, loginBy]);
 
   console.log(account);
   return account;
