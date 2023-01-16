@@ -8,11 +8,10 @@ export default function useAccount() {
   const [account, setAccount] = useState<string | null | undefined>(null);
   const loginBy = window.localStorage.getItem('loginBy');
 
-  console.log(abcAccount.accounts[0].ethAddress);
   console.log(loginBy);
   useEffect(() => {
     if (loginBy === 'sns') {
-      if (abcAccount) {
+      if (abcAccount && abcAccount.accounts) {
         console.log('in');
         setAccount(abcAccount.accounts[0].ethAddress);
       }
