@@ -57,6 +57,7 @@ import { checkWasm } from '../../abc/sandbox';
 
 import secureLocalStorage from 'react-secure-storage';
 import { TxParams } from '../../abc/main/transactions/interface';
+import useAccount from '../../hooks/useAccount';
 
 const modalStyle = {
   position: 'absolute',
@@ -80,9 +81,11 @@ type Props = {
 export default function Header({ transparent }: Props) {
   const { abcController, accountController } = controllers;
   const { mpcService, providerService, providerConnManager } = services;
+  const account = useAccount();
   const dispatch = useDispatch();
   const webUser = useSelector((state: any) => state.webUser);
-
+  // const abcAccount = useSelector((state: any) => state.user);
+  // console.log(abcAccount.accounts[0].ethAddress);
   const theme = useTheme();
 
   const isDesktop = useResponsive('up', 'md');
@@ -284,7 +287,7 @@ export default function Header({ transparent }: Props) {
   const handleJoinClose = () => setJoinOpen(false);
 
   // const {account, accountShot, type, disconnect} = useWallets();
-  const { account } = useWeb3React();
+  // const { account } = useWeb3React();
   const triedEager = useEagerConnect();
   // useInactiveListener(!triedEager || !!activatingConnector);
   useInactiveListener(!triedEager);

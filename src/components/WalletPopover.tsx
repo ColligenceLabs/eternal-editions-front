@@ -31,15 +31,19 @@ import Routes from '../routes';
 import { Iconify } from './index';
 import launchIcon from '@iconify/icons-carbon/launch';
 import { useWeb3React } from '@web3-react/core';
-import { WALLET_METAMASK, WALLET_WALLECTCONNECT } from '../config';
+import { WALLET_ABC, WALLET_METAMASK, WALLET_WALLECTCONNECT } from '../config';
+import { useSelector } from 'react-redux';
+import useAccount from '../hooks/useAccount';
 
 // ----------------------------------------------------------------------
 WalletPopover.propTypes = {};
 
 export default function WalletPopover({}) {
   // const {account, accountShot, type, disconnect, switchChainNetwork, chainId, balance} = useWallets();
-
-  const { account, deactivate, chainId, library } = useWeb3React();
+  // const abcAccount = useSelector((state: any) => state.user);
+  const account = useAccount();
+  const { deactivate, chainId, library } = useWeb3React();
+  const logInBy = window.localStorage.getItem('loginBy');
   const [accountShot, setAccountShot] = useState('');
   const [type, setType] = useState('');
   const router = useRouter();
@@ -47,8 +51,12 @@ export default function WalletPopover({}) {
   useEffect(() => {
     if (account) {
       setAccountShot(getShotAddress(account));
-      if (library.connection.url === 'metamask') setType(WALLET_METAMASK);
-      else if (library.connection.url === 'eip-1193:') setType(WALLET_WALLECTCONNECT);
+      if (logInBy == 'sns') {
+        setType(WALLET_ABC);
+      } else {
+        if (library.connection.url === 'metamask') setType(WALLET_METAMASK);
+        else if (library.connection.url === 'eip-1193:') setType(WALLET_WALLECTCONNECT);
+      }
     }
   }, [account, library]);
   // const {enqueueSnackbar} = useSnackbar();
@@ -112,9 +120,9 @@ export default function WalletPopover({}) {
               </Typography>
             </Box>
 
-            <Button onClick={() => ClipboardCopy(account ?? '', '지갑주소가 복사되었습니다.')}>
-              Copy
-            </Button>
+            {/*<Button onClick={() => ClipboardCopy(account ?? '', '지갑주소가 복사되었습니다.')}>*/}
+            {/*  Copy*/}
+            {/*</Button>*/}
 
             <Button target="_blank" href={'https://polygonscan.com/address/' + account}>
               Explore

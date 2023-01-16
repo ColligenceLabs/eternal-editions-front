@@ -153,6 +153,7 @@ export default function SignUp({ onClose, ...other }) {
   };
 
   const handleSnsLogin = async (snsType) => {
+    window.localStorage.setItem('loginBy', 'sns');
     window.location.href = `${env.REACT_APP_API_URL}/auth/${snsType}?redirectUrl=/`;
   };
 
@@ -197,6 +198,7 @@ export default function SignUp({ onClose, ...other }) {
             <MetaMaskButton
               variant="contained"
               onClick={async () => {
+                window.localStorage.setItem('loginBy', 'wallet');
                 await connectWallet(WALLET_METAMASK);
                 // await connectMetamask();
                 onClose();
@@ -216,6 +218,7 @@ export default function SignUp({ onClose, ...other }) {
             <WalletConnectButton
               variant="contained"
               onClick={async () => {
+                window.localStorage.setItem('loginBy', 'wallet');
                 await connectWallet(WALLET_WALLECTCONNECT);
                 onClose();
               }}

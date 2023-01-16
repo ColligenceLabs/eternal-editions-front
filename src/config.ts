@@ -53,6 +53,7 @@ export const DRAWER_WIDTH = 280;
 export const WALLET_WALLECTCONNECT = 'WALLETCONNECT';
 export const WALLET_COINBASE = 'COINBASE';
 export const WALLET_METAMASK = 'METAMASK';
+export const WALLET_ABC = 'ABC';
 export const WALLET_KAIKAS = 'KAIKAS';
 export const WALLET_KLIP = 'KLIP';
 
