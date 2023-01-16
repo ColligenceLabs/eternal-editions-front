@@ -34,6 +34,7 @@ import { useWeb3React } from '@web3-react/core';
 import { WALLET_ABC, WALLET_METAMASK, WALLET_WALLECTCONNECT } from '../config';
 import { useSelector } from 'react-redux';
 import useAccount from '../hooks/useAccount';
+import env from '../env';
 
 // ----------------------------------------------------------------------
 WalletPopover.propTypes = {};
@@ -41,7 +42,7 @@ WalletPopover.propTypes = {};
 export default function WalletPopover({}) {
   // const {account, accountShot, type, disconnect, switchChainNetwork, chainId, balance} = useWallets();
   // const abcAccount = useSelector((state: any) => state.user);
-  const account = useAccount();
+  const { account } = useAccount();
   const { deactivate, chainId, library } = useWeb3React();
   const logInBy = window.localStorage.getItem('loginBy');
   const [accountShot, setAccountShot] = useState('');
@@ -77,6 +78,7 @@ export default function WalletPopover({}) {
       window.localStorage.setItem('walletStatus', 'disconnected');
       window.localStorage.removeItem('jwtToken');
       window.localStorage.removeItem('loginBy');
+      window.location.href = `${env.REACT_APP_API_URL}/auth/logout`;
     } catch (e) {
       console.log(e);
       alert(e);

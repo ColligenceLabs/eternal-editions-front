@@ -81,7 +81,7 @@ type Props = {
 export default function Header({ transparent }: Props) {
   const { abcController, accountController } = controllers;
   const { mpcService, providerService, providerConnManager } = services;
-  const account = useAccount();
+  const { account } = useAccount();
   const dispatch = useDispatch();
   const webUser = useSelector((state: any) => state.webUser);
   // const abcAccount = useSelector((state: any) => state.user);
