@@ -57,7 +57,7 @@ if (!WebAssembly.instantiateStreaming) {
     return await WebAssembly.instantiate(source, importObject);
   };
 }
-WebAssembly.instantiateStreaming(fetch('wasm/dkeyswasm.wasm'), go.importObject).then(
+WebAssembly.instantiateStreaming(fetch('/wasm/dkeyswasm.wasm'), go.importObject).then(
   async (result) => {
     mod = result.module;
     inst = result.instance;

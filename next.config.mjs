@@ -4,8 +4,8 @@ const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
   },
-  // trailingSlash: true,
-  assetPrefix: '.',
+  trailingSlash: true,
+  assetPrefix: '/',
   env: {
     DEV_API: 'https://dev.nftapi.eternaleditions.io',
     PRODUCTION_API: 'https://dev.nftapi.eternaleditions.io',
