@@ -1,9 +1,9 @@
 // @mui
-import { alpha, styled } from '@mui/material/styles';
-import { Stack, Button, Box, Typography, Divider, Modal } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { Stack, Button, Typography, Divider } from '@mui/material';
 import Image from '../Image';
 import * as React from 'react';
-import useWallets from '../../hooks/useWallets';
+// import useWallets from '../../hooks/useWallets';
 import { getIconByType } from '../../utils/wallet';
 import { ChainId, WALLET_METAMASK, WALLET_WALLECTCONNECT } from '../../config';
 import { useWeb3React } from '@web3-react/core';
@@ -13,7 +13,9 @@ import env from '../../env';
 import useCreateToken from '../../hooks/useCreateToken';
 import { useEffect, useState } from 'react';
 import { Iconify } from '../index';
-import { requestWalletLogin } from '../../services/services';
+import { getUser, requestWalletLogin } from '../../services/services';
+import { setWebUser } from '../../store/slices/webUser';
+import { useDispatch } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -108,12 +110,11 @@ const FacebookButton = styled(Button)({
 
 export default function SignUp({ onClose, hideSns, ...other }) {
   const context = useWeb3React();
-  const { activate, chainId, account, deactivate, library } = context;
+  const { activate, chainId, deactivate, library } = context;
   const [doSign, setDoSign] = useState(false);
   const tokenGenerator = useCreateToken();
-  // const dispatch = useDispatch();
-  const { connectKaikas, connectMetamask, connectKlip, disconnect, requestKey, message, type } =
-    useWallets();
+  const dispatch = useDispatch();
+  // const { connectKaikas, connectMetamask, connectKlip, disconnect, requestKey, message, type } = useWallets();
 
   useEffect(() => {
     async function createToken() {
@@ -135,32 +136,24 @@ export default function SignUp({ onClose, hideSns, ...other }) {
   Talken Drops Signature Request
 
   Type: Login request`;
-      // if (isKaikas) {
-      //   const caver = new Caver(window.klaytn);
-      //   signature = await caver.klay.sign(message, account ?? '').catch(() => deactivate());
-      // } else {
-      //   signature = await library
-      //     .getSigner()
-      //     .signMessage(message)
-      //     .catch(() => deactivate());
-      // }
       signature = await library
         .getSigner()
         .signMessage(message)
         .catch(() => deactivate());
       if (!signature) return; // 서명 거부
-      // const data = { message, signature, isKaikas, isAbc };
       const data = { message, signature, isAbc };
-      console.log(data);
       const res = await requestWalletLogin(data);
-      console.log(res);
-      if (res.data === 'loginSuccess') createToken();
+      if (res.data === 'loginSuccess') {
+        const userRes = await getUser();
+        if (userRes.status === 200 && userRes.data.status !== 0)
+          dispatch(setWebUser(userRes.data.user));
+        createToken();
+      }
       if (res.data === 'User not found!') {
         deactivate();
         window.localStorage.removeItem('loginBy');
         alert('Please continue with SNS and register wallet address on My Profile page.');
       }
-      // setDoSign(false);
     };
 
     if (library) walletLogin();
@@ -196,10 +189,6 @@ export default function SignUp({ onClose, hideSns, ...other }) {
     window.localStorage.setItem('loginBy', 'sns');
     window.location.href = `${env.REACT_APP_API_URL}/auth/${snsType}?redirectUrl=/`;
   };
-
-  const buttonGoogle = {};
-
-  const buttonTwitter = {};
 
   return (
     <Stack {...other}>
