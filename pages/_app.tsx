@@ -77,7 +77,7 @@ function MyApp(props: MyAppProps) {
   console.info('[INFO] baseAPI', axios.defaults.baseURL);
 
   const initialOptions = {
-    'client-id': 'test',
+    'client-id': process.env.PAYPAL_CLIENT_ID ?? 'test',
     currency: "USD",
     intent: "capture",
   };
