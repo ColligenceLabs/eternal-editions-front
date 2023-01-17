@@ -32,9 +32,10 @@ import { Iconify } from './index';
 import launchIcon from '@iconify/icons-carbon/launch';
 import { useWeb3React } from '@web3-react/core';
 import { WALLET_ABC, WALLET_METAMASK, WALLET_WALLECTCONNECT } from '../config';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from "react-redux";
 import useAccount from '../hooks/useAccount';
 import env from '../env';
+import { delUser } from "../store/slices/user";
 
 // ----------------------------------------------------------------------
 WalletPopover.propTypes = {};
@@ -42,6 +43,7 @@ WalletPopover.propTypes = {};
 export default function WalletPopover({}) {
   // const {account, accountShot, type, disconnect, switchChainNetwork, chainId, balance} = useWallets();
   // const abcAccount = useSelector((state: any) => state.user);
+  const dispatch = useDispatch();
   const { account } = useAccount();
   const { deactivate, chainId, library } = useWeb3React();
   const logInBy = window.localStorage.getItem('loginBy');
@@ -79,6 +81,7 @@ export default function WalletPopover({}) {
       window.localStorage.removeItem('jwtToken');
       window.localStorage.removeItem('loginBy');
       window.location.href = `${env.REACT_APP_API_URL}/auth/logout`;
+      dispatch(delUser({}));
     } catch (e) {
       console.log(e);
       alert(e);
@@ -93,7 +96,7 @@ export default function WalletPopover({}) {
       </Button>
 
       <MenuPopover
-        open={Boolean(open)}
+        open={Boolean(open!)}
         anchorEl={open}
         onClose={handleClose}
         sx={{

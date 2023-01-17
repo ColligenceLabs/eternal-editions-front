@@ -93,6 +93,8 @@ export const abcSendTx = async (twofaToken: string, to: string, method: string, 
       : TransactionUtil.createTxHash(txParams);
   console.log('=== messageHash ===>', messageHash);
 
+  await accountController.unlock({password: '!owdin001'}, user);
+
   // 9. TX Signing
   const sResult = await mpcService.sign({
     txHash: messageHash.slice(2),
