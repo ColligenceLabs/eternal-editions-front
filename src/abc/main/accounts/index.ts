@@ -264,7 +264,7 @@ class AccountController extends EventEmitter {
 
   async unlock(dto: UnLockDto, user: any) {
     try {
-      const {password} = dto;
+      const { password } = dto;
 
       // const {user} = this.dekeyStore.getState();
       const sid = user.accounts[0].sid;
@@ -273,10 +273,9 @@ class AccountController extends EventEmitter {
       //   sid,
       // });
 
-      const dummyHashMessage =
-        'ca957bdb7fbed31dacc967fd3c590c0ef7f8610b84d5f37e764987c1bed87fb3';
+      const dummyHashMessage = 'ca957bdb7fbed31dacc967fd3c590c0ef7f8610b84d5f37e764987c1bed87fb3';
 
-      const {SigR, SigS} = await this.mpcService.unlock({
+      const { SigR, SigS } = await this.mpcService.unlock({
         hashMessage: dummyHashMessage,
         EncPV: user.EncPV,
         password,
@@ -296,6 +295,7 @@ class AccountController extends EventEmitter {
 
       if (this.waitingForUnlock.length > 0) {
         while (this.waitingForUnlock.length > 0) {
+          // @ts-ignore
           this.waitingForUnlock.shift().resolve(true);
         }
       }

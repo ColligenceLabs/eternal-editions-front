@@ -1,18 +1,23 @@
-import { makeTxData } from "./makeTxData";
-import tokenAbi from "../config/abi/ERC20Token.json";
-import { ethers } from "ethers";
-import { controllers, nonceTracker, services } from "../abc/background/init";
-import { TxParams } from "../abc/main/transactions/interface";
-import { isKlaytn } from "../abc/utils/network";
-import KlaytnUtil from "../abc/utils/klaytn";
-import TransactionUtil from "../abc/utils/transaction";
+import { makeTxData } from './makeTxData';
+import tokenAbi from '../config/abi/ERC20Token.json';
+import { controllers, nonceTracker, services } from '../abc/background/init';
+import { TxParams } from '../abc/main/transactions/interface';
+import { isKlaytn } from '../abc/utils/network';
+import KlaytnUtil from '../abc/utils/klaytn';
+import TransactionUtil from '../abc/utils/transaction';
 import { DekeyData } from '../abc/dekeyData';
-import useAccount from "../hooks/useAccount";
-import { useSelector } from "react-redux";
+import personalMessage from '../abc/main/personalMessage';
+import typedMessage from '../abc/main/typedMessage';
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export const abcSendTx = async (twofaToken: string, to: string, method: string, txArgs: any, user: any): Promise<number> => {
+export const abcSendTx = async (
+  twofaToken: string,
+  to: string,
+  method: string,
+  txArgs: any,
+  user: any
+): Promise<number> => {
   const { abcController, accountController } = controllers;
   const { mpcService, providerService, providerConnManager } = services;
 
@@ -93,7 +98,7 @@ export const abcSendTx = async (twofaToken: string, to: string, method: string, 
       : TransactionUtil.createTxHash(txParams);
   console.log('=== messageHash ===>', messageHash);
 
-  await accountController.unlock({password: '!owdin001'}, user);
+  await accountController.unlock({ password: '!owdin001' }, user);
 
   // 9. TX Signing
   const sResult = await mpcService.sign({
@@ -130,5 +135,21 @@ export const abcSendTx = async (twofaToken: string, to: string, method: string, 
   const receipt = await providerService.getTransactionReceipt(txHash, txParams.chainId);
   console.log('=====> result: receipt ===>', receipt);
 
-  return receipt?.status
+  return receipt?.status;
+};
+
+export const signPersonalMessage = async (
+  txData: any,
+  user: any,
+  accToken: string
+): Promise<void | string> => {
+  const { personalMessageController } = controllers;
+
+  return await personalMessageController.signPersonalMessage(txData, user.accounts[0], accToken);
+};
+
+export const signTypedData = async (txData: any, user: any): Promise<void | string> => {
+  const { typedMessageController } = controllers;
+
+  return await typedMessageController.signTypedMessage(txData, user.accounts[0]);
 };

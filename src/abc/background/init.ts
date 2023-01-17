@@ -1,11 +1,13 @@
 import { AbcRestApi } from '../infra/rest-api/abc';
 import AbcService from '../usecase/abc';
+import PersonalMessage from '../main/personalMessage';
 import AbcController from '../main/abc';
 import { MpcService } from '../usecase/mpc';
 import { AccountRestApi } from '../infra/rest-api/accounts';
 import { AccountService } from '../usecase/accounts';
 import AccountController from '../main/accounts';
 import DappController from '../main/dapp';
+import TypedMessageController from '../main/typedMessage';
 import { DappService } from '../usecase/dapp';
 import { NetworkService } from '../usecase/network';
 import { TransactionService } from '../usecase/transaction';
@@ -65,7 +67,15 @@ const dappController = new DappController(
   gasFeeService,
   mutexService
 );
+const personalMessageController = new PersonalMessage(mpcService, providerConnManager);
+const typedMessageController = new TypedMessageController(mpcService);
 
-const controllers = { abcController, accountController, dappController };
+const controllers = {
+  abcController,
+  accountController,
+  dappController,
+  typedMessageController,
+  personalMessageController,
+};
 
 export { controllers, services, accountRestApi, nonceTracker };
