@@ -261,6 +261,48 @@ class AccountController extends EventEmitter {
       // };
     }
   }
+
+  async unlock(dto: UnLockDto, user: any) {
+    try {
+      const {password} = dto;
+
+      // const {user} = this.dekeyStore.getState();
+      const sid = user.accounts[0].sid;
+
+      // const {hashMessage} = await this.accountRestApi.getChallengeMessage({
+      //   sid,
+      // });
+
+      const dummyHashMessage =
+        'ca957bdb7fbed31dacc967fd3c590c0ef7f8610b84d5f37e764987c1bed87fb3';
+
+      const {SigR, SigS} = await this.mpcService.unlock({
+        hashMessage: dummyHashMessage,
+        EncPV: user.EncPV,
+        password,
+      });
+
+      // this.dekeyStore.updateStore({
+      //   locked: false,
+      // });
+
+      await this.accountService.unlock();
+
+      // await this.mpcService.unlock({
+      //   hashMessage,
+      //   EncPV: user.EncPV,
+      //   password,
+      // });
+
+      if (this.waitingForUnlock.length > 0) {
+        while (this.waitingForUnlock.length > 0) {
+          this.waitingForUnlock.shift().resolve(true);
+        }
+      }
+    } catch (error) {
+      throw error;
+    }
+  }
 }
 
 export default AccountController;

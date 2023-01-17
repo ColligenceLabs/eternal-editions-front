@@ -10,7 +10,7 @@ export default function useAccount() {
 
   useEffect(() => {
     if (loginBy === 'sns') {
-      if (abcAccount && abcAccount.accounts) {
+      if (abcAccount && abcAccount.accounts && abcAccount.accounts.length > 0) {
         setAccount(abcAccount.accounts[0].ethAddress);
       }
     } else if (loginBy === 'wallet') {

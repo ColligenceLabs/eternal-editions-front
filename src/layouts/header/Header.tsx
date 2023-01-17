@@ -135,9 +135,11 @@ export default function Header({ transparent }: Props) {
 
   useEffect(() => {
     if (webUser?.user?.session?.providerAuthInfo?.provider_token !== '' && temp) {
-      abcSnsLogin();
+      if (abcUser.uid === '') {
+        abcSnsLogin();
+      }
     }
-  }, [webUser, temp]);
+  }, [webUser, temp, abcUser]);
 
   useEffect(() => {
     const timer = setInterval(() => {

@@ -29,6 +29,9 @@ export const slice = createSlice({
       state.twoFactorSecret = action.payload.twoFactorSecret;
       state.twoFAResetCode = action.payload.twoFAResetCode;
     },
+    delUser(state) {
+      state.uid = '';
+    },
   },
   // Special reducer for hydrating the state. Special case for next-redux-wrapper
   extraReducers: {
@@ -43,4 +46,4 @@ export const slice = createSlice({
 });
 
 export default slice.reducer;
-export const { setUser } = slice.actions;
+export const { setUser, delUser } = slice.actions;
