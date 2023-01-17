@@ -8,7 +8,7 @@ import { Box, Divider, Stack, TextField, Typography } from '@mui/material';
 import EECard from '../../components/EECard';
 import { useTheme } from '@mui/material/styles';
 import { PayPalButtons } from '@paypal/react-paypal-js';
-import React, { ChangeEvent, useState } from 'react';
+import React, {ChangeEvent, useEffect, useState} from 'react';
 // components
 
 // ----------------------------------------------------------------------
@@ -26,6 +26,48 @@ type FormValuesProps = {
 export default function PaymentPoint() {
   const [price, setPrice] = useState('');
   const [amount, setAmount] = useState('');
+  const [enablePaypal, setEnablePaypal] = useState(true);
+
+  useEffect(() => {
+    if (price !== '') setEnablePaypal(false);
+    else setEnablePaypal(true);
+  }, [price]);
+
+  // creates a paypal order
+  const createOrder = (data, actions) => {
+    console.log(price);
+    const purchaseData = {
+        purchase_units: [
+          {
+            amount: {
+              value: parseFloat(price),
+            },
+          },
+        ],
+        // remove the applicaiton_context object if you need your users to add a shipping address
+        application_context: {
+          shipping_preference: 'NO_SHIPPING',
+        },
+      };
+    console.log('=====', purchaseData);
+    return actions.order
+        .create(purchaseData)
+        .then((orderID) => {
+          // setOrderID(orderID);
+          console.log('order complete.', orderID);
+          return orderID;
+        });
+  };
+
+  // handles when a payment is confirmed for paypal
+  const onApprove = (data, actions) => {
+    return actions.order.capture().then(function (details) {
+      const {payer} = details;
+      console.log('details', details, payer);
+      // setBillingDetails(payer);
+      // setSucceeded(true);
+    }).catch(err=> console.log('Something went wrong.', err));
+  };
 
   const handleChangePrice = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
@@ -122,7 +164,13 @@ export default function PaymentPoint() {
 
             <Divider sx={{ md: 3, pt: 3 }} />
 
-            <PayPalButtons fundingSource={'paypal'} />
+            <PayPalButtons
+                fundingSource={'paypal'}
+                createOrder={createOrder}
+                onApprove={onApprove}
+                forceReRender={[price]}
+                disabled={enablePaypal}
+            />
 
             <LoadingButton
               fullWidth
