@@ -58,6 +58,7 @@ import { checkWasm } from '../../abc/sandbox';
 import secureLocalStorage from 'react-secure-storage';
 import { TxParams } from '../../abc/main/transactions/interface';
 import useAccount from '../../hooks/useAccount';
+import { abcSendTx } from "../../utils/abcTransactions";
 
 const modalStyle = {
   position: 'absolute',
@@ -105,6 +106,8 @@ export default function Header({ transparent }: Props) {
   const [temp, setTemp] = React.useState(false);
   const [intervalTime, setIntervalTime] = React.useState(1000);
 
+  const abcUser = useSelector((state: any) => state.user);
+
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const abcSnsLogin = async () => {
@@ -149,118 +152,16 @@ export default function Header({ transparent }: Props) {
   }, [intervalTime]);
 
   const handleAbcConfirmClick = async () => {
-    // console.log(`abc token : ${abcToken}`);
+    console.log(`abc token : ${abcToken}`); // Google OTP
 
-    // TODO : AbcWallet Test => Transfer 0.01 USDC to a wallet
-
-    // 1. 블록체인 네트워크 연결
-    const networks = DekeyData.DEFAULT_NETWORKS;
-    await providerService.connect(networks[7], ''); // use Polygon Testnet
-    // await providerConnManager.connect(networks[7], '');
-
-    // 2. Active Account
-    // @ts-ignore
-    const account = user.accounts[0];
-    console.log('=== account ===>', account);
-
-    // 3. Target Smart Contract
     const to = '0xaF07aC23189718a3b570C73Ccd9cD9C82B16b867'; // Test USDC Smart Contract
-
-    // 4. 트랜잭션 Data 생성
-    // const data = makeTxData(tokenAbi, 'approve', [
-    //   '0x1716C4d49E9D81c17608CD9a45b1023ac9DF6c73',
-    //   '0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff',
-    // ]);
-    const data = makeTxData(tokenAbi, 'transfer', [
+    const method = 'transfer';
+    const txArgs = [
       '0x1716C4d49E9D81c17608CD9a45b1023ac9DF6c73', // Recipient
       ethers.utils.parseUnits('0.01', 6), // Amount, USDC decimal = 6
-    ]); // Method name & arguments
-    console.log('====>', data);
-
-    // 5. nonce 확인
-    const { nextNonce } = await nonceTracker.getNetworkNonce(account.ethAddress);
-    console.log('==== nextNonce ===>', nextNonce);
-
-    // 6. unSignedTx 생성
-    const txParams: TxParams = {
-      chainId: 80001,
-      data,
-      gasLimit: '0x010cd2',
-      gasPrice: '0x0ba43b7400',
-      to,
-      nonce: nextNonce,
-    };
-
-    // const txParams = {
-    //   chainId: 1001,
-    //   data: '0x4e71d92d',
-    //   // from: '0xbef6de269b0f4aa8435f7f4d345be68131ba14c3',
-    //   // gas: '0x44819',
-    //   gasLimit: '0x0440af',
-    //   gasPrice: '0x0ba43b7400',
-    //   to: '0xa97d236bb35a26b1bf329e096aa18d40ea337342',
-    //   nonce: nextNonce,
-    // };
-    // const unSignedTx = {
-    //   chainId: 1001,
-    //   gasLimit: '0x04cfe8',
-    //   gasPrice: '0x0ba43b7400',
-    //   data: '0x85be1b3b00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001',
-    //   to: '0xf8e62f89bb0c37e0fa12fda659add38f7f42bc98',
-    //   value: '0x11fc51222ce8000',
-    //   nonce: '0x0b',
-    // };
-
-    // 7. 구글 OTP -> mpcToken 획득
-    const twofaToken = abcToken;
-    const mpcToken = await accountController.verifyTwofactorForMpcSign({
-      twofaToken,
-      jsonUnsignedTx: JSON.stringify(txParams),
-    });
-    console.log('===== mpcToken ===>', mpcToken);
-
-    // 8. Target Sign Message
-    const messageHash =
-      isKlaytn(txParams.chainId) && txParams?.type
-        ? KlaytnUtil.createTxHash(txParams)
-        : TransactionUtil.createTxHash(txParams);
-    console.log('=== messageHash ===>', messageHash);
-
-    // 9. TX Signing
-    const sResult = await mpcService.sign({
-      txHash: messageHash.slice(2),
-      mpcToken,
-      accountId: account.id,
-    });
-    console.log('=== sResult ===>', sResult);
-
-    const { r, s, vsource } = sResult;
-    const v = TransactionUtil.calculateV({
-      r,
-      s,
-      vsource,
-      hash: messageHash,
-      address: account.ethAddress,
-      chainId: txParams.chainId,
-    });
-
-    // 10. signed Raw Tx
-    // @ts-ignore
-    const rawTx =
-      isKlaytn(txParams.chainId) && txParams?.type
-        ? await KlaytnUtil.createRawTx({ txParams, v, r, s })
-        : TransactionUtil.createRawTx({ txParams, v, r, s });
-    console.log('==== rawTx ===>', rawTx);
-
-    // 11. Broadcast signed raw Tx to the chain
-    const txHash = await providerConnManager.broadcastTx(rawTx, undefined, undefined);
-    console.log('=====> result: txHash ===>', txHash);
-
-    // TODO : 왜 await 가 안되고 바로 null 이 return 될까?
-    await sleep(3000);
-    const receipt = await providerService.getTransactionReceipt(txHash, txParams.chainId);
-    console.log('=====> result: receipt ===>', receipt);
-
+    ];
+    const result = await abcSendTx(abcToken, to,method, txArgs, abcUser);
+    console.log('== tx result ==', result);
     setAbcToken('');
     setAbcOpen(false);
   };
