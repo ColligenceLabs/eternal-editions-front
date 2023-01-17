@@ -60,6 +60,8 @@ import secureLocalStorage from 'react-secure-storage';
 import { TxParams } from '../../abc/main/transactions/interface';
 import useAccount from '../../hooks/useAccount';
 import { abcSendTx } from '../../utils/abcTransactions';
+import useActiveWeb3React from '../../hooks/useActiveWeb3React';
+import { requestWalletLogin } from '../../services/services';
 
 const modalStyle = {
   position: 'absolute',
@@ -84,6 +86,7 @@ export default function Header({ transparent }: Props) {
   const { abcController, accountController } = controllers;
   const { mpcService, providerService, providerConnManager } = services;
   const { account } = useAccount();
+  const { library, deactivate } = useActiveWeb3React();
   const dispatch = useDispatch();
   const webUser = useSelector((state: any) => state.webUser);
   // const abcAccount = useSelector((state: any) => state.user);
@@ -154,6 +157,48 @@ export default function Header({ transparent }: Props) {
 
     return () => clearInterval(timer);
   }, [intervalTime]);
+
+  // useEffect(() => {
+  //   const walletLogin = async () => {
+  //     if (!library) return;
+  //     const target_copy = Object.assign({}, library.provider);
+  //     const isAbc = target_copy.isABC === true;
+  //     // const isKaikas = typeof target_copy._kaikas !== 'undefined';
+  //     let signature;
+  //     const message = `apps.talken.io wants you to sign in with your Ethereum account.
+  //
+  // Talken Drops Signature Request
+  //
+  // Type: Login request`;
+  //     // if (isKaikas) {
+  //     //   const caver = new Caver(window.klaytn);
+  //     //   signature = await caver.klay.sign(message, account ?? '').catch(() => deactivate());
+  //     // } else {
+  //     //   signature = await library
+  //     //     .getSigner()
+  //     //     .signMessage(message)
+  //     //     .catch(() => deactivate());
+  //     // }
+  //     signature = await library
+  //       .getSigner()
+  //       .signMessage(message)
+  //       .catch(() => deactivate());
+  //     if (!signature) return; // 서명 거부
+  //     // const data = { message, signature, isKaikas, isAbc };
+  //     const data = { message, signature, isAbc };
+  //     const res = await requestWalletLogin(data);
+  //     console.log(res);
+  //     if (res.data === 'loginSuccess') location.replace('/');
+  //     if (res.data === 'User not found!') {
+  //       deactivate();
+  //       window.localStorage.removeItem('loginBy');
+  //       alert('Please continue with SNS and register wallet address on My Profile page.');
+  //     }
+  //     // setDoSign(false);
+  //   };
+  //
+  //   walletLogin();
+  // }, [library]);
 
   const handleAbcConfirmClick = async () => {
     console.log(`abc token : ${abcToken}`); // Google OTP
@@ -359,7 +404,7 @@ export default function Header({ transparent }: Props) {
       >
         <Fade in={joinOpen}>
           <Box sx={modalStyle}>
-            <SignUp onClose={handleJoinClose} />
+            <SignUp hideSns={false} onClose={handleJoinClose} />
           </Box>
         </Fade>
       </Modal>

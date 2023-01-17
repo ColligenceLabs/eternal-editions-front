@@ -1,9 +1,9 @@
 // @mui
-import { alpha, styled } from '@mui/material/styles';
-import { Stack, Button, Box, Typography, Divider, Modal } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import { Stack, Button, Typography, Divider } from '@mui/material';
 import Image from '../Image';
 import * as React from 'react';
-import useWallets from '../../hooks/useWallets';
+// import useWallets from '../../hooks/useWallets';
 import { getIconByType } from '../../utils/wallet';
 import { ChainId, WALLET_METAMASK, WALLET_WALLECTCONNECT } from '../../config';
 import { useWeb3React } from '@web3-react/core';
@@ -13,6 +13,9 @@ import env from '../../env';
 import useCreateToken from '../../hooks/useCreateToken';
 import { useEffect, useState } from 'react';
 import { Iconify } from '../index';
+import { getUser, requestWalletLogin } from '../../services/services';
+import { setWebUser } from '../../store/slices/webUser';
+import { useDispatch } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -105,14 +108,13 @@ const FacebookButton = styled(Button)({
 });
 // ----------------------------------------------------------------------
 
-export default function SignUp({ onClose, ...other }) {
+export default function SignUp({ onClose, hideSns, ...other }) {
   const context = useWeb3React();
-  const { activate, chainId, account, deactivate } = context;
+  const { activate, chainId, deactivate, library } = context;
   const [doSign, setDoSign] = useState(false);
   const tokenGenerator = useCreateToken();
-  // const dispatch = useDispatch();
-  const { connectKaikas, connectMetamask, connectKlip, disconnect, requestKey, message, type } =
-    useWallets();
+  const dispatch = useDispatch();
+  // const { connectKaikas, connectMetamask, connectKlip, disconnect, requestKey, message, type } = useWallets();
 
   useEffect(() => {
     async function createToken() {
@@ -123,8 +125,39 @@ export default function SignUp({ onClose, ...other }) {
       } else await deactivate();
     }
 
-    if (account) createToken();
-  }, [account]);
+    const walletLogin = async () => {
+      if (!library) return;
+      const target_copy = Object.assign({}, library.provider);
+      const isAbc = target_copy.isABC === true;
+      // const isKaikas = typeof target_copy._kaikas !== 'undefined';
+      let signature;
+      const message = `apps.talken.io wants you to sign in with your Ethereum account.
+
+  Talken Drops Signature Request
+
+  Type: Login request`;
+      signature = await library
+        .getSigner()
+        .signMessage(message)
+        .catch(() => deactivate());
+      if (!signature) return; // 서명 거부
+      const data = { message, signature, isAbc };
+      const res = await requestWalletLogin(data);
+      if (res.data === 'loginSuccess') {
+        const userRes = await getUser();
+        if (userRes.status === 200 && userRes.data.status !== 0)
+          dispatch(setWebUser(userRes.data.user));
+        createToken();
+      }
+      if (res.data === 'User not found!') {
+        deactivate();
+        window.localStorage.removeItem('loginBy');
+        alert('Please continue with SNS and register wallet address on My Profile page.');
+      }
+    };
+
+    if (library) walletLogin();
+  }, [library]);
 
   const connectWallet = async (id) => {
     try {
@@ -157,10 +190,6 @@ export default function SignUp({ onClose, ...other }) {
     window.location.href = `${env.REACT_APP_API_URL}/auth/${snsType}?redirectUrl=/`;
   };
 
-  const buttonGoogle = {};
-
-  const buttonTwitter = {};
-
   return (
     <Stack {...other}>
       <Typography id="transition-modal-title" variant="h4" component="h2" sx={{ mb: 2 }}>
@@ -171,29 +200,34 @@ export default function SignUp({ onClose, ...other }) {
 
       <Stack spacing={2} sx={{ mt: 4 }}>
         <Stack spacing={1}>
-          <Stack>
-            <GoogleButton
-              variant="contained"
-              onClick={() => handleSnsLogin('google')}
-              startIcon={<Iconify icon={'mdi:google-plus'} />}
-            >
-              CONTINUE WITH GOOGLE
-            </GoogleButton>
-          </Stack>
-          <Stack>
-            <FacebookButton
-              variant="contained"
-              onClick={async () => {}}
-              startIcon={<Iconify icon={'mdi:facebook'} />}
-            >
-              CONTINUE WITH FACEBOOK
-            </FacebookButton>
-          </Stack>
+          {!hideSns && (
+            <>
+              <Stack>
+                <GoogleButton
+                  variant="contained"
+                  onClick={() => handleSnsLogin('google')}
+                  startIcon={<Iconify icon={'mdi:google-plus'} />}
+                >
+                  CONTINUE WITH GOOGLE
+                </GoogleButton>
+              </Stack>
+              <Stack>
+                <FacebookButton
+                  variant="contained"
+                  onClick={async () => {}}
+                  startIcon={<Iconify icon={'mdi:facebook'} />}
+                >
+                  CONTINUE WITH FACEBOOK
+                </FacebookButton>
+              </Stack>
+              <Stack direction="row" justifyContent="center" alignItems="center">
+                <Typography variant="caption">Or</Typography>
+              </Stack>
+            </>
+          )}
         </Stack>
-        <Stack direction="row" justifyContent="center" alignItems="center">
-          <Typography variant="caption">Or</Typography>
-        </Stack>
-        <Stack spacing={1}>
+
+        <Stack spacing={0}>
           <Stack>
             <MetaMaskButton
               variant="contained"
@@ -201,7 +235,7 @@ export default function SignUp({ onClose, ...other }) {
                 window.localStorage.setItem('loginBy', 'wallet');
                 await connectWallet(WALLET_METAMASK);
                 // await connectMetamask();
-                onClose();
+                // onClose();
               }}
               startIcon={
                 <Image
@@ -220,7 +254,7 @@ export default function SignUp({ onClose, ...other }) {
               onClick={async () => {
                 window.localStorage.setItem('loginBy', 'wallet');
                 await connectWallet(WALLET_WALLECTCONNECT);
-                onClose();
+                // onClose();
               }}
               startIcon={
                 <Image

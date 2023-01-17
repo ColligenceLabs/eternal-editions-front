@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { AppState } from '../store';
 import { HYDRATE } from 'next-redux-wrapper';
 import { UserModel } from '../../abc/main/accounts/interface';
 
