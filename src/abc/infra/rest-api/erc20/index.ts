@@ -652,6 +652,7 @@ const fetchKlaytnTokenTxs = async (
       chainId,
     });
 
+    // @ts-ignore
     const res = await axios.request({
       url: `https://th-api.klaytnapi.com/v2/transfer/account/${address}`,
       method: 'get',

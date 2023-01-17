@@ -58,7 +58,7 @@ export class AbcRestApi {
       }
 
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error?.response?.data;
     }
   };
@@ -80,7 +80,7 @@ export class AbcRestApi {
       }
       console.log('=== snsAdduser ===>', res.data);
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error?.response?.data;
     }
   };
@@ -101,7 +101,7 @@ export class AbcRestApi {
       }
 
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error?.response?.data;
     }
   };
@@ -123,7 +123,7 @@ export class AbcRestApi {
       }
 
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error?.response?.data;
     }
   };
@@ -145,7 +145,7 @@ export class AbcRestApi {
       }
 
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error?.response?.data;
     }
   };
@@ -168,7 +168,7 @@ export class AbcRestApi {
       }
 
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error?.response?.data;
     }
   };
@@ -194,7 +194,7 @@ export class AbcRestApi {
       }
 
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error?.response?.data;
     }
   };
@@ -230,7 +230,7 @@ export class AbcRestApi {
         tokenType: resData.token_type,
         expiresIn: resData.expire_in,
       };
-    } catch (error) {
+    } catch (error: any) {
       throw error?.response?.data;
     }
   };
@@ -286,7 +286,7 @@ export class AbcRestApi {
       }
 
       return AbcCreateSecureChannelResponse.parse(res.data);
-    } catch (error) {
+    } catch (error: any) {
       throw error?.response?.data;
     }
   };
@@ -308,7 +308,7 @@ export class AbcRestApi {
       }
 
       return AbcSearchBlacklistResopnse.parse(res.data);
-    } catch (error) {
+    } catch (error: any) {
       throw error?.response?.data;
     }
   };
@@ -330,7 +330,7 @@ export class AbcRestApi {
       }
 
       return AbcSearchBlackDomainResopnse.parse(res.data);
-    } catch (error) {
+    } catch (error: any) {
       throw error?.response?.data;
     }
   };

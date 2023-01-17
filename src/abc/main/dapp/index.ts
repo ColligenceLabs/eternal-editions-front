@@ -65,7 +65,7 @@ class DappController {
     this.dappService.on('dappResult', this.handleDappResult.bind(this));
   }
 
-  async sendDappTransaction(payload, account: Account, user: UserModel) {
+  async sendDappTransaction(payload: any, account: Account, user: UserModel) {
     console.log('--- sendDappTransaction ---', payload);
     return new Promise(async (resolve, reject) => {
       try {
@@ -139,7 +139,7 @@ class DappController {
 
         // TOOD: move this to util
         const isAutoconfirm = RuleUtil.checkAutoConfirmRuleExists({
-          contractAddress: to ? utils.getAddress(to) : null, // Normalize any supported address-format to a checksum address.
+          contractAddress: to ? utils.getAddress(to) : '', // Normalize any supported address-format to a checksum address. // Peter H. Nahm null -> ''
           chainId: network.chainId,
           data,
           autoconfirms: user.autoconfirms,
@@ -165,14 +165,15 @@ class DappController {
         const gasData = await this.gasService.makeAutoconfirmGasData({
           networkService: this.networkService,
           gasFeeService: this.gasFeeService,
-          dekeyStore: this.dekeyStore,
+          // dekeyStore: this.dekeyStore,
           latestBlock,
         });
 
         const { nextNonce, releaseLock } = await this.nonceTracker.getNonceLock(
           account.ethAddress,
           network.chainId,
-          this.mutexService
+          this.mutexService,
+          account
         );
 
         return this.txQueueService.add({
@@ -211,7 +212,7 @@ class DappController {
   }
 
   // async processOnetimeDappTx({resolve, reject}) {
-  async confirmDappTransaction(unsignedTx, account: Account) {
+  async confirmDappTransaction(unsignedTx: any, account: Account) {
     const { domainName, funcName, payload, resolve, reject } = this.dappService.getDappTx();
 
     try {
@@ -285,7 +286,7 @@ class DappController {
         gasPrice:
           bSupportsEIP1559 && account.signer === 'mpc'
             ? '0'
-            : ethers.utils.formatUnits(gasPrice, 'gwei'),
+            : ethers.utils.formatUnits(gasPrice!, 'gwei'),
         gas: BigNumber.from(gas).toString(),
         // gasFee: ethers.utils.formatEther(dappGasFee),
         amount: ethers.utils.formatEther(value || '0'),
@@ -353,7 +354,7 @@ class DappController {
   }
 
   // registerAutoconfirm({resolve, reject}) {
-  registerAutoconfirm(unsignedTx, account: Account) {
+  registerAutoconfirm(unsignedTx: any, account: Account) {
     try {
       // const state = this.dekeyStore.getState();
       // const network = state[CURRENT_NETWORK];
@@ -378,7 +379,7 @@ class DappController {
     } catch (error) {}
   }
 
-  handleDappResult(payload, result) {
+  handleDappResult(payload: any, result: any) {
     log.info('handleDappResult', { payload, result });
     this.dappService.payloadHandler({
       id: payload?.id,
@@ -387,7 +388,7 @@ class DappController {
     });
   }
 
-  handleDappError(payload, error) {
+  handleDappError(payload: any, error: any) {
     this.dappService.payloadHandler({
       id: payload?.id,
       jsonrpc: payload?.jsonrpc,

@@ -67,15 +67,15 @@ const getMpcJwt = async (dto: { signType?: string; message: string }): Promise<s
       jsonMessage: dto.message,
     });
     return res.data.mpcJwt;
-  } catch (error) {
+  } catch (error: any) {
     throw new CustomError(DekeyError.getMpcJwt(error.message));
   }
 };
 
-const getTransactions = async (dto): Promise<EtherscanTx[]> => {
+const getTransactions = async (dto: any): Promise<EtherscanTx[]> => {
   const { address, url, blockNumber, chainId } = dto;
   try {
-    let apikey: string;
+    let apikey: string | undefined;
     if (isBinance(chainId)) {
       apikey = process.env.BSCSCAN_API_KEY;
     } else if (isMatic(chainId)) {
@@ -148,6 +148,7 @@ const getKlaytnTransactions = async (address: string, chainId: string, fromTimes
       headers: { 'x-chain-id': chainId, 'Content-Type': 'application/json' },
     };
 
+    // @ts-ignore
     const res = await axios.request({
       url: `https://th-api.klaytnapi.com/v2/transfer/account/${address}`,
       method: 'get',

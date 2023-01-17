@@ -29,7 +29,8 @@ import { BnMultiplyByFraction, bnToHex, hexToBn } from '../transaction/utils';
 import { DekeyData } from '../../dekeyData';
 
 export class GasService {
-  gasNowData;
+  gasNowData: any;
+  // @ts-ignore
   isGasnowConnected: boolean;
 
   constructor(
@@ -64,6 +65,7 @@ export class GasService {
     //   network.chainId === 5
     // ) {
     try {
+      // @ts-ignore
       const { gasFeeEstimates, estimatedGasFeeTimeBounds, gasEstimateType } =
         await gasFeeService.fetchGasFeeEstimates();
 
@@ -88,7 +90,7 @@ export class GasService {
 
   // TODO: separate token case and others
   async getGasLimit({
-    contractAddress = null,
+    contractAddress = '',
     to,
     from,
     latestBlock,
@@ -161,7 +163,7 @@ export class GasService {
     return gasLimit;
   }
 
-  analyzeGasUsage = async (txMeta, block) => {
+  analyzeGasUsage = async (txMeta: any, block: any) => {
     let simulationFails;
 
     // if (txMeta.type) {
@@ -179,7 +181,7 @@ export class GasService {
 
     try {
       estimatedGasHex = await this.providerConnManager.estimateGas(txMeta);
-    } catch (error) {
+    } catch (error: any) {
       simulationFails = {
         reason: error.message,
         errorKey: error.errorKey,

@@ -41,8 +41,8 @@ export interface SendTxInput {
   gasLimit?: string;
   domainName?: string;
   funcName?: string;
-  resolve?;
-  reject?;
+  resolve?: any;
+  reject?: any;
   txType?: string;
   type?: string;
   payload: any;
@@ -63,8 +63,8 @@ export interface SendTokenTxInput {
   gasLimit?: string;
   domainName?: string;
   funcName?: string;
-  resolve?;
-  reject?;
+  resolve?: any;
+  reject?: any;
   txType?: string;
   type?: string;
   payload: any;
@@ -108,7 +108,7 @@ export interface AddTxInput {
 export interface AppAccount extends Account {
   index?: string;
   hdPath?: string;
-  icon?: string;
+  // icon?: string;
   accountDetail?: any;
 }
 
@@ -243,8 +243,8 @@ export interface DappTxInput {
   payload?: any;
   value?: string;
   network?: NetworkModel;
-  gas?;
-  defaultGasLimit?;
+  gas?: any;
+  defaultGasLimit?: any;
   klayType?: string;
   feeRatio?: string;
   chainId: number;

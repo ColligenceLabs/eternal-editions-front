@@ -57,6 +57,7 @@ export class AccountRestApi extends EventEmitter {
     }
   };
 
+  // @ts-ignore
   registerUser = async (): Promise<RegisterUserResult> => {
     console.log('###########################');
     try {
@@ -72,7 +73,7 @@ export class AccountRestApi extends EventEmitter {
   saveKeyGenResult = async (
     dto: SaveKeyGenResultDto,
     abcAuth: AbcAuth
-  ): Promise<{ user: UserModel; wallet; accessToken; expiresIn }> => {
+  ): Promise<{ user: UserModel; wallet: any; accessToken: any; expiresIn: any }> => {
     try {
       const { address, pubKey, ucPubkey, accountName, uid, wid, email, iss } = dto;
 
@@ -98,7 +99,7 @@ export class AccountRestApi extends EventEmitter {
         throw new Error();
       }
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new CustomError(DekeyError.saveKeygenResult(error.message));
     }
   };
@@ -130,7 +131,7 @@ export class AccountRestApi extends EventEmitter {
       const res = await apiClient.post('/v1/user/twofactor/gen', dto);
 
       return TwofaGenResponse.parse(res.data);
-    } catch (error) {
+    } catch (error: any) {
       throw new CustomError(DekeyError.genTwofa(error.message));
     }
   };
@@ -140,7 +141,7 @@ export class AccountRestApi extends EventEmitter {
       const res = await apiClient.post('/v1/user/twofactor/resetcode', {});
 
       return GetTwofaResetcodeResponse.parse(res.data);
-    } catch (error) {
+    } catch (error: any) {
       throw new CustomError(DekeyError.getTwofaResetcode(error.message));
     }
   };
@@ -153,12 +154,12 @@ export class AccountRestApi extends EventEmitter {
       const res = await apiClient.post('/v1/user/twofactor/gen/verify', dto);
 
       return TwofaGenVerifyResponse.parse(res.data);
-    } catch (error) {
+    } catch (error: any) {
       throw error;
     }
   };
 
-  verifyTwoFactorResetGenVerify = async (dto) => {
+  verifyTwoFactorResetGenVerify = async (dto: any) => {
     try {
       const res = await apiClient.post(
         '/v1/user/twofactor/reset/gen/verify',
@@ -173,7 +174,7 @@ export class AccountRestApi extends EventEmitter {
       );
 
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error;
     }
   };
@@ -183,7 +184,7 @@ export class AccountRestApi extends EventEmitter {
       const res = await apiClient.post('/v1/user/twofactor/verify', { token });
 
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error;
     }
   };
@@ -193,7 +194,7 @@ export class AccountRestApi extends EventEmitter {
       const res = await apiClient.post('/v1/user/twofactor/verify/mpc', dto);
 
       return TwofaVerifyMpcResponse.parse(res.data);
-    } catch (error) {
+    } catch (error: any) {
       throw error;
     }
   };
@@ -203,7 +204,7 @@ export class AccountRestApi extends EventEmitter {
       const res = await apiClient.post('/v1/user/twofactor/reset', dto);
 
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error;
     }
   };
@@ -217,7 +218,7 @@ export class AccountRestApi extends EventEmitter {
         throw new Error('');
       }
       return res.data.user;
-    } catch (error) {
+    } catch (error: any) {
       //log.error(error);
       throw error;
     }
@@ -228,7 +229,7 @@ export class AccountRestApi extends EventEmitter {
       const res = await apiClient.post('/v1/user/unlock', dto);
 
       return UnlockResponse.parse(res.data);
-    } catch (error) {
+    } catch (error: any) {
       throw new CustomError(DekeyError.unlock(error.message));
     }
   };
@@ -250,7 +251,7 @@ export class AccountRestApi extends EventEmitter {
       }
 
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       //log.error(error);
       throw error;
     }
@@ -261,7 +262,7 @@ export class AccountRestApi extends EventEmitter {
       const res = await apiClient.post('/v1/user/challenge-message', dto);
 
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new CustomError(DekeyError.getChallengeMessage(error.message));
     }
   };
@@ -272,7 +273,7 @@ export class AccountRestApi extends EventEmitter {
     try {
       const res = await apiClient.post('/v1/user/get', {});
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       throw error;
     }
   };
@@ -314,7 +315,7 @@ export class AccountRestApi extends EventEmitter {
   //   }
   // };
 
-  getUIdAndWIdWithSId = async (dto): Promise<{ uid: string; wid: string }> => {
+  getUIdAndWIdWithSId = async (dto: any): Promise<{ uid: string; wid: string }> => {
     log.debug('getUIdAndWIdWithSId', dto);
     try {
       const { sid } = dto;
@@ -333,7 +334,7 @@ export class AccountRestApi extends EventEmitter {
   };
 
   fetchUserAndAccessTokenWithSid = async (
-    dto
+    dto: any
   ): Promise<{ accessToken: string; user: UserModel; expiresIn: string }> => {
     log.debug('fetchUserAndAccessTokenWithSid', dto);
     try {
@@ -352,14 +353,14 @@ export class AccountRestApi extends EventEmitter {
   };
 
   updateAccountName = async (
-    dto
+    dto: any
   ): Promise<{
     user: UserModel;
   }> => {
     try {
       const res = await apiClient.post('/v1/address/account-name', dto);
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new CustomError(DekeyError.updateAccountName(error.message));
     }
   };
@@ -382,8 +383,8 @@ export class AccountRestApi extends EventEmitter {
   getWalletsAndUserByAbcUid = async (
     abcAuth: AbcLoginResult
   ): Promise<{
-    user;
-    wallets;
+    user: any;
+    wallets: any;
   }> => {
     try {
       const res = await apiClient.post('/v1/user/wallets', {});
@@ -398,14 +399,14 @@ export class AccountRestApi extends EventEmitter {
     }
   };
 
-  recover = async (dto) => {
+  recover = async (dto: any) => {
     try {
       const res = await apiClient.post('/v1/user/recover', dto);
       if (res.status !== 200) {
         throw new Error();
       }
       return res.data;
-    } catch (error) {
+    } catch (error: any) {
       throw new CustomError(DekeyError.saveRecoverResult(error.message));
     }
   };

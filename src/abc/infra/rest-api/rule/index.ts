@@ -15,7 +15,7 @@ import {
 } from '../../../schema/account';
 import {apiClient} from '../../../utils/axios';
 
-const getFuncSignature = async hash => {
+const getFuncSignature = async (hash: any) => {
   hash = hash.toString(16);
   const url =
     'https://www.4byte.directory/api/v1/signatures/?hex_signature=' + hash;

@@ -259,6 +259,7 @@ export class GasFeeService {
     return await this._fetchGasFeeEstimateData(options);
   }
 
+  // @ts-ignore
   async getGasFeeEstimatesAndStartPolling(pollToken?: string): Promise<string> {
     try {
       if (this.pollTokens.size === 0) {

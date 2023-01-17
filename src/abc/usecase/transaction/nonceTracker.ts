@@ -33,9 +33,9 @@ export class NonceTracker {
     address: string,
     chainId: number,
     mutexService: MutexService,
+    account: Account,
     txType?: TxType,
-    nonce?: any,
-    account: Account
+    nonce?: any
   ) => {
     if (txType === TxType.RETRY || txType === TxType.CANCEL) {
       return {
@@ -56,7 +56,7 @@ export class NonceTracker {
       // const state = this.dekeyStore.getState();
       // TODO : 확인이 필요함...
       // const pendingTxs = state[PENDING_TXS] ?? [];
-      const pendingTxs = [];
+      const pendingTxs: any[] = [];
       // const account = state[ACTIVE_ACCOUNT];
 
       const activeAccountPendingTxs = pendingTxs.filter(
@@ -118,8 +118,8 @@ export class NonceTracker {
     return false;
   };
 
-  _getHighestContinuousFrom = (txList, startPoint) => {
-    const nonces = txList.map((txMeta) => {
+  _getHighestContinuousFrom = (txList: any, startPoint: any) => {
+    const nonces = txList.map((txMeta: any) => {
       const nonce = txMeta.nonce;
       return nonce;
     });

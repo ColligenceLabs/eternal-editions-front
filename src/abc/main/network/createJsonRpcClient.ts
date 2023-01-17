@@ -44,7 +44,7 @@ export default function createJsonRpcClient({
     ? createFetchKlaytnMiddleware({
         rpcUrl,
         chainId,
-        encodedAuth: process.env.KLAYTN_AUTH_TOKEN,
+        encodedAuth: process.env.KLAYTN_AUTH_TOKEN ?? '',
       })
     : createFetchMiddleware({rpcUrl});
 
@@ -66,8 +66,8 @@ export default function createJsonRpcClient({
   return {networkMiddleware, blockTracker};
 }
 
-function createChainIdMiddleware(chainId) {
-  return (req, res, next, end) => {
+function createChainIdMiddleware(chainId: any) {
+  return (req: any, res: any, next: any, end: any) => {
     if (req.method === 'eth_chainId') {
       res.result = '0x' + chainId.toString(16);
       return end();
