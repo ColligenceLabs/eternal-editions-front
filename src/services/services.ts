@@ -36,3 +36,20 @@ export const abcLogin = async (data: any) => {
 export const getUser = async () => {
   return await apiAuthAxios.get('/api/users/getUser');
 };
+
+export const updateAddress = async (data: any) => {
+  const token = window.localStorage.getItem('nftapiJwtToken');
+  return await customAxios.post('/api/service/profile/addressUpdate', data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+
+export const deleteAddress = async (data: any) => {
+  const token = window.localStorage.getItem('nftapiJwtToken');
+  return await customAxios.post('/api/service/profile/addressDelete', data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};
+export const requestWalletLogin = async (data: any) => {
+  return await apiAuthAxios.post('/auth/walletLogin?isWalletLogin=true', data);
+};

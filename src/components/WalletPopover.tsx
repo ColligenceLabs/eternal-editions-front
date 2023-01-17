@@ -32,10 +32,10 @@ import { Iconify } from './index';
 import launchIcon from '@iconify/icons-carbon/launch';
 import { useWeb3React } from '@web3-react/core';
 import { WALLET_ABC, WALLET_METAMASK, WALLET_WALLECTCONNECT } from '../config';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch, useSelector } from 'react-redux';
 import useAccount from '../hooks/useAccount';
 import env from '../env';
-import { delUser } from "../store/slices/user";
+import { delUser } from '../store/slices/user';
 
 // ----------------------------------------------------------------------
 WalletPopover.propTypes = {};
@@ -81,7 +81,7 @@ export default function WalletPopover({}) {
       window.localStorage.removeItem('jwtToken');
       window.localStorage.removeItem('loginBy');
       window.location.href = `${env.REACT_APP_API_URL}/auth/logout`;
-      dispatch(delUser({}));
+      dispatch(delUser());
     } catch (e) {
       console.log(e);
       alert(e);
@@ -239,6 +239,16 @@ export default function WalletPopover({}) {
               <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                 <Box sx={{ flexGrow: 1 }}>
                   <Typography variant="subtitle1">Notice</Typography>
+                </Box>
+              </Box>
+            </MenuItem>
+          </NextLink>
+
+          <NextLink href={Routes.eternalEditions.my.walletRegister} passHref>
+            <MenuItem onClick={handleClose}>
+              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                <Box sx={{ flexGrow: 1 }}>
+                  <Typography variant="subtitle1">Register External Wallet</Typography>
                 </Box>
               </Box>
             </MenuItem>

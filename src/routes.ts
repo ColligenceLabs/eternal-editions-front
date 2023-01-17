@@ -17,6 +17,7 @@ const Routes = {
       account: '/my/account',
       tickets: '/my/tickets',
       transaction: '/my/transaction',
+      walletRegister: '/my/wallet-register',
     },
     faq: '/faq',
     notice: '/notice',

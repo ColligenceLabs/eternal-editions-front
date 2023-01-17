@@ -13,6 +13,7 @@ import env from '../../env';
 import useCreateToken from '../../hooks/useCreateToken';
 import { useEffect, useState } from 'react';
 import { Iconify } from '../index';
+import { requestWalletLogin } from '../../services/services';
 
 // ----------------------------------------------------------------------
 
@@ -105,9 +106,9 @@ const FacebookButton = styled(Button)({
 });
 // ----------------------------------------------------------------------
 
-export default function SignUp({ onClose, ...other }) {
+export default function SignUp({ onClose, hideSns, ...other }) {
   const context = useWeb3React();
-  const { activate, chainId, account, deactivate } = context;
+  const { activate, chainId, account, deactivate, library } = context;
   const [doSign, setDoSign] = useState(false);
   const tokenGenerator = useCreateToken();
   // const dispatch = useDispatch();
@@ -123,8 +124,47 @@ export default function SignUp({ onClose, ...other }) {
       } else await deactivate();
     }
 
-    if (account) createToken();
-  }, [account]);
+    const walletLogin = async () => {
+      if (!library) return;
+      const target_copy = Object.assign({}, library.provider);
+      const isAbc = target_copy.isABC === true;
+      // const isKaikas = typeof target_copy._kaikas !== 'undefined';
+      let signature;
+      const message = `apps.talken.io wants you to sign in with your Ethereum account.
+
+  Talken Drops Signature Request
+
+  Type: Login request`;
+      // if (isKaikas) {
+      //   const caver = new Caver(window.klaytn);
+      //   signature = await caver.klay.sign(message, account ?? '').catch(() => deactivate());
+      // } else {
+      //   signature = await library
+      //     .getSigner()
+      //     .signMessage(message)
+      //     .catch(() => deactivate());
+      // }
+      signature = await library
+        .getSigner()
+        .signMessage(message)
+        .catch(() => deactivate());
+      if (!signature) return; // 서명 거부
+      // const data = { message, signature, isKaikas, isAbc };
+      const data = { message, signature, isAbc };
+      console.log(data);
+      const res = await requestWalletLogin(data);
+      console.log(res);
+      if (res.data === 'loginSuccess') createToken();
+      if (res.data === 'User not found!') {
+        deactivate();
+        window.localStorage.removeItem('loginBy');
+        alert('Please continue with SNS and register wallet address on My Profile page.');
+      }
+      // setDoSign(false);
+    };
+
+    if (library) walletLogin();
+  }, [library]);
 
   const connectWallet = async (id) => {
     try {
@@ -171,29 +211,34 @@ export default function SignUp({ onClose, ...other }) {
 
       <Stack spacing={2} sx={{ mt: 4 }}>
         <Stack spacing={1}>
-          <Stack>
-            <GoogleButton
-              variant="contained"
-              onClick={() => handleSnsLogin('google')}
-              startIcon={<Iconify icon={'mdi:google-plus'} />}
-            >
-              CONTINUE WITH GOOGLE
-            </GoogleButton>
-          </Stack>
-          <Stack>
-            <FacebookButton
-              variant="contained"
-              onClick={async () => {}}
-              startIcon={<Iconify icon={'mdi:facebook'} />}
-            >
-              CONTINUE WITH FACEBOOK
-            </FacebookButton>
-          </Stack>
+          {!hideSns && (
+            <>
+              <Stack>
+                <GoogleButton
+                  variant="contained"
+                  onClick={() => handleSnsLogin('google')}
+                  startIcon={<Iconify icon={'mdi:google-plus'} />}
+                >
+                  CONTINUE WITH GOOGLE
+                </GoogleButton>
+              </Stack>
+              <Stack>
+                <FacebookButton
+                  variant="contained"
+                  onClick={async () => {}}
+                  startIcon={<Iconify icon={'mdi:facebook'} />}
+                >
+                  CONTINUE WITH FACEBOOK
+                </FacebookButton>
+              </Stack>
+              <Stack direction="row" justifyContent="center" alignItems="center">
+                <Typography variant="caption">Or</Typography>
+              </Stack>
+            </>
+          )}
         </Stack>
-        <Stack direction="row" justifyContent="center" alignItems="center">
-          <Typography variant="caption">Or</Typography>
-        </Stack>
-        <Stack spacing={1}>
+
+        <Stack spacing={0}>
           <Stack>
             <MetaMaskButton
               variant="contained"
@@ -201,7 +246,7 @@ export default function SignUp({ onClose, ...other }) {
                 window.localStorage.setItem('loginBy', 'wallet');
                 await connectWallet(WALLET_METAMASK);
                 // await connectMetamask();
-                onClose();
+                // onClose();
               }}
               startIcon={
                 <Image
@@ -220,7 +265,7 @@ export default function SignUp({ onClose, ...other }) {
               onClick={async () => {
                 window.localStorage.setItem('loginBy', 'wallet');
                 await connectWallet(WALLET_WALLECTCONNECT);
-                onClose();
+                // onClose();
               }}
               startIcon={
                 <Image
