@@ -1,6 +1,7 @@
 // next
 import NextLink from 'next/link';
 // @mui
+import _ from 'lodash';
 import { useTheme } from '@mui/material/styles';
 import {
   Box,
@@ -58,7 +59,7 @@ import { checkWasm } from '../../abc/sandbox';
 import secureLocalStorage from 'react-secure-storage';
 import { TxParams } from '../../abc/main/transactions/interface';
 import useAccount from '../../hooks/useAccount';
-import { abcSendTx } from "../../utils/abcTransactions";
+import { abcSendTx } from '../../utils/abcTransactions';
 
 const modalStyle = {
   position: 'absolute',
@@ -135,7 +136,8 @@ export default function Header({ transparent }: Props) {
 
   useEffect(() => {
     if (webUser?.user?.session?.providerAuthInfo?.provider_token !== '' && temp) {
-      if (abcUser.uid === '') {
+      console.log(abcUser);
+      if (_.isEmpty(abcUser) || abcUser.uid === '') {
         abcSnsLogin();
       }
     }
@@ -162,7 +164,7 @@ export default function Header({ transparent }: Props) {
       '0x1716C4d49E9D81c17608CD9a45b1023ac9DF6c73', // Recipient
       ethers.utils.parseUnits('0.01', 6), // Amount, USDC decimal = 6
     ];
-    const result = await abcSendTx(abcToken, to,method, txArgs, abcUser);
+    const result = await abcSendTx(abcToken, to, method, txArgs, abcUser);
     console.log('== tx result ==', result);
     setAbcToken('');
     setAbcOpen(false);
