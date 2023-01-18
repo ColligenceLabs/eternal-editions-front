@@ -7,9 +7,9 @@
  ******************************************************************************/
 
 import BN from 'bn.js';
-import ethUtil from 'ethereumjs-util';
+import { stripHexPrefix } from 'ethereumjs-util';
 
-import {addHexPrefix} from './string';
+import { addHexPrefix } from './string';
 
 /**
  * Converts a hex string to a BN object
@@ -18,8 +18,8 @@ import {addHexPrefix} from './string';
  * @returns {Object} A BN object
  *
  */
-function hexToBn(inputHex) {
-  return new BN(ethUtil.stripHexPrefix(inputHex), 16);
+function hexToBn(inputHex: string) {
+  return new BN(stripHexPrefix(inputHex), 16);
 }
 
 /**
@@ -29,7 +29,7 @@ function hexToBn(inputHex) {
  * @returns {string} - A '0x' prefixed hex string
  *
  */
-function bnToHex(inputBn) {
+function bnToHex(inputBn: any) {
   return addHexPrefix(inputBn.toString(16));
 }
 

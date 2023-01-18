@@ -6,21 +6,18 @@
  *
  ******************************************************************************/
 
-import {BigNumber, ethers} from 'ethers';
-import {stripHexPrefix} from 'ethjs-util';
-import {fromWei, toWei} from 'ethjs-unit';
-import {BN} from 'ethereumjs-util';
+import { BigNumber, ethers } from 'ethers';
+import { stripHexPrefix } from 'ethjs-util';
+// @ts-ignore
+import { fromWei, toWei } from 'ethjs-unit';
+import { BN } from 'ethereumjs-util';
 
-import {DekeyData} from '../dekeyData';
-import {GasDataModel} from '../main/transactions/interface';
-import BigNumberUtil from './bignumber';
-import {isKlaytn} from './network';
+import { DekeyData } from '../dekeyData';
+import { GasDataModel } from '../main/transactions/interface';
+import BigNumberUtil from './bigNumber';
+import { isKlaytn } from './network';
 
-const addGasBuffer = (
-  initialGasLimitHex: string,
-  blockGasLimitHex: string,
-  chainId: number
-) => {
+const addGasBuffer = (initialGasLimitHex: string, blockGasLimitHex: string, chainId: number) => {
   const multiplier = _getGasBufferMultiplier(chainId);
 
   const initialGasLimitBn = BigNumberUtil.hexToBn(initialGasLimitHex);
@@ -65,7 +62,7 @@ const makeGasData = (
     };
   }
   return {
-    gasPrice: ethers.utils.parseUnits(gasPrice, 'gwei').toHexString(),
+    gasPrice: ethers.utils.parseUnits(gasPrice!, 'gwei').toHexString(),
   };
 };
 
@@ -92,9 +89,7 @@ const calculateDappGasFee = ({
       .mul(BigNumber.from(SQRT_GWEI))
       .mul(BigNumber.from(2));
 
-    dappGasFee = BigNumber.from(baseFeePerGas)
-      .add(BigNumber.from(baseFeeBuffer))
-      .mul(dappGasLimit);
+    dappGasFee = BigNumber.from(baseFeePerGas).add(BigNumber.from(baseFeeBuffer)).mul(dappGasLimit);
   } else {
     dappGasFee = BigNumber.from(gasPrice).mul(dappGasLimit);
   }

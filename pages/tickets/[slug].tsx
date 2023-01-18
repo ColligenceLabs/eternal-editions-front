@@ -151,7 +151,6 @@ export default function TicketDetailPage() {
       try {
         const method = 'buyItemEth';
         const txArgs = [index, amount];
-        console.log('==== otp ===>', abcToken);
         const result = await abcSendTx(
           abcToken,
           contract,

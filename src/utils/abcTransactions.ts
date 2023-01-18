@@ -7,6 +7,8 @@ import TransactionUtil from '../abc/utils/transaction';
 import { DekeyData } from '../abc/dekeyData';
 import personalMessage from '../abc/main/personalMessage';
 import typedMessage from '../abc/main/typedMessage';
+import GasUtil from '../abc/utils/gas';
+import { addHexPrefix } from '../abc/utils/string';
 
 interface txResult {
   status: number;
@@ -25,7 +27,7 @@ export const abcSendTx = async (
   value?: string
 ): Promise<txResult> => {
   const { abcController, accountController } = controllers;
-  const { mpcService, providerService, providerConnManager } = services;
+  const { mpcService, providerService, providerConnManager, gasService } = services;
 
   // console.log(`abc token : ${twofaToken}`);
 
@@ -60,25 +62,28 @@ export const abcSendTx = async (
   const { nextNonce } = await nonceTracker.getNetworkNonce(account.ethAddress);
   console.log('==== nextNonce ===>', nextNonce);
 
+  const latestBlock = await providerService.getLatestBlock();
+
+  const { blockGasLimit, estimatedGasHex, simulationFails } = await gasService.analyzeGasUsage(
+    // payload.params[0],
+    { data, from: account.ethAddress, to, value: value ? value : '0x0' },
+    latestBlock
+  );
+
+  const gasLimit = GasUtil.addGasBuffer(addHexPrefix(estimatedGasHex), blockGasLimit, 80001);
+  console.log('=== gaslimit ==', gasLimit);
+
   // 6. unSignedTx 생성
-  const txParams: TxParams = value
-    ? {
-        chainId: 80001,
-        data,
-        value,
-        gasLimit: '0x7a120', //'0x010cd2',
-        gasPrice: '0x0ba43b7400',
-        to,
-        nonce: nextNonce,
-      }
-    : {
-        chainId: 80001,
-        data,
-        gasLimit: '0x010cd2',
-        gasPrice: '0x0ba43b7400',
-        to,
-        nonce: nextNonce,
-      };
+  const txParams: TxParams = {
+    chainId: 80001,
+    data,
+    value: value ? value : '0x0',
+    // gasLimit: '0x7a120', //'0x010cd2',
+    gasLimit,
+    gasPrice: '0x0ba43b7400',
+    to,
+    nonce: nextNonce,
+  };
   console.log('=== txParams ===>', txParams);
   // const txParams = {
   //   chainId: 1001,
@@ -147,9 +152,15 @@ export const abcSendTx = async (
   console.log('=====> result: txHash ===>', txHash);
 
   // TODO : 왜 await 가 안되고 바로 null 이 return 될까?
-  await sleep(5000);
-  const receipt = await providerService.getTransactionReceipt(txHash, txParams.chainId);
-  console.log('=====> result: receipt ===>', receipt);
+  let receipt;
+  while (1) {
+    await sleep(3000);
+    receipt = await providerService.getTransactionReceipt(txHash, txParams.chainId);
+    if (receipt !== null) {
+      console.log('=====> result: receipt ===>', receipt);
+      break;
+    }
+  }
 
   return receipt;
 };

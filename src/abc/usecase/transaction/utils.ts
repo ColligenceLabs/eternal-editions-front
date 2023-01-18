@@ -8,10 +8,10 @@
 
 import assert from 'assert';
 import extension from 'extensionizer';
-import ethUtil from 'ethereumjs-util';
+import { stripHexPrefix } from 'ethereumjs-util';
 import BN from 'bn.js';
-import {memoize} from 'lodash';
-import {ethers} from 'ethers';
+import { memoize } from 'lodash';
+import { ethers } from 'ethers';
 
 /**
  * Checks whether a given balance of ETH, represented as a hex string, is sufficient to pay a value plus a gas fee
@@ -24,18 +24,10 @@ import {ethers} from 'ethers';
  * @returns {boolean} Whether the balance is greater than or equal to the value plus the value of gas times gasPrice
  *
  */
-function sufficientBalance(txParams, hexBalance) {
+function sufficientBalance(txParams: any, hexBalance: any) {
   // validate hexBalance is a hex string
-  assert.equal(
-    typeof hexBalance,
-    'string',
-    'sufficientBalance - hexBalance is not a hex string'
-  );
-  assert.equal(
-    hexBalance.slice(0, 2),
-    '0x',
-    'sufficientBalance - hexBalance is not a hex string'
-  );
+  assert.equal(typeof hexBalance, 'string', 'sufficientBalance - hexBalance is not a hex string');
+  assert.equal(hexBalance.slice(0, 2), '0x', 'sufficientBalance - hexBalance is not a hex string');
 
   const balance = hexToBn(hexBalance);
   const value = hexToBn(txParams.value);
@@ -53,8 +45,8 @@ function sufficientBalance(txParams, hexBalance) {
  * @returns {Object} A BN object
  *
  */
-function hexToBn(inputHex) {
-  return new BN(ethUtil.stripHexPrefix(inputHex), 16);
+function hexToBn(inputHex: string) {
+  return new BN(stripHexPrefix(inputHex), 16);
 }
 
 /**
@@ -66,7 +58,7 @@ function hexToBn(inputHex) {
  * @returns {BN} The product of the multiplication
  *
  */
-function BnMultiplyByFraction(targetBN, numerator, denominator) {
+function BnMultiplyByFraction(targetBN: any, numerator: any, denominator: any) {
   const numBN = new BN(numerator);
   const denomBN = new BN(denominator);
   return targetBN.mul(numBN).div(denomBN);
@@ -78,7 +70,7 @@ function BnMultiplyByFraction(targetBN, numerator, denominator) {
  * @returns {Error|undefined}
  */
 function checkForError() {
-  const {lastError} = extension.runtime;
+  const { lastError } = extension.runtime;
   if (!lastError) {
     return undefined;
   }
@@ -96,7 +88,7 @@ function checkForError() {
  * @param {string} str - The string to prefix.
  * @returns {string} The prefixed string.
  */
-const addHexPrefix = str => {
+const addHexPrefix = (str: any) => {
   if (typeof str !== 'string' || str.match(/^-?0x/u)) {
     return str;
   }
@@ -119,15 +111,8 @@ const addHexPrefix = str => {
  * @returns {string} - A '0x' prefixed hex string
  *
  */
-function bnToHex(inputBn) {
+function bnToHex(inputBn: any) {
   return addHexPrefix(inputBn.toString(16));
 }
 
-export {
-  sufficientBalance,
-  hexToBn,
-  BnMultiplyByFraction,
-  checkForError,
-  addHexPrefix,
-  bnToHex,
-};
+export { sufficientBalance, hexToBn, BnMultiplyByFraction, checkForError, addHexPrefix, bnToHex };
