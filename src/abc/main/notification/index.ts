@@ -10,8 +10,13 @@ import log from 'loglevel';
 
 import ExtensionPlatform from '../../background/platforms/extension';
 
-const NOTIFICATION_HEIGHT = navigator.platform.toLocaleLowerCase().includes('mac') ? 600 : 640;
-const NOTIFICATION_WIDTH = navigator.platform.toLocaleLowerCase().includes('mac') ? 360 : 376;
+let NOTIFICATION_HEIGHT: any = null;
+let NOTIFICATION_WIDTH: any = null;
+
+if (typeof window !== 'undefined') {
+  NOTIFICATION_HEIGHT = navigator.platform.toLocaleLowerCase().includes('mac') ? 600 : 640;
+  NOTIFICATION_WIDTH = navigator.platform.toLocaleLowerCase().includes('mac') ? 360 : 376;
+}
 
 export default class NotificationManager {
   platform;
