@@ -162,7 +162,7 @@ export default function TicketDetailPage() {
           payment!.toHexString()
         );
 
-        if (parseInt(result.status.toString(), 10) === SUCCESS) {
+        if (parseInt(result.status.toString(), 16) === SUCCESS) {
           // const left = await getItemAmount(
           //   contract,
           //   index,
@@ -174,7 +174,7 @@ export default function TicketDetailPage() {
           const data = {
             mysterybox_id: ticketInfo?.id,
             buyer: '',
-            buyer_address: account,
+            buyer_address: abcUser.accounts[0].ethAddress,
             isSent: true,
             txHash: result?.txHash,
             price: ticketInfo?.price,
@@ -182,6 +182,7 @@ export default function TicketDetailPage() {
           };
 
           const res = await registerBuy(data);
+          console.log('== call backend : registerBuy ==>', res.data);
           if (res.data.status === SUCCESS) {
             // setOpenSnackbar({
             //   open: true,

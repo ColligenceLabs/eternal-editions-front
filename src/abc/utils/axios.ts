@@ -25,6 +25,7 @@ apiClient.interceptors.request.use((cfg) => {
   console.log('--- axios-- cfg--', cfg);
   // const { abcAuth } = dekeyStore.getState();
   // const abcAuth = JSON.parse(window.localStorage.getItem('abcAuth'));
+  // TODO : 가끔 못 읽는 경우가 있는 듯...
   const abcAuth = JSON.parse(<string>secureLocalStorage.getItem('abcAuth'));
 
   // @ts-ignore
@@ -93,6 +94,7 @@ apiClient.interceptors.response.use(
             //   },
             // });
             // window.localStorage.setItem('abcAuth', JSON.stringify(responseData));
+            console.log('========== refresh access token ========================================');
             secureLocalStorage.setItem('abcAuth', JSON.stringify(responseData));
 
             originalRequest.headers.authorization = `Bearer ${responseData.access_token}`;
