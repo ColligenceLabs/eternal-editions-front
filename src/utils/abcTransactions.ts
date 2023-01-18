@@ -1,5 +1,4 @@
 import { makeTxData } from './makeTxData';
-import tokenAbi from '../config/abi/ERC20Token.json';
 import { controllers, nonceTracker, services } from '../abc/background/init';
 import { TxParams } from '../abc/main/transactions/interface';
 import { isKlaytn } from '../abc/utils/network';
@@ -14,9 +13,11 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 export const abcSendTx = async (
   twofaToken: string,
   to: string,
+  abi: any,
   method: string,
   txArgs: any,
-  user: any
+  user: any,
+  value?: string
 ): Promise<number> => {
   const { abcController, accountController } = controllers;
   const { mpcService, providerService, providerConnManager } = services;
@@ -47,7 +48,7 @@ export const abcSendTx = async (
   //   '0x1716C4d49E9D81c17608CD9a45b1023ac9DF6c73', // Recipient
   //   ethers.utils.parseUnits('0.01', 6), // Amount, USDC decimal = 6
   // ]); // Method name & arguments
-  const data = makeTxData(tokenAbi, method, txArgs); // Method name & arguments
+  const data = makeTxData(abi, method, txArgs); // Method name & arguments
   console.log('====>', data);
 
   // 5. nonce 확인
@@ -55,14 +56,24 @@ export const abcSendTx = async (
   console.log('==== nextNonce ===>', nextNonce);
 
   // 6. unSignedTx 생성
-  const txParams: TxParams = {
-    chainId: 80001,
-    data,
-    gasLimit: '0x010cd2',
-    gasPrice: '0x0ba43b7400',
-    to,
-    nonce: nextNonce,
-  };
+  const txParams: TxParams = value
+    ? {
+        chainId: 80001,
+        data,
+        value,
+        gasLimit: '0x010cd2',
+        gasPrice: '0x0ba43b7400',
+        to,
+        nonce: nextNonce,
+      }
+    : {
+        chainId: 80001,
+        data,
+        gasLimit: '0x010cd2',
+        gasPrice: '0x0ba43b7400',
+        to,
+        nonce: nextNonce,
+      };
 
   // const txParams = {
   //   chainId: 1001,

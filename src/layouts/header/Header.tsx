@@ -53,7 +53,6 @@ import { isKlaytn } from '../../abc/utils/network';
 import { DekeyData } from '../../abc/dekeyData';
 import { makeTxData } from '../../utils/makeTxData';
 
-import tokenAbi from '../../config/abi/ERC20Token.json';
 import { checkWasm } from '../../abc/sandbox';
 
 import secureLocalStorage from 'react-secure-storage';
@@ -62,6 +61,8 @@ import useAccount from '../../hooks/useAccount';
 import { abcSendTx } from '../../utils/abcTransactions';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import { requestWalletLogin } from '../../services/services';
+import tokenAbi from '../../config/abi/ERC20Token.json';
+import { tokenize } from 'protobufjs';
 
 const modalStyle = {
   position: 'absolute',
@@ -139,7 +140,6 @@ export default function Header({ transparent }: Props) {
 
   useEffect(() => {
     if (webUser?.user?.session?.providerAuthInfo?.provider_token !== '' && temp) {
-      console.log(abcUser);
       if (_.isEmpty(abcUser) || abcUser.uid === '') {
         abcSnsLogin();
       }
@@ -209,7 +209,7 @@ export default function Header({ transparent }: Props) {
       '0x1716C4d49E9D81c17608CD9a45b1023ac9DF6c73', // Recipient
       ethers.utils.parseUnits('0.01', 6), // Amount, USDC decimal = 6
     ];
-    const result = await abcSendTx(abcToken, to, method, txArgs, abcUser);
+    const result = await abcSendTx(abcToken, to, tokenAbi, method, txArgs, abcUser);
     console.log('== tx result ==', result);
     setAbcToken('');
     setAbcOpen(false);

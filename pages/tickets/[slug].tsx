@@ -19,7 +19,7 @@ import Select from '@mui/material/Select';
 // config
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT, SUCCESS } from '../../src/config';
 // @types
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 // layouts
 import Layout from '../../src/layouts';
 // components
@@ -39,6 +39,9 @@ import { parseEther } from 'ethers/lib/utils';
 import { buyItem } from '../../src/utils/transactions';
 import CSnackbar from '../../src/components/common/CSnackbar';
 import { BuyerTypes } from '../../src/@types/buyer/buyer';
+import { abcSendTx } from '../../src/utils/abcTransactions';
+import { useSelector } from 'react-redux';
+import { collectionAbi } from '../../src/config/abi/Collection';
 
 // ----------------------------------------------------------------------
 
@@ -90,6 +93,9 @@ export default function TicketDetailPage() {
     message: '',
   });
 
+  const abcUser = useSelector((state: any) => state.user);
+  const [abcToken, setAbcToken] = React.useState(''); // OTP
+
   const handleCloseSnackbar = () => {
     setOpenSnackbar({
       open: false,
@@ -122,6 +128,8 @@ export default function TicketDetailPage() {
     if (selectedTicketItem) {
       setIsBuyingWithMatic(true);
 
+      const loginBy = window.localStorage.getItem('loginBy') ?? 'sns';
+
       // Collection
       const contract = ticketInfo?.boxContractAddress;
       const quote = ticketInfo?.quote;
@@ -135,17 +143,32 @@ export default function TicketDetailPage() {
         payment = parseEther(ticketInfo?.price.toString() ?? '0').mul(amount);
       }
 
+      let result;
       try {
-        const result = await buyItem(
-          contract,
-          index,
-          1,
-          payment!.toString(),
-          quoteToken!,
-          account,
-          library,
-          false
-        );
+        if (loginBy === 'wallet') {
+          result = await buyItem(
+            contract,
+            index,
+            1,
+            payment!.toString(),
+            quoteToken!,
+            account,
+            library,
+            false
+          );
+        } else {
+          const method = 'buyItemEth';
+          const txArgs = [index, 1];
+          result = await abcSendTx(
+            abcToken,
+            contract,
+            collectionAbi,
+            method,
+            txArgs,
+            abcUser,
+            payment!.toString()
+          );
+        }
 
         if (result.status === SUCCESS) {
           // const left = await getItemAmount(
