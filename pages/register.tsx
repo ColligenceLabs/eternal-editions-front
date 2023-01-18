@@ -26,6 +26,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 }));
 export default function Register(effect: React.EffectCallback, deps?: React.DependencyList) {
   const dispatch = useDispatch();
+  const user = useSelector((state: any) => state.user);
   const { abcController, accountController } = controllers;
   const [isCheck, setIsCheck] = useState({
     check1: false,
@@ -52,7 +53,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
 
   const handleAbcConfirmClick = async () => {
     console.log('click confirm.');
-
+    console.log(user);
     // // optToken : 입력 받은 OTP 값을 입력 받은 후 아래 코드 실행
     const twofaResetCode = await accountController.verifyTwoFactorGen({ token: otpToken });
     dispatch(setTwoFa({ secret: qrSecret, reset: twofaResetCode }));
@@ -60,7 +61,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
 
     // // TODO : ABC Wallet 가입 성공하면... 우리 쪽 가입 실행
     if (twofaResetCode !== null && twofaResetCode !== '') {
-      const res = await userRegister();
+      const res = await userRegister({ abc_address: user.accounts[0].ethAddress });
       console.log(res);
       if (res.status === 200) {
         // 성공. 리다이렉트..

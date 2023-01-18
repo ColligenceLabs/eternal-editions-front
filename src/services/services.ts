@@ -25,8 +25,8 @@ export const getSession = async () => {
   return await apiAuthAxios.get('/auth/getSession');
 };
 
-export const userRegister = async () => {
-  return await apiAuthAxios.post('/auth/register/eternals');
+export const userRegister = async (data: any) => {
+  return await apiAuthAxios.post('/auth/register/eternals', data);
 };
 
 export const abcLogin = async (data: any) => {
