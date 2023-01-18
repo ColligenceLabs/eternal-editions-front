@@ -1,13 +1,16 @@
-import React, { ReactElement, useEffect, useState } from 'react';
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import {
+  Backdrop,
   Box,
   Button,
   CircularProgress,
   Container,
   Divider,
+  Fade,
   Grid,
+  Input,
   Modal,
   SelectChangeEvent,
   Stack,
@@ -42,6 +45,7 @@ import { BuyerTypes } from '../../src/@types/buyer/buyer';
 import { abcSendTx } from '../../src/utils/abcTransactions';
 import { useSelector } from 'react-redux';
 import { collectionAbi } from '../../src/config/abi/Collection';
+import tokenAbi from '../../src/config/abi/ERC20Token.json';
 
 // ----------------------------------------------------------------------
 
@@ -94,8 +98,18 @@ export default function TicketDetailPage() {
   });
 
   const abcUser = useSelector((state: any) => state.user);
-  const [abcToken, setAbcToken] = React.useState(''); // OTP
-
+  const [abcToken, setAbcToken] = React.useState('');
+  const [abcOpen, setAbcOpen] = React.useState(false);
+  const handleAbcClose = () => {
+    setAbcToken('');
+    setAbcOpen(false);
+  };
+  const handleAbcTokenChange = (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const { value } = event.target;
+    setAbcToken(value);
+    // console.log(value);
+  };
   const handleCloseSnackbar = () => {
     setOpenSnackbar({
       open: false,
@@ -116,6 +130,21 @@ export default function TicketDetailPage() {
   };
   const handleClose = () => setOpen(false);
 
+  const handleAbcConfirmClick = async () => {
+    console.log(`abc token : ${abcToken}`); // Google OTP
+
+    const to = '0xaF07aC23189718a3b570C73Ccd9cD9C82B16b867'; // Test USDC Smart Contract
+    const method = 'transfer';
+    const txArgs = [
+      '0x1716C4d49E9D81c17608CD9a45b1023ac9DF6c73', // Recipient
+      ethers.utils.parseUnits('0.01', 6), // Amount, USDC decimal = 6
+    ];
+    const result = await abcSendTx(abcToken, to, tokenAbi, method, txArgs, abcUser);
+    console.log('== tx result ==', result);
+    setAbcToken('');
+    setAbcOpen(false);
+  };
+
   const handleItemChange = (event: SelectChangeEvent) => {
     setSelectedItem(event.target.value);
     const result = ticketInfo?.mysteryboxItems.find(
@@ -129,7 +158,10 @@ export default function TicketDetailPage() {
       setIsBuyingWithMatic(true);
 
       const loginBy = window.localStorage.getItem('loginBy') ?? 'sns';
-
+      if (loginBy === 'sns') {
+        setAbcOpen(true);
+        return;
+      }
       // Collection
       const contract = ticketInfo?.boxContractAddress;
       const quote = ticketInfo?.quote;
@@ -509,6 +541,61 @@ export default function TicketDetailPage() {
             </Stack>
           </Stack>
         </Box>
+      </Modal>
+
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={abcOpen}
+        onClose={handleAbcClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={abcOpen}>
+          <Box sx={modalStyle}>
+            구글 OTP 인증 :
+            <Input
+              sx={{ color: 'black' }}
+              fullWidth={true}
+              id="outlined-basic"
+              value={abcToken}
+              onChange={handleAbcTokenChange}
+            />
+            <Box sx={{ display: 'flex', justifyContent: 'center', mt: '10px' }}>
+              <Button
+                variant="outlined"
+                size="medium"
+                sx={{
+                  width: '100% !important',
+                  height: '36px',
+                  fontSize: 12,
+                  backgroundColor: '#f1f2f5',
+                  borderColor: '#f1f2f5',
+                  color: '#000000',
+                  boxShadow: 'none',
+                  '&:hover': {
+                    backgroundColor: '#08FF0C',
+                    borderColor: '#08FF0C',
+                    color: '#ffffff',
+                    boxShadow: 'none',
+                  },
+                  '&:active': {
+                    boxShadow: 'none',
+                    backgroundColor: 'background.paper',
+                    borderColor: 'background.paper',
+                    color: '#ffffff',
+                  },
+                }}
+                onClick={handleAbcConfirmClick}
+              >
+                확인
+              </Button>
+            </Box>
+          </Box>
+        </Fade>
       </Modal>
       <CSnackbar
         open={openSnackbar.open}
