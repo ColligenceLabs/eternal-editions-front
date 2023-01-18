@@ -8,6 +8,11 @@ import { DekeyData } from '../abc/dekeyData';
 import personalMessage from '../abc/main/personalMessage';
 import typedMessage from '../abc/main/typedMessage';
 
+interface txResult {
+  status: number;
+  txHash: string;
+}
+
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const abcSendTx = async (
@@ -18,7 +23,7 @@ export const abcSendTx = async (
   txArgs: any,
   user: any,
   value?: string
-): Promise<number> => {
+): Promise<txResult> => {
   const { abcController, accountController } = controllers;
   const { mpcService, providerService, providerConnManager } = services;
 
@@ -61,7 +66,7 @@ export const abcSendTx = async (
         chainId: 80001,
         data,
         value,
-        gasLimit: '0x010cd2',
+        gasLimit: '0x7a120', //'0x010cd2',
         gasPrice: '0x0ba43b7400',
         to,
         nonce: nextNonce,
@@ -74,7 +79,7 @@ export const abcSendTx = async (
         to,
         nonce: nextNonce,
       };
-
+  console.log('=== txParams ===>', txParams);
   // const txParams = {
   //   chainId: 1001,
   //   data: '0x4e71d92d',
@@ -146,7 +151,7 @@ export const abcSendTx = async (
   const receipt = await providerService.getTransactionReceipt(txHash, txParams.chainId);
   console.log('=====> result: receipt ===>', receipt);
 
-  return receipt?.status;
+  return receipt;
 };
 
 export const signPersonalMessage = async (

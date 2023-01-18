@@ -209,8 +209,8 @@ export default function Header({ transparent }: Props) {
       '0x1716C4d49E9D81c17608CD9a45b1023ac9DF6c73', // Recipient
       ethers.utils.parseUnits('0.01', 6), // Amount, USDC decimal = 6
     ];
-    const result = await abcSendTx(abcToken, to, tokenAbi, method, txArgs, abcUser);
-    console.log('== tx result ==', result);
+    const result: any = await abcSendTx(abcToken, to, tokenAbi, method, txArgs, abcUser);
+    console.log('== tx result ==', result.status);
     setAbcToken('');
     setAbcOpen(false);
   };

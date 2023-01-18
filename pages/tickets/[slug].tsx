@@ -133,14 +133,91 @@ export default function TicketDetailPage() {
   const handleAbcConfirmClick = async () => {
     console.log(`abc token : ${abcToken}`); // Google OTP
 
-    const to = '0xaF07aC23189718a3b570C73Ccd9cD9C82B16b867'; // Test USDC Smart Contract
-    const method = 'transfer';
-    const txArgs = [
-      '0x1716C4d49E9D81c17608CD9a45b1023ac9DF6c73', // Recipient
-      ethers.utils.parseUnits('0.01', 6), // Amount, USDC decimal = 6
-    ];
-    const result = await abcSendTx(abcToken, to, tokenAbi, method, txArgs, abcUser);
-    console.log('== tx result ==', result);
+    if (selectedTicketItem) {
+      setIsBuyingWithMatic(true);
+
+      // Collection
+      const contract = ticketInfo?.boxContractAddress;
+      const quote = ticketInfo?.quote;
+      const index = selectedTicketItem.no - 1 ?? 0;
+      const amount = 1;
+
+      let quoteToken: string;
+      let payment: BigNumber;
+      if (quote === 'matic' || quote === 'wmatic') {
+        quoteToken = quote === 'matic' ? contracts.matic[chainId] : contracts.wmatic[chainId];
+        payment = parseEther(ticketInfo?.price.toString() ?? '0').mul(amount);
+      }
+      try {
+        const method = 'buyItemEth';
+        const txArgs = [index, amount];
+        console.log('==== otp ===>', abcToken);
+        const result = await abcSendTx(
+          abcToken,
+          contract,
+          collectionAbi,
+          method,
+          txArgs,
+          abcUser,
+          payment!.toHexString()
+        );
+
+        if (parseInt(result.status.toString(), 10) === SUCCESS) {
+          // const left = await getItemAmount(
+          //   contract,
+          //   index,
+          //   collectionItemInfo?.collectionInfo?.isCollection === true ? 2 : 1,
+          //   account,
+          //   library
+          // );
+
+          const data = {
+            mysterybox_id: ticketInfo?.id,
+            buyer: '',
+            buyer_address: account,
+            isSent: true,
+            txHash: result?.txHash,
+            price: ticketInfo?.price,
+            itemId: selectedTicketItem?.id,
+          };
+
+          const res = await registerBuy(data);
+          if (res.data.status === SUCCESS) {
+            // setOpenSnackbar({
+            //   open: true,
+            //   type: 'success',
+            //   message: 'Success',
+            // });
+            console.log('success');
+            setOpenSnackbar({
+              open: true,
+              type: 'success',
+              message: 'Purchase completed!',
+            });
+            // return true;
+          } else {
+            // setIsBuyingWithMatic(false);
+            // return false;
+          }
+        } else {
+          // setIsBuyingWithMatic(false);
+          // return false;
+        }
+      } catch (e: any) {
+        setIsBuyingWithMatic(false);
+        console.log(e);
+        // if (e.code == '-32603') setErrMsg('Not sufficient Klay balance!');
+        // return false;
+        setOpenSnackbar({
+          open: true,
+          type: 'error',
+          message: 'Purchase faield!',
+        });
+      }
+      setIsBuyingWithMatic(false);
+    } else {
+      console.log('Item not selected');
+    }
     setAbcToken('');
     setAbcOpen(false);
   };
@@ -175,32 +252,17 @@ export default function TicketDetailPage() {
         payment = parseEther(ticketInfo?.price.toString() ?? '0').mul(amount);
       }
 
-      let result;
       try {
-        if (loginBy === 'wallet') {
-          result = await buyItem(
-            contract,
-            index,
-            1,
-            payment!.toString(),
-            quoteToken!,
-            account,
-            library,
-            false
-          );
-        } else {
-          const method = 'buyItemEth';
-          const txArgs = [index, 1];
-          result = await abcSendTx(
-            abcToken,
-            contract,
-            collectionAbi,
-            method,
-            txArgs,
-            abcUser,
-            payment!.toString()
-          );
-        }
+        const result = await buyItem(
+          contract,
+          index,
+          1,
+          payment!.toString(),
+          quoteToken!,
+          account,
+          library,
+          false
+        );
 
         if (result.status === SUCCESS) {
           // const left = await getItemAmount(
