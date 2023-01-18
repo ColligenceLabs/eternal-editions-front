@@ -117,14 +117,6 @@ export default function SignUp({ onClose, hideSns, ...other }) {
   // const { connectKaikas, connectMetamask, connectKlip, disconnect, requestKey, message, type } = useWallets();
 
   useEffect(() => {
-    async function createToken() {
-      const result = await tokenGenerator.createToken(setDoSign);
-      if (result) {
-        onClose();
-        window.localStorage.setItem('walletStatus', 'connected');
-      } else await deactivate();
-    }
-
     const walletLogin = async () => {
       if (!library) return;
       const target_copy = Object.assign({}, library.provider);
@@ -147,7 +139,8 @@ export default function SignUp({ onClose, hideSns, ...other }) {
         const userRes = await getUser();
         if (userRes.status === 200 && userRes.data.status !== 0)
           dispatch(setWebUser(userRes.data.user));
-        createToken();
+        onClose();
+        // createToken();
       }
       if (res.data === 'User not found!') {
         deactivate();
