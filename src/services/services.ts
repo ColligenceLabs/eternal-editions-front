@@ -33,6 +33,10 @@ export const abcLogin = async (data: any) => {
   return await customAxios.post(`api/abc/login`, data);
 };
 
+export const abcTokenRefresh = async (data: any) => {
+  return await customAxios.post(`api/abc/refresh`, data);
+};
+
 export const getUser = async () => {
   return await apiAuthAxios.get('/api/users/getUser');
 };

@@ -15,6 +15,8 @@ import secureLocalStorage from 'react-secure-storage';
 // import { dekeyStore } from '../background/init';
 import { AbcLoginResponse } from '../schema/account';
 
+import { abcTokenRefresh } from '../../services/services';
+
 export const apiClient = axios.create({
   baseURL: `${process.env.APP_SERVER_ADDRESS_PROTOCOL}://${process.env.APP_SERVER_ADDRESS}/api/`,
   // timeout: 1000,
@@ -50,7 +52,7 @@ apiClient.interceptors.response.use(
     console.log('apiClient.interceptors.response ..... ok', response);
     return response;
   },
-  (error) => {
+  async (error) => {
     // 오류 응답 처리
     let errResponseStatus = null;
     const originalRequest = error.config;
@@ -71,41 +73,70 @@ apiClient.interceptors.response.use(
 
       if (preRefreshToken) {
         // refresh token을 이용하여 access token 재발행 받기
-        return axios
-          .request({
-            url: 'https://dev-api.id.myabcwallet.com/auth/auth-service/refresh',
-            method: 'post',
-            // adapter: fetchAdapter,
-            headers: { 'content-type': 'application/x-www-form-urlencoded' },
-            data: queryString.stringify({
-              grant_type: 'refresh_token',
-              refresh_token: preRefreshToken,
-            }),
-          })
-          .then((res) => {
-            const responseData = AbcLoginResponse.parse(res.data);
+        // return axios
+        //   .request({
+        //     url: 'https://dev-api.id.myabcwallet.com/auth/auth-service/refresh',
+        //     method: 'post',
+        //     // adapter: fetchAdapter,
+        //     headers: { 'content-type': 'application/x-www-form-urlencoded' },
+        //     data: queryString.stringify({
+        //       grant_type: 'refresh_token',
+        //       refresh_token: preRefreshToken,
+        //     }),
+        //   })
+        //   .then((res) => {
+        //     const responseData = AbcLoginResponse.parse(res.data);
+        //
+        //     // dekeyStore.updateStore({
+        //     //   abcAuth: {
+        //     //     accessToken: responseData.access_token,
+        //     //     refreshToken: responseData.refresh_token,
+        //     //     tokenType: responseData.token_type,
+        //     //     expiresIn: responseData.expire_in,
+        //     //   },
+        //     // });
+        //     // window.localStorage.setItem('abcAuth', JSON.stringify(responseData));
+        //     console.log('========== refresh access token ========================================');
+        //     secureLocalStorage.setItem('abcAuth', JSON.stringify(responseData));
+        //
+        //     originalRequest.headers.authorization = `Bearer ${responseData.access_token}`;
+        //     return axios(originalRequest);
+        //   })
+        //   .catch((error) => {
+        //     // access token을 받아오지 못하는 오류 발생시 logout 처리
+        //     // dekeyStore.updateStore({ abcAuth: null });
+        //
+        //     return false;
+        //   });
 
-            // dekeyStore.updateStore({
-            //   abcAuth: {
-            //     accessToken: responseData.access_token,
-            //     refreshToken: responseData.refresh_token,
-            //     tokenType: responseData.token_type,
-            //     expiresIn: responseData.expire_in,
-            //   },
-            // });
-            // window.localStorage.setItem('abcAuth', JSON.stringify(responseData));
-            console.log('========== refresh access token ========================================');
-            secureLocalStorage.setItem('abcAuth', JSON.stringify(responseData));
-
-            originalRequest.headers.authorization = `Bearer ${responseData.access_token}`;
-            return axios(originalRequest);
-          })
-          .catch((error) => {
-            // access token을 받아오지 못하는 오류 발생시 logout 처리
-            // dekeyStore.updateStore({ abcAuth: null });
-
-            return false;
+        try {
+          const res = await abcTokenRefresh({
+            refresh_token: preRefreshToken,
           });
+
+          const responseData = AbcLoginResponse.parse(res.data);
+          console.log('===== refresh token ===>', responseData);
+
+          // dekeyStore.updateStore({
+          //   abcAuth: {
+          //     accessToken: responseData.access_token,
+          //     refreshToken: responseData.refresh_token,
+          //     tokenType: responseData.token_type,
+          //     expiresIn: responseData.expire_in,
+          //   },
+          // });
+          // window.localStorage.setItem('abcAuth', JSON.stringify(responseData));
+          console.log('========== refresh access token ========================================');
+          secureLocalStorage.setItem('abcAuth', JSON.stringify(responseData));
+
+          originalRequest.headers.authorization = `Bearer ${responseData.access_token}`;
+          return axios(originalRequest);
+        } catch (error) {
+          // access token을 받아오지 못하는 오류 발생시 logout 처리
+          // dekeyStore.updateStore({ abcAuth: null });
+
+          return false;
+        }
       }
 
       return Promise.reject(error);
