@@ -32,7 +32,8 @@ apiClient.interceptors.request.use((cfg) => {
 
   // @ts-ignore
   if (!cfg?.headers?.authorization) {
-    console.log('---------------------->>>>>', abcAuth?.accessToken);
+    console.log('1---------------------->>>>>', abcAuth);
+    console.log('2---------------------->>>>>', abcAuth.accessToken);
     // @ts-ignore
     cfg.headers.authorization = `Bearer ${abcAuth?.accessToken}`;
   }
@@ -114,7 +115,13 @@ apiClient.interceptors.response.use(
             refresh_token: preRefreshToken,
           });
 
-          const responseData = AbcLoginResponse.parse(res.data);
+          const resData = AbcLoginResponse.parse(res.data);
+          const responseData = {
+            accessToken: resData.access_token,
+            refreshToken: resData.refresh_token,
+            tokenType: resData.token_type,
+            expiresIn: resData.expire_in,
+          };
           console.log('===== refresh token ===>', responseData);
 
           // dekeyStore.updateStore({
@@ -130,7 +137,7 @@ apiClient.interceptors.response.use(
           secureLocalStorage.removeItem('abcAuth');
           secureLocalStorage.setItem('abcAuth', JSON.stringify(responseData));
 
-          originalRequest.headers.authorization = `Bearer ${responseData.access_token}`;
+          originalRequest.headers.authorization = `Bearer ${responseData.accessToken}`;
           return axios(originalRequest);
         } catch (error) {
           // access token을 받아오지 못하는 오류 발생시 logout 처리
