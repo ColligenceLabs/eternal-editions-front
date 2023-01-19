@@ -127,6 +127,7 @@ apiClient.interceptors.response.use(
           // });
           // window.localStorage.setItem('abcAuth', JSON.stringify(responseData));
           console.log('========== refresh access token ========================================');
+          secureLocalStorage.removeItem('abcAuth');
           secureLocalStorage.setItem('abcAuth', JSON.stringify(responseData));
 
           originalRequest.headers.authorization = `Bearer ${responseData.access_token}`;
