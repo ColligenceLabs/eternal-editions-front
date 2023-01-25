@@ -60,9 +60,10 @@ import { TxParams } from '../../abc/main/transactions/interface';
 import useAccount from '../../hooks/useAccount';
 import { abcSendTx } from '../../utils/abcTransactions';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
-import { requestWalletLogin } from '../../services/services';
+import { abcLogin, requestWalletLogin } from '../../services/services';
 import tokenAbi from '../../config/abi/ERC20Token.json';
 import { tokenize } from 'protobufjs';
+import { AbcLoginResponse } from '../../abc/schema/account';
 
 const modalStyle = {
   position: 'absolute',
@@ -118,24 +119,41 @@ export default function Header({ transparent }: Props) {
   const abcSnsLogin = async () => {
     // ABC Wallet Test
     console.log('!! start sns login !!');
-    // const dto: AbcLoginDto = { username: 'hwnahm@gmail.com', password: '!owdin001' };
-    // const abcAuth: AbcLoginResult = await abcController.login(dto);
-    const abcAuth: AbcLoginResult = await abcController.snsLogin(
-      webUser?.user?.session?.providerAuthInfo?.provider_token,
-      webUser?.user?.session?.providerAuthInfo?.provider
-    );
-    await dispatch(setAbcAuth(abcAuth));
+    // // const dto: AbcLoginDto = { username: 'hwnahm@gmail.com', password: '!owdin001' };
+    // // const abcAuth: AbcLoginResult = await abcController.login(dto);
+    // const abcAuth: AbcLoginResult = await abcController.snsLogin(
+    //   webUser?.user?.session?.providerAuthInfo?.provider_token,
+    //   webUser?.user?.session?.providerAuthInfo?.provider
+    // );
+    // console.log('===>', webUser?.user?.session?.providerAuthInfo?.provider_token);
+    // console.log('===>', webUser?.user?.session?.providerAuthInfo?.provider);
+    const res = await abcLogin({
+      token: webUser?.user?.session?.providerAuthInfo?.provider_token,
+      service: webUser?.user?.session?.providerAuthInfo?.provider,
+      audience: 'https://mw.myabcwallet.com',
+    });
+    // console.log('======>', res);
+    if (res !== undefined && res.data.data !== null) {
+      const resData = AbcLoginResponse.parse(res.data);
+      const abcAuth: AbcLoginResult = {
+        accessToken: resData.access_token,
+        refreshToken: resData.refresh_token,
+        tokenType: resData.token_type,
+        expiresIn: resData.expire_in,
+      };
+      await dispatch(setAbcAuth(abcAuth));
 
-    // window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
-    secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
+      // window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
+      secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
 
-    const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
-    setUser(user);
+      const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
+      setUser(user);
 
-    await accountController.recoverShare(
-      { password: '!owdin001', user, wallets, keepDB: false },
-      dispatch
-    );
+      await accountController.recoverShare(
+        { password: '!owdin001', user, wallets, keepDB: false },
+        dispatch
+      );
+    }
   };
 
   useEffect(() => {
