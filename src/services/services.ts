@@ -57,3 +57,10 @@ export const deleteAddress = async (data: any) => {
 export const requestWalletLogin = async (data: any) => {
   return await apiAuthAxios.post('/auth/walletLogin?isWalletLogin=true', data);
 };
+
+export const savePoint = async (data: any) => {
+  const token = window.localStorage.getItem('nftapiJwtToken');
+  return await apiAuthAxios.post('/api/point', data, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+};

@@ -10,6 +10,7 @@ import { useTheme } from '@mui/material/styles';
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import React, {ChangeEvent, useEffect, useState} from 'react';
 // components
+import { savePoint } from '../../services/services';
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +36,7 @@ export default function PaymentPoint() {
 
   // creates a paypal order
   const createOrder = (data, actions) => {
+    // todo 세션체크를 한번 해야하나?
     console.log(price);
     const purchaseData = {
         purchase_units: [
@@ -52,7 +54,7 @@ export default function PaymentPoint() {
     console.log('=====', purchaseData);
     return actions.order
         .create(purchaseData)
-        .then((orderID) => {
+        .then(async (orderID) => {
           // setOrderID(orderID);
           console.log('order complete.', orderID);
           return orderID;
@@ -61,9 +63,10 @@ export default function PaymentPoint() {
 
   // handles when a payment is confirmed for paypal
   const onApprove = (data, actions) => {
-    return actions.order.capture().then(function (details) {
+    return actions.order.capture().then(async (details) => {
       const {payer} = details;
       console.log('details', details, payer);
+      await savePoint({order_id: details.id, point: parseFloat(price), type: 'BUY'});
       // setBillingDetails(payer);
       // setSucceeded(true);
     }).catch(err=> console.log('Something went wrong.', err));
