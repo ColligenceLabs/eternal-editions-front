@@ -21,6 +21,7 @@ import {
   ChangeActiveAccount,
   EmSeedRequest,
   RecoverShare,
+  ClearPV,
 } from '../../sandbox/worker';
 import { CustomError } from '../../utils/error';
 import { DekeyError } from '../../utils/errorTypes';
@@ -43,6 +44,14 @@ export const MPC_COMMANDS = {
 };
 
 export class MpcService {
+  clearPV = async () => {
+    try {
+      await ClearPV();
+    } catch (error) {
+      throw error;
+    }
+  };
+
   generateKey = (dto: GenereateKeyDto): Promise<GenereateKeyResult> => {
     try {
       return InitiateShares(dto);

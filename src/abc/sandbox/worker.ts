@@ -865,6 +865,15 @@ function _handleSuccess({ csws, resolve, result }) {
   resolve(result);
 }
 
+// keygen, recover 호출하기 전에 항상 호출
+async function ClearPV() {
+  try {
+    WASMClearPV();
+  } catch (error) {
+    throw error;
+  }
+}
+
 export {
   InitiateShares,
   Unlock,
@@ -873,4 +882,5 @@ export {
   EmSeedRequest,
   RecoverShare,
   CheckWasm,
+  ClearPV,
 };

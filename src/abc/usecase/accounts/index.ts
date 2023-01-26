@@ -73,6 +73,8 @@ export class AccountService extends EventEmitter {
       const uid = uuidv4();
       const wid = 1;
 
+      await mpcService.clearPV();
+
       const mpcKeyGenResult = await mpcService.generateKey({
         uid,
         wid,
