@@ -153,11 +153,14 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
 
     // 신규 가입자 지갑 생성
     if (flCreate) {
-      await accountController.createMpcBaseAccount({
-        accountName: email,
-        password: '!owdin001',
-        email: email,
-      });
+      await accountController.createMpcBaseAccount(
+        {
+          accountName: email,
+          password: '!owdin001',
+          email: email,
+        },
+        dispatch
+      );
       console.log('===== createMpcBaseAccount ... done =====');
     }
 

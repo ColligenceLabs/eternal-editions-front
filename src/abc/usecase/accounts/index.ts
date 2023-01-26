@@ -39,6 +39,8 @@ import { CurrencyType } from '../../main/preference/interface';
 import { getCoingeckoNetworkName } from '../../utils/network';
 
 import secureLocalStorage from 'react-secure-storage';
+import { setUser } from '../../../store/slices/user';
+import { setWallet } from '../../../store/slices/wallet';
 
 // export const NOTIFICATION_NAMES = {
 //   accountsChanged: 'metamask_accountsChanged',
@@ -58,7 +60,7 @@ export class AccountService extends EventEmitter {
     super();
   }
 
-  createMpcBaseAccount = async (data: AddAccountDto, mpcService: MpcService) => {
+  createMpcBaseAccount = async (data: AddAccountDto, mpcService: MpcService, dispatch: any) => {
     try {
       const { password, accountName, email } = data;
 
@@ -100,6 +102,9 @@ export class AccountService extends EventEmitter {
       );
 
       user.EncPV = PVEncStr;
+
+      await dispatch(setUser(user));
+      await dispatch(setWallet(wallet));
 
       this.initializeWalletAfterKeyGen({
         user,

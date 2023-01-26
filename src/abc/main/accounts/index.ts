@@ -90,9 +90,9 @@ class AccountController extends EventEmitter {
     // });
   }
 
-  async createMpcBaseAccount(data: AddAccountDto) {
+  async createMpcBaseAccount(data: AddAccountDto, dispatch: any) {
     try {
-      await this.accountService.createMpcBaseAccount(data, this.mpcService);
+      await this.accountService.createMpcBaseAccount(data, this.mpcService, dispatch);
     } catch (err) {
       throw err;
     }
