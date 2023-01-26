@@ -27,6 +27,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 export default function Register(effect: React.EffectCallback, deps?: React.DependencyList) {
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user);
+  const twoFa = useSelector((state: any) => state.twoFa);
   const { abcController, accountController } = controllers;
   const [isCheck, setIsCheck] = useState({
     check1: false,
@@ -56,6 +57,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     console.log(user);
     // // optToken : 입력 받은 OTP 값을 입력 받은 후 아래 코드 실행
     const twofaResetCode = await accountController.verifyTwoFactorGen({ token: otpToken });
+    // console.log('=== 가입 완료 단계 ===>', qrSecret, twofaResetCode);
     dispatch(setTwoFa({ secret: qrSecret, reset: twofaResetCode }));
     setResetCode(twofaResetCode);
 
@@ -112,6 +114,12 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       };
       const newAccount = await abcController.snsAddUser(dto);
       console.log('== created account =>', newAccount);
+
+      await accountController.createMpcBaseAccount({
+        accountName: email,
+        password: '!owdin001',
+        email: email,
+      });
     }
 
     console.log('=== start to sns login =====');
@@ -122,13 +130,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     // window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
     secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
 
-    if (flCreate) {
-      await accountController.createMpcBaseAccount({
-        accountName: email,
-        password: '!owdin001',
-        email: email,
-      });
-
+    if (flCreate || twoFa.reset.length === 0) {
       const { qrcode, secret } = await accountController.generateTwoFactor({ reset: false });
       console.log('!!!!!!!!!!!', qrcode, secret);
       setQrCode(qrcode);
