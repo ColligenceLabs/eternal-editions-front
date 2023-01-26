@@ -114,12 +114,6 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       };
       const newAccount = await abcController.snsAddUser(dto);
       console.log('== created account =>', newAccount);
-
-      await accountController.createMpcBaseAccount({
-        accountName: email,
-        password: '!owdin001',
-        email: email,
-      });
     }
 
     console.log('=== start to sns login =====');
@@ -129,6 +123,15 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     await dispatch(setAbcAuth(abcAuth));
     // window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
     secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
+
+    if (flCreate) {
+      await accountController.createMpcBaseAccount({
+        accountName: email,
+        password: '!owdin001',
+        email: email,
+      });
+      console.log('===== createMpcBaseAccount ... done =====');
+    }
 
     if (flCreate || twoFa.reset.length === 0) {
       const { qrcode, secret } = await accountController.generateTwoFactor({ reset: false });
