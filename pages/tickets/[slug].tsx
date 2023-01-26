@@ -33,7 +33,7 @@ import EECard from '../../src/components/EECard';
 import EEAvatar from '../../src/components/EEAvatar';
 import { fDate } from '../../src/utils/formatTime';
 import searchIcon from '@iconify/icons-carbon/search';
-import { getBuyersService, getTicketInfoService, registerBuy } from '../../src/services/services';
+import {getBuyersService, getSession, getTicketInfoService, registerBuy, savePoint} from '../../src/services/services';
 import { TicketInfoTypes, TicketItemTypes } from '../../src/@types/ticket/ticketTypes';
 import axios from 'axios';
 import contracts from '../../src/config/constants/contracts';
@@ -90,6 +90,7 @@ export default function TicketDetailPage() {
   const [klayPrice, setKlayPrice] = useState(0);
   const [maticPrice, setMaticPrice] = useState(0);
   const [isBuyingWithMatic, setIsBuyingWithMatic] = useState(false);
+  const [isBuyingWithPoint, setIsBuyingWithPoint] = useState(false);
   const [open, setOpen] = React.useState(false);
   const [openSnackbar, setOpenSnackbar] = useState({
     open: false,
@@ -229,6 +230,54 @@ export default function TicketDetailPage() {
     );
     if (result) setSelectedTicketItem(result);
   };
+
+  const handleBuyWithPoint = async () => {
+    if (isBuyingWithPoint) {
+      console.log('in progress');
+      return;
+    }
+    if (selectedTicketItem) {
+      try {
+        const session = await getSession();
+        if (!session.data.dropsUser) throw new Error('session expired.');
+        const loginBy = window.localStorage.getItem('loginBy') ?? 'sns';
+        setIsBuyingWithPoint(true);
+        const data = {
+          mysterybox_id: ticketInfo?.id,
+          buyer: session.data.dropsUser.uid,
+          buyer_address: loginBy === 'sns' ? abcUser.accounts[0].ethAddress : account,
+          isSent: false,
+          txHash: '',
+          price: ticketInfo?.price,
+          itemId: selectedTicketItem?.id,
+          usePoint: true
+        };
+
+        let res = await registerBuy(data);
+        if (res.data.status === SUCCESS) {
+          res = await savePoint({order_id: res.data.data.id, point: ticketInfo?.price, type: 'USE'});
+          console.log('success');
+          setOpenSnackbar({
+            open: true,
+            type: 'success',
+            message: 'Purchase completed!',
+          });
+        } else {
+          console.log('Item not selected');
+        }
+      } catch (e) {
+        setIsBuyingWithMatic(false);
+        console.log(e);
+        setOpenSnackbar({
+          open: true,
+          type: 'error',
+          message: 'Purchase faield!',
+        });
+      } finally {
+        setIsBuyingWithPoint(false);
+      }
+    }
+  }
 
   const handleBuyWithMatic = async () => {
     if (selectedTicketItem) {
@@ -552,17 +601,35 @@ export default function TicketDetailPage() {
             </Stack>
             <Stack spacing={1} sx={{ pt: 3 }}>
               <Stack>
-                <Box
-                  onClick={() => {
-                    alert('EDC 구매하기');
-                  }}
-                >
-                  <LineItemByModal
-                    icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
-                    label="1,000 EDC"
-                    value={'PAY WITH EDC'}
-                    isBuying={false}
-                  />
+                <Box onClick={handleBuyWithPoint}>
+                  {isBuyingWithPoint ? (
+                    <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          color: 'text.primary',
+                          cursor: 'pointer',
+                          // '& svg': { mr: 1, width: 24, height: 24 },
+                          mb: 1,
+                          padding: '14px 24px',
+                          borderRadius: '50px',
+                          bgcolor: '#F5F5F5',
+                          '&:hover': {
+                            bgcolor: 'primary.main',
+                          },
+                        }}
+                    >
+                      <CircularProgress size={25} color="secondary" />
+                    </Box>
+                  ) : (
+                    <LineItemByModal
+                      icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
+                      label={`${ticketInfo?.price} EDC`}
+                      value={'PAY WITH EDC'}
+                      isBuying={isBuyingWithPoint}
+                    />
+                  )}
                 </Box>
                 <Box onClick={handleBuyWithMatic}>
                   {isBuyingWithMatic ? (
@@ -589,7 +656,7 @@ export default function TicketDetailPage() {
                     <LineItemByModal
                       icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
                       label={`${ticketInfo?.price} ${ticketInfo?.quote.toUpperCase()}`}
-                      value={'PAY WITH MATIC'}
+                      value={`PAY WITH ${ticketInfo?.quote.toUpperCase()}`}
                       isBuying={isBuyingWithMatic}
                     />
                   )}
