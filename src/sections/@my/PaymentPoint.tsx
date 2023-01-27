@@ -8,9 +8,12 @@ import { Box, Divider, Stack, TextField, Typography } from '@mui/material';
 import EECard from '../../components/EECard';
 import { useTheme } from '@mui/material/styles';
 import { PayPalButtons } from '@paypal/react-paypal-js';
-import React, {ChangeEvent, useEffect, useState} from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 // components
-import { savePoint } from '../../services/services';
+import { getUser, savePoint } from '../../services/services';
+import { SUCCESS } from '../../config';
+import { setWebUser } from '../../store/slices/webUser';
+import { useDispatch } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -25,6 +28,7 @@ type FormValuesProps = {
 };
 
 export default function PaymentPoint() {
+  const dispatch = useDispatch();
   const [price, setPrice] = useState('');
   const [amount, setAmount] = useState('');
   const [enablePaypal, setEnablePaypal] = useState(true);
@@ -35,41 +39,51 @@ export default function PaymentPoint() {
   }, [price]);
 
   // creates a paypal order
-  const createOrder = (data, actions) => {
+  const createOrder = (data: any, actions: any) => {
     // todo 세션체크를 한번 해야하나?
     console.log(price);
     const purchaseData = {
-        purchase_units: [
-          {
-            amount: {
-              value: parseFloat(price),
-            },
+      purchase_units: [
+        {
+          amount: {
+            value: parseFloat(price),
           },
-        ],
-        // remove the applicaiton_context object if you need your users to add a shipping address
-        application_context: {
-          shipping_preference: 'NO_SHIPPING',
         },
-      };
+      ],
+      // remove the applicaiton_context object if you need your users to add a shipping address
+      application_context: {
+        shipping_preference: 'NO_SHIPPING',
+      },
+    };
     console.log('=====', purchaseData);
-    return actions.order
-        .create(purchaseData)
-        .then(async (orderID) => {
-          // setOrderID(orderID);
-          console.log('order complete.', orderID);
-          return orderID;
-        });
+    return actions.order.create(purchaseData).then(async (orderID: any) => {
+      // setOrderID(orderID);
+      console.log('order complete.', orderID);
+      return orderID;
+    });
   };
 
   // handles when a payment is confirmed for paypal
-  const onApprove = (data, actions) => {
-    return actions.order.capture().then(async (details) => {
-      const {payer} = details;
-      console.log('details', details, payer);
-      await savePoint({order_id: details.id, point: parseFloat(price), type: 'BUY'});
-      // setBillingDetails(payer);
-      // setSucceeded(true);
-    }).catch(err=> console.log('Something went wrong.', err));
+  const onApprove = (data: any, actions: any) => {
+    return actions.order
+      .capture()
+      .then(async (details: any) => {
+        const { payer } = details;
+        console.log('details', details, payer);
+        const result = await savePoint({
+          order_id: details.id,
+          point: parseFloat(price),
+          type: 'BUY',
+        });
+        if (result.data.status === SUCCESS) {
+          const userRes = await getUser();
+          if (userRes.status === 200 && userRes.data.status != 0)
+            dispatch(setWebUser(userRes.data.user));
+        }
+        // setBillingDetails(payer);
+        // setSucceeded(true);
+      })
+      .catch((err: any) => console.log('Something went wrong.', err));
   };
 
   const handleChangePrice = (event: ChangeEvent<HTMLInputElement>) => {
@@ -168,11 +182,11 @@ export default function PaymentPoint() {
             <Divider sx={{ md: 3, pt: 3 }} />
 
             <PayPalButtons
-                fundingSource={'paypal'}
-                createOrder={createOrder}
-                onApprove={onApprove}
-                forceReRender={[price]}
-                disabled={enablePaypal}
+              fundingSource={'paypal'}
+              createOrder={createOrder}
+              onApprove={onApprove}
+              forceReRender={[price]}
+              disabled={enablePaypal}
             />
 
             <LoadingButton
