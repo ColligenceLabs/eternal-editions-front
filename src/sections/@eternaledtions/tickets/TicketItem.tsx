@@ -63,7 +63,7 @@ export default function TicketItem({ ticket }: any) {
         company: ticket.companyname.en,
         companyImage: ticket.companyimage,
         createdAt: ticket.createdAt,
-        itemTitle: ticket.title.en,
+        itemTitle: ticket.name,
         itemImage: ticket.itemImage,
         price: ticket.price,
         location: location?.name ? location.name : '',
