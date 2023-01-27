@@ -43,6 +43,7 @@ WalletPopover.propTypes = {};
 export default function WalletPopover({}) {
   // const {account, accountShot, type, disconnect, switchChainNetwork, chainId, balance} = useWallets();
   // const abcAccount = useSelector((state: any) => state.user);
+  const { user } = useSelector((state: any) => state.webUser);
   const dispatch = useDispatch();
   const { account } = useAccount();
   const { deactivate, chainId, library } = useWeb3React();
@@ -151,7 +152,7 @@ export default function WalletPopover({}) {
                   sx={{ fontSize: '0.8em', color: 'text.secondary' }}
                   noWrap
                 >
-                  [EDC] : 1234
+                  {`[EDC] : ${user.point}`}
                 </Typography>
               </Box>
 

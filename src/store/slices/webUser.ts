@@ -20,6 +20,7 @@ const initialState = {
     session: {},
     id_token: '',
     service: '',
+    point: '',
   },
 };
 
@@ -47,6 +48,7 @@ const userSlice = createSlice({
         session: {},
         id_token: '',
         service: '',
+        point: '',
       };
     },
     setWebUser: (state, action) => {
