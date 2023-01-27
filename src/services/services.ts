@@ -64,3 +64,7 @@ export const savePoint = async (data: any) => {
     headers: { Authorization: `Bearer ${token}` },
   });
 };
+
+export const getMyTickets = async (uid: string) => {
+  return await apiAuthAxios.get(`/api/service/drops?buyer=${uid}&type=item&sortBy=createdAt:ASC`);
+};
