@@ -67,7 +67,7 @@ export default function TicketItem({ ticket }: any) {
         itemImage: ticket.itemImage,
         price: ticket.price,
         location: location?.name ? location.name : '',
-        ticketNumber: '',
+        ticketNumber: ticket.cnt,
       });
     }
   }, [ticket]);
