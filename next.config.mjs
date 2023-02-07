@@ -13,7 +13,7 @@ const nextConfig = {
     // ABC Wallet
     // APP_SERVER_ADDRESS: 'cs.mw.myabcwallet.com:9000',
     // APP_SERVER_ADDRESS_PROTOCOL: 'https',
-    APP_SERVER_ADDRESS: 'cs-gateway.abcsktcolab.link:9000',
+    APP_SERVER_ADDRESS: 'cs.dev-mw.myabcwallet.com:9000',
     APP_SERVER_ADDRESS_PROTOCOL: 'https',
     MPC_PROTOCOL: 'wss',
     SELENIUM_BROWSER: 'chrome',
@@ -30,6 +30,18 @@ const nextConfig = {
     SENTRY_DSN: 'https://33738b9d7e4f432b919d7d03412bbe34@o1346368.ingest.sentry.io/6624178',
     ISS: 'abc',
     SECURE_LOCAL_STORAGE_HASH_KEY: process.env.SECURE_LOCAL_STORAGE_HASH_KEY,
+
+    API_SERVER_ADDRESS: 'https://api.eternaleditions.io',
+    // API_SERVER_ADDRESS: 'https://api.dev.eternaleditions.io',
+    // API_SERVER_ADDRESS: 'http://localhost:8187',
+    // API_SERVER_ADDRESS: 'http://api.test10.tickets-x.com', // test address
+    // API_SERVER_ADDRESS: 'https://dsvm4mn1pb.execute-api.ap-northeast-2.amazonaws.com/prod', // vue-oauth2-code.js 테스트를 위한 API 서버 주소
+    // API_CLIENT_ADDRESS: 'http://localhost:15000',
+    // API_CLIENT_ADDRESS: 'http://192.168.100.68:15000', // naver 간편로그인 테스트
+    // API_CLIENT_ADDRESS: 'http://test10.tickets-x.com',
+    API_CLIENT_ADDRESS: 'https://market.eternaleditions.io',
+    REMEMBER_ID_NAME: 'tx-remember-id',
+    ACCESS_TOKEN_NAME: 'tx-access-token'
   },
   images: {
     domains: ['flagcdn.com'],
