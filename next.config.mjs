@@ -1,5 +1,4 @@
 // ----------------------------------------------------------------------
-
 const nextConfig = {
   eslint: {
     ignoreDuringBuilds: true,
@@ -18,14 +17,14 @@ const nextConfig = {
     MPC_PROTOCOL: 'wss',
     SELENIUM_BROWSER: 'chrome',
     DETECT_TOKEN_PERIOD: '180000',
-    INFURA_ID: '74b90148609e4064a6990fab0a79ae9a',
-    ALCHEMY_ID: 'y02b5fstsuCe3D7exATm-bJvJWycDJ_1',
-    KLAYTN_API_USERNAME: 'KASK1RHT36TU1QPAV7TAPVVE',
-    KLAYTN_API_PASSWORD: 'j3Bbv4Y-qUJrLZzzBGjAuyQp_sGx2dYygpXRJKwF',
-    KLAYTN_AUTH_TOKEN: 'S0FTSzFSSFQzNlRVMVFQQVY3VEFQVlZFOmozQmJ2NFktcVVKckxaenpCR2pBdXlRcF9zR3gyZFl5Z3BYUkpLd0Y=',
-    ETHERSCAN_API_KEY: '4GV13Q5P8R3C6WMYBCRK5BX63IY2Q6EMJD',
-    BSCSCAN_API_KEY: 'GQIP1KHUW3Y3VQFP2Z88VS98CQ6GVU7BK3',
-    POLIGONSCAN_API_KEY: 'DKBA6NPBY6MTH3J1FD4KHWIV4TYJDMX5IS',
+    INFURA_ID: process.env.INFURA_ID,
+    ALCHEMY_ID: process.env.ALCHEMY_ID,
+    KLAYTN_API_USERNAME: process.env.KLAYTN_API_USERNAME,
+    KLAYTN_API_PASSWORD: process.env.KLAYTN_API_PASSWORD,
+    KLAYTN_AUTH_TOKEN: process.env.KLAYTN_API_PASSWORD,
+    ETHERSCAN_API_KEY: process.env.ETHERSCAN_API_KEY,
+    BSCSCAN_API_KEY: process.env.BSCSCAN_API_KEY,
+    POLIGONSCAN_API_KEY: process.env.POLIGONSCAN_API_KEY,
     ABC_SERVICE_ID: 'https://mw.myabcwallet.com',
     SENTRY_DSN: 'https://33738b9d7e4f432b919d7d03412bbe34@o1346368.ingest.sentry.io/6624178',
     ISS: 'abc',
