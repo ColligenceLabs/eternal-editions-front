@@ -1,0 +1,16 @@
+function goResult(){
+    document.KSPayWeb.target = "";
+    document.KSPayWeb.action = "api/ksnet/kspay_wh_result/";
+    document.KSPayWeb.submit();
+}
+// eparamSet() - 함수설명 : 결재완료후 (kspay_wh_rcv.php로부터)결과값을 받아 지정된 결과페이지(kspay_wh_result.php)로 전송될 form에 세팅합니다.
+function eparamSet(rcid, rctype, rhash){
+    document.KSPayWeb.reCommConId.value 	= rcid;
+    document.KSPayWeb.reCommType.value = rctype  ;
+    document.KSPayWeb.reHash.value 	= rhash  ;
+}
+function mcancel()
+{
+    // 취소
+    closeEvent();
+}

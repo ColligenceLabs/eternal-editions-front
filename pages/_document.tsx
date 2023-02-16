@@ -7,6 +7,7 @@ import createCache from '@emotion/cache';
 import createEmotionServer from '@emotion/server/create-instance';
 // theme
 import palette from '../src/theme/palette';
+import Script from 'next/script';
 
 // ----------------------------------------------------------------------
 
@@ -47,11 +48,12 @@ export default class MyDocument extends Document {
           />
           {/*// https://image.eternaleditions.io/fonts/KommonGrotesk-Black.eot*/}
           <link href="/assets/css/fonts.css" rel="stylesheet" />
+          <script type="text/javascript" src="/script/script.js"></script>
+          <script
+            type="text/javascript"
+            src="https://kspay.ksnet.to/store/KSPayWebV1.4/js/kspay_web_ssl.js"
+          ></script>
         </Head>
-        <script
-          language="javascript"
-          src="https://kspay.ksnet.to/store/KSPayWebV1.4/js/kspay_web_ssl.js"
-        ></script>
         <body>
           <Main />
           <NextScript />

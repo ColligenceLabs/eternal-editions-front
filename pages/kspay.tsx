@@ -89,33 +89,34 @@ export default function KSPay() {
   };
 
   function getLocalUrl(mypage: string) {
-    var myloc = location.href;
+    const myloc = location.href;
     console.log(myloc);
     return myloc.substring(0, myloc.lastIndexOf('/')) + '/' + mypage;
   }
   // goResult() - 함수설명 : 결재완료후 결과값을 지정된 결과페이지(kspay_wh_result.php)로 전송합니다.
-  function goResult() {
-    document.KSPayWeb.target = '';
-    document.KSPayWeb.action = 'api/ksnet/kspay_wh_result/';
-    document.KSPayWeb.submit();
-  }
-  // eparamSet() - 함수설명 : 결재완료후 (kspay_wh_rcv.php로부터)결과값을 받아 지정된 결과페이지(kspay_wh_result.php)로 전송될 form에 세팅합니다.
-  function eparamSet(rcid, rctype, rhash) {
-    setOrderInfo({ ...orderInfo, reCommConId: rcid, reCommType: rctype, reHash: rhash });
-    // document.KSPayWeb.reCommConId.value = rcid;
-    // document.KSPayWeb.reCommType.value = rctype;
-    // document.KSPayWeb.reHash.value = rhash;
-  }
-  // function mcancel() {
+  // function goResult() {
+  //   document.KSPayWeb.target = '';
+  //   document.KSPayWeb.action = 'api/ksnet/kspay_wh_result/';
+  //   document.KSPayWeb.submit();
+  // }
+  // // eparamSet() - 함수설명 : 결재완료후 (kspay_wh_rcv.php로부터)결과값을 받아 지정된 결과페이지(kspay_wh_result.php)로 전송될 form에 세팅합니다.
+  // function eparamSet(rcid, rctype, rhash) {
+  //   setOrderInfo({ ...orderInfo, reCommConId: rcid, reCommType: rctype, reHash: rhash });
+  //   // document.KSPayWeb.reCommConId.value = rcid;
+  //   // document.KSPayWeb.reCommType.value = rctype;
+  //   // document.KSPayWeb.reHash.value = rhash;
+  // }
+  // const mcancel = () => {
   //   // 취소
   //   closeEvent();
-  // }
+  // };
 
-  const onSubmit = (_frm: any) => {
+  const _submit = (_frm: any) => {
     console.log(typeof _frm[0]);
     // _frm[0].sndReply.value = getLocalUrl('api/ksnet/kspay_wh_rcv/');
-    setOrderInfo({ ...orderInfo, sndReply: getLocalUrl('api/ksnet/kspay_wh_rcv/') });
-    console.log(_frm[0]);
+    setOrderInfo({ ...orderInfo, sndReply: 'http://localhost:8888/api/ksnet/kspay_wh_rcv/' });
+    _frm[0].sndReply.value = 'http://localhost:8888/api/ksnet/kspay_wh_rcv/';
+    console.log('=====>', _frm[0], _frm[0].sndReply);
     _pay(_frm[0]);
   };
 
@@ -131,9 +132,9 @@ export default function KSPay() {
             <form
               name="KSPayWeb"
               method="post"
-              onSubmit={(form) => {
-                console.log(form);
-              }}
+              // onSubmit={(form) => {
+              //   console.log(form);
+              // }}
             >
               <Typography variant={'h2'}>KSNET WebHost Sample V1.4[PHP]</Typography>
               <SectionWrapper>
@@ -220,68 +221,72 @@ export default function KSPay() {
               </SectionWrapper>
               <Button
                 variant="outlined"
-                onClick={() => onSubmit(document.getElementsByName('KSPayWeb'))}
+                onClick={() => _submit(document.getElementsByName('KSPayWeb'))}
               >
                 결제
               </Button>
+              {/* 공통 환경설정 */}
+              <Input type="hidden" name="sndReply" value={orderInfo.sndReply} />
+              <Input type="hidden" name="sndCharSet" value="UTF-8" />
+              <Input type="hidden" name="sndGoodType" value="1" />
+
+              {/* 1. 신용카드 관련 설정*/}
+              {/* 신용카드 결제방법 */}
+              {/* 일반적인 업체의 경우 ISP,안심결제만 사용하면 되며 다른 결제방법 추가시에는 사전에 협의이후 적용바랍니다 */}
+              <Input type="hidden" name="sndShowcard" value="C" />
+
+              {/*신용카드(해외카드) 통화코드: 해외카드결제시 달러결제를 사용할경우 변경*/}
+              {/*원화(WON), 달러(USD) */}
+              <Input type="hidden" name="sndCurrencytype" value="WON" />
+              {/*원화(WON), 달러(USD)*/}
+              <Input type="hidden" name="iframeYn" value="Y" />
+
+              {/* 할부개월수 선택범위 */}
+              {/*상점에서 적용할 할부개월수를 세팅합니다. 여기서 세팅하신 값은 결제창에서 고객이 스크롤하여 선택하게 됩니다*/}
+              {/*아래의 예의경우 고객은 0~12개월의 할부거래를 선택할수있게 됩니다.*/}
+              <Input
+                type="hidden"
+                name="sndInstallmenttype"
+                value="ALL(0:2:3:4:5:6:7:8:9:10:11:12)"
+              />
+
+              {/*가맹점부담 무이자할부설정 */}
+              {/*카드사 무이자행사만 이용하실경우  또는 무이자 할부를 적용하지 않는 업체는  "NONE"로 세팅  */}
+              {/*예 : 전체카드사 및 전체 할부에대해서 무이자 적용할 때는 value="ALL" / 무이자 미적용할 때는 value="NONE" */}
+              {/*예 : 전체카드사 3,4,5,6개월 무이자 적용할 때는 value="ALL(3:4:5:6)" */}
+              {/*예 : 삼성카드(카드사코드:04) 2,3개월 무이자 적용할 때는 value="04(3:4:5:6)"*/}
+              <Input type="hidden" name="sndInteresttype" value="10(02:03),05(06)" />
+              <Input type="hidden" name="sndInteresttype" value="NONE" />
+
+              {/*카카오페이 사용시 필수 세팅 값*/}
+              {/*카카오페이용 상점대표자명*/}
+              <Input type="hidden" name="sndStoreCeoName" value="" />
+              {/*  카카오페이 연락처*/}
+              <Input type="hidden" name="sndStorePhoneNo" value="" />
+              {/*카카오페이 주소*/}
+              <Input type="hidden" name="sndStoreAddress" value="" />
+
+              {/*2. 온라인입금(가상계좌) 관련설정*/}
+              {/*에스크로사용여부 (0:사용안함, 1:사용)*/}
+              <Input type="hidden" name="sndEscrow" value="0" />
+
+              {/*3. 계좌이체 현금영수증발급여부 설정*/}
+              {/*계좌이체시 현금영수증 발급여부 (0: 발급안함, 1:발급)*/}
+              <Input type="hidden" name="sndCashReceipt" value="0" />
+
+              {/*결과데이타: 승인이후 자동으로 채워집니다. (*변수명을 변경하지 마세요)*/}
+              <Input type="hidden" name="reCommConId" value="" />
+              <Input type="hidden" name="reCommType" value="" />
+              <Input type="hidden" name="reHash" value="" />
+
+              {/*업체에서 추가하고자하는 임의의 파라미터를 입력하면 됩니다.*/}
+              {/*이 파라메터들은 지정된결과 페이지(kspay_result.php)로 전송됩니다.*/}
+              <Input type="hidden" name="a" value="a1" />
+              <Input type="hidden" name="b" value="b1" />
+              <Input type="hidden" name="c" value="c1" />
+              <Input type="hidden" name="d" value="d1" />
             </form>
           </Box>
-          {/* 공통 환경설정 */}
-          <input type="hidden" name="sndReply" value={orderInfo.sndReply} />
-          <input type="hidden" name="sndCharSet" value="UTF-8" />
-          <input type="hidden" name="sndGoodType" value="1" />
-
-          {/* 1. 신용카드 관련 설정*/}
-          {/* 신용카드 결제방법 */}
-          {/* 일반적인 업체의 경우 ISP,안심결제만 사용하면 되며 다른 결제방법 추가시에는 사전에 협의이후 적용바랍니다 */}
-          <input type="hidden" name="sndShowcard" value="C" />
-
-          {/*신용카드(해외카드) 통화코드: 해외카드결제시 달러결제를 사용할경우 변경*/}
-          {/*원화(WON), 달러(USD) */}
-          <input type="hidden" name="sndCurrencytype" value="WON" />
-          {/*원화(WON), 달러(USD)*/}
-          <input type="hidden" name="iframeYn" value="Y" />
-
-          {/* 할부개월수 선택범위 */}
-          {/*상점에서 적용할 할부개월수를 세팅합니다. 여기서 세팅하신 값은 결제창에서 고객이 스크롤하여 선택하게 됩니다*/}
-          {/*아래의 예의경우 고객은 0~12개월의 할부거래를 선택할수있게 됩니다.*/}
-          <input type="hidden" name="sndInstallmenttype" value="ALL(0:2:3:4:5:6:7:8:9:10:11:12)" />
-
-          {/*가맹점부담 무이자할부설정 */}
-          {/*카드사 무이자행사만 이용하실경우  또는 무이자 할부를 적용하지 않는 업체는  "NONE"로 세팅  */}
-          {/*예 : 전체카드사 및 전체 할부에대해서 무이자 적용할 때는 value="ALL" / 무이자 미적용할 때는 value="NONE" */}
-          {/*예 : 전체카드사 3,4,5,6개월 무이자 적용할 때는 value="ALL(3:4:5:6)" */}
-          {/*예 : 삼성카드(카드사코드:04) 2,3개월 무이자 적용할 때는 value="04(3:4:5:6)"*/}
-          <input type="hidden" name="sndInteresttype" value="10(02:03),05(06)" />
-          <input type="hidden" name="sndInteresttype" value="NONE" />
-
-          {/*카카오페이 사용시 필수 세팅 값*/}
-          {/*카카오페이용 상점대표자명*/}
-          <input type="hidden" name="sndStoreCeoName" value="" />
-          {/*  카카오페이 연락처*/}
-          <input type="hidden" name="sndStorePhoneNo" value="" />
-          {/*카카오페이 주소*/}
-          <input type="hidden" name="sndStoreAddress" value="" />
-
-          {/*2. 온라인입금(가상계좌) 관련설정*/}
-          {/*에스크로사용여부 (0:사용안함, 1:사용)*/}
-          <input type="hidden" name="sndEscrow" value="0" />
-
-          {/*3. 계좌이체 현금영수증발급여부 설정*/}
-          {/*계좌이체시 현금영수증 발급여부 (0: 발급안함, 1:발급)*/}
-          <input type="hidden" name="sndCashReceipt" value="0" />
-
-          {/*결과데이타: 승인이후 자동으로 채워집니다. (*변수명을 변경하지 마세요)*/}
-          <input type="hidden" name="reCommConId" value="" />
-          <input type="hidden" name="reCommType" value="" />
-          <input type="hidden" name="reHash" value="" />
-
-          {/*업체에서 추가하고자하는 임의의 파라미터를 입력하면 됩니다.*/}
-          {/*이 파라메터들은 지정된결과 페이지(kspay_result.php)로 전송됩니다.*/}
-          <input type="hidden" name="a" value="a1" />
-          <input type="hidden" name="b" value="b1" />
-          <input type="hidden" name="c" value="c1" />
-          <input type="hidden" name="d" value="d1" />
         </Container>
       </RootStyle>
     </Page>
