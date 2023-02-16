@@ -11,6 +11,7 @@
 
 	function _submit(_frm)
 	{
+    console.log(typeof _frm)
 		_frm.sndReply.value = getLocalUrl("api/ksnet/kspay_wh_rcv/") ;
 		_pay(_frm);
 	}

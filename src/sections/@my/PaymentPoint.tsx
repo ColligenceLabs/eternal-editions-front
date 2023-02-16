@@ -195,6 +195,9 @@ export default function PaymentPoint() {
               type="submit"
               variant="contained"
               loading={isSubmitting}
+              onClick={() => {
+                window.location.href = '/kspay';
+              }}
             >
               결제하기
             </LoadingButton>
