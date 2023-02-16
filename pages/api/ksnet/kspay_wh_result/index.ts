@@ -122,7 +122,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             <td width="120"><img src="/imgs/ico_right.gif" width="11" height="11" align="absmiddle"> 성공여부</td>
             <td width="280">
     ${authyn} ${
-      authyn === '0' ? '승인성공' : '승인거절'
+      authyn === 'O' ? '승인성공' : '승인거절'
     }<font color=red> :성공여부값은 영어 대문자 O,X입니다. </font>
             </td>
           </tr>
