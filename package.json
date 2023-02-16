@@ -69,6 +69,7 @@
     "google-map-react": "^2.2.0",
     "gray-matter": "^4.0.3",
     "human-standard-token-abi": "^2.0.0",
+    "iconv-lite": "^0.6.3",
     "identicon.js": "^2.3.3",
     "is-buffer": "^2.0.5",
     "json-rpc-engine": "^6.1.0",
