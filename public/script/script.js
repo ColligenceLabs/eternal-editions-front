@@ -1,6 +1,6 @@
 function goResult(){
     document.KSPayWeb.target = "";
-    document.KSPayWeb.action = "api/ksnet/kspay_wh_result/";
+    document.KSPayWeb.action = "http://localhost:8888/api/ksnet/kspay_wh_result/";
     document.KSPayWeb.submit();
 }
 // eparamSet() - 함수설명 : 결재완료후 (kspay_wh_rcv.php로부터)결과값을 받아 지정된 결과페이지(kspay_wh_result.php)로 전송될 form에 세팅합니다.
@@ -13,4 +13,10 @@ function mcancel()
 {
     // 취소
     closeEvent();
+}
+
+function getLocalUrl(mypage)
+{
+    var myloc = location.href;
+    return myloc.substring(0, myloc.lastIndexOf('/')) + '/' + mypage;
 }

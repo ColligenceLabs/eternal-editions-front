@@ -88,29 +88,6 @@ export default function KSPay() {
     setOrderInfo({ ...orderInfo, [name]: value });
   };
 
-  function getLocalUrl(mypage: string) {
-    const myloc = location.href;
-    console.log(myloc);
-    return myloc.substring(0, myloc.lastIndexOf('/')) + '/' + mypage;
-  }
-  // goResult() - 함수설명 : 결재완료후 결과값을 지정된 결과페이지(kspay_wh_result.php)로 전송합니다.
-  // function goResult() {
-  //   document.KSPayWeb.target = '';
-  //   document.KSPayWeb.action = 'api/ksnet/kspay_wh_result/';
-  //   document.KSPayWeb.submit();
-  // }
-  // // eparamSet() - 함수설명 : 결재완료후 (kspay_wh_rcv.php로부터)결과값을 받아 지정된 결과페이지(kspay_wh_result.php)로 전송될 form에 세팅합니다.
-  // function eparamSet(rcid, rctype, rhash) {
-  //   setOrderInfo({ ...orderInfo, reCommConId: rcid, reCommType: rctype, reHash: rhash });
-  //   // document.KSPayWeb.reCommConId.value = rcid;
-  //   // document.KSPayWeb.reCommType.value = rctype;
-  //   // document.KSPayWeb.reHash.value = rhash;
-  // }
-  // const mcancel = () => {
-  //   // 취소
-  //   closeEvent();
-  // };
-
   const _submit = (_frm: any) => {
     console.log(typeof _frm[0]);
     // _frm[0].sndReply.value = getLocalUrl('api/ksnet/kspay_wh_rcv/');
