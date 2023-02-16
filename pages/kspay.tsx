@@ -60,7 +60,7 @@ export default function KSPay() {
     sndStoreid: '2999199999',
     sndOrdernumber: 'carrot_1234',
     sndGoodname: '당근10kg',
-    sndAmount: '1004',
+    sndAmount: '100',
     sndOrdername: '김토끼',
     sndEmail: 'kspay@carrot.co.kr',
     sndMobile: '01112341234',
@@ -94,6 +94,8 @@ export default function KSPay() {
     setOrderInfo({ ...orderInfo, sndReply: 'http://localhost:8888/api/ksnet/kspay_wh_rcv/' });
     _frm[0].sndReply.value = 'http://localhost:8888/api/ksnet/kspay_wh_rcv/';
     console.log('=====>', _frm[0], _frm[0].sndReply);
+
+    // @ts-ignore
     _pay(_frm[0]);
   };
 
