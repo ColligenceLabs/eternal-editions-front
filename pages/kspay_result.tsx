@@ -1,10 +1,11 @@
 import React from 'react';
 import { useState, useEffect, ReactElement } from 'react';
+import { useDispatch } from 'react-redux';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Box, Container, Typography } from '@mui/material';
 // config
-import { HEADER_MOBILE_HEIGHT, HEADER_DESKTOP_HEIGHT } from '../src/config';
+import { HEADER_MOBILE_HEIGHT, HEADER_DESKTOP_HEIGHT, SUCCESS } from '../src/config';
 // layouts
 import Layout from '../src/layouts';
 // components
@@ -12,6 +13,8 @@ import { Page } from '../src/components';
 // sections
 import axios, { AxiosResponse } from 'axios';
 import { useRouter } from 'next/router';
+import { getUser, savePoint } from '../src/services/services';
+import { setWebUser } from '../src/store/slices/webUser';
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +38,7 @@ const InputWrapper = styled(Typography)(({ theme }) => ({
 
 export default function KSPayResult() {
   const router = useRouter();
+  const dispatch = useDispatch();
   console.log(router.query);
   const rcid = router.query['rcid'];
 
@@ -58,6 +62,20 @@ export default function KSPayResult() {
     const res: AxiosResponse = await axios.post('/api/ksnet/kspay_wh_result', { rcid });
     console.log(res.data);
     const rslt = res.data;
+
+    if (rslt[1] === 'O') {
+      const result = await savePoint({
+        order_id: rslt[9],
+        point: (parseInt(rslt[5]) / 1200).toFixed(2),
+        type: 'BUY',
+      });
+      if (result.data.status === SUCCESS) {
+        const userRes = await getUser();
+        if (userRes.status === 200 && userRes.data.status != 0)
+          dispatch(setWebUser(userRes.data.user));
+      }
+    }
+
     setPayResult({
       authyn: rslt[1] === 'O' ? '승인성공' : '승인거절',
       trno: rslt[2],
