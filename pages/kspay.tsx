@@ -1,33 +1,18 @@
 import React, { ChangeEvent, useRef } from 'react';
 import { useState, useEffect, ReactElement } from 'react';
-// icons
-import menuIcon from '@iconify/icons-carbon/menu';
 // @mui
 import { styled } from '@mui/material/styles';
-import {
-  Box,
-  Button,
-  Container,
-  Input,
-  SelectChangeEvent,
-  Stack,
-  Table,
-  Typography,
-} from '@mui/material';
+import { Box, Button, Container, Input, SelectChangeEvent, Typography } from '@mui/material';
 // config
 import { HEADER_MOBILE_HEIGHT, HEADER_DESKTOP_HEIGHT } from '../src/config';
-// _data
-import { _faqsSupport } from '../_data/mock';
 // layouts
 import Layout from '../src/layouts';
 // components
-import { Iconify, Page } from '../src/components';
-import { IconButtonAnimate } from '../src/components/animate';
+import { Page } from '../src/components';
 // sections
-import { SupportHero, SupportSidebar, SupportContent } from '../src/sections/support';
 import MenuItem from '@mui/material/MenuItem';
 import Select from '@mui/material/Select';
-import { minWidth } from '@mui/system';
+import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
@@ -55,12 +40,13 @@ const Title = styled(Typography)(({ theme }) => ({
 // ----------------------------------------------------------------------
 
 export default function KSPay() {
+  const router = useRouter();
   const [orderInfo, setOrderInfo] = useState({
     sndPaymethod: '1000000000',
     sndStoreid: '2999199999',
     sndOrdernumber: 'carrot_1234',
     sndGoodname: '당근10kg',
-    sndAmount: '100',
+    sndAmount: router.query['price'] ? router.query['price'] : '0',
     sndOrdername: '김토끼',
     sndEmail: 'kspay@carrot.co.kr',
     sndMobile: '01112341234',
