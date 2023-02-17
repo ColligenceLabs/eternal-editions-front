@@ -2,7 +2,7 @@ function goResult(){
     document.KSPayWeb.target = "";
     // document.KSPayWeb.action = "http://localhost:8888/kspay_result/";
     // document.KSPayWeb.submit();
-    window.location.href = `http://localhost:8888/kspay_result/?rcid=${document.KSPayWeb.reCommConId.value}`
+    window.location.href = `/kspay_result/?rcid=${document.KSPayWeb.reCommConId.value}`
 }
 // eparamSet() - 함수설명 : 결재완료후 (kspay_wh_rcv.php로부터)결과값을 받아 지정된 결과페이지(kspay_wh_result.php)로 전송될 form에 세팅합니다.
 function eparamSet(rcid, rctype, rhash){
