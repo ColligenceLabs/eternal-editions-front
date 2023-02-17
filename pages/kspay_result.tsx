@@ -141,25 +141,25 @@ export default function KSPayResult() {
             </Box>
           )}
 
-          <Box sx={{ display: 'flex', gap: '1rem' }}>
+          <SectionWrapper>
             <InputWrapper>발급사코드/가상계좌번호/계좌이체번호</InputWrapper>
             <InputWrapper>{payResult.isscd}</InputWrapper>
-          </Box>
+          </SectionWrapper>
 
-          <Box sx={{ display: 'flex', gap: '1rem' }}>
+          <SectionWrapper>
             <InputWrapper>매입사코드</InputWrapper>
             <InputWrapper>{payResult.aqucd}</InputWrapper>
-          </Box>
+          </SectionWrapper>
 
-          <Box sx={{ display: 'flex', gap: '1rem' }}>
+          <SectionWrapper>
             <InputWrapper>메시지1</InputWrapper>
             <InputWrapper>{payResult.msg1}</InputWrapper>
-          </Box>
+          </SectionWrapper>
 
-          <Box sx={{ display: 'flex', gap: '1rem' }}>
+          <SectionWrapper>
             <InputWrapper>메시지2</InputWrapper>
             <InputWrapper>{payResult.msg2}</InputWrapper>
-          </Box>
+          </SectionWrapper>
         </Container>
       </RootStyle>
     </Page>
