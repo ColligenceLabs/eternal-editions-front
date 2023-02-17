@@ -22,6 +22,15 @@ const RootStyle = styled('div')(({ theme }) => ({
   },
 }));
 
+const SectionWrapper = styled(Box)(({ theme }) => ({
+  display: 'flex',
+  gap: '1rem',
+}));
+
+const InputWrapper = styled(Typography)(({ theme }) => ({
+  fontSize: '18px',
+}));
+
 // ----------------------------------------------------------------------
 
 export default function KSPayResult() {
@@ -92,66 +101,64 @@ export default function KSPayResult() {
           <Box sx={{ padding: '20px' }}>
             <Typography variant={'h2'}>결제 결과</Typography>
           </Box>
-          <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Typography variant={'h4'}>결제방법</Typography>
-            <Typography variant={'h4'}>{payResult.typeStr}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Typography variant={'h4'}>성공여부</Typography>
-            <Typography variant={'h4'}>{payResult.authyn}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Typography variant={'h4'}>응답코드</Typography>
-            <Typography variant={'h4'}>{payResult.resultcd}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Typography variant={'h4'}>주문번호</Typography>
-            <Typography variant={'h4'}>{payResult.ordno}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Typography variant={'h4'}>금액</Typography>
-            <Typography variant={'h4'}>{payResult.amt}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Typography variant={'h4'}>거래번호</Typography>
-            <Typography variant={'h4'}>{payResult.trno}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Typography variant={'h4'}>거래일자</Typography>
-            <Typography variant={'h4'}>{payResult.trddt}</Typography>
-          </Box>
-          <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Typography variant={'h4'}>거래시간</Typography>
-            <Typography variant={'h4'}>{payResult.trdtm}</Typography>
-          </Box>
+          <SectionWrapper>
+            <InputWrapper>결제방법</InputWrapper>
+            <InputWrapper>{payResult.typeStr}</InputWrapper>
+          </SectionWrapper>
+          <SectionWrapper>
+            <InputWrapper>성공여부</InputWrapper>
+            <InputWrapper>{payResult.authyn}</InputWrapper>
+          </SectionWrapper>
+          <SectionWrapper>
+            <InputWrapper>응답코드</InputWrapper>
+            <InputWrapper>{payResult.resultcd}</InputWrapper>
+          </SectionWrapper>
+          <SectionWrapper>
+            <InputWrapper>주문번호</InputWrapper>
+            <InputWrapper>{payResult.ordno}</InputWrapper>
+          </SectionWrapper>
+          <SectionWrapper>
+            <InputWrapper>금액</InputWrapper>
+            <InputWrapper>{payResult.amt}</InputWrapper>
+          </SectionWrapper>
+          <SectionWrapper>
+            <InputWrapper>거래번호</InputWrapper>
+            <InputWrapper>{payResult.trno}</InputWrapper>
+          </SectionWrapper>
+          <SectionWrapper>
+            <InputWrapper>거래일자</InputWrapper>
+            <InputWrapper>{payResult.trddt}</InputWrapper>
+          </SectionWrapper>
+          <SectionWrapper>
+            <InputWrapper>거래시간</InputWrapper>
+            <InputWrapper>{payResult.trdtm}</InputWrapper>
+          </SectionWrapper>
 
           {payResult.authyn && 'O' === payResult.authyn && (
             <Box sx={{ display: 'flex', gap: '1rem' }}>
-              <Typography variant={'h4'}>카드사 승인번호/은행 코드번호</Typography>
-              <Typography
-                variant={'h4'}
-              >{`${payResult.authno} :카드사에서 부여한 번호로 고유한값은 아닙니다.`}</Typography>
+              <InputWrapper>카드사 승인번호/은행 코드번호</InputWrapper>
+              <InputWrapper>{`${payResult.authno} :카드사에서 부여한 번호로 고유한값은 아닙니다.`}</InputWrapper>
             </Box>
           )}
 
           <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Typography variant={'h4'}>발급사코드/가상계좌번호/계좌이체번호</Typography>
-            <Typography variant={'h4'}>{payResult.isscd}</Typography>
+            <InputWrapper>발급사코드/가상계좌번호/계좌이체번호</InputWrapper>
+            <InputWrapper>{payResult.isscd}</InputWrapper>
           </Box>
 
           <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Typography variant={'h4'}>매입사코드</Typography>
-            <Typography variant={'h4'}>{payResult.aqucd}</Typography>
+            <InputWrapper>매입사코드</InputWrapper>
+            <InputWrapper>{payResult.aqucd}</InputWrapper>
           </Box>
 
           <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Typography variant={'h4'}>메시지1</Typography>
-            <Typography variant={'h4'}>{payResult.msg1}</Typography>
+            <InputWrapper>메시지1</InputWrapper>
+            <InputWrapper>{payResult.msg1}</InputWrapper>
           </Box>
 
           <Box sx={{ display: 'flex', gap: '1rem' }}>
-            <Typography variant={'h4'}>메시지2</Typography>
-            <Typography variant={'h4'}>{payResult.msg2}</Typography>
+            <InputWrapper>메시지2</InputWrapper>
+            <InputWrapper>{payResult.msg2}</InputWrapper>
           </Box>
         </Container>
       </RootStyle>
