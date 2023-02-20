@@ -9,7 +9,7 @@ type ENV = {
 const development: ENV = {
   REACT_APP_TARGET_NETWORK: 80001, // mumbai
   REACT_APP_TARGET_NETWORK_MSG: '',
-  REACT_APP_API_URL: 'https://dev.nftapi.eternaleditions.io/',
+  REACT_APP_API_URL: 'https://dev.nftapi.eternaleditions.io',
   MPC_PROTOCOL: 'wss',
   APP_SERVER_ADDRESS: 'cs.mw.myabcwallet.com:9000',
 };
