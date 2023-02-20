@@ -14,6 +14,7 @@ import { getUser, savePoint } from '../../services/services';
 import { SUCCESS } from '../../config';
 import { setWebUser } from '../../store/slices/webUser';
 import { useDispatch } from 'react-redux';
+import Link from 'next/link';
 
 // ----------------------------------------------------------------------
 
@@ -189,15 +190,20 @@ export default function PaymentPoint() {
               disabled={enablePaypal}
             />
 
-            <LoadingButton
-              fullWidth
-              size="large"
-              type="submit"
-              variant="contained"
-              loading={isSubmitting}
-            >
-              결제하기
-            </LoadingButton>
+            <Link href={{ pathname: '/kspay', query: { price } }}>
+              <LoadingButton
+                fullWidth
+                size="large"
+                type="submit"
+                variant="contained"
+                loading={isSubmitting}
+                // onClick={() => {
+                //   window.location.href = '/kspay';
+                // }}
+              >
+                결제하기
+              </LoadingButton>
+            </Link>
           </Stack>
         </form>
       </Stack>

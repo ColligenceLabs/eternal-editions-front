@@ -55,6 +55,10 @@ const Routes = {
     about: '/career/about-us',
     contact: '/career/contact-us',
   },
+  ksnet: {
+    kspay_wh_rcv: '/ksnet/kspay_wh_rcv',
+    kspay_wh_result: '/ksnet/kspay_wh_result',
+  },
   // E-Learning
   eLearning: {
     landing: '/e-learning',
