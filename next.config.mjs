@@ -13,7 +13,8 @@ const nextConfig = {
     // ABC Wallet
     // APP_SERVER_ADDRESS: 'cs.mw.myabcwallet.com:9000',
     // APP_SERVER_ADDRESS_PROTOCOL: 'https',
-    APP_SERVER_ADDRESS: 'cs-gateway.abcsktcolab.link:9000',
+    // APP_SERVER_ADDRESS: 'cs-gateway.abcsktcolab.link:9000',//OLDDEV
+    APP_SERVER_ADDRESS: 'cs.dev-mw.myabcwallet.com:9000',
     APP_SERVER_ADDRESS_PROTOCOL: 'https',
     MPC_PROTOCOL: 'wss',
     SELENIUM_BROWSER: 'chrome',
