@@ -181,7 +181,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
   console.log('googleredirecturl:::', `${env.REACT_APP_API_URL}/auth/google?redirectUrl=/`);
   const handleSnsLogin = async (snsType) => {
     window.localStorage.setItem('loginBy', 'sns');
-    window.location.href = `${env.REACT_APP_API_URL}/auth/${snsType}`;
+    window.location.href = `${env.REACT_APP_API_URL}/auth/${snsType}?redirectUrl=/`;
   };
 
   return (
