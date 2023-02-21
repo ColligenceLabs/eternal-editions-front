@@ -35,7 +35,7 @@ import wallet from './slices/wallet';
 const makeConfiguredStore = (reducer: any) =>
   configureStore({
     reducer: reducer,
-    devTools: true,
+    devTools: process.env.NODE_ENV !== 'production',
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         serializableCheck: {
