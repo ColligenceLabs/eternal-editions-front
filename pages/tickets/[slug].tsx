@@ -33,7 +33,13 @@ import EECard from '../../src/components/EECard';
 import EEAvatar from '../../src/components/EEAvatar';
 import { fDate } from '../../src/utils/formatTime';
 import searchIcon from '@iconify/icons-carbon/search';
-import {getBuyersService, getSession, getTicketInfoService, registerBuy, savePoint} from '../../src/services/services';
+import {
+  getBuyersService,
+  getSession,
+  getTicketInfoService,
+  registerBuy,
+  savePoint,
+} from '../../src/services/services';
 import { TicketInfoTypes, TicketItemTypes } from '../../src/@types/ticket/ticketTypes';
 import axios from 'axios';
 import contracts from '../../src/config/constants/contracts';
@@ -250,12 +256,17 @@ export default function TicketDetailPage() {
           txHash: '',
           price: ticketInfo?.price,
           itemId: selectedTicketItem?.id,
-          usePoint: true
+          usePoint: true,
         };
 
         let res = await registerBuy(data);
+        console.log(res.data);
         if (res.data.status === SUCCESS) {
-          res = await savePoint({order_id: res.data.data.id, point: ticketInfo?.price, type: 'USE'});
+          res = await savePoint({
+            order_id: res.data.data.id,
+            point: ticketInfo?.price,
+            type: 'USE',
+          });
           console.log('success');
           setOpenSnackbar({
             open: true,
@@ -263,7 +274,12 @@ export default function TicketDetailPage() {
             message: 'Purchase completed!',
           });
         } else {
-          console.log('Item not selected');
+          console.log('Item not selected', res.data.message);
+          setOpenSnackbar({
+            open: true,
+            type: 'error',
+            message: `Purchase faield! ${res.data.message}`,
+          });
         }
       } catch (e) {
         setIsBuyingWithMatic(false);
@@ -277,7 +293,7 @@ export default function TicketDetailPage() {
         setIsBuyingWithPoint(false);
       }
     }
-  }
+  };
 
   const handleBuyWithMatic = async () => {
     if (selectedTicketItem) {
@@ -604,21 +620,21 @@ export default function TicketDetailPage() {
                 <Box onClick={handleBuyWithPoint}>
                   {isBuyingWithPoint ? (
                     <Box
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          color: 'text.primary',
-                          cursor: 'pointer',
-                          // '& svg': { mr: 1, width: 24, height: 24 },
-                          mb: 1,
-                          padding: '14px 24px',
-                          borderRadius: '50px',
-                          bgcolor: '#F5F5F5',
-                          '&:hover': {
-                            bgcolor: 'primary.main',
-                          },
-                        }}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        color: 'text.primary',
+                        cursor: 'pointer',
+                        // '& svg': { mr: 1, width: 24, height: 24 },
+                        mb: 1,
+                        padding: '14px 24px',
+                        borderRadius: '50px',
+                        bgcolor: '#F5F5F5',
+                        '&:hover': {
+                          bgcolor: 'primary.main',
+                        },
+                      }}
                     >
                       <CircularProgress size={25} color="secondary" />
                     </Box>

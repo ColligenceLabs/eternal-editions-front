@@ -156,11 +156,12 @@
   //   );
   // }
 
-  if (!globalThis.performance) {
-    throw new Error(
-      'globalThis.performance is not available, polyfill required (performance.now only)'
-    );
-  }
+  //// legacy implementation
+  // if (!globalThis.performance) {
+  //   throw new Error(
+  //     'globalThis.performance is not available, polyfill required (performance.now only)'
+  //   );
+  // }
 
   if (!globalThis.TextEncoder) {
     throw new Error('globalThis.TextEncoder is not available, polyfill required');
@@ -284,7 +285,9 @@
         return decoder.decode(new DataView(this._inst.exports.mem.buffer, saddr, len));
       };
 
-      const timeOrigin = Date.now() - performance.now();
+      //// legacy implementation
+      // const timeOrigin = Date.now() - performance.now();
+      const timeOrigin = Date.now();
       this.importObject = {
         go: {
           // Go's SP does not change as long as no Go code is running. Some operations (e.g. calls, getters and setters)
@@ -323,7 +326,9 @@
           // func nanotime1() int64
           'runtime.nanotime1': (sp) => {
             sp >>>= 0;
-            setInt64(sp + 8, (timeOrigin + performance.now()) * 1000000);
+            //// legacy implementation
+            // setInt64(sp + 8, (timeOrigin + performance.now()) * 1000000);
+            setInt64(sp + 8, (timeOrigin) * 1000000);
           },
 
           // func walltime() (sec int64, nsec int32)
