@@ -11,7 +11,7 @@ const development: ENV = {
   REACT_APP_TARGET_NETWORK_MSG: '',
   REACT_APP_API_URL: 'https://dev.nftapi.eternaleditions.io',
   MPC_PROTOCOL: 'wss',
-  APP_SERVER_ADDRESS: 'cs.mw.myabcwallet.com:9000',
+  APP_SERVER_ADDRESS: 'cs.dev-mw.myabcwallet.com:9000',
 };
 
 const staging: ENV = {
@@ -19,7 +19,7 @@ const staging: ENV = {
   REACT_APP_TARGET_NETWORK_MSG: '',
   REACT_APP_API_URL: 'http://localhost:5001',
   MPC_PROTOCOL: 'wss',
-  APP_SERVER_ADDRESS: 'cs.mw.myabcwallet.com:9000',
+  APP_SERVER_ADDRESS: 'cs.dev-mw.myabcwallet.com:9000',
 };
 
 const production: ENV = {
@@ -27,7 +27,7 @@ const production: ENV = {
   REACT_APP_TARGET_NETWORK_MSG: '',
   REACT_APP_API_URL: 'http://localhost:5001',
   MPC_PROTOCOL: 'wss',
-  APP_SERVER_ADDRESS: 'cs.mw.myabcwallet.com:9000',
+  APP_SERVER_ADDRESS: 'cs.dev-mw.myabcwallet.com:9000',
 };
 
 const env =
