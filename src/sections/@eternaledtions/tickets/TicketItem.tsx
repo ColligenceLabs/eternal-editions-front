@@ -13,6 +13,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import EEAvatar from '../../../components/EEAvatar';
 import { fDate } from '../../../utils/formatTime';
 import axios from 'axios';
+import QRCode from 'react-qr-code';
 
 // ----------------------------------------------------------------------
 
@@ -21,6 +22,7 @@ type Props = {
 };
 
 export default function TicketItem({ ticket }: any) {
+  console.log(ticket);
   const [maticPrice, setMaticPrice] = useState(0);
   const [klayPrice, setKlayPrice] = useState(0);
   const [ticketInfo, setTicketInfo] = useState({
@@ -32,6 +34,8 @@ export default function TicketItem({ ticket }: any) {
     price: 0,
     location: '',
     ticketNumber: '',
+    boxContractAddress: '',
+    no: '',
   });
 
   const getCoinPrice = () => {
@@ -68,6 +72,8 @@ export default function TicketItem({ ticket }: any) {
         price: ticket.price,
         location: location?.name ? location.name : '',
         ticketNumber: ticket.cnt,
+        boxContractAddress: ticket.boxContractAddress,
+        no: ticket.no,
       });
     }
   }, [ticket]);
@@ -108,7 +114,12 @@ export default function TicketItem({ ticket }: any) {
           <LineItem icon={<></>} label="Number of tickets" value={ticketInfo.ticketNumber} />
 
           <Stack sx={{ mt: 3 }} justifyContent="center" alignItems="center">
-            <img src={'/assets/example/qr.png'} style={{ maxWidth: '120px' }} />
+            {/*<img src={'/assets/example/qr.png'} style={{ maxWidth: '120px' }} />*/}
+            <QRCode
+              value={`https://entrace2023.eternaleditions.io/entrace-confirm?contractAddress=${ticketInfo.boxContractAddress}&tokenId=${ticketInfo.no}
+`}
+              size={120}
+            />
           </Stack>
 
           <Stack sx={{ mt: 4 }}>
