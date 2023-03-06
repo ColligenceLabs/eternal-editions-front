@@ -1,40 +1,19 @@
-import { useState } from 'react';
-// next
-import NextLink from 'next/link';
-// icons
-import chevronDown from '@iconify/icons-carbon/chevron-down';
-import chevronRight from '@iconify/icons-carbon/chevron-right';
 // @mui
-import {styled, useTheme} from '@mui/material/styles';
-import Masonry from '@mui/lab/Masonry';
-import {
-  Box,
-  Grid,
-  Link,
-  Stack,
-  Button,
-  Divider,
-  Collapse,
-  Container,
-  LinkProps,
-  Typography,
-  FilledInput,
-  InputAdornment,
-} from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
+import { Box, Link, Stack, Container, LinkProps, Typography } from '@mui/material';
 // hooks
 import { useResponsive } from '../../hooks';
 // components
-import { Logo, Iconify, SocialsButton, AppStoreButton, Image } from '../../components';
+import { Image } from '../../components';
 //
 import { PageLinks } from '../nav/NavConfig';
-import Routes from "../../routes";
 
 const ICONS = [
   '/assets/icons/icon-instagram.svg',
   '/assets/icons/icon-gitbook.svg',
   '/assets/icons/icon-discord.svg',
   '/assets/icons/icon-twitter.svg',
-]
+];
 
 // ----------------------------------------------------------------------
 
@@ -83,7 +62,7 @@ export default function Footer() {
               justifyContent: 'space-between',
               alignItems: 'flex-start',
               mb: '16px',
-            }
+            },
           }}
         >
           <Image
@@ -92,9 +71,9 @@ export default function Footer() {
               mb: '50px',
               [theme.breakpoints.up('md')]: {
                 mb: 0,
-              }
+              },
             }}
-            src='/assets/img/footer-logo.svg'
+            src="/assets/img/footer-logo.svg"
           />
 
           <Box
@@ -103,7 +82,7 @@ export default function Footer() {
               alignItems: 'center',
               'a + a': {
                 ml: '22px',
-              }
+              },
             }}
           >
             {ICONS.map((src, index) => (
@@ -113,20 +92,29 @@ export default function Footer() {
             ))}
           </Box>
         </Box>
-        <Box component="p" sx={{
-          typography: 'caption',
-          mb: '16px',
-        }}>
-          Eternal Editions CEO icksoo Han<br />
-          7th floor, 14, Teheran-ro 26 gil, Gangnam-gu, Seoul<br />
-          Republic of Korea
+        <Box
+          component="p"
+          sx={{
+            typography: 'caption',
+            mb: '16px',
+          }}
+        >
+          Eternal Editions CEO : Joon Young Lim
+          <br />
+          Business registration number : 353-88-02481
+          <br />
+          Mail order number : 123-435-2859
+          <br />
+          Address : 7th floor, 14, Teheran-ro 26 gil, Gangnam-gu, Seoul, Republic of Korea
         </Box>
         <Box
           component="p"
-          sx={ {
+          sx={{
             typography: 'caption',
           }}
-        >COPYRIGHT ⓒ Eternal Editions. ALL RIGHTS RESERVED</Box>
+        >
+          COPYRIGHT ⓒ Eternal Editions. ALL RIGHTS RESERVED
+        </Box>
       </Container>
     </>
   );
