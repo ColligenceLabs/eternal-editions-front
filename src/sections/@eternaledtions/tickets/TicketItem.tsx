@@ -1,12 +1,6 @@
-// next
 // @mui
 import { Box, Button, Stack, Typography } from '@mui/material';
-// routes
-// utils
-// @types
-// components
 import { MYTicketProps } from '../../../@types/ticket/ticket';
-import EECard from '../../../components/EECard';
 import { m } from 'framer-motion';
 import { Image, TextIconLabel, TextMaxLine, varHover, varTranHover } from '../../../components';
 import React, { ReactElement, useEffect, useState } from 'react';
@@ -22,7 +16,6 @@ type Props = {
 };
 
 export default function TicketItem({ ticket }: any) {
-  console.log(ticket);
   const [maticPrice, setMaticPrice] = useState(0);
   const [klayPrice, setKlayPrice] = useState(0);
   const [ticketInfo, setTicketInfo] = useState({
