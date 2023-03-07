@@ -221,7 +221,7 @@ export default function PaymentPoint() {
               />
             )}
             {method === 'credit' && (
-              <Link href={{ pathname: '/kspay', query: { price } }}>
+              <Link href={{ pathname: '/kspay', query: { price, amount } }}>
                 <LoadingButton
                   fullWidth
                   size="large"
