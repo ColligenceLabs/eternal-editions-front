@@ -4,7 +4,21 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // icons
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Divider, Stack, TextField, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Divider,
+  FormControl,
+  FormControlLabel,
+  Input,
+  InputAdornment,
+  InputLabel,
+  Radio,
+  RadioGroup,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import EECard from '../../components/EECard';
 import { useTheme } from '@mui/material/styles';
 import { PayPalButtons } from '@paypal/react-paypal-js';
@@ -15,6 +29,7 @@ import { SUCCESS } from '../../config';
 import { setWebUser } from '../../store/slices/webUser';
 import { useDispatch } from 'react-redux';
 import Link from 'next/link';
+import useAccount from '../../hooks/useAccount';
 
 // ----------------------------------------------------------------------
 
@@ -30,9 +45,11 @@ type FormValuesProps = {
 
 export default function PaymentPoint() {
   const dispatch = useDispatch();
+  const { account } = useAccount();
   const [price, setPrice] = useState('');
   const [amount, setAmount] = useState('');
   const [enablePaypal, setEnablePaypal] = useState(true);
+  const [method, setMethod] = useState('credit');
 
   useEffect(() => {
     if (price !== '') setEnablePaypal(false);
@@ -129,82 +146,171 @@ export default function PaymentPoint() {
   };
 
   return (
-    <EECard bgColor="common.white" color="common.black">
+    <EECard>
       <Stack>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Stack sx={{ mt: 2, mb: 2 }} spacing={1}>
-            <Stack>
-              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                <Box sx={{ flexGrow: 1 }}>
-                  <Controller
-                    name="krw"
-                    control={control}
-                    render={({ field, fieldState: { error } }) => (
-                      <TextField
-                        {...field}
-                        label="결제 금액"
-                        value={price}
-                        onChange={handleChangePrice}
-                        error={Boolean(error)}
-                        helperText={error?.message}
-                        inputProps={{ style: { color: theme.palette.grey[900], width: '100%' } }}
-                      />
-                    )}
+          <Box sx={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+            <Box>
+              <Typography sx={{ fontColor: '#999999', fontSize: '12px' }}>
+                WALLET ADDRESS
+              </Typography>
+              <Typography>{account}</Typography>
+            </Box>
+            <Box>
+              <Typography sx={{ fontColor: '#999999', fontSize: '12px' }}>
+                PURCHASE QUANTITY
+              </Typography>
+              <FormControl fullWidth variant="standard">
+                <Input
+                  id="standard-adornment-amount"
+                  value={amount}
+                  onChange={handleChangeAmount}
+                  endAdornment={<InputAdornment position="end">EDC</InputAdornment>}
+                  inputProps={{ style: { color: theme.palette.grey[900], width: '100%' } }}
+                />
+              </FormControl>
+            </Box>
+            <Box>
+              <Typography sx={{ fontColor: '#999999', fontSize: '12px' }}>
+                PAYMENT AMOUNT
+              </Typography>
+              <FormControl fullWidth variant="standard">
+                <Input
+                  id="standard-adornment-amount"
+                  value={price}
+                  onChange={handleChangePrice}
+                  inputProps={{ style: { color: theme.palette.grey[900], width: '100%' } }}
+                  endAdornment={<InputAdornment position="end">₩</InputAdornment>}
+                />
+              </FormControl>
+            </Box>
+            <Box>
+              <Typography sx={{ fontColor: '#999999', fontSize: '12px' }}>
+                PAYMENT METHOD
+              </Typography>
+              <FormControl>
+                <RadioGroup
+                  row
+                  aria-labelledby="demo-row-radio-buttons-group-label"
+                  name="row-radio-buttons-group"
+                >
+                  <FormControlLabel
+                    checked={method === 'credit'}
+                    onChange={() => setMethod('credit')}
+                    value="credit"
+                    control={<Radio />}
+                    label="CREDIT CARD"
                   />
-                </Box>
-
-                <Typography>KRW</Typography>
-              </Box>
-            </Stack>
-            <Stack>
-              <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
-                <Box sx={{ flexGrow: 1 }}>
-                  <Controller
-                    name="edc"
-                    control={control}
-                    render={({ field, fieldState: { error } }) => (
-                      <TextField
-                        {...field}
-                        label="포인트 구매 수량"
-                        value={amount}
-                        onChange={handleChangeAmount}
-                        error={Boolean(error)}
-                        helperText={error?.message}
-                        inputProps={{ style: { color: theme.palette.grey[900], width: '100%' } }}
-                      />
-                    )}
+                  <FormControlLabel
+                    checked={method === 'paypal'}
+                    onChange={() => setMethod('paypal')}
+                    value="paypal"
+                    control={<Radio />}
+                    label="PAYPAL"
                   />
-                </Box>
+                </RadioGroup>
+              </FormControl>
+            </Box>
+            {method === 'paypal' && (
+              <PayPalButtons
+                fundingSource={'paypal'}
+                createOrder={createOrder}
+                onApprove={onApprove}
+                forceReRender={[price]}
+                disabled={enablePaypal || !amount}
+              />
+            )}
+            {method === 'credit' && (
+              <Link href={{ pathname: '/kspay', query: { price } }}>
+                <LoadingButton
+                  fullWidth
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                  loading={isSubmitting}
+                  disabled={!amount}
+                  // onClick={() => {
+                  //   window.location.href = '/kspay';
+                  // }}
+                >
+                  결제하기
+                </LoadingButton>
+              </Link>
+            )}
+          </Box>
+          {/*<Stack sx={{ mt: 2, mb: 2 }} spacing={1}>*/}
+          {/*  <Stack>*/}
+          {/*    <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>*/}
+          {/*      <Box sx={{ flexGrow: 1 }}>*/}
+          {/*        <Controller*/}
+          {/*          name="edc"*/}
+          {/*          control={control}*/}
+          {/*          render={({ field, fieldState: { error } }) => (*/}
+          {/*            <TextField*/}
+          {/*              {...field}*/}
+          {/*              label="포인트 구매 수량"*/}
+          {/*              value={amount}*/}
+          {/*              onChange={handleChangeAmount}*/}
+          {/*              error={Boolean(error)}*/}
+          {/*              helperText={error?.message}*/}
+          {/*              inputProps={{ style: { color: theme.palette.grey[900], width: '100%' } }}*/}
+          {/*            />*/}
+          {/*          )}*/}
+          {/*        />*/}
+          {/*      </Box>*/}
 
-                <Typography>EDC</Typography>
-              </Box>
-            </Stack>
+          {/*      <Typography>EDC</Typography>*/}
+          {/*    </Box>*/}
+          {/*  </Stack>*/}
+          {/*  <Stack>*/}
+          {/*    <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>*/}
+          {/*      <Box sx={{ flexGrow: 1 }}>*/}
+          {/*        <Controller*/}
+          {/*          name="krw"*/}
+          {/*          control={control}*/}
+          {/*          render={({ field, fieldState: { error } }) => (*/}
+          {/*            <TextField*/}
+          {/*              {...field}*/}
+          {/*              label="결제 금액"*/}
+          {/*              value={price}*/}
+          {/*              onChange={handleChangePrice}*/}
+          {/*              error={Boolean(error)}*/}
+          {/*              helperText={error?.message}*/}
+          {/*              inputProps={{ style: { color: theme.palette.grey[900], width: '100%' } }}*/}
+          {/*            />*/}
+          {/*          )}*/}
+          {/*        />*/}
+          {/*      </Box>*/}
 
-            <Divider sx={{ md: 3, pt: 3 }} />
+          {/*      <Typography>KRW</Typography>*/}
+          {/*    </Box>*/}
+          {/*  </Stack>*/}
 
-            <PayPalButtons
-              fundingSource={'paypal'}
-              createOrder={createOrder}
-              onApprove={onApprove}
-              forceReRender={[price]}
-              disabled={enablePaypal}
-            />
+          {/*  <Divider sx={{ md: 3, pt: 3 }} />*/}
 
-            <Link href={{ pathname: '/kspay', query: { price } }}>
-              <LoadingButton
-                fullWidth
-                size="large"
-                type="submit"
-                variant="contained"
-                loading={isSubmitting}
-                // onClick={() => {
-                //   window.location.href = '/kspay';
-                // }}
-              >
-                결제하기
-              </LoadingButton>
-            </Link>
-          </Stack>
+          {/*  <PayPalButtons*/}
+          {/*    fundingSource={'paypal'}*/}
+          {/*    createOrder={createOrder}*/}
+          {/*    onApprove={onApprove}*/}
+          {/*    forceReRender={[price]}*/}
+          {/*    disabled={enablePaypal}*/}
+          {/*  />*/}
+
+          {/*  <Link href={{ pathname: '/kspay', query: { price } }}>*/}
+          {/*    <LoadingButton*/}
+          {/*      fullWidth*/}
+          {/*      size="large"*/}
+          {/*      type="submit"*/}
+          {/*      variant="contained"*/}
+          {/*      loading={isSubmitting}*/}
+          {/*      // onClick={() => {*/}
+          {/*      //   window.location.href = '/kspay';*/}
+          {/*      // }}*/}
+          {/*    >*/}
+          {/*      결제하기*/}
+          {/*    </LoadingButton>*/}
+          {/*  </Link>*/}
+          {/*</Stack>*/}
         </form>
       </Stack>
     </EECard>
