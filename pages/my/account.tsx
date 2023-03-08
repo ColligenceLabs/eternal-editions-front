@@ -237,9 +237,12 @@ Type: Address verification`;
                     mt: '16px',
                   }}
                 >
-                  <Image src="/assets/icons/profile-logo.png" sx={{ width: 96 }} />
+                  <Image
+                    src={user.profile_image ? user.profile_image : '/assets/icons/profile-logo.png'}
+                    sx={{ width: 96 }}
+                  />
                   <Typography sx={{ fontSize: '16px', fontWeight: '700', mt: '16px' }}>
-                    Polygon Main Chain
+                    {user.name}
                   </Typography>
                 </Box>
               </Box>
