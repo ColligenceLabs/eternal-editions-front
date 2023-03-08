@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef } from 'react';
+import React, { ChangeEvent } from 'react';
 import { useState, useEffect, ReactElement } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -87,10 +87,6 @@ export default function KSPay() {
     // @ts-ignore
     _pay(_frm[0]);
   };
-
-  useEffect(() => {
-    console.log(orderInfo);
-  }, [orderInfo]);
 
   return (
     <Page title="Support">
