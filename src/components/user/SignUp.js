@@ -221,7 +221,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
           )}
         </Stack>
 
-        <Stack spacing={0}>
+        <Stack spacing={1}>
           <Stack>
             <MetaMaskButton
               variant="contained"
