@@ -34,6 +34,7 @@ import profileLogo from '../../public/assets/icons/profile-logo.png';
 import { styled } from '@mui/material/styles';
 import palette from '../theme/palette';
 import maticIcon from '../../public/assets/img/matic-token-icon.png';
+import getBalances from '../utils/getBalances';
 
 // ----------------------------------------------------------------------
 WalletPopover.propTypes = {};
@@ -57,6 +58,8 @@ export default function WalletPopover({}) {
   const [accountShot, setAccountShot] = useState('');
   const [type, setType] = useState('');
   const router = useRouter();
+
+  const balance = getBalances(account, library);
 
   useEffect(() => {
     if (account) {
@@ -206,7 +209,9 @@ export default function WalletPopover({}) {
                 <Box sx={{ width: '20px' }}>
                   <Image src="/assets/img/matic-token-icon.png" sx={{ width: '100%' }} />
                 </Box>
-                <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>1234 MATIC</Typography>
+                <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
+                  {balance} MATIC
+                </Typography>
               </Box>
               <Box
                 sx={{
