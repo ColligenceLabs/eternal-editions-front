@@ -86,6 +86,7 @@ const modalStyle = {
 
 export default function TicketDetailPage() {
   const router = useRouter();
+  const { user } = useSelector((state: any) => state.webUser);
   const { account, library, chainId } = useActiveWeb3React();
   const { slug } = router.query;
 
@@ -340,7 +341,7 @@ export default function TicketDetailPage() {
 
           const data = {
             mysterybox_id: ticketInfo?.id,
-            buyer: '',
+            buyer: user.uid,
             buyer_address: account,
             isSent: true,
             txHash: result?.txHash,
@@ -349,6 +350,7 @@ export default function TicketDetailPage() {
           };
 
           const res = await registerBuy(data);
+          console.log(res);
           if (res.data.status === SUCCESS) {
             // setOpenSnackbar({
             //   open: true,
