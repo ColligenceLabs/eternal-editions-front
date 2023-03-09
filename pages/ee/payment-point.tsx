@@ -1,20 +1,10 @@
-import { ChangeEvent, ReactElement, useState } from 'react';
-// utils
-// @types
-// _data
-// layouts
+import { ReactElement } from 'react';
 import Layout from '../../src/layouts';
-// components
 import { Page } from '../../src/components';
-import { Box, Button, Container, Stack, Typography } from '@mui/material';
+import { Container, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../../src/config';
-import { RegisterForm } from '../../src/sections/auth';
-import NextLink from 'next/link';
-import Routes from '../../src/routes';
 import PaymentPoint from '../../src/sections/@my/PaymentPoint';
-import EECard from '../../src/components/EECard';
-// sections
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({

@@ -1,4 +1,4 @@
-import React, { ChangeEvent, useRef } from 'react';
+import React, { ChangeEvent } from 'react';
 import { useState, useEffect, ReactElement } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -88,10 +88,6 @@ export default function KSPay() {
     _pay(_frm[0]);
   };
 
-  useEffect(() => {
-    console.log(orderInfo);
-  }, [orderInfo]);
-
   return (
     <Page title="Support">
       <RootStyle>
@@ -99,7 +95,7 @@ export default function KSPay() {
           <EECard>
             <Stack sx={{ padding: '10px' }}>
               <form name="KSPayWeb" method="post">
-                <Typography>KSNET WebHost Sample V1.4[PHP]</Typography>
+                {/*<Typography>KSNET WebHost Sample V1.4[PHP]</Typography>*/}
                 <SectionWrapper>
                   <Typography>고객에게보여지지 않아야 하는 설정값 항목</Typography>
                   <Rows>
