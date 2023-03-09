@@ -61,8 +61,6 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   };
 
   const handleAbcConfirmClick = async () => {
-    console.log('click confirm.');
-    console.log(user);
     // // optToken : 입력 받은 OTP 값을 입력 받은 후 아래 코드 실행
     const twofaResetCode = await accountController.verifyTwoFactorGen({ token: otpToken });
     // console.log('=== 가입 완료 단계 ===>', qrSecret, twofaResetCode);

@@ -127,13 +127,14 @@ export default function WalletPopover({}) {
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
             <Box sx={{ display: 'flex', gap: '12px' }}>
               <Box>
-                <Image src="/assets/icons/profile-logo.png" sx={{ width: 48 }} />
+                <Image
+                  src={user.profile_image ? user.profile_image : '/assets/icons/profile-logo.png'}
+                  sx={{ width: 48 }}
+                />
               </Box>
               <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                <Typography sx={{ fontSize: '16px', fontWeight: '500' }}>
-                  POLYGON MAIN CHAIN
-                </Typography>
-                <Typography>{`${account?.substring(0, 10)}...`}</Typography>
+                <Typography sx={{ fontSize: '16px', fontWeight: '500' }}>{user.name}</Typography>
+                <Typography>{`${account?.substring(0, 20)}...`}</Typography>
               </Box>
             </Box>
             <Box sx={{ display: 'flex', gap: '0.5rem' }}>

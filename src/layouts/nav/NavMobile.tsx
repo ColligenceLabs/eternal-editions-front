@@ -98,19 +98,19 @@ export default function NavMobile({ navConfig, sx }: NavProps) {
             ))}
           </List>
 
-          <Stack spacing={2} sx={{ p: 2.5, pb: 5 }}>
-            <NextLink href={Routes.loginIllustration} passHref>
-              <Button fullWidth variant="outlined" color="inherit">
-                Login
-              </Button>
-            </NextLink>
+          {/*<Stack spacing={2} sx={{ p: 2.5, pb: 5 }}>*/}
+          {/*  <NextLink href={Routes.loginIllustration} passHref>*/}
+          {/*    <Button fullWidth variant="outlined" color="inherit">*/}
+          {/*      Login*/}
+          {/*    </Button>*/}
+          {/*  </NextLink>*/}
 
-            <NextLink href={Routes.registerIllustration} passHref>
-              <Button fullWidth variant="contained" color="inherit">
-                Join Us
-              </Button>
-            </NextLink>
-          </Stack>
+          {/*  <NextLink href={Routes.registerIllustration} passHref>*/}
+          {/*    <Button fullWidth variant="contained" color="inherit">*/}
+          {/*      Join Us*/}
+          {/*    </Button>*/}
+          {/*  </NextLink>*/}
+          {/*</Stack>*/}
         </Scrollbar>
       </Drawer>
     </>
