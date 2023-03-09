@@ -14,7 +14,7 @@ export const getTicketInfoService = (id: string) => {
 };
 
 export const registerBuy = async (data: any) => {
-  return await customAxios.post(`api/service/drops`, data);
+  return await apiAuthAxios.post(`api/service/drops`, data);
 };
 
 export const getBuyersService = async (id: any) => {
