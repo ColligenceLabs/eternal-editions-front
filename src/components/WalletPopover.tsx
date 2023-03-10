@@ -211,7 +211,7 @@ export default function WalletPopover({}) {
                   <Image src="/assets/img/matic-token-icon.png" sx={{ width: '100%' }} />
                 </Box>
                 <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
-                  {balance} MATIC
+                  {balance.toFixed(5)} MATIC
                 </Typography>
               </Box>
               <Box
