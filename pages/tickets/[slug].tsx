@@ -567,12 +567,12 @@ export default function TicketDetailPage() {
 
                   <Divider />
 
-                  <Stack>구매한 유저들</Stack>
-                  {buyers &&
-                    buyers.map((buyer: BuyerTypes) => (
-                      <Box key={buyer.id}>{buyer.buyerAddress}</Box>
-                    ))}
-                  <Divider />
+                  {/*<Stack>구매한 유저들</Stack>*/}
+                  {/*{buyers &&*/}
+                  {/*  buyers.map((buyer: BuyerTypes) => (*/}
+                  {/*    <Box key={buyer.id}>{buyer.buyerAddress}</Box>*/}
+                  {/*  ))}*/}
+                  {/*<Divider />*/}
                   <Stack>
                     <Typography variant={'subtitle2'} sx={{ mb: 1 }}>
                       Description
