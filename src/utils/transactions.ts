@@ -1410,3 +1410,26 @@ export async function buyItem(
     return result;
   }
 }
+
+export async function getTokenIds(
+  address: string,
+  amount: number,
+  account: string | undefined | null,
+  chainId: number
+): Promise<number[]> {
+  const provider = ethers.getDefaultProvider(getSelectedNodeUrl(chainId));
+  new ethers.Contract(address, mysteryBoxAbi, provider);
+  const contract = new ethers.Contract(address, collectionAbi, provider);
+
+  let tokenIds: number[] = [];
+  try {
+    for (let i = 0; i < amount; i++) {
+      const rlt = await contract.tokenOfOwnerByIndex(account, i);
+      tokenIds[i] = rlt.toNumber();
+    }
+  } catch (e) {
+    console.log('#####', address);
+    console.log('getTokenIds Error : ', e);
+  }
+  return tokenIds;
+}
