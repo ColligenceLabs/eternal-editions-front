@@ -23,6 +23,7 @@ export function calculateGasMargin(value: BigNumber) {
 interface txResult {
   status: number;
   txHash: string;
+  tokenId: number;
 }
 
 interface Overrides {
@@ -1297,6 +1298,10 @@ export async function getItemRemainsNoSigner(
   return remains;
 }
 
+function hexToAddress(hexVal) {
+  return '0x' + hexVal.substr(-40);
+}
+
 export async function buyItem(
   address: string,
   index: number,
@@ -1346,7 +1351,7 @@ export async function buyItem(
 
   // registerItems 요청
   let receipt;
-  const result: txResult = { status: 0, txHash: '' };
+  const result: txResult = { status: 0, txHash: '', tokenId: 0 };
   try {
     let overrides: Overrides = {
       from: account,
@@ -1393,6 +1398,12 @@ export async function buyItem(
       // receipt 대기
       try {
         receipt = await tx.wait();
+        // TODO: Get tokenId in the receipt and save into DB drops ?
+        const events = receipt.events;
+        const recipient = hexToAddress(events[1].topics[2]);
+        const tokenIdHex = ethers.utils.defaultAbiCoder.decode(['uint256'], events[1].topics[3]);
+        result.tokenId = parseInt(tokenIdHex.toString());
+        console.log('== buyItem event ==>', recipient, result.tokenId);
       } catch (e) {
         result.status = FAILURE;
       }

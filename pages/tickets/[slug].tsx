@@ -347,6 +347,7 @@ export default function TicketDetailPage() {
             txHash: result?.txHash,
             price: ticketInfo?.price,
             itemId: selectedTicketItem?.id,
+            tokenId: result.tokenId,
           };
 
           const res = await registerBuy(data);
