@@ -32,6 +32,7 @@ import { useWeb3React } from '@web3-react/core';
 import env from '../../src/env';
 import { setupNetwork } from '../../src/utils/network';
 import { injected, walletconnect } from '../../src/hooks/connectors';
+import getBalances from '../../src/utils/getBalances';
 // sections
 
 // ----------------------------------------------------------------------
@@ -68,6 +69,7 @@ export default function MyAccountPage({}: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [openSignUp, setOpenSignUp] = useState(false);
   console.log(user);
+  const balance = getBalances(account, library);
 
   const handleSignUpClose = () => {
     setOpenSignUp(false);
@@ -290,7 +292,7 @@ Type: Address verification`;
                         <Image src="/assets/img/matic-token-icon.png" sx={{ width: '100%' }} />
                       </Box>
                       <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
-                        1234 MATIC
+                        {balance.toFixed(5)} MATIC
                       </Typography>
                     </Box>
                     <Box
