@@ -127,6 +127,7 @@ export default function PaymentPoint() {
 
   const handleChangeAmount = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+    if (value < 0) return;
     if (value) {
       if (method == 'credit') {
         setPrice((value * 10 * exchange).toString());
@@ -186,6 +187,7 @@ export default function PaymentPoint() {
               <FormControl fullWidth variant="standard">
                 <Input
                   id="standard-adornment-amount"
+                  type="number"
                   value={amount}
                   onChange={handleChangeAmount}
                   endAdornment={<InputAdornment position="end">EDC</InputAdornment>}
