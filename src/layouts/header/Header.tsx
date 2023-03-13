@@ -263,6 +263,10 @@ export default function Header({ transparent }: Props) {
 
   const isScrolling = useOffSetTop(HEADER_DESKTOP_HEIGHT);
 
+  useEffect(() => {
+    console.log(account);
+  }, [account]);
+
   return (
     <AppBar sx={{ boxShadow: 0, bgcolor: 'transparent' }}>
       <ToolbarStyle disableGutters transparent={transparent} scrolling={isScrolling}>
@@ -302,61 +306,7 @@ export default function Header({ transparent }: Props) {
 
             {/*<Divider orientation="vertical" sx={{height: 24}}/>*/}
 
-            {isDesktop && (
-              <Stack direction="row" spacing={1}>
-                {/*<NextLink href={Routes.registerIllustration} prefetch={false} passHref>*/}
-                {/*<Button*/}
-                {/*  color="inherit"*/}
-                {/*  variant="outlined"*/}
-                {/*  sx={{*/}
-                {/*    ...(transparent && {*/}
-                {/*      color: 'common.white',*/}
-                {/*    }),*/}
-                {/*    ...(isScrolling && isLight && { color: 'text.primary' }),*/}
-                {/*  }}*/}
-                {/*>*/}
-                {/*  Join Us*/}
-                {/*</Button>*/}
-                {/*</NextLink>*/}
-
-                {/*<Button variant="contained" href={'/'} target="_blank" rel="noopener">*/}
-                {/*    Connect Wallet*/}
-                {/*</Button>*/}
-
-                {/* 지갑 연동 */}
-
-                {account ? (
-                  <>
-                    <WalletPopover />
-                  </>
-                ) : (
-                  <>
-                    <Button
-                      variant="contained"
-                      onClick={() => handleJoinOpen()}
-                      sx={{
-                        width: {
-                          md: 120,
-                        },
-                      }}
-                    >
-                      SIGN UP
-                    </Button>
-                  </>
-                )}
-                {/*<Button*/}
-                {/*  variant="contained"*/}
-                {/*  onClick={handleAbcOpen}*/}
-                {/*  sx={{*/}
-                {/*    width: {*/}
-                {/*      md: 120,*/}
-                {/*    },*/}
-                {/*  }}*/}
-                {/*>*/}
-                {/*  ABC Test*/}
-                {/*</Button>*/}
-              </Stack>
-            )}
+            {isDesktop && <></>}
           </Stack>
 
           {!isDesktop && (
@@ -368,6 +318,61 @@ export default function Header({ transparent }: Props) {
               }}
             />
           )}
+          <Stack direction="row" spacing={1}>
+            {/*<NextLink href={Routes.registerIllustration} prefetch={false} passHref>*/}
+            {/*<Button*/}
+            {/*  color="inherit"*/}
+            {/*  variant="outlined"*/}
+            {/*  sx={{*/}
+            {/*    ...(transparent && {*/}
+            {/*      color: 'common.white',*/}
+            {/*    }),*/}
+            {/*    ...(isScrolling && isLight && { color: 'text.primary' }),*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*  Join Us*/}
+            {/*</Button>*/}
+            {/*</NextLink>*/}
+
+            {/*<Button variant="contained" href={'/'} target="_blank" rel="noopener">*/}
+            {/*    Connect Wallet*/}
+            {/*</Button>*/}
+
+            {/* 지갑 연동 */}
+
+            {account ? (
+              <>
+                <WalletPopover />
+              </>
+            ) : (
+              <>
+                {isDesktop && (
+                  <Button
+                    variant="contained"
+                    onClick={() => handleJoinOpen()}
+                    sx={{
+                      width: {
+                        md: 120,
+                      },
+                    }}
+                  >
+                    SIGN UP
+                  </Button>
+                )}
+              </>
+            )}
+            {/*<Button*/}
+            {/*  variant="contained"*/}
+            {/*  onClick={handleAbcOpen}*/}
+            {/*  sx={{*/}
+            {/*    width: {*/}
+            {/*      md: 120,*/}
+            {/*    },*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*  ABC Test*/}
+            {/*</Button>*/}
+          </Stack>
         </Container>
       </ToolbarStyle>
 
