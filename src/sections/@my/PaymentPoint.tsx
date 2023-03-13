@@ -24,7 +24,7 @@ import { useTheme } from '@mui/material/styles';
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 // components
-import { getUser, savePoint } from '../../services/services';
+import {getExchange, getUser, savePoint} from '../../services/services';
 import { SUCCESS } from '../../config';
 import { setWebUser } from '../../store/slices/webUser';
 import { useDispatch } from 'react-redux';
@@ -48,6 +48,7 @@ export default function PaymentPoint() {
   const { account } = useAccount();
   const [price, setPrice] = useState('');
   const [amount, setAmount] = useState('');
+  const [exchange, setExchange] = useState(0);
   const [enablePaypal, setEnablePaypal] = useState(true);
   const [method, setMethod] = useState('credit');
 
@@ -55,6 +56,17 @@ export default function PaymentPoint() {
     if (price !== '') setEnablePaypal(false);
     else setEnablePaypal(true);
   }, [price]);
+
+  useEffect(() => {
+    const getUSDExchange = async () => {
+      const tmp = await getExchange();
+      console.log('-----', tmp);
+      setExchange(tmp.data);
+    }
+    if (exchange === 0)
+      getUSDExchange();
+  });
+
 
   // creates a paypal order
   const createOrder = (data: any, actions: any) => {
@@ -107,7 +119,7 @@ export default function PaymentPoint() {
   const handleChangePrice = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     if (value) {
-      setPrice(value);
+      setPrice((value * 10 * exchange).toString());
       setAmount(value);
     } else {
       setPrice('');
@@ -118,7 +130,7 @@ export default function PaymentPoint() {
   const handleChangeAmount = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
     if (value) {
-      setPrice(value);
+      setPrice((value * 10 * exchange).toString());
       setAmount(value);
     } else {
       setPrice('');
