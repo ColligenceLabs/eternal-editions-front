@@ -68,7 +68,6 @@ export default function MyAccountPage({}: Props) {
   const [doAddWallet, setDoAddWallet] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [openSignUp, setOpenSignUp] = useState(false);
-  console.log(user);
   const balance = getBalances(account, library);
 
   const handleSignUpClose = () => {
@@ -120,7 +119,6 @@ export default function MyAccountPage({}: Props) {
 
   useEffect(() => {
     const saveAddress = async () => {
-      console.log('asdflaiejlwijeflij');
       setIsLoading(true);
       try {
         const target_copy = Object.assign({}, library.provider);
@@ -149,7 +147,6 @@ Type: Address verification`;
         // const data = { message, signature, isKaikas, isAbc };
         const data = { message, signature, isAbc };
         const res = await updateAddress(data);
-        console.log(res);
         dispatch(setWebUser(res.data));
       } catch (error: any) {
         console.log(error.message);
