@@ -436,7 +436,7 @@ export default function TicketDetailPage() {
 
   useEffect(() => {
     setDollarPrice((ticketInfo?.price ?? 0) * maticPrice);
-  }, [ticketInfo]);
+  }, [ticketInfo, maticPrice]);
 
   return (
     <Page

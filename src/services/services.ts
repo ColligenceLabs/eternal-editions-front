@@ -66,7 +66,9 @@ export const savePoint = async (data: any) => {
 };
 
 export const getMyTickets = async (uid: string) => {
-  return await apiAuthAxios.get(`/api/service/drops?buyer=${uid}&type=item&sortBy=createdAt:ASC`);
+  return await apiAuthAxios.get(
+    `/api/service/drops?buyer=${uid}&type=item&mode=each&sortBy=createdAt:ASC`
+  );
 };
 
 export const getTransactionsByUID = async (uid: string, page: number) => {

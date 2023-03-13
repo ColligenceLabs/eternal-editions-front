@@ -19,8 +19,8 @@ export default function TicketItem({ ticket }: any) {
   const [maticPrice, setMaticPrice] = useState(0);
   const [klayPrice, setKlayPrice] = useState(0);
   const [ticketInfo, setTicketInfo] = useState({
-    company: '',
-    companyImage: null,
+    // company: '',
+    // companyImage: null,
     createdAt: null,
     itemTitle: '',
     itemImage: '',
@@ -29,6 +29,7 @@ export default function TicketItem({ ticket }: any) {
     ticketNumber: '',
     boxContractAddress: '',
     no: '',
+    tokenId: null,
   });
 
   const getCoinPrice = () => {
@@ -54,19 +55,22 @@ export default function TicketItem({ ticket }: any) {
   useEffect(() => {
     if (ticket) {
       const location =
-        ticket.properties &&
-        ticket.properties.find((item: any) => (item.type.toLowerCase() === 'location' ? item : ''));
+        ticket.mysteryboxItem.properties &&
+        ticket.mysteryboxItem.properties.find((item: any) =>
+          item.type.toLowerCase() === 'location' ? item : ''
+        );
       setTicketInfo({
-        company: ticket.companyname.en,
-        companyImage: ticket.companyimage,
+        // company: ticket.companyname.en,
+        // companyImage: ticket.companyimage,
         createdAt: ticket.createdAt,
-        itemTitle: ticket.name,
-        itemImage: ticket.itemImage,
-        price: ticket.price,
+        itemTitle: ticket.mysteryboxItem.name,
+        itemImage: ticket.mysteryboxItem.itemImage,
+        price: ticket.mysteryboxItem.price,
         location: location?.name ? location.name : '',
-        ticketNumber: ticket.cnt,
-        boxContractAddress: ticket.boxContractAddress,
+        ticketNumber: '1',
+        boxContractAddress: ticket.mysteryboxInfo.boxContractAddress,
         no: ticket.no,
+        tokenId: ticket.tokenId,
       });
     }
   }, [ticket]);
@@ -109,7 +113,7 @@ export default function TicketItem({ ticket }: any) {
           <Stack sx={{ mt: 3 }} justifyContent="center" alignItems="center">
             {/*<img src={'/assets/example/qr.png'} style={{ maxWidth: '120px' }} />*/}
             <QRCode
-              value={`https://entrace2023.eternaleditions.io/entrace-confirm?contractAddress=${ticketInfo.boxContractAddress}&tokenId=${ticketInfo.no}
+              value={`https://entrace2023.eternaleditions.io/entrace-confirm?contractAddress=${ticketInfo.boxContractAddress}&tokenId=${ticketInfo.tokenId}
 `}
               size={120}
             />
@@ -132,16 +136,16 @@ export default function TicketItem({ ticket }: any) {
         }}
       >
         <Stack spacing={1} sx={{ position: 'absolute', zIndex: 999, left: 20, top: 20 }}>
-          <Stack
-            direction="row"
-            spacing={1}
-            alignItems="center"
-            sx={{ opacity: 0.72, typography: 'caption' }}
-          >
-            <EEAvatar src={ticketInfo.companyImage!} sx={{ mr: 0, width: 24, height: 24 }} />
+          {/*<Stack*/}
+          {/*  direction="row"*/}
+          {/*  spacing={1}*/}
+          {/*  alignItems="center"*/}
+          {/*  sx={{ opacity: 0.72, typography: 'caption' }}*/}
+          {/*>*/}
+          {/*  <EEAvatar src={ticketInfo.companyImage!} sx={{ mr: 0, width: 24, height: 24 }} />*/}
 
-            <Typography>{ticketInfo.company}</Typography>
-          </Stack>
+          {/*  <Typography>{ticketInfo.company}</Typography>*/}
+          {/*</Stack>*/}
 
           <TextMaxLine variant="h3" sx={{ width: '80%' }}>
             {ticketInfo.itemTitle}
