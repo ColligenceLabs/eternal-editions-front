@@ -255,7 +255,8 @@ export default function TicketDetailPage() {
           buyer_address: loginBy === 'sns' ? abcUser.accounts[0].ethAddress : account,
           isSent: false,
           txHash: '',
-          price: ticketInfo?.price,
+          // price: ticketInfo?.price,
+          price: ((ticketInfo?.price ?? 0) * maticPrice * 10).toFixed(4),
           itemId: selectedTicketItem?.id,
           usePoint: true,
         };
@@ -644,7 +645,7 @@ export default function TicketDetailPage() {
                   ) : (
                     <LineItemByModal
                       icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
-                      label={`${ticketInfo?.price} EDC`}
+                      label={`${((ticketInfo?.price ?? 0) * maticPrice * 10).toFixed(4)} EDC`}
                       value={'PAY WITH EDC'}
                       isBuying={isBuyingWithPoint}
                     />
