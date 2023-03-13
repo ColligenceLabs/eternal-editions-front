@@ -88,8 +88,8 @@ export default function NFTTransactionPoint() {
               <TableHead sx={{ background: 'transparent' }}>
                 <TableRow sx={{ background: 'transparent', boxShadow: 'none' }}>
                   <HeaderTableCell>Date</HeaderTableCell>
-                  <HeaderTableCell align="right">User Id</HeaderTableCell>
-                  <HeaderTableCell align="right">Order Id</HeaderTableCell>
+                  {/*<HeaderTableCell align="right">User Id</HeaderTableCell>*/}
+                  <HeaderTableCell align="right">Order</HeaderTableCell>
                   <HeaderTableCell align="right">Price</HeaderTableCell>
                   <HeaderTableCell align="right">Type</HeaderTableCell>
 
@@ -101,7 +101,7 @@ export default function NFTTransactionPoint() {
                   transactions.map((row: TransactionsType, index) => (
                     <BodyTableRow key={index}>
                       <BodyTableCell>{new Date(row.createdAt).toLocaleString()}</BodyTableCell>
-                      <BodyTableCell align="right">{row.user_id}</BodyTableCell>
+                      {/*<BodyTableCell align="right">{row.user_id}</BodyTableCell>*/}
                       <BodyTableCell align="right">{row.order_id}</BodyTableCell>
                       <BodyTableCell align="right">{row.point}</BodyTableCell>
                       <BodyTableCell align="right">{row.type}</BodyTableCell>
