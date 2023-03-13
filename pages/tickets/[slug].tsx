@@ -96,6 +96,7 @@ export default function TicketDetailPage() {
   const [selectedItem, setSelectedItem] = React.useState('');
   const [klayPrice, setKlayPrice] = useState(0);
   const [maticPrice, setMaticPrice] = useState(0);
+  const [dollarPrice, setDollarPrice] = useState(0);
   const [isBuyingWithMatic, setIsBuyingWithMatic] = useState(false);
   const [isBuyingWithPoint, setIsBuyingWithPoint] = useState(false);
   const [open, setOpen] = React.useState(false);
@@ -433,6 +434,10 @@ export default function TicketDetailPage() {
     fetchBuyersList();
   }, [slug]);
 
+  useEffect(() => {
+    setDollarPrice((ticketInfo?.price ?? 0) * maticPrice);
+  }, [ticketInfo]);
+
   return (
     <Page
       title={`${slug} - Ticket`}
@@ -475,7 +480,7 @@ export default function TicketDetailPage() {
                         sx={{ opacity: 0.72, typography: 'caption' }}
                       >
                         <EEAvatar
-                          account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
+                          // account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
                           image={ticketInfo?.featured?.company.image}
                           nickname={ticketInfo?.featured?.company.name.en}
                           sx={{ mr: 0, width: 24, height: 24 }}
@@ -508,15 +513,8 @@ export default function TicketDetailPage() {
                     <LineItem
                       icon={<></>}
                       label="Reserve Price"
-                      value={`$${((ticketInfo?.price ?? 0) * maticPrice).toFixed(4)} (Ξ ${
-                        ticketInfo?.price
-                      })`}
+                      value={`$${dollarPrice.toFixed(4)} (Ξ ${ticketInfo?.price})`}
                     />
-                    {/*<LineItem*/}
-                    {/*  icon={<></>}*/}
-                    {/*  label="Location"*/}
-                    {/*  value={'HQ Beercade Nashville Nashville, TN'}*/}
-                    {/*/>*/}
                     {ticketInfo &&
                       ticketInfo.mysteryboxItems[0].properties &&
                       ticketInfo.mysteryboxItems[0].properties.map((item: any) => (
@@ -541,12 +539,6 @@ export default function TicketDetailPage() {
                         inputProps={{ 'aria-label': 'optione1' }}
                         sx={{ color: 'common.black' }}
                       >
-                        {/*<MenuItem value={0}>*/}
-                        {/*  <em>None</em>*/}
-                        {/*</MenuItem>*/}
-                        {/*<MenuItem value={1}>item1</MenuItem>*/}
-                        {/*<MenuItem value={2}>item2</MenuItem>*/}
-                        {/*<MenuItem value={3}>item3</MenuItem>*/}
                         {ticketInfo?.mysteryboxItems.map((item) => (
                           <MenuItem key={item.id} value={item.id}>
                             {item.name}
@@ -645,7 +637,7 @@ export default function TicketDetailPage() {
                   ) : (
                     <LineItemByModal
                       icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
-                      label={`${((ticketInfo?.price ?? 0) * maticPrice * 10).toFixed(4)} EDC`}
+                      label={`${(dollarPrice * 10).toFixed(4)} EDC`}
                       value={'PAY WITH EDC'}
                       isBuying={isBuyingWithPoint}
                     />
