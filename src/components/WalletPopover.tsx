@@ -193,7 +193,7 @@ export default function WalletPopover({}) {
               <Box
                 sx={{
                   border: '1.5px solid',
-                  width: '200px',
+                  width: '150px',
                   textAlign: 'center',
                   borderRadius: '12px',
                   cursor: 'pointer',
@@ -217,7 +217,7 @@ export default function WalletPopover({}) {
               <Box
                 sx={{
                   border: '1.5px solid',
-                  width: '200px',
+                  width: '150px',
                   textAlign: 'center',
                   borderRadius: '12px',
                   cursor: 'pointer',

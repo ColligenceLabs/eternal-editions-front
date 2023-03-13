@@ -24,7 +24,7 @@ import { useTheme } from '@mui/material/styles';
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 // components
-import {getExchange, getUser, savePoint} from '../../services/services';
+import { getExchange, getUser, savePoint } from '../../services/services';
 import { SUCCESS } from '../../config';
 import { setWebUser } from '../../store/slices/webUser';
 import { useDispatch } from 'react-redux';
@@ -62,11 +62,9 @@ export default function PaymentPoint() {
       const tmp = await getExchange();
       console.log('-----', tmp);
       setExchange(tmp.data);
-    }
-    if (exchange === 0)
-      getUSDExchange();
+    };
+    if (exchange === 0) getUSDExchange();
   });
-
 
   // creates a paypal order
   const createOrder = (data: any, actions: any) => {
@@ -129,8 +127,14 @@ export default function PaymentPoint() {
 
   const handleChangeAmount = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
+    if (value < 0) return;
     if (value) {
-      setPrice((value * 10 * exchange).toString());
+      if (method == 'credit') {
+        setPrice((value * 10 * exchange).toString());
+      } else {
+        setPrice((value * 10).toString());
+      }
+
       setAmount(value);
     } else {
       setPrice('');
@@ -157,6 +161,14 @@ export default function PaymentPoint() {
     reset();
   };
 
+  useEffect(() => {
+    if (method == 'credit') {
+      setPrice((amount * 10 * exchange).toString());
+    } else {
+      setPrice((amount * 10).toString());
+    }
+  }, [method]);
+
   return (
     <EECard>
       <Stack>
@@ -175,6 +187,7 @@ export default function PaymentPoint() {
               <FormControl fullWidth variant="standard">
                 <Input
                   id="standard-adornment-amount"
+                  type="number"
                   value={amount}
                   onChange={handleChangeAmount}
                   endAdornment={<InputAdornment position="end">EDC</InputAdornment>}
@@ -190,9 +203,13 @@ export default function PaymentPoint() {
                 <Input
                   id="standard-adornment-amount"
                   value={price}
-                  onChange={handleChangePrice}
+                  // onChange={handleChangePrice}
                   inputProps={{ style: { color: theme.palette.grey[900], width: '100%' } }}
-                  endAdornment={<InputAdornment position="end">₩</InputAdornment>}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      {method === 'credit' ? '₩' : '$'}
+                    </InputAdornment>
+                  }
                 />
               </FormControl>
             </Box>
