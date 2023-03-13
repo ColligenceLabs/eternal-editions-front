@@ -16,23 +16,14 @@ import { TableCellProps } from '@mui/material/TableCell/TableCell';
 import { TableRowProps } from '@mui/material/TableRow/TableRow';
 import { useSelector } from 'react-redux';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { getTransactionsByUID } from '../../services/services';
+import { getEdcTransactionByUID, getTransactionsByUID } from '../../services/services';
 
 type TransactionsType = {
-  buyer: string;
-  buyerAddress: string;
+  user_id: string;
+  order_id: string;
+  point: number;
+  type: string;
   createdAt: Date;
-  mysteryboxInfo: {
-    title: {
-      ko: string;
-      en: string;
-    };
-  };
-  mysteryboxItem: {
-    name: string;
-  };
-  price: number;
-  txHash: string;
 };
 
 const HeaderTableCell = styled((props: TableCellProps) => <TableCell {...props} />)(
@@ -67,15 +58,15 @@ const BodyTableCell = styled((props: TableCellProps) => <TableCell {...props} />
 
 export default function NFTTransactionPoint() {
   const { user } = useSelector((state: any) => state.webUser);
-  console.log(user);
   const [transactions, setTransactions] = useState<TransactionsType[] | null>(null);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
   const fetchTransaction = async () => {
     // const res = await getTransactionsByUID('435eTNke', page);
-    const res = await getTransactionsByUID(user.uid, page);
+    const res = await getEdcTransactionByUID(user.uid, page);
     if (res.data.status === 1) {
-      setTransactions(res.data.data.drops);
+      console.log(res.data.data.histories);
+      setTransactions(res.data.data.histories);
       setTotalPage(res.data.data.headers.x_pages_count);
     }
   };
@@ -97,11 +88,11 @@ export default function NFTTransactionPoint() {
               <TableHead sx={{ background: 'transparent' }}>
                 <TableRow sx={{ background: 'transparent', boxShadow: 'none' }}>
                   <HeaderTableCell>Date</HeaderTableCell>
-                  <HeaderTableCell align="right">Type</HeaderTableCell>
-                  <HeaderTableCell align="right">NFT</HeaderTableCell>
+                  <HeaderTableCell align="right">User Id</HeaderTableCell>
+                  <HeaderTableCell align="right">Order Id</HeaderTableCell>
                   <HeaderTableCell align="right">Price</HeaderTableCell>
-                  <HeaderTableCell align="right">Chain</HeaderTableCell>
-                  <HeaderTableCell align="right">Confirmation</HeaderTableCell>
+                  <HeaderTableCell align="right">Type</HeaderTableCell>
+
                   {/*<HeaderTableCell align="right">-</HeaderTableCell>*/}
                 </TableRow>
               </TableHead>
@@ -110,14 +101,10 @@ export default function NFTTransactionPoint() {
                   transactions.map((row: TransactionsType, index) => (
                     <BodyTableRow key={index}>
                       <BodyTableCell>{new Date(row.createdAt).toLocaleString()}</BodyTableCell>
-                      <BodyTableCell align="right">NFT</BodyTableCell>
-                      <BodyTableCell align="right">{`${row.mysteryboxInfo.title.en} - ${row.mysteryboxItem.name}`}</BodyTableCell>
-                      <BodyTableCell align="right">{row.price}</BodyTableCell>
-                      <BodyTableCell align="right">Polygon</BodyTableCell>
-                      <BodyTableCell align="right">{`${row.txHash.substring(
-                        0,
-                        20
-                      )}...`}</BodyTableCell>
+                      <BodyTableCell align="right">{row.user_id}</BodyTableCell>
+                      <BodyTableCell align="right">{row.order_id}</BodyTableCell>
+                      <BodyTableCell align="right">{row.point}</BodyTableCell>
+                      <BodyTableCell align="right">{row.type}</BodyTableCell>
                       {/*<BodyTableCell align="right">-</BodyTableCell>*/}
                     </BodyTableRow>
                   ))}

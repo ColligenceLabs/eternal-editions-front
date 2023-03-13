@@ -72,9 +72,13 @@ export const getMyTickets = async (uid: string) => {
 };
 
 export const getTransactionsByUID = async (uid: string, page: number) => {
-  return await customAxios(`/api/service/drops/transactions?buyer=${uid}&page=${page}&limit=5`);
+  return await customAxios(`/api/service/drops/transactions?buyer=${uid}&page=${page}&limit=10`);
+};
+
+export const getEdcTransactionByUID = async (uid: string, page: number) => {
+  return await customAxios(`/api/point?buyer=${uid}&page=${page}&limit=10`);
 };
 
 export const getExchange = async () => {
   return await customAxios.get('/api/exchange');
-}
+};
