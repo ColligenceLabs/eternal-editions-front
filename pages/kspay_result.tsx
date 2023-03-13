@@ -73,7 +73,7 @@ export default function KSPayResult() {
     if (rslt[1] === 'O') {
       const result = await savePoint({
         order_id: rslt[9],
-        point: (parseInt(rslt[5]) / 1200).toFixed(2),
+        point: router.query['point'],
         type: 'BUY',
       });
       if (result.data.status === SUCCESS) {
