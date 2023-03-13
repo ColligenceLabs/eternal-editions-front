@@ -259,7 +259,7 @@ export default function KSPay() {
 
                 {/*업체에서 추가하고자하는 임의의 파라미터를 입력하면 됩니다.*/}
                 {/*이 파라메터들은 지정된결과 페이지(kspay_result.php)로 전송됩니다.*/}
-                <Input type="hidden" name="a" value="a1" />
+                <Input type="hidden" name="a" value={router.query['amount']} />
                 <Input type="hidden" name="b" value="b1" />
                 <Input type="hidden" name="c" value="c1" />
                 <Input type="hidden" name="d" value="d1" />
