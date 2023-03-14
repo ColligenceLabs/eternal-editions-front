@@ -297,7 +297,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
               }}
             >
               <CircularProgress />
-              <Typography>ABC Wallet 가입여부 확인중.</Typography>
+              <Typography>ABC Wallet 가입여부 확인 중...</Typography>
             </Box>
           ) : (
             <>
