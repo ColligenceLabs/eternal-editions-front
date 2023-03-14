@@ -187,6 +187,64 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     }
   };
 
+  // ABC Wallet 기가입자 중 users 테이블어 등록되지 않은 경우
+  // Case 1 : 다른 서비스에서 ABC Wallet 기 가입자가  우리 서비스에 로그인 시 처리
+  const tryRecoverABC = async (token: string, serv: string) => {
+    // ABC Wallet 로그임
+    const result = await abcLogin({
+      token: token,
+      service: serv,
+      audience: 'https://mw.myabcwallet.com',
+    });
+
+    // 기 가입자인지 신규 가입자인지 확인
+    const flCreate = result.data.msg !== undefined ? true : false;
+
+    let abcAuth: AbcLoginResult = {
+      accessToken: '',
+      refreshToken: '',
+      tokenType: '',
+      expiresIn: 0,
+    };
+
+    if (!flCreate) {
+      // 기 가입자 토큰 처리
+      if (result.data.data !== null) {
+        const resData = AbcLoginResponse.parse(result.data);
+        abcAuth = {
+          accessToken: resData.access_token,
+          refreshToken: resData.refresh_token,
+          tokenType: resData.token_type,
+          expiresIn: resData.expire_in,
+        };
+      } else {
+        // TODO : What ?
+        console.log('===== ABC Wallet ... SNS Login ... Failed !! =====');
+      }
+
+      // 새 토큰 저장
+      await dispatch(setAbcAuth(abcAuth));
+      // window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
+      secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
+
+      // 기 가입자 지갑 복구
+      const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
+
+      await accountController.recoverShare(
+        { password: '!owdin001', user, wallets, keepDB: false },
+        dispatch
+      );
+
+      const res = await userRegister({ abc_address: user.accounts[0].ethAddress });
+      console.log(res);
+      if (res.status === 200) {
+        // 성공. 리다이렉트..
+        alert('이미 가입되어 있습니다. 로그인 처리합니다.');
+        location.replace('/');
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchSession = async () => {
       const res = await getSession();
@@ -201,6 +259,9 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         setService(service);
         setEmail(data.email);
         dispatch(setProvider({ id_token, service }));
+
+        // TODO : ABC Wallet 기가입자 인지 확인
+        await tryRecoverABC(id_token, service);
       }
     };
     fetchSession();
