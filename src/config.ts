@@ -76,8 +76,8 @@ export const FAILURE = 0;
 export const targetNetworkMsg = env.REACT_APP_TARGET_NETWORK_MSG;
 
 export const NETWORK_NAME = {
-  [ChainId.POLYGON]: 'Polygon',
-  [ChainId.MUMBAI]: 'Mumbai',
+  [ChainId.POLYGON]: 'Polygon Mainnet',
+  [ChainId.MUMBAI]: 'Polygon Testnet',
 };
 
 export const SCAN_URL = {
