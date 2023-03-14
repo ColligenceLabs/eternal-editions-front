@@ -52,7 +52,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   const [resetCode, setResetCode] = useState('');
   const [qrCode, setQrCode] = useState('');
   const [qrSecret, setQrSecret] = useState('');
-  const [memberCheck, setMemberCheck] = useState(false);
+  const [memberCheck, setMemberCheck] = useState(true);
 
   const handleAbcTokenChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -242,6 +242,8 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         // 성공. 리다이렉트..
         alert('이미 가입되어 있습니다. 로그인 처리합니다.');
         location.replace('/');
+      } else {
+        setMemberCheck(false);
       }
     }
   };
@@ -264,7 +266,6 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         // TODO : ABC Wallet 기가입자 인지 확인
         setMemberCheck(true);
         await tryRecoverABC(id_token, service);
-        setMemberCheck(false);
       }
     };
     fetchSession();
