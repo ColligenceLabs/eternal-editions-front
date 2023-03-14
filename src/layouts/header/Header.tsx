@@ -132,8 +132,13 @@ export default function Header({ transparent }: Props) {
       service: webUser?.user?.session?.providerAuthInfo?.provider,
       audience: 'https://mw.myabcwallet.com',
     });
-    // console.log('======>', res);
-    if (res !== undefined && res.data.data !== null) {
+    console.log('!! abcLogin Result : ', res.data);
+    if (
+      res.data !== null &&
+      res.data !== undefined &&
+      res.data.data !== null &&
+      res.data.error === undefined
+    ) {
       const resData = AbcLoginResponse.parse(res.data);
       const abcAuth: AbcLoginResult = {
         accessToken: resData.access_token,
