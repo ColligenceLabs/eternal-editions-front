@@ -52,6 +52,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   const [resetCode, setResetCode] = useState('');
   const [qrCode, setQrCode] = useState('');
   const [qrSecret, setQrSecret] = useState('');
+  const [memberCheck, setMemberCheck] = useState(false);
 
   const handleAbcTokenChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -261,7 +262,9 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         dispatch(setProvider({ id_token, service }));
 
         // TODO : ABC Wallet 기가입자 인지 확인
+        setMemberCheck(true);
         await tryRecoverABC(id_token, service);
+        setMemberCheck(false);
       }
     };
     fetchSession();
@@ -274,192 +277,202 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
           maxWidth={'xs'}
           sx={{ my: 5, backgroundColor: '#fff', color: '#000', borderRadius: '40px' }}
         >
-          <Box
-            sx={{
-              border: '1px solid white',
-              borderRadius: '15px',
-              p: 2,
-            }}
-          >
-            <Box>
-              <h1>Register</h1>
-            </Box>
-            <Box>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    disabled={qrCode !== ''}
-                    checked={isCheckAll}
-                    onClick={handleCheckAll}
-                  />
-                }
-                label="전체 약관에 동의합니다."
-              />
-            </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column', paddingLeft: '15px' }}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    disabled={qrCode !== ''}
-                    checked={isCheck.check1}
-                    onClick={() => handleCheckItem('check1')}
-                  />
-                }
-                label="[필수] 14세 이상 사용자입니다."
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    disabled={qrCode !== ''}
-                    checked={isCheck.check2}
-                    onClick={() => handleCheckItem('check2')}
-                  />
-                }
-                label={
-                  <p>
-                    [필수]{' '}
-                    <a
-                      href="https://api.id.myabcwallet.com/query/terms?language=1&service=16"
-                      target="_blank"
-                      style={{ color: '#000' }}
-                    >
-                      이용약관
-                    </a>
-                    에 동의합니다.
-                  </p>
-                }
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    disabled={qrCode !== ''}
-                    checked={isCheck.check3}
-                    onClick={() => handleCheckItem('check3')}
-                  />
-                }
-                label={
-                  <p>
-                    [필수]{' '}
-                    <a
-                      href="https://api.id.myabcwallet.com/query/privacy?language=1&service=16"
-                      target="_blank"
-                      style={{ color: '#000' }}
-                    >
-                      개인정보 수집 및 이용
-                    </a>
-                    에 동의합니다.
-                  </p>
-                }
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    disabled={qrCode !== ''}
-                    checked={isCheck.check4}
-                    onClick={() => handleCheckItem('check4')}
-                  />
-                }
-                label={
-                  <p>
-                    [필수]{' '}
-                    <a
-                      href="https://api.id.myabcwallet.com/query/third-party?language=1&service=16"
-                      target="_blank"
-                      style={{ color: '#000' }}
-                    >
-                      개인정보 제3자 제공
-                    </a>
-                    에 동의합니다.
-                  </p>
-                }
-              />
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    disabled={qrCode !== ''}
-                    checked={isCheck.check5}
-                    onClick={() => handleCheckItem('check5')}
-                  />
-                }
-                label={
-                  <p>
-                    [선택]{' '}
-                    <a
-                      href="https://api.id.myabcwallet.com/query/marketing?language=1&service=16"
-                      target="_blank"
-                      style={{ color: '#000' }}
-                    >
-                      마케팅 활용 및 광고성 정보 수신
-                    </a>
-                    에 동의합니다.
-                  </p>
-                }
-              />
-            </Box>
-            <Box sx={{ mt: '14px' }}>
-              <Button
-                onClick={handleClickRegister}
-                fullWidth
-                disabled={
-                  !isCheck.check1 ||
-                  !isCheck.check2 ||
-                  !isCheck.check3 ||
-                  !isCheck.check4 ||
-                  qrCode !== ''
-                }
-                variant={'outlined'}
-              >
-                가입
-              </Button>
-            </Box>
-          </Box>
-          {qrCode && (
-            <Box sx={{ border: '1px solid white', borderRadius: '15px', p: 2, my: 2 }}>
-              <Box sx={{ textAlign: 'center' }}>
-                <img className="QRCode" src={qrCode} alt="qrapp" />
-                {/*<Box>{qrSecret}</Box>*/}
-              </Box>
-              <Typography sx={{ fontSize: '12px', color: '#999999' }}>Verification Code</Typography>
-              <Box sx={{ display: 'flex', gap: 1 }}>
-                <Input
-                  fullWidth={true}
-                  id="outlined-basic"
-                  value={otpToken}
-                  onChange={handleAbcTokenChange}
-                  sx={{ color: '#000' }}
-                />
-                <Button
-                  variant="outlined"
-                  size="medium"
+          <>
+            {memberCheck ? (
+              <div>member check</div>
+            ) : (
+              <>
+                <Box
                   sx={{
-                    // width: '100% !important',
-                    height: '36px',
-                    fontSize: 12,
-                    backgroundColor: '#f1f2f5',
-                    borderColor: '#f1f2f5',
-                    color: '#000000',
-                    boxShadow: 'none',
-                    '&:hover': {
-                      backgroundColor: '#08FF0C',
-                      borderColor: '#08FF0C',
-                      color: '#ffffff',
-                      boxShadow: 'none',
-                    },
-                    '&:active': {
-                      boxShadow: 'none',
-                      backgroundColor: 'background.paper',
-                      borderColor: 'background.paper',
-                      color: '#ffffff',
-                    },
+                    border: '1px solid white',
+                    borderRadius: '15px',
+                    p: 2,
                   }}
-                  onClick={handleAbcConfirmClick}
                 >
-                  확인
-                </Button>
-              </Box>
-              {resetCode && <Box>{resetCode}</Box>}
-            </Box>
-          )}
+                  <Box>
+                    <h1>Register</h1>
+                  </Box>
+                  <Box>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          disabled={qrCode !== ''}
+                          checked={isCheckAll}
+                          onClick={handleCheckAll}
+                        />
+                      }
+                      label="전체 약관에 동의합니다."
+                    />
+                  </Box>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', paddingLeft: '15px' }}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          disabled={qrCode !== ''}
+                          checked={isCheck.check1}
+                          onClick={() => handleCheckItem('check1')}
+                        />
+                      }
+                      label="[필수] 14세 이상 사용자입니다."
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          disabled={qrCode !== ''}
+                          checked={isCheck.check2}
+                          onClick={() => handleCheckItem('check2')}
+                        />
+                      }
+                      label={
+                        <p>
+                          [필수]{' '}
+                          <a
+                            href="https://api.id.myabcwallet.com/query/terms?language=1&service=16"
+                            target="_blank"
+                            style={{ color: '#000' }}
+                          >
+                            이용약관
+                          </a>
+                          에 동의합니다.
+                        </p>
+                      }
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          disabled={qrCode !== ''}
+                          checked={isCheck.check3}
+                          onClick={() => handleCheckItem('check3')}
+                        />
+                      }
+                      label={
+                        <p>
+                          [필수]{' '}
+                          <a
+                            href="https://api.id.myabcwallet.com/query/privacy?language=1&service=16"
+                            target="_blank"
+                            style={{ color: '#000' }}
+                          >
+                            개인정보 수집 및 이용
+                          </a>
+                          에 동의합니다.
+                        </p>
+                      }
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          disabled={qrCode !== ''}
+                          checked={isCheck.check4}
+                          onClick={() => handleCheckItem('check4')}
+                        />
+                      }
+                      label={
+                        <p>
+                          [필수]{' '}
+                          <a
+                            href="https://api.id.myabcwallet.com/query/third-party?language=1&service=16"
+                            target="_blank"
+                            style={{ color: '#000' }}
+                          >
+                            개인정보 제3자 제공
+                          </a>
+                          에 동의합니다.
+                        </p>
+                      }
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          disabled={qrCode !== ''}
+                          checked={isCheck.check5}
+                          onClick={() => handleCheckItem('check5')}
+                        />
+                      }
+                      label={
+                        <p>
+                          [선택]{' '}
+                          <a
+                            href="https://api.id.myabcwallet.com/query/marketing?language=1&service=16"
+                            target="_blank"
+                            style={{ color: '#000' }}
+                          >
+                            마케팅 활용 및 광고성 정보 수신
+                          </a>
+                          에 동의합니다.
+                        </p>
+                      }
+                    />
+                  </Box>
+                  <Box sx={{ mt: '14px' }}>
+                    <Button
+                      onClick={handleClickRegister}
+                      fullWidth
+                      disabled={
+                        !isCheck.check1 ||
+                        !isCheck.check2 ||
+                        !isCheck.check3 ||
+                        !isCheck.check4 ||
+                        qrCode !== ''
+                      }
+                      variant={'outlined'}
+                    >
+                      가입
+                    </Button>
+                  </Box>
+                </Box>
+                {qrCode && (
+                  <Box sx={{ border: '1px solid white', borderRadius: '15px', p: 2, my: 2 }}>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <img className="QRCode" src={qrCode} alt="qrapp" />
+                      {/*<Box>{qrSecret}</Box>*/}
+                    </Box>
+                    <Typography sx={{ fontSize: '12px', color: '#999999' }}>
+                      Verification Code
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Input
+                        fullWidth={true}
+                        id="outlined-basic"
+                        value={otpToken}
+                        onChange={handleAbcTokenChange}
+                        sx={{ color: '#000' }}
+                      />
+                      <Button
+                        variant="outlined"
+                        size="medium"
+                        sx={{
+                          // width: '100% !important',
+                          height: '36px',
+                          fontSize: 12,
+                          backgroundColor: '#f1f2f5',
+                          borderColor: '#f1f2f5',
+                          color: '#000000',
+                          boxShadow: 'none',
+                          '&:hover': {
+                            backgroundColor: '#08FF0C',
+                            borderColor: '#08FF0C',
+                            color: '#ffffff',
+                            boxShadow: 'none',
+                          },
+                          '&:active': {
+                            boxShadow: 'none',
+                            backgroundColor: 'background.paper',
+                            borderColor: 'background.paper',
+                            color: '#ffffff',
+                          },
+                        }}
+                        onClick={handleAbcConfirmClick}
+                      >
+                        확인
+                      </Button>
+                    </Box>
+                    {resetCode && <Box>{resetCode}</Box>}
+                  </Box>
+                )}
+              </>
+            )}
+          </>
         </Container>
       </RootStyle>
     </Page>
