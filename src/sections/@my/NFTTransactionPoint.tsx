@@ -29,7 +29,7 @@ type TransactionsType = {
 const HeaderTableCell = styled((props: TableCellProps) => <TableCell {...props} />)(
   ({ theme }) => ({
     background: 'transparent',
-    '&:first-child': {
+    '&:first-of-type': {
       boxShadow: 'none',
     },
     '&:last-child': {
@@ -48,7 +48,7 @@ const BodyTableRow = styled((props: TableRowProps) => <TableRow {...props} />)((
 
 const BodyTableCell = styled((props: TableCellProps) => <TableCell {...props} />)(({ theme }) => ({
   background: 'transparent',
-  '&:first-child': {
+  '&:first-of-type': {
     boxShadow: 'none',
   },
   '&:last-child': {
