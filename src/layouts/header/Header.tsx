@@ -132,7 +132,7 @@ export default function Header({ transparent }: Props) {
       service: webUser?.user?.session?.providerAuthInfo?.provider,
       audience: 'https://mw.myabcwallet.com',
     });
-    console.log('======>', res.data);
+    console.log('!! abcLogin Result : ', res.data);
     if (
       res.data !== null &&
       res.data !== undefined &&
