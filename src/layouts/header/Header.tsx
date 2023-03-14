@@ -133,7 +133,7 @@ export default function Header({ transparent }: Props) {
       audience: 'https://mw.myabcwallet.com',
     });
     // console.log('======>', res);
-    if (res !== undefined && res.data.data !== null) {
+    if (res !== undefined && res.data.data !== null && res.data.data !== undefined) {
       const resData = AbcLoginResponse.parse(res.data);
       const abcAuth: AbcLoginResult = {
         accessToken: resData.access_token,
