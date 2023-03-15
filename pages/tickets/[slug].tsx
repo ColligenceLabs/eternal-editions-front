@@ -52,6 +52,7 @@ import { abcSendTx } from '../../src/utils/abcTransactions';
 import { useSelector } from 'react-redux';
 import { collectionAbi } from '../../src/config/abi/Collection';
 import tokenAbi from '../../src/config/abi/ERC20Token.json';
+import { LoadingButton } from '@mui/lab';
 
 // ----------------------------------------------------------------------
 
@@ -110,6 +111,7 @@ export default function TicketDetailPage() {
   const [abcToken, setAbcToken] = React.useState('');
   const [abcOpen, setAbcOpen] = React.useState(false);
   const [reload, setReload] = useState(false);
+  const [otpLoading, setOtpLoading] = useState(false);
 
   const handleAbcClose = () => {
     setAbcToken('');
@@ -142,6 +144,7 @@ export default function TicketDetailPage() {
   const handleClose = () => setOpen(false);
 
   const handleAbcConfirmClick = async () => {
+    setOtpLoading(true);
     console.log(`abc token : ${abcToken}`); // Google OTP
 
     if (selectedTicketItem) {
@@ -231,6 +234,7 @@ export default function TicketDetailPage() {
     }
     setAbcToken('');
     setAbcOpen(false);
+    setOtpLoading(false);
   };
 
   const handleItemChange = (event: SelectChangeEvent) => {
@@ -729,7 +733,7 @@ export default function TicketDetailPage() {
               onChange={handleAbcTokenChange}
             />
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: '10px' }}>
-              <Button
+              <LoadingButton
                 variant="outlined"
                 size="medium"
                 sx={{
@@ -754,9 +758,11 @@ export default function TicketDetailPage() {
                   },
                 }}
                 onClick={handleAbcConfirmClick}
+                loading={otpLoading}
+                disabled={otpLoading}
               >
                 확인
-              </Button>
+              </LoadingButton>
             </Box>
           </Box>
         </Fade>
