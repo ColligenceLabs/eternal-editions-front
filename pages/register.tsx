@@ -456,7 +456,20 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                 </Box>
               )}
               {qrCode && (
-                <Box sx={{ border: '1px solid white', borderRadius: '15px', p: 2, my: 2 }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '2rem',
+                    border: '1px solid white',
+                    borderRadius: '15px',
+                    p: 2,
+                    my: 2,
+                  }}
+                >
+                  <Typography>Register 2FA Google OTP</Typography>
                   <Box sx={{ textAlign: 'center' }}>
                     <img className="QRCode" src={qrCode} alt="qrapp" />
                     {/*<Box>{qrSecret}</Box>*/}
