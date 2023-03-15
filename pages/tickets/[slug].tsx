@@ -45,7 +45,7 @@ import axios from 'axios';
 import contracts from '../../src/config/constants/contracts';
 import useActiveWeb3React from '../../src/hooks/useActiveWeb3React';
 import { parseEther } from 'ethers/lib/utils';
-import { buyItem } from '../../src/utils/transactions';
+import { buyItem, getItemSold } from '../../src/utils/transactions';
 import CSnackbar from '../../src/components/common/CSnackbar';
 import { BuyerTypes } from '../../src/@types/buyer/buyer';
 import { abcSendTx } from '../../src/utils/abcTransactions';
@@ -396,11 +396,12 @@ export default function TicketDetailPage() {
     if (slug && typeof slug === 'string') {
       const ticketInfoRes = await getTicketInfoService(slug);
 
+      const contract = ticketInfoRes.data.data.boxContractAddress;
       const temp = await Promise.all(
-        ticketInfoRes.data.data.mysteryboxItems.map((item: TicketItemTypes) => {
-          const remain = '';
+        ticketInfoRes.data.data.mysteryboxItems.map(async (item: TicketItemTypes) => {
           // todo getRemain
-          return { ...item, remain };
+          const sold = await getItemSold(contract, item.no - 1, chainId);
+          return { ...item, sold };
         })
       );
 

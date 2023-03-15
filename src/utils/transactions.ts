@@ -1298,7 +1298,7 @@ export async function getItemRemainsNoSigner(
   return remains;
 }
 
-function hexToAddress(hexVal) {
+function hexToAddress(hexVal: any) {
   return '0x' + hexVal.substr(-40);
 }
 
@@ -1443,4 +1443,23 @@ export async function getTokenIds(
     console.log('getTokenIds Error : ', e);
   }
   return tokenIds;
+}
+
+export async function getItemSold(
+  address: string,
+  index: number,
+  chainId: number
+): Promise<number> {
+  const provider = ethers.getDefaultProvider(getSelectedNodeUrl(chainId));
+  const contract = new ethers.Contract(address, collectionAbi, provider);
+
+  let sold = 0;
+  try {
+    const result: BigNumber = await contract.itemSolds(index);
+    sold = result.toNumber();
+  } catch (e) {
+    console.log('#####', address);
+    console.log('getItemSold Error : ', e);
+  }
+  return sold;
 }
