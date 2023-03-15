@@ -109,6 +109,8 @@ export default function TicketDetailPage() {
   const abcUser = useSelector((state: any) => state.user);
   const [abcToken, setAbcToken] = React.useState('');
   const [abcOpen, setAbcOpen] = React.useState(false);
+  const [reload, setReload] = useState(false);
+
   const handleAbcClose = () => {
     setAbcToken('');
     setAbcOpen(false);
@@ -276,6 +278,7 @@ export default function TicketDetailPage() {
             type: 'success',
             message: 'Purchase completed!',
           });
+          setReload((cur) => !cur);
         } else {
           console.log('Item not selected', res.data.message);
           setOpenSnackbar({
@@ -366,6 +369,7 @@ export default function TicketDetailPage() {
               type: 'success',
               message: 'Purchase completed!',
             });
+            setReload((cur) => !cur);
             // return true;
           } else {
             // setIsBuyingWithMatic(false);
@@ -401,12 +405,14 @@ export default function TicketDetailPage() {
         ticketInfoRes.data.data.mysteryboxItems.map(async (item: TicketItemTypes) => {
           // todo getRemain
           const sold = await getItemSold(contract, item.no - 1, chainId);
-          return { ...item, sold };
+          console.log(sold);
+          return { ...item, remain: item.issueAmount - sold };
         })
       );
 
       console.log(temp);
-      if (ticketInfoRes.data.status === SUCCESS) setTicketInfo(ticketInfoRes.data.data);
+      if (ticketInfoRes.data.status === SUCCESS)
+        setTicketInfo({ ...ticketInfoRes.data.data, mysteryboxItems: temp });
     }
   };
 
@@ -443,7 +449,7 @@ export default function TicketDetailPage() {
   useEffect(() => {
     fetchTicketInfo();
     fetchBuyersList();
-  }, [slug]);
+  }, [slug, reload]);
 
   useEffect(() => {
     setDollarPrice((ticketInfo?.price ?? 0) * maticPrice);
@@ -549,10 +555,21 @@ export default function TicketDetailPage() {
                         fullWidth
                         inputProps={{ 'aria-label': 'optione1' }}
                         sx={{ color: 'common.black' }}
+                        onFocus={() => console.log('asdf')}
                       >
-                        {ticketInfo?.mysteryboxItems.map((item) => (
+                        {ticketInfo?.mysteryboxItems.map((item: TicketItemTypes) => (
                           <MenuItem key={item.id} value={item.id}>
-                            {item.name}
+                            <Box
+                              sx={{
+                                width: '100%',
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                padding: '0px 10px',
+                              }}
+                            >
+                              <Typography>{item.name}</Typography>
+                              <Typography>{`(${item.remain} / ${item.issueAmount})`}</Typography>
+                            </Box>
                           </MenuItem>
                         ))}
                       </Select>
