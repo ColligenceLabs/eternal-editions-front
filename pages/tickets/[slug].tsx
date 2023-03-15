@@ -356,7 +356,6 @@ export default function TicketDetailPage() {
           };
 
           const res = await registerBuy(data);
-          console.log(res);
           if (res.data.status === SUCCESS) {
             // setOpenSnackbar({
             //   open: true,
@@ -405,12 +404,10 @@ export default function TicketDetailPage() {
         ticketInfoRes.data.data.mysteryboxItems.map(async (item: TicketItemTypes) => {
           // todo getRemain
           const sold = await getItemSold(contract, item.no - 1, chainId);
-          console.log(sold);
           return { ...item, remain: item.issueAmount - sold };
         })
       );
 
-      console.log(temp);
       if (ticketInfoRes.data.status === SUCCESS)
         setTicketInfo({ ...ticketInfoRes.data.data, mysteryboxItems: temp });
     }
@@ -434,7 +431,6 @@ export default function TicketDetailPage() {
           const maticKrw = response.data.data[3890].quote.KRW.price;
           setKlayPrice(parseFloat(klayUsd));
           setMaticPrice(parseFloat(maticUsd));
-          console.log(klayUsd, maticUsd);
         });
       }
     } catch (error: any) {
@@ -555,7 +551,6 @@ export default function TicketDetailPage() {
                         fullWidth
                         inputProps={{ 'aria-label': 'optione1' }}
                         sx={{ color: 'common.black' }}
-                        onFocus={() => console.log('asdf')}
                       >
                         {ticketInfo?.mysteryboxItems.map((item: TicketItemTypes) => (
                           <MenuItem key={item.id} value={item.id}>
