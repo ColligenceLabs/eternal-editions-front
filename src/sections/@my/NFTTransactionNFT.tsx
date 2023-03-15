@@ -13,6 +13,7 @@ import { TableRowProps } from '@mui/material/TableRow/TableRow';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { getTransactionsByUID } from '../../services/services';
 import { useSelector } from 'react-redux';
+import env from '../../env';
 
 type TransactionsType = {
   buyer: string;
@@ -61,6 +62,11 @@ const BodyTableCell = styled((props: TableCellProps) => <TableCell {...props} />
   },
 }));
 
+const LinkColumn = styled('a')`
+  text-decoration: none;
+  color: #fff;
+`;
+
 export default function NFTTransactionNFT() {
   const { user } = useSelector((state: any) => state.webUser);
   console.log(user);
@@ -80,6 +86,15 @@ export default function NFTTransactionNFT() {
     setPage(value);
   };
 
+  const getExternalUrl = (txHash: string) => {
+    let url = '';
+    if (env.REACT_APP_TARGET_NETWORK === 80001) {
+      url = `https://mumbai.polygonscan.com/tx/${txHash}`;
+    } else {
+      url = `https://polygonscan.com/tx/${txHash}`;
+    }
+    return url;
+  };
   useEffect(() => {
     fetchTransaction();
   }, [page]);
@@ -110,10 +125,12 @@ export default function NFTTransactionNFT() {
                       <BodyTableCell align="right">{`${row.mysteryboxInfo.title.en} - ${row.mysteryboxItem.name}`}</BodyTableCell>
                       <BodyTableCell align="right">{row.price}</BodyTableCell>
                       <BodyTableCell align="right">Polygon</BodyTableCell>
-                      <BodyTableCell align="right">{`${row.txHash.substring(
-                        0,
-                        20
-                      )}...`}</BodyTableCell>
+                      <BodyTableCell align="right">
+                        <LinkColumn
+                          href={getExternalUrl(row.txHash)}
+                          target="_blank"
+                        >{`${row.txHash.substring(0, 20)}...`}</LinkColumn>{' '}
+                      </BodyTableCell>
                       {/*<BodyTableCell align="right">-</BodyTableCell>*/}
                     </BodyTableRow>
                   ))}
