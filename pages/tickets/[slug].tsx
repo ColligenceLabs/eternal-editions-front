@@ -396,11 +396,14 @@ export default function TicketDetailPage() {
     if (slug && typeof slug === 'string') {
       const ticketInfoRes = await getTicketInfoService(slug);
 
-      const temp = ticketInfoRes.data.data.mysteryboxItems.map((item: TicketItemTypes) => {
-        const remain = '';
+      const temp = await Promise.all(
+        ticketInfoRes.data.data.mysteryboxItems.map((item: TicketItemTypes) => {
+          const remain = '';
+          // todo getRemain
+          return { ...item, remain };
+        })
+      );
 
-        return { ...item, remain };
-      });
       console.log(temp);
       if (ticketInfoRes.data.status === SUCCESS) setTicketInfo(ticketInfoRes.data.data);
     }
