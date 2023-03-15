@@ -16,7 +16,7 @@ const getBalances = (account: string | undefined | null, library: any) => {
 
   useEffect(() => {
     try {
-      if (!!account && !!library) {
+      if (!!account ) {
         const provider = ethers.getDefaultProvider(getSelectedNodeUrl(chainId));
 
         provider
@@ -29,7 +29,7 @@ const getBalances = (account: string | undefined | null, library: any) => {
     } catch (error) {
       console.log(error);
     }
-  }, [account, library, chainId, time]);
+  }, [account, chainId, time]);
 
   return baseBalance;
 };
