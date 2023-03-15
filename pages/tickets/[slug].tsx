@@ -395,6 +395,13 @@ export default function TicketDetailPage() {
   const fetchTicketInfo = async () => {
     if (slug && typeof slug === 'string') {
       const ticketInfoRes = await getTicketInfoService(slug);
+
+      const temp = ticketInfoRes.data.data.mysteryboxItems.map((item: TicketItemTypes) => {
+        const remain = '';
+
+        return { ...item, remain };
+      });
+      console.log(temp);
       if (ticketInfoRes.data.status === SUCCESS) setTicketInfo(ticketInfoRes.data.data);
     }
   };
