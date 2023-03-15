@@ -79,9 +79,9 @@ export default function KSPay() {
 
   const _submit = (_frm: any) => {
     console.log(typeof _frm[0]);
-    // _frm[0].sndReply.value = getLocalUrl('api/ksnet/kspay_wh_rcv/');
-    setOrderInfo({ ...orderInfo, sndReply: 'http://localhost:8888/api/ksnet/kspay_wh_rcv/' });
-    _frm[0].sndReply.value = 'http://localhost:8888/api/ksnet/kspay_wh_rcv/';
+    _frm[0].sndReply.value = getLocalUrl('api/ksnet/kspay_wh_rcv/');
+    setOrderInfo({ ...orderInfo, sndReply: _frm[0].sndReply.value });
+    // _frm[0].sndReply.value = 'http://localhost:8888/api/ksnet/kspay_wh_rcv/';
     console.log('=====>', _frm[0], _frm[0].sndReply);
 
     // @ts-ignore

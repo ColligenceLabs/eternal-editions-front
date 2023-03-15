@@ -19,5 +19,5 @@ function mcancel()
 function getLocalUrl(mypage)
 {
     var myloc = location.href;
-    return myloc.substring(0, myloc.lastIndexOf('/')) + '/' + mypage;
+    return myloc.substring(0, myloc.lastIndexOf('/')).replaceAll('/kspay', '') + '/' + mypage;
 }

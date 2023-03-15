@@ -5,7 +5,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
     const {reCommConId, reCommType, reHash, reCnclType} = req.body;
     res.status(200).send(
         `
-<title>KSPay(<?php echo($rcid)?>)</title>
+<title>KSPay(${reCommConId})</title>
 <script language="JavaScript">
   function init()
   {
