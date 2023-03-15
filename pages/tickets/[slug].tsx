@@ -181,7 +181,7 @@ export default function TicketDetailPage() {
 
           const data = {
             mysterybox_id: ticketInfo?.id,
-            buyer: '',
+            buyer: user.uid,
             buyer_address: abcUser.accounts[0].ethAddress,
             isSent: true,
             txHash: result?.txHash,
