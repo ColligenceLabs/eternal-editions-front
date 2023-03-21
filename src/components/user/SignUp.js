@@ -1,11 +1,22 @@
 // @mui
 import { styled } from '@mui/material/styles';
-import { Stack, Button, Typography, Divider } from '@mui/material';
+import {
+  Stack,
+  Button,
+  Typography,
+  Divider,
+  Backdrop,
+  Fade,
+  Box,
+  Modal,
+  Input,
+  TextField,
+} from '@mui/material';
 import Image from '../Image';
 import * as React from 'react';
 // import useWallets from '../../hooks/useWallets';
 import { getIconByType } from '../../utils/wallet';
-import { ChainId, WALLET_METAMASK, WALLET_WALLECTCONNECT } from '../../config';
+import { ChainId, SUCCESS, WALLET_METAMASK, WALLET_WALLECTCONNECT } from '../../config';
 import { useWeb3React } from '@web3-react/core';
 import { setupNetwork } from '../../utils/network';
 import { injected, walletconnect } from '../../hooks/connectors';
@@ -13,9 +24,11 @@ import env from '../../env';
 import useCreateToken from '../../hooks/useCreateToken';
 import { useEffect, useState } from 'react';
 import { Iconify } from '../index';
-import { getUser, requestWalletLogin } from '../../services/services';
+import { eternalLogin, getUser, requestWalletLogin } from '../../services/services';
 import { setWebUser } from '../../store/slices/webUser';
 import { useDispatch } from 'react-redux';
+import { ChangeEvent } from 'react';
+import Router from 'next/router';
 
 // ----------------------------------------------------------------------
 
@@ -106,12 +119,85 @@ const FacebookButton = styled(Button)({
     color: '#ffffff',
   },
 });
+
+const IDPWDButton = styled(Button)({
+  width: '100% !important',
+  height: '36px',
+  fontSize: 12,
+  backgroundColor: '#f1f2f5',
+  borderColor: '#f1f2f5',
+  color: '#000000',
+  boxShadow: 'none',
+  '&:hover': {
+    backgroundColor: '#9360d1',
+    borderColor: '#4460d1',
+    color: '#ffffff',
+    boxShadow: 'none',
+  },
+  '&:active': {
+    boxShadow: 'none',
+    backgroundColor: 'background.paper',
+    borderColor: 'background.paper',
+    color: '#ffffff',
+  },
+});
+
+const LogInButton = styled(Button)({
+  width: '100% !important',
+  // height: '36px',
+  height: '100%',
+  fontSize: 12,
+  padding: '30px',
+  backgroundColor: '#f1f2f5',
+  borderColor: '#f1f2f5',
+  color: '#000000',
+  boxShadow: 'none',
+  '&:hover': {
+    backgroundColor: '#9360d1',
+    borderColor: '#4460d1',
+    color: '#ffffff',
+    boxShadow: 'none',
+  },
+  '&:active': {
+    boxShadow: 'none',
+    backgroundColor: 'background.paper',
+    borderColor: 'background.paper',
+    color: '#ffffff',
+  },
+});
+
 // ----------------------------------------------------------------------
 
 export default function SignUp({ onClose, hideSns, ...other }) {
   const context = useWeb3React();
   const { activate, chainId, deactivate, library } = context;
   const [doSign, setDoSign] = useState(false);
+  const [openIDPWD, setOpenIDPWD] = useState(false);
+  const [userId, setUserId] = useState('');
+  const [userPWD, setUserPWD] = useState('');
+
+  const handleChangeUserId = (event) => {
+    setUserId(event.target.value);
+  };
+
+  const handleChangeUserPWD = (event) => {
+    setUserPWD(event.target.value);
+  };
+
+  const onClickIDLogin = async () => {
+    const res = await eternalLogin({ email: userId, password: userPWD });
+    console.log(`ID : ${userId}`);
+    console.log(`PWD : ${userPWD}`);
+    console.log(res);
+    if (res.data.status === SUCCESS) {
+      console.log('로그인 성공');
+    } else {
+      console.log('로그인 실패');
+    }
+    Router.push({ pathname: '/register', query: { eternal: 'password' } });
+    onClose();
+  };
+
   const tokenGenerator = useCreateToken();
   const dispatch = useDispatch();
   // const { connectKaikas, connectMetamask, connectKlip, disconnect, requestKey, message, type } = useWallets();
@@ -192,77 +278,152 @@ export default function SignUp({ onClose, hideSns, ...other }) {
 
       <Divider />
 
-      <Stack spacing={2} sx={{ mt: 4 }}>
-        <Stack spacing={1}>
-          {!hideSns && (
-            <>
-              <Stack>
-                <GoogleButton
-                  variant="contained"
-                  onClick={() => handleSnsLogin('google')}
-                  startIcon={<Iconify icon={'mdi:google-plus'} />}
-                >
-                  CONTINUE WITH GOOGLE
-                </GoogleButton>
-              </Stack>
-              <Stack>
-                <FacebookButton
-                  variant="contained"
-                  onClick={async () => {}}
-                  startIcon={<Iconify icon={'mdi:facebook'} />}
-                >
-                  CONTINUE WITH FACEBOOK
-                </FacebookButton>
-              </Stack>
-              <Stack direction="row" justifyContent="center" alignItems="center">
-                <Typography variant="caption">Or</Typography>
-              </Stack>
-            </>
-          )}
-        </Stack>
+      {openIDPWD ? (
+        <Stack spacing={2} sx={{ mt: 4 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
+            <Box
+              sx={{
+                width: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.7rem',
+              }}
+            >
+              <TextField
+                label="ID"
+                variant="outlined"
+                fullWidth
+                size={'small'}
+                inputProps={{ style: { color: '#999999' } }}
+                value={userId}
+                onChange={handleChangeUserId}
+              />
+              <TextField
+                type="password"
+                label="Password"
+                variant="outlined"
+                fullWidth
+                size={'small'}
+                inputProps={{ style: { color: '#999999' } }}
+                value={userPWD}
+                onChange={handleChangeUserPWD}
+              />
+            </Box>
+            <Box>
+              <LogInButton onClick={onClickIDLogin}>Login</LogInButton>
+            </Box>
+          </Box>
 
-        <Stack spacing={1}>
-          <Stack>
-            <MetaMaskButton
-              variant="contained"
-              onClick={async () => {
-                window.localStorage.setItem('loginBy', 'wallet');
-                await connectWallet(WALLET_METAMASK);
-                // await connectMetamask();
-                // onClose();
-              }}
-              startIcon={
-                <Image
-                  alt="metamask icon"
-                  src={getIconByType(WALLET_METAMASK)}
-                  sx={{ width: 24, height: 24 }}
-                />
-              }
-            >
-              CONNECT TO METAMASK WALLET
-            </MetaMaskButton>
+          <IDPWDButton onClick={() => setOpenIDPWD(false)}>뒤로</IDPWDButton>
+        </Stack>
+      ) : (
+        <Stack spacing={2} sx={{ mt: 4 }}>
+          <Stack spacing={1}>
+            {!hideSns && (
+              <>
+                <Stack>
+                  <GoogleButton
+                    variant="contained"
+                    onClick={() => handleSnsLogin('google')}
+                    startIcon={<Iconify icon={'mdi:google-plus'} />}
+                  >
+                    CONTINUE WITH GOOGLE
+                  </GoogleButton>
+                </Stack>
+                <Stack>
+                  <FacebookButton
+                    variant="contained"
+                    onClick={() => handleSnsLogin('facebook')}
+                    startIcon={<Iconify icon={'mdi:facebook'} />}
+                  >
+                    CONTINUE WITH FACEBOOK
+                  </FacebookButton>
+                </Stack>
+                <Stack>
+                  <IDPWDButton
+                    variant="contained"
+                    onClick={() => {
+                      setOpenIDPWD(true);
+                    }}
+                    // startIcon={<Iconify icon={'mdi:facebook'} />}
+                  >
+                    ID / PASSWORD (신규회원)
+                  </IDPWDButton>
+                </Stack>
+                <Stack direction="row" justifyContent="center" alignItems="center">
+                  <Typography variant="caption">Or</Typography>
+                </Stack>
+              </>
+            )}
           </Stack>
-          <Stack>
-            <WalletConnectButton
-              variant="contained"
-              onClick={async () => {
-                window.localStorage.setItem('loginBy', 'wallet');
-                await connectWallet(WALLET_WALLECTCONNECT);
-                // onClose();
-              }}
-              startIcon={
-                <Image
-                  alt="metamask icon"
-                  src={getIconByType(WALLET_WALLECTCONNECT)}
-                  sx={{ width: 24, height: 24 }}
-                />
-              }
-            >
-              CONNECT TO WALLET CONNECT
-            </WalletConnectButton>
+
+          <Stack spacing={1}>
+            <Stack>
+              <MetaMaskButton
+                variant="contained"
+                onClick={async () => {
+                  window.localStorage.setItem('loginBy', 'wallet');
+                  await connectWallet(WALLET_METAMASK);
+                  // await connectMetamask();
+                  // onClose();
+                }}
+                startIcon={
+                  <Image
+                    alt="metamask icon"
+                    src={getIconByType(WALLET_METAMASK)}
+                    sx={{ width: 24, height: 24 }}
+                  />
+                }
+              >
+                CONNECT TO METAMASK WALLET
+              </MetaMaskButton>
+            </Stack>
+            <Stack>
+              <WalletConnectButton
+                variant="contained"
+                onClick={async () => {
+                  window.localStorage.setItem('loginBy', 'wallet');
+                  await connectWallet(WALLET_WALLECTCONNECT);
+                  // onClose();
+                }}
+                startIcon={
+                  <Image
+                    alt="metamask icon"
+                    src={getIconByType(WALLET_WALLECTCONNECT)}
+                    sx={{ width: 24, height: 24 }}
+                  />
+                }
+              >
+                CONNECT TO WALLET CONNECT
+              </WalletConnectButton>
+            </Stack>
           </Stack>
         </Stack>
-      </Stack>
+      )}
+
+      {/*<Modal*/}
+      {/*  aria-labelledby="transition-modal-title"*/}
+      {/*  aria-describedby="transition-modal-description"*/}
+      {/*  open={openIDPWD}*/}
+      {/*  onClose={handleIDPWDClose}*/}
+      {/*  closeAfterTransition*/}
+      {/*  // BackdropComponent={Backdrop}*/}
+      {/*  // BackdropProps={{*/}
+      {/*  //   timeout: 500,*/}
+      {/*  // }}*/}
+      {/*>*/}
+      {/*  <Fade in={openIDPWD}>*/}
+      {/*    <Box sx={modalStyle}>*/}
+      {/*      <Stack {...other}>*/}
+      {/*        <Typography id="transition-modal-title" variant="h4" component="h2" sx={{ mb: 2 }}>*/}
+      {/*          SIGN UP*/}
+      {/*        </Typography>*/}
+
+      {/*        <Divider />*/}
+      {/*      </Stack>*/}
+      {/*    </Box>*/}
+      {/*  </Fade>*/}
+      {/*</Modal>*/}
     </Stack>
   );
 }

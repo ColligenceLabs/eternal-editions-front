@@ -26,6 +26,7 @@ import { setAbcAuth } from '../src/store/slices/abcAuth';
 import { setTwoFa } from '../src/store/slices/twoFa';
 import { setProvider } from '../src/store/slices/webUser';
 import { AbcLoginResponse } from '../src/abc/schema/account';
+import { useRouter } from 'next/router';
 
 const RootStyle = styled('div')(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,
@@ -34,6 +35,9 @@ const RootStyle = styled('div')(({ theme }) => ({
   },
 }));
 export default function Register(effect: React.EffectCallback, deps?: React.DependencyList) {
+  const router = useRouter();
+  console.log(router);
+
   const dispatch = useDispatch();
   const user = useSelector((state: any) => state.user);
   const twoFa = useSelector((state: any) => state.twoFa);
