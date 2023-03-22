@@ -198,6 +198,10 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     }
   };
 
+  const handleChangeEmailCheckCode = (event: ChangeEvent<HTMLInputElement>) => {
+    setEmailCheckCode(event.target.value);
+  };
+
   const handleCRegisterOldUser = async () => {
     // ABC Wallet 로그임
     const result = await abcController.login({
@@ -615,6 +619,12 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                       }
                     />
                   </Box>
+                  {oldUser && (
+                    <>
+                      <Typography>Email Check Code</Typography>
+                      <Input value={emailCheckCode} onChange={handleChangeEmailCheckCode} />
+                    </>
+                  )}
                   <Box sx={{ mt: '14px' }}>
                     <Button
                       onClick={oldUser ? handleCRegisterOldUser : handleClickRegister}
