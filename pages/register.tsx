@@ -11,6 +11,7 @@ import {
   Container,
   FormControlLabel,
   Input,
+  TextField,
   Typography,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
@@ -620,10 +621,18 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                     />
                   </Box>
                   {oldUser && (
-                    <>
-                      <Typography>Email Check Code</Typography>
-                      <Input value={emailCheckCode} onChange={handleChangeEmailCheckCode} />
-                    </>
+                    <Box sx={{ marginY: '20px' }}>
+                      {/*<Typography>Email Check Code</Typography>*/}
+                      <TextField
+                        label="Email Check Code"
+                        variant="outlined"
+                        fullWidth
+                        size={'small'}
+                        inputProps={{ style: { color: '#999999' } }}
+                        value={emailCheckCode}
+                        onChange={handleChangeEmailCheckCode}
+                      />
+                    </Box>
                   )}
                   <Box sx={{ mt: '14px' }}>
                     <Button
