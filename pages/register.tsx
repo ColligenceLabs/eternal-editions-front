@@ -203,7 +203,19 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   };
 
   const handleCRegisterOldUser = async () => {
-    // ABC Wallet 로그임
+    // Check Email Check Code
+    const resp = await abcController.verifyEmailAuthCode({
+      email: email,
+      code: emailCheckCode,
+    });
+    console.log('!! Email Check Result = ', resp);
+
+    if (resp.code !== undefined) {
+      alert('Email Check Code가 틀립니다. Email을 다시 확인하세요.');
+    }
+
+    /*
+    // ABC Wallet 로그인
     const result = await abcController.login({
       grant_type: 'password',
       username: email,
@@ -299,6 +311,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         dispatch
       );
     }
+    */
   };
 
   // ABC Wallet 기가입자 중 users 테이블어 등록되지 않은 경우
@@ -324,27 +337,43 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     // ABC Wallet 로그임
     if (flag) {
       console.log('!! login info =', loginEmail, password);
-      result = await abcController.login({
-        grant_type: 'password',
-        username: loginEmail!,
-        // @ts-ignore
-        password,
-        audience: 'https://mw.myabcwallet.com',
-      });
-      // 기 가입자인지 신규 가입자인지 확인
-      console.log('!! login result =', result);
-      if ('code' in result) {
-        flCreate = result?.code !== undefined && result?.code === 601;
-        if (result?.code === 602) loginFail = true;
-      }
 
-      // 기 가입자 토큰 처리
-      if (!flCreate && result !== null && !loginFail) {
-        abcAuth = result;
+      const isExist = await abcController.getUser({
+        email: loginEmail,
+        successIfUserExist: true,
+      });
+
+      if (isExist) {
+        result = await abcController.login({
+          grant_type: 'password',
+          username: loginEmail!,
+          // @ts-ignore
+          password,
+          audience: 'https://mw.myabcwallet.com',
+        });
+        // 기 가입자인지 신규 가입자인지 확인
+        console.log('!! login result =', result);
+        if ('code' in result) {
+          flCreate = result?.code !== undefined && result?.code === 601;
+          if (result?.code === 602) loginFail = true;
+        }
+
+        // 기 가입자 토큰 처리
+        if (!flCreate && result !== null && !loginFail) {
+          abcAuth = result;
+        } else {
+          // TODO : What ?
+          if (loginFail) alert('로그인에 실패했습니다. uaername과 password를 다시 확인하세요.');
+          console.log('===== ABC Wallet ... Login ... Failed !! =====');
+        }
       } else {
-        // TODO : What ?
-        if (loginFail) alert('로그인에 실패했습니다. uaername과 password를 다시 확인하세요.');
-        console.log('===== ABC Wallet ... SNS Login ... Failed !! =====');
+        flCreate = true;
+
+        // Send Email Check Code
+        result = await abcController.sendEmailAuthCode({
+          email: loginEmail,
+        });
+        console.log('!! send email check code result =', result);
       }
     } else {
       result = await abcLogin({
@@ -454,7 +483,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       } else {
         setOldUser(true);
         // loginEmail = res.data?.dropsUser?.email;
-        loginEmail = 'admin@gmail.com';
+        loginEmail = 'hwnahm@hotmail.com';
         setEmail(loginEmail);
         flag = true; // ID Pass Old User
       }
