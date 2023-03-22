@@ -347,7 +347,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                     }}
                     // startIcon={<Iconify icon={'mdi:facebook'} />}
                   >
-                    ID / PASSWORD (기존 회원)
+                    ID / PASSWORD (기존회원)
                   </IDPWDButton>
                 </Stack>
                 <Stack direction="row" justifyContent="center" alignItems="center">
