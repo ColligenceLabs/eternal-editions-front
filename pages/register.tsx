@@ -339,7 +339,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         abcAuth = result;
       } else {
         // TODO : What ?
-        alert('로그인에 실패했습니다. uaername과 password를 다시 확인하세요.');
+        if (loginFail) alert('로그인에 실패했습니다. uaername과 password를 다시 확인하세요.');
         console.log('===== ABC Wallet ... SNS Login ... Failed !! =====');
       }
     } else {
@@ -450,7 +450,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       } else {
         setOldUser(true);
         // loginEmail = res.data?.dropsUser?.email;
-        loginEmail = 'hwnahm@hanmail.net';
+        loginEmail = 'admin@gmail.com';
         setEmail(loginEmail);
         flag = true; // ID Pass Old User
       }
