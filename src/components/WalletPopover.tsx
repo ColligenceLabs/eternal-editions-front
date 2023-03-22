@@ -64,11 +64,11 @@ export default function WalletPopover({}) {
   useEffect(() => {
     if (account) {
       setAccountShot(getShotAddress(account));
-      if (logInBy == 'sns') {
-        setType(WALLET_ABC);
-      } else {
+      if (logInBy == 'wallet') {
         if (library?.connection.url === 'metamask') setType(WALLET_METAMASK);
         else if (library?.connection.url === 'eip-1193:') setType(WALLET_WALLECTCONNECT);
+      } else {
+        setType(WALLET_ABC);
       }
     }
   }, [account, library]);
