@@ -273,7 +273,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
   return (
     <Stack {...other}>
       <Typography id="transition-modal-title" variant="h4" component="h2" sx={{ mb: 2 }}>
-        SIGN UP
+        SIGN UP {openIDPWD ? '(기존회원)' : ''}
       </Typography>
 
       <Divider />
