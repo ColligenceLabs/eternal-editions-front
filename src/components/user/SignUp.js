@@ -345,6 +345,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                     onClick={() => {
                       setOpenIDPWD(true);
                     }}
+                    startIcon={<Iconify icon="ic:sharp-supervised-user-circle" />}
                     // startIcon={<Iconify icon={'mdi:facebook'} />}
                   >
                     ID / PASSWORD (기존회원)
