@@ -231,7 +231,8 @@ export class AbcRestApi {
         expiresIn: resData.expire_in,
       };
     } catch (error: any) {
-      throw error?.response?.data;
+      // throw error?.response?.data;
+      return error?.response?.data;
     }
   };
 
