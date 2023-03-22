@@ -9,16 +9,14 @@ export default function useAccount() {
   const loginBy = window.localStorage.getItem('loginBy');
 
   useEffect(() => {
-    if (loginBy === 'sns') {
-      if (abcAccount && abcAccount.accounts && abcAccount.accounts.length > 0) {
-        setAccount(abcAccount.accounts[0].ethAddress);
-      }
-    } else if (loginBy === 'wallet') {
+    if (loginBy === 'wallet') {
       if (walletAccount) {
         setAccount(walletAccount);
       }
     } else {
-      setAccount(null);
+      if (abcAccount && abcAccount.accounts && abcAccount.accounts.length > 0) {
+        setAccount(abcAccount.accounts[0].ethAddress);
+      }
     }
   }, [walletAccount, abcAccount, loginBy]);
 
