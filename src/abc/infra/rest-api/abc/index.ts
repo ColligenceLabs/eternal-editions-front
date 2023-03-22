@@ -128,7 +128,7 @@ export class AbcRestApi {
     }
   };
 
-  verifyEmailAuthCode = async (dto: AbcVerifyEmailAuthCodeDto): Promise<any> => {
+  verifyEmailAuthCode = async (dto: AbcVerifyEmailAuthCodeDto): Promise<boolean> => {
     try {
       const { email, code } = dto;
 
@@ -141,12 +141,15 @@ export class AbcRestApi {
       });
 
       if (res.status !== 200) {
-        throw new Error();
+        // throw new Error();
+        return false;
       }
 
-      return res.data;
+      // return res.data;
+      return true;
     } catch (error: any) {
-      throw error?.response?.data;
+      // throw error?.response?.data;
+      return false;
     }
   };
 

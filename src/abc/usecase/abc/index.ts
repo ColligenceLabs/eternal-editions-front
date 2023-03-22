@@ -76,8 +76,6 @@ class AbcService extends EventEmitter {
       throw new Error();
     }
 
-    const xxx = await AbcUtil.encrypt(secretKey, text);
-    console.log('===>', xxx);
     return {
       encrypted: AbcUtil.encrypt(secretKey, text),
       channelid,

@@ -40,9 +40,9 @@ class AbcController extends EventEmitter {
     super();
   }
 
-  async addUser(dto: AbcAddUserDto) {
+  async addUser(dto: AbcAddUserDto): Promise<any> {
     const { encrypted, channelid } = await this.abcService.encryptSecureData(dto.password);
-    return this.restApi.addUser(
+    return await this.restApi.addUser(
       {
         ...dto,
         password: encrypted,
@@ -88,8 +88,8 @@ class AbcController extends EventEmitter {
     });
   }
 
-  verifyEmailAuthCode(dto: AbcVerifyEmailAuthCodeDto) {
-    return this.restApi.verifyEmailAuthCode(dto);
+  async verifyEmailAuthCode(dto: AbcVerifyEmailAuthCodeDto): Promise<boolean> {
+    return await this.restApi.verifyEmailAuthCode(dto);
   }
 
   async changePassword(dto: AbcChangePasswordDto) {
