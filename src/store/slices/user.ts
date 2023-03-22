@@ -30,6 +30,9 @@ export const slice = createSlice({
     },
     delUser(state) {
       state.uid = '';
+      state.email = '';
+      state.abcUid = '';
+      state.accounts = [];
     },
   },
   // Special reducer for hydrating the state. Special case for next-redux-wrapper
