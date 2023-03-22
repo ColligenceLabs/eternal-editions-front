@@ -21,12 +21,7 @@ import secureLocalStorage from 'react-secure-storage';
 // TODO : dkeys WASM Go Initialize...
 import '../src/abc/sandbox/index';
 import { controllers, accountRestApi } from '../src/abc/background/init';
-import {
-  AbcAddUserDto,
-  AbcLoginDto,
-  AbcLoginResult,
-  AbcSnsAddUserDto,
-} from '../src/abc/main/abc/interface';
+import { AbcAddUserDto, AbcLoginResult, AbcSnsAddUserDto } from '../src/abc/main/abc/interface';
 import { setAbcAuth } from '../src/store/slices/abcAuth';
 import { setTwoFa } from '../src/store/slices/twoFa';
 import { setProvider } from '../src/store/slices/webUser';
@@ -83,7 +78,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     dispatch(setTwoFa({ secret: qrSecret, reset: twofaResetCode }));
     setResetCode(twofaResetCode);
 
-    // // TODO : ABC Wallet 가입 성공하면... 우리 쪽 가입 실행
+    // TODO : ABC Wallet 가입 성공하면... 우리 쪽 가입 실행
     if (twofaResetCode !== null && twofaResetCode !== '') {
       const res = await userRegister({ abc_address: user.accounts[0].ethAddress });
       console.log(res);
@@ -215,7 +210,10 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
 
     // 기 가입자인지 신규 가입자인지 확인
     console.log('!! old user abc login result =', result);
-    const flCreate = result?.code !== undefined && result?.code === 601;
+    let flCreate = false;
+    if ('code' in result) {
+      flCreate = result?.code !== undefined && result?.code === 601;
+    }
 
     let abcAuth: AbcLoginResult = {
       accessToken: '',
@@ -229,6 +227,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       console.log('!! emailCheckCode =', emailCheckCode);
       const dto: AbcAddUserDto = {
         username: email,
+        // @ts-ignore
         password: password,
         code: emailCheckCode,
         serviceid: 'https://mw.myabcwallet.com',
@@ -304,10 +303,10 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     token: string | undefined,
     serv: string | undefined,
     loginEmail: string | undefined,
-    flag: boolean
+    flag: boolean // true = old user, false = sns user
   ) => {
-    let result;
-    let flCreate;
+    let result = null;
+    let flCreate = false;
     let loginFail = false;
 
     let abcAuth: AbcLoginResult = {
@@ -330,8 +329,10 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       });
       // 기 가입자인지 신규 가입자인지 확인
       console.log('!! login result =', result);
-      flCreate = result?.code !== undefined && result?.code === 601;
-      if (result?.code === 602) loginFail = true;
+      if ('code' in result) {
+        flCreate = result?.code !== undefined && result?.code === 601;
+        if (result?.code === 602) loginFail = true;
+      }
 
       // 기 가입자 토큰 처리
       if (!flCreate && result !== null && !loginFail) {
@@ -381,10 +382,8 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         dispatch
       );
 
-      console.log('!! ABC Address =', user.accounts[0].ethAddress);
-      const res = await userRegister({ abc_address: user.accounts[0].ethAddress });
-      console.log(res);
-      if (res.status === 200) {
+      if (flag) {
+        // OLD User
         if (!user.twoFactorEnabled) {
           setMemberCheck(false);
           // TODO : OTP 미등록 상태 처리
@@ -399,7 +398,29 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
           location.replace('/');
         }
       } else {
-        setMemberCheck(false);
+        // New SNS User
+        console.log('!! ABC Address =', user.accounts[0].ethAddress);
+
+        // ABC 기가입자로 DB에 사용자 정보가 없어서 신규로 생성
+        const res = await userRegister({ abc_address: user.accounts[0].ethAddress });
+        console.log(res);
+        if (res.status === 200) {
+          if (!user.twoFactorEnabled) {
+            setMemberCheck(false);
+            // TODO : OTP 미등록 상태 처리
+            const { qrcode, secret } = await accountController.generateTwoFactor({ reset: false });
+            console.log('!! OTP =', qrcode, secret);
+            setQrCode(qrcode);
+            setQrSecret(secret);
+            setQrOnly(true);
+          } else {
+            // 성공. 리다이렉트..
+            alert('이미 가입되어 있습니다. 로그인 처리합니다.');
+            location.replace('/');
+          }
+        } else {
+          setMemberCheck(false);
+        }
       }
     } else {
       setMemberCheck(false);
@@ -410,9 +431,9 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     const fetchSession = async () => {
       const res = await getSession();
       console.log('session res::::', res);
-      let id_token: string | undefined;
-      let service: string | undefined;
-      let loginEmail: string | undefined;
+      let id_token: string;
+      let service: string;
+      let loginEmail: string;
       let flag: boolean;
 
       if (res.data?.providerAuthInfo) {
@@ -436,6 +457,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
 
       // TODO : ABC Wallet 기가입자 인지 확인
       setMemberCheck(true);
+      // @ts-ignore
       await tryRecoverABC(id_token, service, loginEmail, flag);
     };
     fetchSession();
