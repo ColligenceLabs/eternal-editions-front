@@ -1,6 +1,9 @@
 import axios from 'axios';
 import env from '../env';
 import { apiAuthAxios, customAxios } from './customAxios';
+import { AbcAddUserDto } from '../abc/main/abc/interface';
+import { services } from '../../src/abc/background/init';
+import queryString from 'query-string';
 
 export const getTicketsService = (page: number, perPage: number, category: string) => {
   // const url = `${API_URL}/service/collection/mysterybox/?&page=${page}&limit=${perPage}&category=${category.toLowerCase()}`;
@@ -40,6 +43,20 @@ export const abcLogin = async (data: any) => {
 
 export const abcTokenRefresh = async (data: any) => {
   return await customAxios.post(`api/abc/refresh`, data);
+};
+
+export const abcAddUser = async (dto: AbcAddUserDto) => {
+  const { abcService } = services;
+  const { encrypted, channelid } = await abcService.encryptSecureData(dto.password);
+
+  return await customAxios.post(`api/abc/adduser`, {
+    data: queryString.stringify({
+      ...dto,
+      password: encrypted,
+      serviceid: process.env.ABC_SERVICE_ID,
+    }),
+    channelid: channelid,
+  });
 };
 
 export const getUser = async () => {

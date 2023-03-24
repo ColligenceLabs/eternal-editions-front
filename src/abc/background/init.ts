@@ -50,6 +50,7 @@ const services = {
   ruleService,
   gasService,
   providerConnManager,
+  abcService,
 };
 
 const abcController = new AbcController(abcRestApi, abcService);
