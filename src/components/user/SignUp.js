@@ -28,6 +28,7 @@ import { eternalLogin, getUser, requestWalletLogin } from '../../services/servic
 import { setWebUser } from '../../store/slices/webUser';
 import { useDispatch } from 'react-redux';
 import { ChangeEvent } from 'react';
+import { Base64 } from 'js-base64';
 import Router from 'next/router';
 
 // ----------------------------------------------------------------------
@@ -191,7 +192,10 @@ export default function SignUp({ onClose, hideSns, ...other }) {
     console.log(res);
     if (res.data.status === SUCCESS) {
       console.log('로그인 성공');
-      Router.push({ pathname: '/register', query: { eternal: 'password' } });
+      Router.push({
+        pathname: '/register',
+        query: { eternal: Base64.encode(userPWD) },
+      });
     } else {
       alert('로그인에 실패했습니다.');
     }
