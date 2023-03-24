@@ -507,9 +507,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         flag = false; // SNS User
       } else {
         setOldUser(true);
-        // loginEmail = res.data?.dropsUser?.email;
-        // loginEmail = 'hwnahm@hotmail.com';
-        loginEmail = 'hwnahm@hanmail.net';
+        loginEmail = res.data?.dropsUser?.email;
         setEmail(loginEmail);
         flag = true; // ID Pass Old User
       }
