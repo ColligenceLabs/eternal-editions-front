@@ -1,18 +1,13 @@
-import { ReactElement, useEffect, useState } from 'react';
-// utils
-// @types
-// _data
-// layouts
+import { ReactElement } from 'react';
 import Layout from '../../src/layouts';
-// components
 import { Page } from '../../src/components';
-import { Container, Stack, Typography } from '@mui/material';
+import { Container, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../../src/config';
 import MyTicketList from '../../src/sections/@my/MyTicketList';
 import TICKET from '../../src/sample/ticket';
 import PageHeader from '../../src/components/common/PageHeader';
-// sections
+import MyOldTicketList from '../../src/sections/@my/MyOldTicketList';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
@@ -27,10 +22,6 @@ type Props = {};
 export default function MyTicketPage({}: Props) {
   // const [tickets, setTickets] = useState([]);
 
-  useEffect(() => {
-    // setTickets();
-  }, []);
-
   return (
     <Page title="Account">
       <RootStyle>
@@ -39,6 +30,7 @@ export default function MyTicketPage({}: Props) {
 
           <Stack sx={{ mb: 3 }}>
             <MyTicketList loading={false} tickets={TICKET.myTickets} />
+            <MyOldTicketList loading={false} />
           </Stack>
         </Container>
       </RootStyle>

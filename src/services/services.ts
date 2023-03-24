@@ -104,3 +104,7 @@ export const getEdcTransactionByUID = async (uid: string, page: number) => {
 export const getExchange = async () => {
   return await customAxios.get('/api/exchange');
 };
+
+export const getOldMyTicket = async () => {
+  return await apiAuthAxios.get('/api/users/tickets');
+};
