@@ -5,6 +5,7 @@ import {
   abcLogin,
   abcVerifyCode,
   getSession,
+  updateAbcAddress,
   userRegister,
 } from '../src/services/services';
 import Layout from '../src/layouts';
@@ -21,6 +22,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { Base64 } from 'js-base64';
 import { styled } from '@mui/material/styles';
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../src/config';
 
@@ -77,9 +79,10 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   const [memberCheck, setMemberCheck] = useState(true);
   const [qrOnly, setQrOnly] = useState(false);
   const [oldUser, setOldUser] = useState(false);
-  const [password, setPassword] = useState(router ? router.query.eternal : undefined);
+  const [password, setPassword] = useState(
+    router ? Base64.decode(router.query.eternal) : undefined
+  );
   const [emailCheckCode, setEmailCheckCode] = useState('');
-
   console.log(router);
 
   const handleAbcTokenChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -98,7 +101,12 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
 
     // TODO : ABC Wallet 가입 성공하면... 우리 쪽 가입 실행
     if (twofaResetCode !== null && twofaResetCode !== '') {
-      const res = await userRegister({ abc_address: user.accounts[0].ethAddress });
+      let res;
+      if (oldUser) {
+        res = await updateAbcAddress(user.accounts[0].ethAddress);
+      } else {
+        res = await userRegister({ abc_address: user.accounts[0].ethAddress });
+      }
       console.log(res);
       if (res.status === 200) {
         // 성공. 리다이렉트..
@@ -300,7 +308,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       console.log('!! created account =', newAccount);
 
       const isExist = await abcController.getUser({
-        email: loginEmail,
+        email: email,
         successIfUserExist: true,
       });
       console.log('!! addUser =', isExist);
@@ -425,6 +433,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       } else {
         flCreate = true;
 
+        console.log('!! send check code to ', loginEmail);
         // Send Email Check Code
         result = await abcController.sendEmailAuthCode({
           email: loginEmail,

@@ -32,6 +32,10 @@ export const userRegister = async (data: any) => {
   return await apiAuthAxios.post('/auth/register/eternals', data);
 };
 
+export const updateAbcAddress = async (address: string) => {
+  return await apiAuthAxios.post(`api/users/abc/${address}`);
+};
+
 export const eternalLogin = async (data: any) => {
   // {email:'asdf', password:'asdf}
   return await apiAuthAxios.post('/auth/eternal', data);

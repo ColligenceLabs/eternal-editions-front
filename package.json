@@ -72,6 +72,7 @@
     "iconv-lite": "^0.6.3",
     "identicon.js": "^2.3.3",
     "is-buffer": "^2.0.5",
+    "js-base64": "^3.7.5",
     "json-rpc-engine": "^6.1.0",
     "jsonschema": "^1.4.1",
     "lodash": "^4.17.21",
