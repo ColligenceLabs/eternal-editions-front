@@ -9,6 +9,7 @@ import {
   Checkbox,
   CircularProgress,
   Container,
+  Divider,
   FormControlLabel,
   Input,
   TextField,
@@ -48,8 +49,17 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     check3: false,
     check4: false,
     check5: false,
+    check6: false,
+    check7: false,
+    check8: false,
+    check9: false,
   });
-  const [isCheckAll, setIsCheckAll] = useState(isCheck.check1 && isCheck.check2 && isCheck.check3);
+  const [isCheckAbcAll, setIsCheckAbcAll] = useState(
+    isCheck.check1 && isCheck.check2 && isCheck.check3 && isCheck.check4
+  );
+  const [isCheckEternalAll, setIsCheckEternalAll] = useState(
+    isCheck.check6 && isCheck.check7 && isCheck.check8
+  );
   const [idToken, setIdToken] = useState('');
   const [service, setService] = useState('');
   const [email, setEmail] = useState('');
@@ -91,19 +101,42 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     }
   };
 
-  const handleCheckItem = (check: 'check1' | 'check2' | 'check3' | 'check4' | 'check5') => {
+  const handleCheckItem = (
+    check:
+      | 'check1'
+      | 'check2'
+      | 'check3'
+      | 'check4'
+      | 'check5'
+      | 'check6'
+      | 'check7'
+      | 'check8'
+      | 'check9'
+  ) => {
     const newCheck = { ...isCheck, [check]: !isCheck[check] };
     setIsCheck(newCheck);
   };
   // const isCheckAll = isCheck.check1 && isCheck.check2 && isCheck.check3;
-  const handleCheckAll = () => {
-    setIsCheckAll((cur) => !cur);
+  const handleCheckAbcAll = () => {
+    setIsCheckAbcAll((cur) => !cur);
     setIsCheck({
-      check1: !isCheckAll,
-      check2: !isCheckAll,
-      check3: !isCheckAll,
-      check4: !isCheckAll,
-      check5: !isCheckAll,
+      ...isCheck,
+      check1: !isCheckAbcAll,
+      check2: !isCheckAbcAll,
+      check3: !isCheckAbcAll,
+      check4: !isCheckAbcAll,
+      check5: !isCheckAbcAll,
+    });
+  };
+
+  const handleCheckEternalAll = () => {
+    setIsCheckEternalAll((cur) => !cur);
+    setIsCheck({
+      ...isCheck,
+      check6: !isCheckEternalAll,
+      check7: !isCheckEternalAll,
+      check8: !isCheckEternalAll,
+      check9: !isCheckEternalAll,
     });
   };
 
@@ -501,7 +534,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     <Page title="Register">
       <RootStyle>
         <Container
-          maxWidth={'xs'}
+          maxWidth={'sm'}
           sx={{
             my: 5,
             backgroundColor: '#fff',
@@ -534,19 +567,106 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                     p: 2,
                   }}
                 >
-                  <Box>
-                    <h1>Register</h1>
+                  <Box sx={{ textAlign: 'center', marginBottom: '20px' }}>
+                    <h1>회원가입</h1>
                   </Box>
                   <Box>
                     <FormControlLabel
                       control={
                         <Checkbox
                           disabled={qrCode !== ''}
-                          checked={isCheckAll}
-                          onClick={handleCheckAll}
+                          checked={isCheckEternalAll}
+                          onClick={handleCheckEternalAll}
                         />
                       }
-                      label="전체 약관에 동의합니다."
+                      label="Eternal Editions의 모든 약관에 동의합니다."
+                    />
+                  </Box>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', paddingLeft: '15px' }}>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          disabled={qrCode !== ''}
+                          checked={isCheck.check6}
+                          onClick={() => handleCheckItem('check6')}
+                        />
+                      }
+                      label={
+                        <p>
+                          [필수]{' '}
+                          <a href="" target="_blank" style={{ color: '#000' }}>
+                            이용약관
+                          </a>
+                          을 모두 확인하였으며, 이에 동의합니다.
+                        </p>
+                      }
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          disabled={qrCode !== ''}
+                          checked={isCheck.check7}
+                          onClick={() => handleCheckItem('check7')}
+                        />
+                      }
+                      label={
+                        <p>
+                          [필수]{' '}
+                          <a href="" target="_blank" style={{ color: '#000' }}>
+                            개인정보처리방침
+                          </a>
+                          을 모두 확인하였으며, 이에 동의합니다.
+                        </p>
+                      }
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          disabled={qrCode !== ''}
+                          checked={isCheck.check8}
+                          onClick={() => handleCheckItem('check8')}
+                        />
+                      }
+                      label={
+                        <p>
+                          [필수]{' '}
+                          <a href="" target="_blank" style={{ color: '#000' }}>
+                            개인정보 제3자 제공 동의
+                          </a>
+                          를 모두 확인하였으며, 이에 동의합니다.
+                        </p>
+                      }
+                    />
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          disabled={qrCode !== ''}
+                          checked={isCheck.check9}
+                          onClick={() => handleCheckItem('check9')}
+                        />
+                      }
+                      label={
+                        <p>
+                          [선택]{' '}
+                          <a href="" target="_blank" style={{ color: '#000' }}>
+                            마케팅 활용 및 광고성 정보 수신
+                          </a>
+                          에 동의합니다.
+                        </p>
+                      }
+                    />
+                  </Box>
+                  <Divider sx={{ marginY: '10px' }} />
+                  <Box>
+                    <FormControlLabel
+                      control={
+                        <Checkbox
+                          disabled={qrCode !== ''}
+                          checked={isCheckAbcAll}
+                          onClick={handleCheckAbcAll}
+                        />
+                      }
+                      label="ABC WALLET의 모든 약관에 동의합니다."
                     />
                   </Box>
                   <Box sx={{ display: 'flex', flexDirection: 'column', paddingLeft: '15px' }}>
@@ -576,9 +696,9 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                             target="_blank"
                             style={{ color: '#000' }}
                           >
-                            이용약관
+                            이용약관을
                           </a>
-                          에 동의합니다.
+                          모두 확인하였으며, 이에 동의합니다.
                         </p>
                       }
                     />
@@ -600,7 +720,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                           >
                             개인정보 수집 및 이용
                           </a>
-                          에 동의합니다.
+                          을 모두 확인하였으며, 이에 동의합니다.
                         </p>
                       }
                     />
@@ -620,9 +740,9 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                             target="_blank"
                             style={{ color: '#000' }}
                           >
-                            개인정보 제3자 제공
+                            개인정보 제3자 제공 동의
                           </a>
-                          에 동의합니다.
+                          를 모두 확인하였으며, 이에 동의합니다.
                         </p>
                       }
                     />
@@ -672,6 +792,9 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                         !isCheck.check2 ||
                         !isCheck.check3 ||
                         !isCheck.check4 ||
+                        !isCheck.check6 ||
+                        !isCheck.check7 ||
+                        !isCheck.check8 ||
                         qrCode !== ''
                       }
                       variant={'outlined'}
