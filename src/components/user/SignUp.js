@@ -191,10 +191,10 @@ export default function SignUp({ onClose, hideSns, ...other }) {
     console.log(res);
     if (res.data.status === SUCCESS) {
       console.log('로그인 성공');
+      Router.push({ pathname: '/register', query: { eternal: 'password' } });
     } else {
-      console.log('로그인 실패');
+      alert('로그인에 실패했습니다.');
     }
-    Router.push({ pathname: '/register', query: { eternal: 'password' } });
     onClose();
   };
 
