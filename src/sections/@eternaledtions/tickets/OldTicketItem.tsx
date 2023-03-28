@@ -16,6 +16,7 @@ type Props = {
     qrcode: string;
     createdAt: Date;
     updatedAt: Date;
+    status: string;
   };
 };
 
@@ -26,7 +27,7 @@ export default function OldTicketItem({ ticket }: Props) {
       whileHover="hover"
       variants={varHover(1)}
       transition={varTranHover()}
-      sx={{ borderRadius: 2, overflow: 'hidden', position: 'relative', maxHeight: '380px' }}
+      sx={{ borderRadius: 2, overflow: 'hidden', position: 'relative' }}
     >
       <Stack
         justifyContent="space-between"
@@ -47,7 +48,12 @@ export default function OldTicketItem({ ticket }: Props) {
         <Stack>
           <LineItem icon={<></>} label="Reserve Price" value={'-'} />
           <LineItem icon={<></>} label="Location" value={'-'} />
-          <LineItem icon={<></>} label="Number of tickets" value={'-'} />
+          <LineItem icon={<></>} label="Number of tickets" value={1} />
+          <LineItem
+            icon={<></>}
+            label="Used"
+            value={ticket.status.toLowerCase() === 'used' ? 'Used' : '-'}
+          />
 
           <Stack sx={{ mt: 3 }} justifyContent="center" alignItems="center">
             {/*<img src={'/assets/example/qr.png'} style={{ maxWidth: '120px' }} />*/}
