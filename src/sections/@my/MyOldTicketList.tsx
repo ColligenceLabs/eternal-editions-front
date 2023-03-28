@@ -14,6 +14,7 @@ type OldTicketTypes = {
   qrcode: string;
   createdAt: Date;
   updatedAt: Date;
+  status: string;
 };
 
 export default function MyOldTicketList({ loading }: Props) {
@@ -30,6 +31,7 @@ export default function MyOldTicketList({ loading }: Props) {
         qrcode: `https://entrance.eternaleditions.io/admin-e-ticket/${ticket.code}?expireTime=${time}`,
         createdAt: ticket.createdAt,
         updatedAt: ticket.updatedAt,
+        status: ticket.status,
       };
     });
     setOldTicket(temp);
