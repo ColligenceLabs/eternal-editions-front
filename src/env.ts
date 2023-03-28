@@ -4,7 +4,7 @@ type ENV = {
   REACT_APP_API_URL: string;
   MPC_PROTOCOL: string;
   APP_SERVER_ADDRESS: string;
-  STORE_ID: string;
+  KSPAY_STORE_ID: string;
 };
 
 const development: ENV = {
@@ -13,7 +13,7 @@ const development: ENV = {
   REACT_APP_API_URL: 'https://dev.nftapi.eternaleditions.io',
   MPC_PROTOCOL: 'wss',
   APP_SERVER_ADDRESS: 'cs.dev-mw.myabcwallet.com:9000',
-  STORE_ID: '2999199999',
+  KSPAY_STORE_ID: '2999199999',
 };
 
 const staging: ENV = {
@@ -22,7 +22,7 @@ const staging: ENV = {
   REACT_APP_API_URL: 'http://localhost:5001',
   MPC_PROTOCOL: 'wss',
   APP_SERVER_ADDRESS: 'cs.dev-mw.myabcwallet.com:9000',
-  STORE_ID: '2999199999',
+  KSPAY_STORE_ID: '2999199999',
 };
 
 const production: ENV = {
@@ -31,7 +31,7 @@ const production: ENV = {
   REACT_APP_API_URL: 'http://localhost:5001',
   MPC_PROTOCOL: 'wss',
   APP_SERVER_ADDRESS: 'cs.dev-mw.myabcwallet.com:9000',
-  STORE_ID: '2034700002',
+  KSPAY_STORE_ID: '2034700002',
 };
 
 const env =

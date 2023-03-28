@@ -47,7 +47,7 @@ export default function KSPay() {
   const router = useRouter();
   const [orderInfo, setOrderInfo] = useState({
     sndPaymethod: '1000000000',
-    sndStoreid: env.STORE_ID,
+    sndStoreid: env.KSPAY_STORE_ID,
     sndOrdernumber: 'carrot_1234',
     sndGoodname: router.query['amount'] ? `${router.query['amount']} EDC` : 'EDC',
     sndAmount: router.query['price'] ? router.query['price'] : '0',
