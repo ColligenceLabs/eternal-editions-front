@@ -15,6 +15,7 @@ import Select from '@mui/material/Select';
 import { useRouter } from 'next/router';
 import EECard from '../src/components/EECard';
 import { useSelector } from 'react-redux';
+import env from '../src/env';
 
 // ----------------------------------------------------------------------
 
@@ -46,7 +47,7 @@ export default function KSPay() {
   const router = useRouter();
   const [orderInfo, setOrderInfo] = useState({
     sndPaymethod: '1000000000',
-    sndStoreid: '2999199999',
+    sndStoreid: env.STORE_ID,
     sndOrdernumber: 'carrot_1234',
     sndGoodname: router.query['amount'] ? `${router.query['amount']} EDC` : 'EDC',
     sndAmount: router.query['price'] ? router.query['price'] : '0',
