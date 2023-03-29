@@ -50,8 +50,8 @@ export const PageLinks = [
       // { title: 'About', path: Routes.marketing.about },
       // { title: 'Contact', path: Routes.marketing.contact },
     ],
-  }
-]
+  },
+];
 export const PageLinks_old = [
   {
     order: '1',
@@ -153,12 +153,11 @@ export const PageLinks_old = [
 //   { title: 'Documentation', path: Routes.docs },
 // ];
 
-
 export const navConfig = [
   // { title: 'Home', path: '/' },
   { title: 'ABOUT', path: Routes.eternalEditions.about },
   { title: 'TICKET', path: Routes.eternalEditions.tickets },
-  { title: 'HELP', path: Routes.eternalEditions.help },
+  // { title: 'HELP', path: Routes.eternalEditions.help },
   // { title: 'Components', path: Routes.componentsUI },
   // {
   //   title: 'Pages',
