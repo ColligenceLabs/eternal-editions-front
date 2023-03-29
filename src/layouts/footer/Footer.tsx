@@ -1,6 +1,7 @@
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
-import { Box, Link, Stack, Container, LinkProps, Typography } from '@mui/material';
+import { Box, Link as MLink, Stack, Container, LinkProps, Typography } from '@mui/material';
+import Link from 'next/link';
 // hooks
 import { useResponsive } from '../../hooks';
 // components
@@ -17,7 +18,7 @@ const ICONS = [
 
 // ----------------------------------------------------------------------
 
-const LinkStyle = styled((props: LinkProps) => <Link target="_blank" rel="noopener" {...props} />)(
+const LinkStyle = styled((props: LinkProps) => <MLink target="_blank" rel="noopener" {...props} />)(
   ({ theme }) => ({
     ...theme.typography.body3,
     marginTop: theme.spacing(1),
@@ -86,9 +87,9 @@ export default function Footer() {
             }}
           >
             {ICONS.map((src, index) => (
-              <Link href="#" key={index}>
+              <MLink href="#" key={index}>
                 <Image sx={{ width: '20px' }} src={src} />
-              </Link>
+              </MLink>
             ))}
           </Box>
         </Box>
@@ -106,6 +107,15 @@ export default function Footer() {
           Mail order number : 123-435-2859
           <br />
           Address : 7th floor, 14, Teheran-ro 26 gil, Gangnam-gu, Seoul, Republic of Korea
+        </Box>
+        <Box>
+          <Link href="/privacy" color="black">
+            개인정보취급방침
+          </Link>{' '}
+          |{' '}
+          <Link href="/service_terms" color="black">
+            서비스 이용약관
+          </Link>
         </Box>
         <Box
           component="p"
