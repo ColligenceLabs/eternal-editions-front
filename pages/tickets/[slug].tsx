@@ -665,7 +665,7 @@ export default function TicketDetailPage() {
                     <LineItemByModal
                       icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
                       label={`${(dollarPrice * 10).toFixed(4)} EDC`}
-                      value={'PAY WITH EDC'}
+                      value={'PAY WITH EDCP'}
                       isBuying={isBuyingWithPoint}
                     />
                   )}
