@@ -110,11 +110,11 @@ export default function Footer() {
         </Box>
         <Box>
           <Link href="/privacy" color="black">
-            개인정보취급방침
+            <span style={{ fontWeight: 'bold' }}>개인정보취급방침</span>
           </Link>{' '}
           |{' '}
           <Link href="/service_terms" color="black">
-            서비스 이용약관
+            <span>서비스 이용약관</span>
           </Link>
         </Box>
         <Box
