@@ -263,11 +263,12 @@ export default function TicketDetailPage() {
           isSent: false,
           txHash: '',
           // price: ticketInfo?.price,
-          price: ((ticketInfo?.price ?? 0) * maticPrice * 10).toFixed(4),
+          price: (((ticketInfo?.price ?? 0) * maticPrice) / 10).toFixed(4),
           itemId: selectedTicketItem?.id,
           usePoint: true,
         };
 
+        console.log(data);
         let res = await registerBuy(data);
         console.log(res.data);
         if (res.data.status === SUCCESS) {
@@ -530,7 +531,7 @@ export default function TicketDetailPage() {
                     <LineItem
                       icon={<></>}
                       label="Reserve Price"
-                      value={`$${dollarPrice.toFixed(4)} (Ξ ${ticketInfo?.price})`}
+                      value={`EDCP ${(dollarPrice / 10).toFixed(4)} (Ξ ${ticketInfo?.price})`}
                     />
                     {ticketInfo &&
                       ticketInfo.mysteryboxItems[0].properties &&
@@ -628,9 +629,14 @@ export default function TicketDetailPage() {
         <Box sx={modalStyle}>
           <Stack spacing={2}>
             <Stack sx={{ pr: 3 }}>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                Buy NFT Ticket
-              </Typography>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography id="modal-modal-title" variant="h4">
+                  Buy NFT Ticket
+                </Typography>
+                <Typography id="modal-modal-title" variant="h6">
+                  {`$ ${((ticketInfo?.price ?? 0) * maticPrice).toFixed(4)}`}
+                </Typography>
+              </Box>
               <Typography
                 id="modal-modal-description"
                 sx={{ mt: 2, color: '#999999', width: '80%', lineHeight: '1.1em' }}
@@ -663,8 +669,8 @@ export default function TicketDetailPage() {
                     </Box>
                   ) : (
                     <LineItemByModal
-                      icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
-                      label={`${(dollarPrice * 10).toFixed(4)} EDC`}
+                      // icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
+                      label={`${(dollarPrice / 10).toFixed(4)} EDCP`}
                       value={'PAY WITH EDCP'}
                       isBuying={isBuyingWithPoint}
                     />
@@ -693,7 +699,7 @@ export default function TicketDetailPage() {
                     </Box>
                   ) : (
                     <LineItemByModal
-                      icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
+                      // icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
                       label={`${ticketInfo?.price} ${ticketInfo?.quote.toUpperCase()}`}
                       value={`PAY WITH ${ticketInfo?.quote.toUpperCase()}`}
                       isBuying={isBuyingWithMatic}
