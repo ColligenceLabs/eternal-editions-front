@@ -38,7 +38,7 @@ export default function EEAboutUsPage({ }: Props) {
     <Page title="About Us">
       <RootStyle>
         <AboutHeader />
-        <AboutVideo />
+        {/* <AboutVideo /> */}
         <AboutWhyEE />
         <AboutIFSo />
       </RootStyle>
