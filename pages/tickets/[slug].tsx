@@ -89,7 +89,8 @@ const modalStyle = {
 export default function TicketDetailPage() {
   const router = useRouter();
   const { user } = useSelector((state: any) => state.webUser);
-  const { account, library, chainId } = useActiveWeb3React();
+  const { library, chainId } = useActiveWeb3React();
+  const { account } = useAccount();
   const { slug } = router.query;
 
   const [ticketInfo, setTicketInfo] = useState<TicketInfoTypes | null>(null);
@@ -415,7 +416,6 @@ export default function TicketDetailPage() {
           let whlBalance = 0;
           let whlBool = false;
           if (whitelist !== null && whitelist > 0) {
-            const { account } = useAccount();
             whlBalance = await getWhlBalanceNoSigner(whitelistAddress, account, chainId);
             console.log('!! get whitelist balance =', account, whlBalance);
             whlBool = true;
