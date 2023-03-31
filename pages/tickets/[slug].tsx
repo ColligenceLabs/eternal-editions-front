@@ -74,7 +74,7 @@ const modalStyle = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 450,
+  minWidth: '350px',
   bgcolor: 'common.white',
   color: 'common.black',
   border: 'none',
@@ -483,10 +483,11 @@ export default function TicketDetailPage() {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
+        minHeight: '1000px'
       }}
     >
       <RootStyle>
-        <Container>
+        <Container sx={{minHeight: '800px'}}>
           <Grid container spacing={8} direction="row">
             <Grid item xs={12} md={5} lg={6}>
               {/*<Image*/}
