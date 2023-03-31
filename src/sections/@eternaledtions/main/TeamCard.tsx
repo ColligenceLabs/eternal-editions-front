@@ -49,6 +49,7 @@ const TeamProfile = styled('figure')(({theme}) => ({
 type Props = {
   team: {
     nickname: string;
+    image: string;
     history?: string;
     name: string;
     job: string;
@@ -58,7 +59,7 @@ type Props = {
 }
 
 export default function TeamCardItem({team}: Props) {
-  const {nickname, history, name, job, intro, isLogo} = team;
+  const {nickname, image, history, name, job, intro, isLogo} = team;
   return (
     <TeamCard>
       <TeamCardHeader>
@@ -74,7 +75,7 @@ export default function TeamCardItem({team}: Props) {
       </TeamCardHeader>
       <Box>
         <TeamProfile>
-          <img src="/assets/img/img-profile-user01.png"/>
+          <img src={image}/>
         </TeamProfile>
         <Typography variant="h5">{name}</Typography>
         <Typography variant="subtitle1">{job}</Typography>
