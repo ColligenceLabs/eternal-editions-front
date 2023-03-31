@@ -22,7 +22,7 @@ function Logo({onDark = false, isSimple = false, sx}: LogoProps) {
         <NextLink href="/" passHref>
             <Box
                 sx={{
-                    width: isSimple ? 40 : 114,
+                    width: isSimple ? 40 : 230,
                     height: 40,
                     cursor: 'pointer',
                     ...sx,
