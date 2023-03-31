@@ -6,6 +6,7 @@ import {useTheme} from '@mui/material/styles';
 import {Box, BoxProps} from '@mui/material';
 import HeaderLogo from "../assets/logo/HeaderLogo";
 import SimpleLogo from "../assets/logo/SimpleLogo";
+import useResponsive from "../hooks/useResponsive";
 
 // ----------------------------------------------------------------------
 
@@ -16,13 +17,14 @@ interface LogoProps extends BoxProps {
 
 function Logo({onDark = false, isSimple = false, sx}: LogoProps) {
     const theme = useTheme();
+    const isDesktop = useResponsive('up', 'md');
     const isLight = theme.palette.mode === 'light';
 
     return (
         <NextLink href="/" passHref>
             <Box
                 sx={{
-                    width: isSimple ? 40 : 230,
+                    width: isSimple ? 40 : isDesktop ? 230 : 44,
                     height: 40,
                     cursor: 'pointer',
                     ...sx,
