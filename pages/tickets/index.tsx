@@ -40,7 +40,7 @@ export default function TicketPage({}: Props) {
     return (
         <Page title="Tickets">
             <RootStyle>
-                <Container sx={{mt: 3}}>
+                <Container sx={{mt: 3, mr: {sx:0}}}>
 
                     <PageHeader title="TICKET"/>
 
