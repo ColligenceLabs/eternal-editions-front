@@ -11,11 +11,11 @@ import {PageLinks} from '../nav/NavConfig';
 
 const ICONS = [
     {
-        link: 'https://www.instagram.com/waterbomb_league/',
+        link: 'https://www.instagram.com/ee_dao_official/',
         icon: '/assets/icons/icon-instagram.svg'
     },
     {
-        link: 'https://waterbomb-league.gitbook.io/',
+        link: 'https://eternaledtions.gitbook.io/kor/introduction',
         icon: '/assets/icons/icon-gitbook.svg'
     },
     {
