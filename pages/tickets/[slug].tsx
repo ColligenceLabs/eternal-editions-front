@@ -417,7 +417,7 @@ export default function TicketDetailPage() {
           if (whitelist !== null && whitelist > 0) {
             const { account } = useAccount();
             whlBalance = await getWhlBalanceNoSigner(whitelistAddress, account, chainId);
-            console.loh('!! get whitelist balance =', account, whlBalance);
+            console.log('!! get whitelist balance =', account, whlBalance);
             whlBool = true;
             if (whlBool && whlBalance === 0) {
               setOpenSnackbar({
