@@ -415,7 +415,7 @@ export default function TicketDetailPage() {
           const sold = await getItemSold(contract, item.no - 1, chainId);
           let whlBalance = 0;
           let whlBool = false;
-          if (whitelist !== null && whitelist > 0) {
+          if (whitelist !== null && whitelist > 0 && account !== null) {
             whlBalance = await getWhlBalanceNoSigner(whitelistAddress, account, chainId);
             console.log('!! get whitelist balance =', account, whlBalance);
             whlBool = true;
