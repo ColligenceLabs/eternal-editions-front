@@ -223,9 +223,9 @@ export default function WalletPopover({}) {
                   cursor: 'pointer',
                 }}
               >
-                <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
-                  BUY SIMPLEX CREDIT
-                </Typography>
+                {/*<Typography sx={{ fontSize: '13px', fontWeight: '700' }}>*/}
+                {/*  BUY SIMPLEX CREDIT*/}
+                {/*</Typography>*/}
               </Box>
             </Box>
           </Box>
