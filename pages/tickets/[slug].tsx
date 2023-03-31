@@ -818,7 +818,7 @@ type Params = {
 };
 
 type LineItemProps = {
-  icon: ReactElement;
+  icon?: ReactElement;
   label: string;
   value: any;
   isBuying?: boolean;
@@ -827,7 +827,7 @@ type LineItemProps = {
 function LineItem({ icon, label, value }: LineItemProps) {
   return (
     <TextIconLabel
-      icon={icon}
+      icon={icon!}
       value={
         <>
           <Typography sx={{ fontSize: '14px', color: 'common.black' }}>{label}</Typography>
@@ -856,7 +856,7 @@ function LineItem({ icon, label, value }: LineItemProps) {
 function LineItemByModal({ icon, label, value, isBuying }: LineItemProps) {
   return (
     <TextIconLabel
-      icon={icon}
+      icon={icon!}
       value={
         <>
           <Typography sx={{ fontSize: '14px', color: 'common.black' }}>{label}</Typography>
