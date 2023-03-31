@@ -36,7 +36,7 @@ export default function HomePage({posts}: Props) {
         <HomeHero/>
         {/* <HomeEvent/> */}
         {/* TODO 홈 이벤트 추가때 사용 */}
-        <HomeNowEvent/>
+        {/* <HomeNowEvent/> */}
         <HomeBackground>
           <HomeEternalEditions/>
           <HomeTeam/>
