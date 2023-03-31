@@ -53,6 +53,7 @@ import { useSelector } from 'react-redux';
 import { collectionAbi } from '../../src/config/abi/Collection';
 import tokenAbi from '../../src/config/abi/ERC20Token.json';
 import { LoadingButton } from '@mui/lab';
+import useAccount from '../../src/hooks/useAccount';
 
 // ----------------------------------------------------------------------
 
@@ -414,7 +415,9 @@ export default function TicketDetailPage() {
           let whlBalance = 0;
           let whlBool = false;
           if (whitelist !== null && whitelist > 0) {
+            const { account } = useAccount();
             whlBalance = await getWhlBalanceNoSigner(whitelistAddress, account, chainId);
+            console.loh('!! get whitelist balance =', account, whlBalance);
             whlBool = true;
             if (whlBool && whlBalance === 0) {
               setOpenSnackbar({
