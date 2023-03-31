@@ -146,7 +146,7 @@ export default function NavMobile({ navConfig, sx }: NavProps) {
 
           <Stack spacing={2} sx={{ p: 2.5, pb: 5 }}>
             {!account ? (
-              <Button onClick={() => handleJoinOpen()} fullWidth variant="outlined" color="inherit">
+              <Button onClick={() => handleJoinOpen()} fullWidth variant="outlined">
                 SIGN UP
               </Button>
             ) : (
@@ -154,7 +154,6 @@ export default function NavMobile({ navConfig, sx }: NavProps) {
                 onClick={() => handleDisconnect()}
                 fullWidth
                 variant="outlined"
-                color="inherit"
               >
                 Disconnect
               </Button>
