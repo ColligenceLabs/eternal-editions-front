@@ -214,19 +214,19 @@ export default function WalletPopover({}) {
                   {balance.toFixed(5)} MATIC
                 </Typography>
               </Box>
-              <Box
-                sx={{
-                  border: '1.5px solid',
-                  width: '150px',
-                  textAlign: 'center',
-                  borderRadius: '12px',
-                  cursor: 'pointer',
-                }}
-              >
-                {/*<Typography sx={{ fontSize: '13px', fontWeight: '700' }}>*/}
-                {/*  BUY SIMPLEX CREDIT*/}
-                {/*</Typography>*/}
-              </Box>
+              {/*<Box*/}
+              {/*  sx={{*/}
+              {/*    border: '1.5px solid',*/}
+              {/*    width: '150px',*/}
+              {/*    textAlign: 'center',*/}
+              {/*    borderRadius: '12px',*/}
+              {/*    cursor: 'pointer',*/}
+              {/*  }}*/}
+              {/*>*/}
+              {/*  <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>*/}
+              {/*    BUY SIMPLEX CREDIT*/}
+              {/*  </Typography>*/}
+              {/*</Box>*/}
             </Box>
           </Box>
           <Box
