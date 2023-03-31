@@ -264,7 +264,7 @@ Type: Address verification`;
                         <Image src="/assets/img/ee-logo.svg" sx={{ width: '100%' }} />
                       </Box>
                       <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
-                        {user.point ? user.point : 0} EDC
+                        {user.point ? user.point : 0} EDCP
                       </Typography>
                     </Box>
                     <Box

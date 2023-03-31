@@ -35,7 +35,7 @@ import useAccount from '../../hooks/useAccount';
 
 const FormSchema = Yup.object().shape({
   krw: Yup.number().required('KRW is required').default(0),
-  edc: Yup.number().required('EDC is required').default(0),
+  edc: Yup.number().required('EDCP is required').default(0),
 });
 
 type FormValuesProps = {
@@ -190,7 +190,7 @@ export default function PaymentPoint() {
                   type="number"
                   value={amount}
                   onChange={handleChangeAmount}
-                  endAdornment={<InputAdornment position="end">EDC</InputAdornment>}
+                  endAdornment={<InputAdornment position="end">EDCP</InputAdornment>}
                   inputProps={{ style: { color: theme.palette.grey[900], width: '100%' } }}
                 />
               </FormControl>
