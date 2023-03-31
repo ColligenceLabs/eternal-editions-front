@@ -2,6 +2,7 @@ import {styled, useTheme} from '@mui/material/styles';
 import {Box, Chip, Typography} from "@mui/material";
 import React from "react";
 import {TicketProps} from "../../../@types/ticket/ticket";
+import Link from "next/link";
 
 const ContactCard = styled('div')(({theme}) => ({
   display: 'flex',
@@ -23,6 +24,12 @@ const ContactCardButton = styled('div')(({theme}) => ({
   marginTop: 'auto',
 }));
 
+const Anchor = styled('a')(({theme}) => ({
+  textDecoration: 'none',
+  cursor: 'pointer',
+  display: 'block'
+}));
+
 type Props = {
   contact: {
     title: string;
@@ -42,7 +49,10 @@ export default function ContactCardItem({contact}: Props) {
         </Typography>
       </ContactCardHeader>
       <ContactCardButton>
-        <Chip label="SEND A E-MAIL" variant="outlined" />
+          {link && <Anchor href={link} target={"_blank"}>
+              <Chip label="SEND A E-MAIL" variant="outlined" />
+          </Anchor>}
+
       </ContactCardButton>
     </ContactCard>
   )

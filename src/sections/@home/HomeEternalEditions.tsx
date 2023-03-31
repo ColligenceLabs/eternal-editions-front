@@ -68,7 +68,7 @@ export default function HomeEternalEditions() {
             <ImgHuman src="/assets/img/img-human.png" />
 
             <EternalEditionBody>
-              <PageHeader title="ABOUT" link='/tickets' />
+              <PageHeader title="ABOUT" link='/about-us' />
               <Box
                   component="h1"
                   sx={{

@@ -193,7 +193,7 @@ export default function HomeTeam() {
     <RootStyle>
       <TeamSection>
         <Container maxWidth={false} sx={{px: {xs: '12px', lg: '80px'}}}>
-          <PageHeader title="TEAM" link='/tickets'/>
+          <PageHeader title="TEAM"/>
           {isDesktop ? (
           <Masonry columns={{xs: 1, md: 2, lg: 3}} spacing={1}>
             {members.map((team, index) => (

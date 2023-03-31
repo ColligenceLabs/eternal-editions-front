@@ -25,12 +25,12 @@ const contacts = [
   {
     title: 'Media&Press',
     description: 'All media and press related requests can be made through these channels.',
-    link: 'link',
+    link: 'mailto:eternaleditions@gmail.com',
   },
   {
     title: 'Consultations',
     description: 'All consultation related requests can be done through these channels. No request is too small. Please be patient and we will do our best to provide a prompt response.',
-    link: 'link',
+    link: 'mailto:eternaleditions@gmail.com',
   },
 ];
 
