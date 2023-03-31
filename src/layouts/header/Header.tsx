@@ -359,6 +359,7 @@ export default function Header({ transparent }: Props) {
                       width: {
                         md: 120,
                       },
+                      color: 'white'
                     }}
                   >
                     SIGN UP
