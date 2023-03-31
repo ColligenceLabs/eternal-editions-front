@@ -32,6 +32,7 @@ import {
 } from '../../../schema/account';
 import { abcAdminApiClient } from '../../../utils/axios';
 import { AbcLanguage, AbcMobileService } from '../../../schema/abc';
+import env from '../../../../env';
 
 // 인증서버 : https://dev-api.id.myabcwallet.com/auth
 // 회원서버 : https://dev-api.id.myabcwallet.com/member
