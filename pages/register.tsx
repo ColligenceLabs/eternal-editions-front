@@ -80,7 +80,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   const [qrOnly, setQrOnly] = useState(false);
   const [oldUser, setOldUser] = useState(false);
   const [password, setPassword] = useState(
-    router ? Base64.decode(router.query.eternal) : undefined
+    router.query.eternal ? Base64.decode(router.query.eternal) : undefined
   );
   const [emailCheckCode, setEmailCheckCode] = useState('');
   console.log(router);

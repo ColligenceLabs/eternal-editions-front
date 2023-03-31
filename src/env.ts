@@ -6,6 +6,7 @@ type ENV = {
   APP_SERVER_ADDRESS: string;
   KSPAY_STORE_ID: string;
   APP_SERVER_ADDRESS_PROTOCOL: string;
+  ABC_SERVER_ADDRESS: string;
 };
 
 const development: ENV = {
@@ -15,6 +16,7 @@ const development: ENV = {
   MPC_PROTOCOL: 'wss',
   APP_SERVER_ADDRESS_PROTOCOL: 'https',
   APP_SERVER_ADDRESS: 'cs.dev-mw.myabcwallet.com:9000',
+  ABC_SERVER_ADDRESS: 'dev-api.id.myabcwallet.com',
   KSPAY_STORE_ID: '2999199999',
 };
 
@@ -25,6 +27,7 @@ const staging: ENV = {
   MPC_PROTOCOL: 'wss',
   APP_SERVER_ADDRESS_PROTOCOL: 'https',
   APP_SERVER_ADDRESS: 'cs.dev-mw.myabcwallet.com:9000',
+  ABC_SERVER_ADDRESS: 'dev-api.id.myabcwallet.com',
   KSPAY_STORE_ID: '2999199999',
 };
 
@@ -35,6 +38,7 @@ const production: ENV = {
   MPC_PROTOCOL: 'wss',
   APP_SERVER_ADDRESS_PROTOCOL: 'https',
   APP_SERVER_ADDRESS: 'cs.mw.myabcwallet.com:9000',
+  ABC_SERVER_ADDRESS: 'api.id.myabcwallet.com',
   KSPAY_STORE_ID: '2034700002',
 };
 

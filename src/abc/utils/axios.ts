@@ -80,7 +80,7 @@ apiClient.interceptors.response.use(
         // refresh token을 이용하여 access token 재발행 받기
         // return axios
         //   .request({
-        //     url: 'https://dev-api.id.myabcwallet.com/auth/auth-service/refresh',
+        //     url: 'https://${env.ABC_SERVER_ADDRESS}/auth/auth-service/refresh',
         //     method: 'post',
         //     // adapter: fetchAdapter,
         //     headers: { 'content-type': 'application/x-www-form-urlencoded' },
@@ -208,7 +208,7 @@ abcAdminApiClient.interceptors.response.use(
         // refresh token을 이용하여 access token 재발행 받기
         return axios
           .request({
-            url: 'https://dev-api.id.myabcwallet.com/auth/auth-service/refresh',
+            url: `https://${env.ABC_SERVER_ADDRESS}/auth/auth-service/refresh`,
             method: 'post',
             // adapter: fetchAdapter,
             headers: { 'content-type': 'application/x-www-form-urlencoded' },

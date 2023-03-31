@@ -36,8 +36,8 @@ import { AbcLanguage, AbcMobileService } from '../../../schema/abc';
 // 인증서버 : https://dev-api.id.myabcwallet.com/auth
 // 회원서버 : https://dev-api.id.myabcwallet.com/member
 
-const memberBaseURL = `https://dev-api.id.myabcwallet.com/member`;
-const authBaseURL = `https://dev-api.id.myabcwallet.com/auth`;
+const memberBaseURL = `https://${env.ABC_SERVER_ADDRESS}/member`;
+const authBaseURL = `https://${env.ABC_SERVER_ADDRESS}/auth`;
 
 export class AbcRestApi {
   addUser = async (dto: AbcAddUserDto, channelid: string): Promise<any> => {
@@ -275,7 +275,7 @@ export class AbcRestApi {
       const { pubkey, plain } = dto;
 
       const res = await axios.request({
-        url: `https://dev-api.id.myabcwallet.com/secure/channel/create`,
+        url: `https://${env.ABC_SERVER_ADDRESS}/secure/channel/create`,
         method: 'post',
         // adapter: fetchAdapter,
         headers: { 'content-type': 'application/x-www-form-urlencoded' },
@@ -298,7 +298,7 @@ export class AbcRestApi {
   searchBlacklist = async (dto: AbcSearchBlacklistDto, abcToken: string) => {
     try {
       const res = await abcAdminApiClient.request({
-        url: `https://dev-api.id.myabcwallet.com/query/v1/filter/address`,
+        url: `https://${env.ABC_SERVER_ADDRESS}/query/v1/filter/address`,
         method: 'post',
         // adapter: fetchAdapter,
         headers: {
@@ -320,7 +320,7 @@ export class AbcRestApi {
   searchBlackDomain = async (dto: AbcSearchBlackDomainDto) => {
     try {
       const res = await abcAdminApiClient.request({
-        url: `https://dev-api.id.myabcwallet.com/query/v1/filter/domain`,
+        url: `https://${env.ABC_SERVER_ADDRESS}/query/v1/filter/domain`,
         method: 'post',
         // adapter: fetchAdapter,
         headers: {
@@ -342,7 +342,7 @@ export class AbcRestApi {
   getUrgentNotice = async (service: AbcMobileService, language: AbcLanguage) => {
     try {
       const res = await abcAdminApiClient.request({
-        url: `https://dev-api.id.myabcwallet.com/query/v1/urgent-notice`,
+        url: `https://${env.ABC_SERVER_ADDRESS}/query/v1/urgent-notice`,
         method: 'get',
         headers: {
           'content-type': 'application/json',
