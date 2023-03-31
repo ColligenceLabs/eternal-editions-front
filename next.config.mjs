@@ -6,15 +6,8 @@ const nextConfig = {
   trailingSlash: true,
   assetPrefix: '/',
   env: {
-    DEV_API: 'https://dev.nftapi.eternaleditions.io',
-    PRODUCTION_API: 'https://dev.nftapi.eternaleditions.io',
     GOOGLE_API: '',
     // ABC Wallet
-    // APP_SERVER_ADDRESS: 'cs.mw.myabcwallet.com:9000',
-    // APP_SERVER_ADDRESS_PROTOCOL: 'https',
-    APP_SERVER_ADDRESS: 'cs.dev-mw.myabcwallet.com:9000',
-    APP_SERVER_ADDRESS_PROTOCOL: 'https',
-    MPC_PROTOCOL: 'wss',
     SELENIUM_BROWSER: 'chrome',
     DETECT_TOKEN_PERIOD: '180000',
     INFURA_ID: process.env.INFURA_ID,

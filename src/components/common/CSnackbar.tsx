@@ -21,7 +21,7 @@ const CSnackbar: React.FC<SnackbarProps> = ({ open, type, message, handleClose }
         <>
           <Snackbar
             open={open}
-            autoHideDuration={3000}
+            autoHideDuration={5000}
             anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
             onClose={handleClose}
           >

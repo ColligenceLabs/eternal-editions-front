@@ -69,8 +69,10 @@ WebAssembly.instantiateStreaming(fetch('/wasm/dkeyswasm.wasm'), go.importObject)
 
 const ErrStr = 'wasmerror';
 
+console.log('!! APP_SERVER_ADDRESS = ', env.APP_SERVER_ADDRESS);
 var appPropNcloud = {
-  csAddr: process.env.APP_SERVER_ADDRESS,
+  // csAddr: process.env.APP_SERVER_ADDRESS,
+  csAddr: env.APP_SERVER_ADDRESS,
   useTLS: false,
   skipInsecureTLS: true,
 };
@@ -89,9 +91,10 @@ const RSID = 3;
 ////////////////////////////////// connect to
 function ConnectTo(addr, path, useTLS, skipInsecureTLS, token) {
   try {
-    console.log('=== ConnectTo ===>', `${process.env.MPC_PROTOCOL}://` + addr + path);
+    console.log('=== ConnectTo ===>', `${env.MPC_PROTOCOL}://` + addr + path);
     console.log('=== ConnectTo ===>', token);
-    return new WebSocket(`${process.env.MPC_PROTOCOL}://` + addr + path, token);
+    // return new WebSocket(`${process.env.MPC_PROTOCOL}://` + addr + path, token);
+    return new WebSocket(`${env.MPC_PROTOCOL}://` + addr + path, token);
   } catch (err) {
     console.log('=== ConnectTo error ===>', err);
   }

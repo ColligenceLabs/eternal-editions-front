@@ -45,7 +45,7 @@ import axios from 'axios';
 import contracts from '../../src/config/constants/contracts';
 import useActiveWeb3React from '../../src/hooks/useActiveWeb3React';
 import { parseEther } from 'ethers/lib/utils';
-import { buyItem, getItemSold } from '../../src/utils/transactions';
+import { buyItem, getItemSold, getWhlBalanceNoSigner } from '../../src/utils/transactions';
 import CSnackbar from '../../src/components/common/CSnackbar';
 import { BuyerTypes } from '../../src/@types/buyer/buyer';
 import { abcSendTx } from '../../src/utils/abcTransactions';
@@ -404,11 +404,26 @@ export default function TicketDetailPage() {
       const ticketInfoRes = await getTicketInfoService(slug);
 
       const contract = ticketInfoRes.data.data.boxContractAddress;
+      const whitelist = ticketInfoRes.data.data.whitelistNftId;
+      const whitelistAddress = ticketInfoRes.data.data.whitelistNftContractAddress ?? '';
       const temp = await Promise.all(
         ticketInfoRes.data.data.mysteryboxItems.map(async (item: TicketItemTypes) => {
           // todo getRemain
           const sold = await getItemSold(contract, item.no - 1, chainId);
-          return { ...item, remain: item.issueAmount - sold };
+          let whlBalance = 0;
+          let whlBool = false;
+          if (whitelist !== null && whitelist > 0) {
+            whlBalance = await getWhlBalanceNoSigner(whitelistAddress, account, chainId);
+            whlBool = true;
+            if (whlBool && whlBalance === 0) {
+              setOpenSnackbar({
+                open: true,
+                type: 'error',
+                message: 'Not in the whitelist or a wallet is not connected !!',
+              });
+            }
+          }
+          return { ...item, remain: item.issueAmount - sold, whlBool, whlBalance };
         })
       );
 
@@ -449,7 +464,7 @@ export default function TicketDetailPage() {
   useEffect(() => {
     fetchTicketInfo();
     fetchBuyersList();
-  }, [slug, reload]);
+  }, [slug, reload, account]);
 
   useEffect(() => {
     setDollarPrice((ticketInfo?.price ?? 0) * maticPrice);
@@ -581,6 +596,7 @@ export default function TicketDetailPage() {
                       size={'large'}
                       fullWidth={true}
                       variant="contained"
+                      disabled={selectedTicketItem?.whlBool && selectedTicketItem?.whlBalance === 0}
                     >
                       Payment
                     </Button>

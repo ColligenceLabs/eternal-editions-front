@@ -1020,6 +1020,27 @@ export async function getTotalSupplyNoSigner(
   return totalSupply;
 }
 
+export async function getWhlBalanceNoSigner(
+  address: string,
+  account: string | undefined | null,
+  chainId: number
+): Promise<number> {
+  const provider = ethers.getDefaultProvider(getSelectedNodeUrl(chainId));
+  const contract = new ethers.Contract(address, whiteListAbi, provider);
+
+  if (account === undefined) return 0;
+
+  let balance = 0;
+  try {
+    const result: BigNumber = await contract.balanceOf(account);
+    balance = result.toNumber();
+  } catch (e) {
+    console.log('#####', address);
+    console.log('getWhlBalanceNoSigner Error : ', e);
+  }
+  return balance;
+}
+
 export async function approveKIP7(
   address: string,
   spender: string,

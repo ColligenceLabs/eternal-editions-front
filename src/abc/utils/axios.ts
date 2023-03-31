@@ -16,9 +16,13 @@ import secureLocalStorage from 'react-secure-storage';
 import { AbcLoginResponse } from '../schema/account';
 
 import { abcTokenRefresh } from '../../services/services';
+import env from '../../env';
 
+console.log('!!!! APP_SERVER_ADDRESS = ', env.APP_SERVER_ADDRESS);
+console.log('!!!! APP_SERVER_ADDRESS_PROTOCOL = ', env.APP_SERVER_ADDRESS_PROTOCOL);
 export const apiClient = axios.create({
-  baseURL: `${process.env.APP_SERVER_ADDRESS_PROTOCOL}://${process.env.APP_SERVER_ADDRESS}/api/`,
+  // baseURL: `${process.env.APP_SERVER_ADDRESS_PROTOCOL}://${process.env.APP_SERVER_ADDRESS}/api/`,
+  baseURL: `${env.APP_SERVER_ADDRESS_PROTOCOL}://${env.APP_SERVER_ADDRESS}/api/`,
   // timeout: 1000,
   // adapter: fetchAdapter,
 });
