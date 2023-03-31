@@ -50,7 +50,7 @@ export default function KSPay() {
     sndPaymethod: '1000000000',
     sndStoreid: env.KSPAY_STORE_ID,
     sndOrdernumber: `EE${format(new Date(), 'yyyyMMddHHmmss')}-${Math.floor(Math.random() * 89999) + 10000}`,
-    sndGoodname: router.query['amount'] ? `${router.query['amount']} EDC` : 'EDC',
+    sndGoodname: router.query['amount'] ? `${router.query['amount']} EDCP` : 'EDCP',
     sndAmount: router.query['price'] ? router.query['price'] : '0',
     sndOrdername: user.name,
     sndEmail: user.email,
