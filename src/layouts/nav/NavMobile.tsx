@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 // icons
 import menuIcon from '@iconify/icons-carbon/menu';
 import chevronRight from '@iconify/icons-carbon/chevron-right';
@@ -19,6 +19,9 @@ import {
   ListItemText,
   ListItemButton,
   ListItemButtonProps,
+  Backdrop,
+  Fade,
+  Modal,
 } from '@mui/material';
 // routes
 import Routes from '../../routes';
@@ -29,6 +32,12 @@ import { NavProps, NavItemMobileProps } from '../../@types/layout';
 // components
 import { Logo, Scrollbar, Iconify, NavSection } from '../../components';
 import { IconButtonAnimate } from '../../components/animate';
+import SignUp from '../../components/user/SignUp';
+import useAccount from '../../hooks/useAccount';
+import env from '../../env';
+import { delUser } from '../../store/slices/user';
+import { useDispatch } from 'react-redux';
+import { useWeb3React } from '@web3-react/core';
 
 // ----------------------------------------------------------------------
 
@@ -52,18 +61,28 @@ const RootLinkStyle = styled(ListItemButton, {
   }),
 }));
 
+const modalStyle = {
+  position: 'absolute',
+  top: '30%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'common.white',
+  color: 'common.black',
+  boxShadow: 24,
+  p: 4,
+  borderRadius: '24px',
+};
+
 // ----------------------------------------------------------------------
 
 export default function NavMobile({ navConfig, sx }: NavProps) {
   const { pathname } = useRouter();
   const [drawerOpen, setDrawerOpen] = useState(false);
-
-  useEffect(() => {
-    if (drawerOpen) {
-      handleDrawerClose();
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [pathname]);
+  const [joinOpen, setJoinOpen] = React.useState(false);
+  const dispatch = useDispatch();
+  const { account } = useAccount();
+  const { deactivate, chainId, library } = useWeb3React();
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -72,6 +91,33 @@ export default function NavMobile({ navConfig, sx }: NavProps) {
   const handleDrawerClose = () => {
     setDrawerOpen(false);
   };
+
+  const handleJoinOpen = async () => {
+    setJoinOpen(true);
+  };
+
+  const handleJoinClose = () => setJoinOpen(false);
+
+  const handleDisconnect = async () => {
+    try {
+      await deactivate();
+      window.localStorage.setItem('walletStatus', 'disconnected');
+      window.localStorage.removeItem('jwtToken');
+      window.localStorage.removeItem('loginBy');
+      window.location.href = `${env.REACT_APP_API_URL}/auth/logout`;
+      dispatch(delUser());
+    } catch (e) {
+      console.log(e);
+      alert(e);
+    }
+  };
+
+  useEffect(() => {
+    if (drawerOpen) {
+      handleDrawerClose();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pathname]);
 
   return (
     <>
@@ -99,19 +145,45 @@ export default function NavMobile({ navConfig, sx }: NavProps) {
           </List>
 
           <Stack spacing={2} sx={{ p: 2.5, pb: 5 }}>
-            <NextLink href={Routes.loginIllustration} passHref>
-              <Button fullWidth variant="outlined" color="inherit">
-                Login
+            {!account ? (
+              <Button onClick={() => handleJoinOpen()} fullWidth variant="outlined" color="inherit">
+                SIGN UP
               </Button>
-            </NextLink>
+            ) : (
+              <Button
+                onClick={() => handleDisconnect()}
+                fullWidth
+                variant="outlined"
+                color="inherit"
+              >
+                Disconnect
+              </Button>
+            )}
 
-            <NextLink href={Routes.registerIllustration} passHref>
-              <Button fullWidth variant="contained" color="inherit">
-                Join Us
-              </Button>
-            </NextLink>
+            {/*<NextLink href={Routes.registerIllustration} passHref>*/}
+            {/*  <Button fullWidth variant="contained" color="inherit">*/}
+            {/*    Join Us*/}
+            {/*  </Button>*/}
+            {/*</NextLink>*/}
           </Stack>
         </Scrollbar>
+        <Modal
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          open={joinOpen}
+          onClose={handleJoinClose}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+          <Fade in={joinOpen}>
+            <Box sx={modalStyle}>
+              <SignUp hideSns={false} onClose={handleJoinClose} />
+            </Box>
+          </Fade>
+        </Modal>
       </Drawer>
     </>
   );

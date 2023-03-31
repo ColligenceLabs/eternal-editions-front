@@ -58,6 +58,9 @@ export type TicketItemTypes = {
   stats: OptionsTypes[];
   remainingAmount?: number;
   originalImage: string;
+  remain: number;
+  whlBool: boolean;
+  whlBalance: number;
 };
 
 export type PropertyTypes = {

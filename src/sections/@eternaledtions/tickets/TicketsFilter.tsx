@@ -54,6 +54,7 @@ export default function TicketsFilter({ tickets, categories }: Props) {
 
   const getTickets = async () => {
     const res = await getTicketsService(1, perPage, selected);
+    console.log(res)
     if (res.status === 200) {
       setTicketInfoList(res.data.list);
       setLastPage(res.data.headers.x_pages_count);

@@ -1,44 +1,24 @@
-import { useState } from 'react';
-// next
-import NextLink from 'next/link';
-// icons
-import chevronDown from '@iconify/icons-carbon/chevron-down';
-import chevronRight from '@iconify/icons-carbon/chevron-right';
 // @mui
-import {styled, useTheme} from '@mui/material/styles';
-import Masonry from '@mui/lab/Masonry';
-import {
-  Box,
-  Grid,
-  Link,
-  Stack,
-  Button,
-  Divider,
-  Collapse,
-  Container,
-  LinkProps,
-  Typography,
-  FilledInput,
-  InputAdornment,
-} from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
+import { Box, Link as MLink, Stack, Container, LinkProps, Typography } from '@mui/material';
+import Link from 'next/link';
 // hooks
 import { useResponsive } from '../../hooks';
 // components
-import { Logo, Iconify, SocialsButton, AppStoreButton, Image } from '../../components';
+import { Image } from '../../components';
 //
 import { PageLinks } from '../nav/NavConfig';
-import Routes from "../../routes";
 
 const ICONS = [
   '/assets/icons/icon-instagram.svg',
   '/assets/icons/icon-gitbook.svg',
   '/assets/icons/icon-discord.svg',
   '/assets/icons/icon-twitter.svg',
-]
+];
 
 // ----------------------------------------------------------------------
 
-const LinkStyle = styled((props: LinkProps) => <Link target="_blank" rel="noopener" {...props} />)(
+const LinkStyle = styled((props: LinkProps) => <MLink target="_blank" rel="noopener" {...props} />)(
   ({ theme }) => ({
     ...theme.typography.body3,
     marginTop: theme.spacing(1),
@@ -83,7 +63,7 @@ export default function Footer() {
               justifyContent: 'space-between',
               alignItems: 'flex-start',
               mb: '16px',
-            }
+            },
           }}
         >
           <Image
@@ -92,9 +72,9 @@ export default function Footer() {
               mb: '50px',
               [theme.breakpoints.up('md')]: {
                 mb: 0,
-              }
+              },
             }}
-            src='/assets/img/footer-logo.svg'
+            src="/assets/img/footer-logo.svg"
           />
 
           <Box
@@ -103,30 +83,48 @@ export default function Footer() {
               alignItems: 'center',
               'a + a': {
                 ml: '22px',
-              }
+              },
             }}
           >
             {ICONS.map((src, index) => (
-              <Link href="#" key={index}>
+              <MLink href="#" key={index}>
                 <Image sx={{ width: '20px' }} src={src} />
-              </Link>
+              </MLink>
             ))}
           </Box>
         </Box>
-        <Box component="p" sx={{
-          typography: 'caption',
-          mb: '16px',
-        }}>
-          Eternal Editions CEO icksoo Han<br />
-          7th floor, 14, Teheran-ro 26 gil, Gangnam-gu, Seoul<br />
-          Republic of Korea
+        <Box
+          component="p"
+          sx={{
+            typography: 'caption',
+            mb: '16px',
+          }}
+        >
+          Eternal Editions CEO : Joon Young Lim
+          <br />
+          Business registration number : 353-88-02481
+          <br />
+          Mail order number : 123-435-2859
+          <br />
+          Address : 7th floor, 14, Teheran-ro 26 gil, Gangnam-gu, Seoul, Republic of Korea
+        </Box>
+        <Box>
+          <Link href="/privacy" color="black">
+            <span style={{ fontWeight: 'bold' }}>개인정보처리방침</span>
+          </Link>{' '}
+          |{' '}
+          <Link href="/service_terms" color="black">
+            <span>서비스 이용약관</span>
+          </Link>
         </Box>
         <Box
           component="p"
-          sx={ {
+          sx={{
             typography: 'caption',
           }}
-        >COPYRIGHT ⓒ Eternal Editions. ALL RIGHTS RESERVED</Box>
+        >
+          COPYRIGHT ⓒ Eternal Editions. ALL RIGHTS RESERVED
+        </Box>
       </Container>
     </>
   );

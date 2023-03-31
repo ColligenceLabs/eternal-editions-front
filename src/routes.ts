@@ -17,6 +17,7 @@ const Routes = {
       account: '/my/account',
       tickets: '/my/tickets',
       transaction: '/my/transaction',
+      walletRegister: '/my/wallet-register',
     },
     faq: '/faq',
     notice: '/notice',
@@ -53,6 +54,10 @@ const Routes = {
     post: (slug: string) => `/career/blog/${slug}`,
     about: '/career/about-us',
     contact: '/career/contact-us',
+  },
+  ksnet: {
+    kspay_wh_rcv: '/ksnet/kspay_wh_rcv',
+    kspay_wh_result: '/ksnet/kspay_wh_result',
   },
   // E-Learning
   eLearning: {

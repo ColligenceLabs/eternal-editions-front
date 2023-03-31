@@ -1,10 +1,10 @@
 import axios from 'axios';
 // config
-import { HOST_API } from '../config';
+import env from '../env';
 
 // ----------------------------------------------------------------------
 
-export const basePath = process.env.NODE_ENV === 'production' ? HOST_API.production : HOST_API.dev;
+export const basePath = env.REACT_APP_API_URL;
 
 const axiosInstance = axios.create({
   baseURL: basePath,

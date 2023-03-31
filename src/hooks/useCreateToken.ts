@@ -1,14 +1,13 @@
 import { SetStateAction } from 'react';
-import {useWeb3React} from "@web3-react/core";
+import { useWeb3React } from '@web3-react/core';
 import Web3Token from 'web3-token';
-import {checkKaikas} from "../utils/wallet";
+import { checkKaikas } from '../utils/wallet';
 
 const useCreateToken = () => {
   const { account, library } = useWeb3React();
 
   const createToken = async (setDoSign: SetStateAction<any>) => {
     localStorage.removeItem('jwtToken');
-    console.log('=====>', library);
     if (library !== undefined) {
       const isKaikas = checkKaikas(library);
 

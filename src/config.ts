@@ -5,11 +5,6 @@ import env from './env';
 // API
 // ----------------------------------------------------------------------
 
-export const HOST_API = {
-  dev: process.env.DEV_API,
-  production: process.env.PRODUCTION_API,
-};
-
 export const GOOGLE_API = process.env.GOOGLE_API;
 
 // MARKDOWN FILE DIRECTORY
@@ -53,6 +48,7 @@ export const DRAWER_WIDTH = 280;
 export const WALLET_WALLECTCONNECT = 'WALLETCONNECT';
 export const WALLET_COINBASE = 'COINBASE';
 export const WALLET_METAMASK = 'METAMASK';
+export const WALLET_ABC = 'ABC';
 export const WALLET_KAIKAS = 'KAIKAS';
 export const WALLET_KLIP = 'KLIP';
 
@@ -75,8 +71,8 @@ export const FAILURE = 0;
 export const targetNetworkMsg = env.REACT_APP_TARGET_NETWORK_MSG;
 
 export const NETWORK_NAME = {
-  [ChainId.POLYGON]: 'Polygon',
-  [ChainId.MUMBAI]: 'Mumbai',
+  [ChainId.POLYGON]: 'Polygon Mainnet',
+  [ChainId.MUMBAI]: 'Polygon Testnet',
 };
 
 export const SCAN_URL = {
