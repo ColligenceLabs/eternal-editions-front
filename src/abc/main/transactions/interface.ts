@@ -148,7 +148,7 @@ export interface CreateUnsignedTxForTransferingTokenDto {
 export interface TxParams {
   to: string;
   value?: string;
-  gasPrice?: string | BigNumber;
+  gasPrice?: string;
   gasLimit: string;
   chainId: number;
   data?: string;
