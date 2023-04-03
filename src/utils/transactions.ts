@@ -1488,14 +1488,16 @@ export async function getItemSold(
 
 export async function getGasPriceFRomAPI() {
   let gasPrice = '';
-  const target = localStorage.getItem('target');
-  if (target === '1001' || target === '8217') gasPrice = await caver.rpc.klay.getGasPrice();
-  else if (target === '80001') {
+  // const target = localStorage.getItem('target');
+  const target = env.REACT_APP_TARGET_NETWORK;
+
+  if (target === 1001 || target === 8217) gasPrice = await caver.rpc.klay.getGasPrice();
+  else if (target === 80001) {
     const result = await axios.get('https://gasstation-mumbai.matic.today/v2');
     gasPrice = ethers.utils
       .parseUnits(result.data.standard.maxFee.toFixed(5).toString(), 'gwei')
       .toString();
-  } else if (target === '137') {
+  } else if (target === 137) {
     const result = await axios.get('https://gasstation-mainnet.matic.network/v2');
     gasPrice = ethers.utils
       .parseUnits(result.data.standard.maxFee.toFixed(5).toString(), 'gwei')
