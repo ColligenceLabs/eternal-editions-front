@@ -303,6 +303,7 @@ export default function TicketDetailPage() {
           message: 'Purchase faield!',
         });
       } finally {
+        setOpen(false);
         setIsBuyingWithPoint(false);
       }
     }
@@ -396,6 +397,7 @@ export default function TicketDetailPage() {
           message: 'Purchase faield!',
         });
       }
+      setOpen(false);
       setIsBuyingWithMatic(false);
     } else {
       console.log('Item not selected');
@@ -483,11 +485,11 @@ export default function TicketDetailPage() {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
-        minHeight: '1000px'
+        minHeight: '1000px',
       }}
     >
       <RootStyle>
-        <Container sx={{minHeight: '800px'}}>
+        <Container sx={{ minHeight: '800px' }}>
           <Grid container spacing={8} direction="row">
             <Grid item xs={12} md={5} lg={6}>
               {/*<Image*/}
