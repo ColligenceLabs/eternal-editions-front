@@ -12,6 +12,7 @@ import { collectionAbi } from '../config/abi/Collection';
 import { collectionData } from '../contracts';
 import getSelectedNodeUrl from './getRpcUrl';
 import { airDropAbi } from '../config/abi/AirDrop';
+import axios from 'axios';
 
 const rpcUrl = RPC_URLS[targetNetwork];
 const caver = new Caver(rpcUrl);
@@ -1483,4 +1484,25 @@ export async function getItemSold(
     console.log('getItemSold Error : ', e);
   }
   return sold;
+}
+
+export async function getGasPriceFRomAPI() {
+  let gasPrice = '';
+  // const target = localStorage.getItem('target');
+  const target = env.REACT_APP_TARGET_NETWORK;
+
+  if (target === 1001 || target === 8217) gasPrice = await caver.rpc.klay.getGasPrice();
+  else if (target === 80001) {
+    const result = await axios.get('https://gasstation-mumbai.matic.today/v2');
+    gasPrice = ethers.utils
+      .parseUnits(result.data.fast.maxFee.toFixed(5).toString(), 'gwei')
+      .toHexString();
+  } else if (target === 137) {
+    const result = await axios.get('https://gasstation-mainnet.matic.network/v2');
+    gasPrice = ethers.utils
+      .parseUnits(result.data.fast.maxFee.toFixed(5).toString(), 'gwei')
+      .toHexString();
+  }
+  console.log('!! getPrice = ', gasPrice);
+  return gasPrice;
 }

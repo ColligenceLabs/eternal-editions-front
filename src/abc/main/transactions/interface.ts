@@ -6,8 +6,8 @@
  *
  ******************************************************************************/
 
-import {BigNumber, ethers, UnsignedTransaction} from 'ethers';
-import {Account} from '../../schema/model';
+import { BigNumber, ethers, UnsignedTransaction } from 'ethers';
+import { Account } from '../../schema/model';
 
 export enum TX_SOURCE {
   TRANSFER = 0,

@@ -15,6 +15,7 @@ import { UserModel } from '../../main/accounts/interface';
 import TransactionUtil from '../../utils/transaction';
 import { AddAutoconfirmDto } from '../../schema/account';
 import { DekeyData } from '../../dekeyData';
+import env from '../../../env';
 
 export class RuleService {
   // constructor(private dekeyStore: DekeyStore) {}
@@ -28,7 +29,8 @@ export class RuleService {
       let abi;
       if (to) {
         // const { currentNetwork } = this.dekeyStore.getState();
-        const currentNetwork = DekeyData.DEFAULT_NETWORKS[7];
+        const currentNetwork =
+          DekeyData.DEFAULT_NETWORKS[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7];
         abi = await erc20RestApi.getAbi(to, url, currentNetwork.chainId);
       }
       let funcName: string;

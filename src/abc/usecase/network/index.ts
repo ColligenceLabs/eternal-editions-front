@@ -15,6 +15,7 @@ import { jsonRpcRequest } from '../../utils/rpc';
 import { ProviderService } from '../provider';
 import { isValidURL, trimUrl } from '../../utils/string';
 import { DekeyData } from '../../dekeyData';
+import env from '../../../env';
 
 export class NetworkService extends EventEmitter {
   constructor(
@@ -146,7 +147,7 @@ export class NetworkService extends EventEmitter {
   setEIP1559Compatibility = (latestBlock) => {
     // const { networks, currentNetwork } = this.dekeyStore.getState();
     const networks = DekeyData.DEFAULT_NETWORKS;
-    const currentNetwork = DekeyData.DEFAULT_NETWORKS[7];
+    const currentNetwork = DekeyData.DEFAULT_NETWORKS[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7];
 
     // If flag is set to true, don't repeat logic
     if (currentNetwork.EIPS && currentNetwork.EIPS[1559] === true) {

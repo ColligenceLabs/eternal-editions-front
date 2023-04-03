@@ -45,6 +45,7 @@ import { CustomError } from '../../utils/error';
 import { DekeyError } from '../../utils/errorTypes';
 import RuleUtil from '../../utils/rule';
 import { DekeyData } from '../../dekeyData';
+import env from '../../../env';
 
 export interface ProcessingTx {
   txId: string;
@@ -87,7 +88,7 @@ export class TransactionService extends EventEmitter {
     // const state = this.dekeyStore.getState();
     // const account = state[ACTIVE_ACCOUNT];
     // const network = state[CURRENT_NETWORK];
-    const network = DekeyData.DEFAULT_NETWORKS[7];
+    const network = DekeyData.DEFAULT_NETWORKS[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7];
 
     if (isKlaytn(network.chainId)) {
       this.setKlaytnTxs({
@@ -107,7 +108,8 @@ export class TransactionService extends EventEmitter {
       const state = this.dekeyStore.getState();
 
       // const currentNetwork = state[CURRENT_NETWORK];
-      const currentNetwork = DekeyData.DEFAULT_NETWORKS[7];
+      const currentNetwork =
+        DekeyData.DEFAULT_NETWORKS[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7];
       // const account = state[ACTIVE_ACCOUNT];
       // TODO : 확인이 필요함...
       // const esTxs = state[ES_TXS] ?? [];
@@ -185,7 +187,8 @@ export class TransactionService extends EventEmitter {
   }) => {
     try {
       // const { esTxs, currentNetwork } = this.dekeyStore.getState();
-      const currentNetwork = DekeyData.DEFAULT_NETWORKS[7];
+      const currentNetwork =
+        DekeyData.DEFAULT_NETWORKS[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7];
       let esTxs = [];
 
       const lastTx = esTxs.filter((tx) => tx.chainId === chainId)[0];
