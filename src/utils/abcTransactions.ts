@@ -11,6 +11,7 @@ import GasUtil from '../abc/utils/gas';
 import { addHexPrefix } from '../abc/utils/string';
 import env from '../env';
 import { getGasPriceFRomAPI } from './transactions';
+import { BigNumber } from 'ethers';
 
 interface txResult {
   status: number;
@@ -90,7 +91,7 @@ export const abcSendTx = async (
     // gasLimit: '0x7a120', //'0x010cd2',
     gasLimit,
     // gasPrice: '0x0ba43b7400',
-    gasPrice,
+    gasPrice: BigNumber.from(gasPrice),
     to,
     nonce: nextNonce,
   };
