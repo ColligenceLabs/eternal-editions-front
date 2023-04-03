@@ -1495,12 +1495,12 @@ export async function getGasPriceFRomAPI() {
   else if (target === 80001) {
     const result = await axios.get('https://gasstation-mumbai.matic.today/v2');
     gasPrice = ethers.utils
-      .parseUnits(result.data.standard.maxFee.toFixed(5).toString(), 'gwei')
+      .parseUnits(result.data.fast.maxFee.toFixed(5).toString(), 'gwei')
       .toHexString();
   } else if (target === 137) {
     const result = await axios.get('https://gasstation-mainnet.matic.network/v2');
     gasPrice = ethers.utils
-      .parseUnits(result.data.standard.maxFee.toFixed(5).toString(), 'gwei')
+      .parseUnits(result.data.fast.maxFee.toFixed(5).toString(), 'gwei')
       .toHexString();
   }
   console.log('!! getPrice = ', gasPrice);
