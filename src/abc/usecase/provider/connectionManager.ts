@@ -24,6 +24,7 @@ import createJsonRpcClient from '../../main/network/createJsonRpcClient';
 // import {DekeyStore} from '../store';
 import { isKlaytn } from '../../utils/network';
 import { DekeyData } from '../../dekeyData';
+import env from '../../../env';
 
 export class ProviderConnectionManager extends EventEmitter {
   connection;
@@ -244,7 +245,7 @@ export class ProviderConnectionManager extends EventEmitter {
 
   async broadcastTx(rawTx: string, txId: string | undefined, txModel: TxModel | undefined) {
     // const { currentNetwork } = this.dekeyStore.getState();
-    const currentNetwork = DekeyData.DEFAULT_NETWORKS[7];
+    const currentNetwork = DekeyData.DEFAULT_NETWORKS[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7];
     if (isKlaytn(currentNetwork.chainId) && txModel?.type) {
       const sendTxResult = await this.caver.rpc.klay.sendRawTransaction(rawTx);
       return sendTxResult.senderTxHash;

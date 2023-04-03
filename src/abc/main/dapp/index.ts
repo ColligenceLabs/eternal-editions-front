@@ -37,6 +37,7 @@ import { UserModel } from '../accounts/interface';
 import { z } from 'zod';
 
 import { Account } from '../../schema/model';
+import env from '../../../env';
 // interface Account {
 //   id: number;
 //   sid: string;
@@ -75,7 +76,7 @@ class DappController {
         // const network = state[CURRENT_NETWORK] as NetworkModel;
         // const user = state[USER];
 
-        const network = DekeyData.DEFAULT_NETWORKS[7];
+        const network = DekeyData.DEFAULT_NETWORKS[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7];
 
         // if (locked) {
         //   return this.handleDappResult(payload, undefined);
@@ -219,7 +220,7 @@ class DappController {
       // const state = this.dekeyStore.getState();
       // const network = state[CURRENT_NETWORK];
       // const account = state[ACTIVE_ACCOUNT];
-      const network = DekeyData.DEFAULT_NETWORKS[7];
+      const network = DekeyData.DEFAULT_NETWORKS[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7];
 
       this.txQueueService.add({
         txParams: unsignedTx,
@@ -260,7 +261,7 @@ class DappController {
       // const state = this.dekeyStore.getState();
       // const network = state[CURRENT_NETWORK];
       // const account = state[ACTIVE_ACCOUNT];
-      const network = DekeyData.DEFAULT_NETWORKS[7];
+      const network = DekeyData.DEFAULT_NETWORKS[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7];
 
       const bSupportsEIP1559 = supportsEIP1559(network);
 
@@ -359,7 +360,7 @@ class DappController {
       // const state = this.dekeyStore.getState();
       // const network = state[CURRENT_NETWORK];
       // const account = state[ACTIVE_ACCOUNT];
-      const network = DekeyData.DEFAULT_NETWORKS[7];
+      const network = DekeyData.DEFAULT_NETWORKS[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7];
 
       const { domainName, funcName, payload, resolve, reject } = this.dappService.getDappTx();
 

@@ -33,6 +33,7 @@ import TransactionUtil from '../../utils/transaction';
 import { DekeyData } from '../../dekeyData';
 import { Account } from '../../schema/model';
 import { AppAccount } from '../transactions/interface';
+import env from '../../../env';
 
 const hexRe = /^[0-9A-Fa-f]+$/gu;
 
@@ -265,7 +266,8 @@ class PersonalMessageManager extends EventEmitter {
         const account = abcAccount;
         // const accToken = state[ACCESS_TOKEN];
         // const currentNetwork = state[CURRENT_NETWORK];
-        const currentNetwork = DekeyData.DEFAULT_NETWORKS[7];
+        const currentNetwork =
+          DekeyData.DEFAULT_NETWORKS[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7];
 
         if (cleanMsgParams.msgParams.from.toLowerCase() !== account.ethAddress.toLowerCase()) {
           log.debug('address is not equal');
