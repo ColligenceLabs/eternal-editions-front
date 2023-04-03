@@ -36,7 +36,7 @@ export const abcSendTx = async (
 
   // 1. 블록체인 네트워크 연결
   const networks = DekeyData.DEFAULT_NETWORKS;
-  await providerService.connect(networks[7], ''); // use Polygon Testnet
+  await providerService.connect(networks[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7], ''); // use Polygon Testnet
   // await providerConnManager.connect(networks[7], '');
 
   // 2. Active Account

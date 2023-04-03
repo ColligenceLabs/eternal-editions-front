@@ -27,6 +27,7 @@ import GasUtil from '../../utils/gas';
 import { addHexPrefix } from '../../utils/string';
 import { BnMultiplyByFraction, bnToHex, hexToBn } from '../transaction/utils';
 import { DekeyData } from '../../dekeyData';
+import env from '../../../env';
 
 export class GasService {
   gasNowData: any;
@@ -50,7 +51,7 @@ export class GasService {
     latestBlock: { baseFeePerGas: string };
   }) => {
     // const { currentNetwork } = this.dekeyStore.getState();
-    const currentNetwork = DekeyData.DEFAULT_NETWORKS[7];
+    const currentNetwork = DekeyData.DEFAULT_NETWORKS[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7];
     if (!supportsEIP1559(currentNetwork)) {
       return {
         gasPrice: await this.getGasPrice(),
@@ -106,7 +107,7 @@ export class GasService {
     let gasLimit = '21000';
 
     // const { currentNetwork, assets } = this.dekeyStore.getState();
-    const currentNetwork = DekeyData.DEFAULT_NETWORKS[7];
+    const currentNetwork = DekeyData.DEFAULT_NETWORKS[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7];
     const { chainId } = currentNetwork;
 
     // const foundAsset = assets.find((a) => a.contractAddress === contractAddress);
@@ -171,7 +172,7 @@ export class GasService {
     // }
 
     // const { currentNetwork } = this.dekeyStore.getState();
-    const currentNetwork = DekeyData.DEFAULT_NETWORKS[7];
+    const currentNetwork = DekeyData.DEFAULT_NETWORKS[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7];
 
     const blockGasLimit = isKlaytn(currentNetwork.chainId) ? block.gasUsed : block.gasLimit;
 

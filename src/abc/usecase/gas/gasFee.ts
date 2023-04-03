@@ -24,6 +24,7 @@ import { ProviderConnectionManager } from '../../usecase/provider/connectionMana
 // import {DekeyStore} from '../../usecase/store';
 import { supportsEIP1559 } from '../../utils/network';
 import { DekeyData } from '../../dekeyData';
+import env from '../../../env';
 
 const GAS_FEE_API = 'https://mock-gas-server.herokuapp.com/';
 export const LEGACY_GAS_PRICES_API_URL = `https://api.metaswap.codefi.network/gasPrices`;
@@ -286,7 +287,7 @@ export class GasFeeService {
   ): Promise<GasFeeState | undefined> {
     const { shouldUpdateState = true } = options;
     // const { currentNetwork } = this.dekeyStore.getState();
-    const currentNetwork = DekeyData.DEFAULT_NETWORKS[7];
+    const currentNetwork = DekeyData.DEFAULT_NETWORKS[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7];
     const chainId = currentNetwork.chainId;
     let isEIP1559Compatible: boolean;
 
@@ -384,7 +385,7 @@ export class GasFeeService {
 
   private getEIP1559Compatibility() {
     // const { currentNetwork } = this.dekeyStore.getState();
-    const currentNetwork = DekeyData.DEFAULT_NETWORKS[7];
+    const currentNetwork = DekeyData.DEFAULT_NETWORKS[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7];
     const currentNetworkIsEIP1559Compatible = supportsEIP1559(currentNetwork);
 
     return currentNetworkIsEIP1559Compatible;

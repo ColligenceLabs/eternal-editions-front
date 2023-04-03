@@ -16,6 +16,7 @@ import { BigNumber } from 'ethers';
 import { isKlaytn } from '../../utils/network';
 import { DekeyData } from '../../dekeyData';
 import { Account } from '../../schema/model';
+import env from '../../../env';
 
 export class NonceTracker {
   lockMap;
@@ -48,7 +49,7 @@ export class NonceTracker {
 
     // const state = this.dekeyStore.getState();
     // const network = state[CURRENT_NETWORK];
-    const network = DekeyData.DEFAULT_NETWORKS[7];
+    const network = DekeyData.DEFAULT_NETWORKS[env.REACT_APP_TARGET_NETWORK === 137 ? 6 : 7];
 
     try {
       const networkNonceNext = await this.providerService.getTransactionCount(address);
