@@ -6,8 +6,8 @@
  *
  ******************************************************************************/
 
-import {BigNumber, ethers, UnsignedTransaction} from 'ethers';
-import {Account} from '../../schema/model';
+import { BigNumber, ethers, UnsignedTransaction } from 'ethers';
+import { Account } from '../../schema/model';
 
 export enum TX_SOURCE {
   TRANSFER = 0,
@@ -148,7 +148,7 @@ export interface CreateUnsignedTxForTransferingTokenDto {
 export interface TxParams {
   to: string;
   value?: string;
-  gasPrice?: string;
+  gasPrice?: string | BigNumber;
   gasLimit: string;
   chainId: number;
   data?: string;
