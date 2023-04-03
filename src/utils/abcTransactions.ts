@@ -81,7 +81,7 @@ export const abcSendTx = async (
   console.log('=== gaslimit ==', gasLimit);
 
   const gasPrice = await getGasPriceFRomAPI();
-  console.log('=== gasPrice ==', gasPrice);
+  console.log('=== gasPrice ==', '0x' + parseInt(gasPrice, 16));
 
   // 6. unSignedTx 생성
   const txParams: TxParams = {
@@ -91,7 +91,7 @@ export const abcSendTx = async (
     // gasLimit: '0x7a120', //'0x010cd2',
     gasLimit,
     // gasPrice: '0x0ba43b7400',
-    gasPrice: BigNumber.from(gasPrice),
+    gasPrice: '0x' + parseInt(gasPrice, 16),
     to,
     nonce: nextNonce,
   };
