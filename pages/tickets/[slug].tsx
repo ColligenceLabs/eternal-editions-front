@@ -36,7 +36,7 @@ import searchIcon from '@iconify/icons-carbon/search';
 import {
   getBuyersService,
   getSession,
-  getTicketInfoService,
+  getTicketInfoService, getUser,
   registerBuy,
   savePoint,
 } from '../../src/services/services';
@@ -49,11 +49,12 @@ import { buyItem, getItemSold, getWhlBalanceNoSigner } from '../../src/utils/tra
 import CSnackbar from '../../src/components/common/CSnackbar';
 import { BuyerTypes } from '../../src/@types/buyer/buyer';
 import { abcSendTx } from '../../src/utils/abcTransactions';
-import { useSelector } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import { collectionAbi } from '../../src/config/abi/Collection';
 import tokenAbi from '../../src/config/abi/ERC20Token.json';
 import { LoadingButton } from '@mui/lab';
 import useAccount from '../../src/hooks/useAccount';
+import {setWebUser} from "../../src/store/slices/webUser";
 
 // ----------------------------------------------------------------------
 
@@ -91,6 +92,7 @@ export default function TicketDetailPage() {
   const { user } = useSelector((state: any) => state.webUser);
   const { library, chainId } = useActiveWeb3React();
   const { account } = useAccount();
+  const dispatch = useDispatch();
   const { slug } = router.query;
 
   const [ticketInfo, setTicketInfo] = useState<TicketInfoTypes | null>(null);
@@ -274,11 +276,14 @@ export default function TicketDetailPage() {
         let res = await registerBuy(data);
         console.log(res.data);
         if (res.data.status === SUCCESS) {
-          res = await savePoint({
-            order_id: res.data.data.id,
-            point: ticketInfo?.price,
-            type: 'USE',
-          });
+          const userRes = await getUser();
+          console.log(userRes);
+          if (userRes.status === 200 && userRes.data.status != 0) dispatch(setWebUser(userRes.data.user));
+          // res = await savePoint({
+          //   order_id: res.data.data.id,
+          //   point: ticketInfo?.price,
+          //   type: 'USE',
+          // });
           console.log('success');
           setOpenSnackbar({
             open: true,
