@@ -80,4 +80,4 @@ export const SCAN_URL = {
   [ChainId.MUMBAI]: 'https://mumbai.polygonscan.com/',
 };
 
-export const targetNetwork = ChainId.MUMBAI;
+export const targetNetwork = env.REACT_APP_TARGET_NETWORK;
