@@ -35,6 +35,7 @@ import { styled } from '@mui/material/styles';
 import palette from '../theme/palette';
 import maticIcon from '../../public/assets/img/matic-token-icon.png';
 import getBalances from '../utils/getBalances';
+import { isMobile } from 'react-device-detect';
 
 // ----------------------------------------------------------------------
 WalletPopover.propTypes = {};
@@ -199,10 +200,15 @@ export default function WalletPopover({}) {
                   cursor: 'pointer',
                 }}
               >
-                <NextLink href={Routes.eternalEditions.payment.point} passHref>
-                  <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>BUY POINT</Typography>
-                </NextLink>
-                {/*<Typography sx={{ fontSize: '13px', fontWeight: '700' }}>BUY POINT</Typography>*/}
+                {isMobile ? (
+                  <Box onClick={() => alert('PC 환경에서만 가능합니다.')}>
+                    <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>BUY POINT</Typography>
+                  </Box>
+                ) : (
+                  <NextLink href={Routes.eternalEditions.payment.point} passHref>
+                    <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>BUY POINT</Typography>
+                  </NextLink>
+                )}
               </Box>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
