@@ -10,6 +10,7 @@ import typedMessage from '../abc/main/typedMessage';
 import GasUtil from '../abc/utils/gas';
 import { addHexPrefix } from '../abc/utils/string';
 import env from '../env';
+import { getGasPriceFRomAPI } from './transactions';
 
 interface txResult {
   status: number;
@@ -78,6 +79,9 @@ export const abcSendTx = async (
   );
   console.log('=== gaslimit ==', gasLimit);
 
+  const gasPrice = await getGasPriceFRomAPI();
+  console.log('=== gasPrice ==', gasPrice);
+
   // 6. unSignedTx 생성
   const txParams: TxParams = {
     chainId: env.REACT_APP_TARGET_NETWORK,
@@ -85,7 +89,8 @@ export const abcSendTx = async (
     value: value ? value : '0x0',
     // gasLimit: '0x7a120', //'0x010cd2',
     gasLimit,
-    gasPrice: '0x0ba43b7400',
+    // gasPrice: '0x0ba43b7400',
+    gasPrice,
     to,
     nonce: nextNonce,
   };
