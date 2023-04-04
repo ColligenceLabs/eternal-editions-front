@@ -36,7 +36,7 @@ async function kspay_send_msg(rcid: any, mType: any) {
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   console.log(req.method, req.body);
-  const rcid = req.body.rcid;
+  const rcid = req.body.reCommConId;
   const rctype = req.body.reCommType;
   const rhash = req.body.reHash;
   const reCnclType = req.body.reCnclType;
