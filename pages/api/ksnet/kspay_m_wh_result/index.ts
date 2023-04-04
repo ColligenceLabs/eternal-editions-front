@@ -3,11 +3,11 @@ import axios, { AxiosResponse } from 'axios';
 import iconv from 'iconv-lite';
 import queryString from 'query-string';
 
-// const KSPAY_WEBHOST_URL = 'http://kspay.ksnet.to/store/KSPayMobileV1.4/web_host/recv_post.jsp';
-const KSPAY_WEBHOST_URL = 'http://210.181.28.134/store/KSPayMobileV1.4/web_host/recv_post.jsp';
+const KSPAY_WEBHOST_URL = 'http://kspay.ksnet.to/store/KSPayMobileV1.4/web_host/recv_post.jsp';
+// const KSPAY_WEBHOST_URL = 'http://210.181.28.134/store/KSPayMobileV1.4/web_host/recv_post.jsp';
 const DEFAULT_DELIM = '`';
 const DEFAULT_RPARAMS =
-  'authyn`trno`trddt`trdtm`amt`authno`msg1`msg2`ordno`isscd`aqucd`result`resultcd';
+  'authyn`trno`trddt`trdtm`amt`authno`msg1`msg2`ordno`isscd`aqucd`result`resultcd`goodname';
 // authyn : O/X 상태
 // trno   : KSNET거래번호(영수증 및 취소 등 결제데이터용 KEY
 // trddt  : 거래일자(YYYYMMDD)
@@ -42,8 +42,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const reCnclType = req.body.reCnclType;
 
   //업체에서 추가하신 인자값을 받는 부분입니다
-  const { a, b, c, d } = req.body;
-  console.log('=====>00000', rcid, reCnclType, a);
+  const { ECHA, b, c, d } = req.body;
+  console.log('=====>00000', rcid, reCnclType, ECHA);
   if (reCnclType === '1') return res.redirect(302, '/');
 
   const ret = await kspay_send_msg(rcid, '1');
@@ -65,7 +65,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const aqucd = msg[11];
     const result = msg[12];
     const resultcd = msg[13];
-
+    const goodname = msg[14];
+    console.log(goodname);
     if (!result || 4 !== result.length) {
       typeStr = '(???)';
     } else {
