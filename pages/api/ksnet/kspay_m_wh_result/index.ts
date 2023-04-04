@@ -3,8 +3,8 @@ import axios, { AxiosResponse } from 'axios';
 import iconv from 'iconv-lite';
 import queryString from 'query-string';
 
-// const KSPAY_WEBHOST_URL = 'http://kspay.ksnet.to/store/KSPayWebV1.4/web_host/recv_post.jsp';
-const KSPAY_WEBHOST_URL = 'http://kspay.ksnet.to/store/KSPayMobileV1.4/web_host/recv_post.jsp';
+// const KSPAY_WEBHOST_URL = 'http://kspay.ksnet.to/store/KSPayMobileV1.4/web_host/recv_post.jsp';
+const KSPAY_WEBHOST_URL = 'http://210.181.28.134/store/KSPayMobileV1.4/web_host/recv_post.jsp';
 const DEFAULT_DELIM = '`';
 const DEFAULT_RPARAMS =
   'authyn`trno`trddt`trdtm`amt`authno`msg1`msg2`ordno`isscd`aqucd`result`resultcd';
