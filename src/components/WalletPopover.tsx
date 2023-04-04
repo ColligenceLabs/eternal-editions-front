@@ -200,15 +200,15 @@ export default function WalletPopover({}) {
                   cursor: 'pointer',
                 }}
               >
-                {isMobile ? (
-                  <Box onClick={() => alert('PC 환경에서만 가능합니다.')}>
-                    <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>BUY POINT</Typography>
-                  </Box>
-                ) : (
+                {/*{isMobile ? (*/}
+                {/*  <Box onClick={() => alert('PC 환경에서만 가능합니다.')}>*/}
+                {/*    <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>BUY POINT</Typography>*/}
+                {/*  </Box>*/}
+                {/*) : (*/}
                   <NextLink href={Routes.eternalEditions.payment.point} passHref>
                     <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>BUY POINT</Typography>
                   </NextLink>
-                )}
+                {/*)}*/}
               </Box>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>

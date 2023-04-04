@@ -17,6 +17,7 @@ import EECard from '../src/components/EECard';
 import { useSelector } from 'react-redux';
 import env from '../src/env';
 import { format } from 'date-fns';
+import { isMobile } from 'react-device-detect';
 
 // ----------------------------------------------------------------------
 
@@ -80,14 +81,26 @@ export default function KSPay() {
   };
 
   const _submit = (_frm: any) => {
-    console.log(typeof _frm[0]);
-    _frm[0].sndReply.value = getLocalUrl('api/ksnet/kspay_wh_rcv/');
-    setOrderInfo({ ...orderInfo, sndReply: _frm[0].sndReply.value });
-    // _frm[0].sndReply.value = 'http://localhost:8888/api/ksnet/kspay_wh_rcv/';
-    console.log('=====>', _frm[0], _frm[0].sndReply);
+    console.log('isMobile', isMobile);
+    if (isMobile) {
+      // sndReply는 kspay_wh_rcv.php (결제승인 후 결과값들을 본창의 KSPayWeb Form에 넘겨주는 페이지)의 절대경로를 넣어줍니다.
+      _frm[0].sndReply.value = getLocalUrl("api/ksnet/kspay_m_wh_result/");
 
-    // @ts-ignore
-    _pay(_frm[0]);
+      //_frm.target = '_blank';
+      // _frm.action ='http://kspay.ksnet.to/store/KSPayMobileV1.4/KSPayPWeb.jsp';    //리얼
+      _frm[0].action ='http://210.181.28.134/store/KSPayMobileV1.4/KSPayPWeb.jsp';  //테스트
+
+      _frm[0].submit();
+    } else {
+      // console.log(typeof _frm[0]);
+      _frm[0].sndReply.value = getLocalUrl('api/ksnet/kspay_wh_rcv/');
+      setOrderInfo({ ...orderInfo, sndReply: _frm[0].sndReply.value });
+      // _frm[0].sndReply.value = 'http://localhost:8888/api/ksnet/kspay_wh_rcv/';
+      // console.log('=====>', _frm[0], _frm[0].sndReply);
+
+      // @ts-ignore
+      _pay(_frm[0]);
+    }
   };
 
   return (

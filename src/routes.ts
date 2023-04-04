@@ -58,6 +58,7 @@ const Routes = {
   ksnet: {
     kspay_wh_rcv: '/ksnet/kspay_wh_rcv',
     kspay_wh_result: '/ksnet/kspay_wh_result',
+    kspay_m_wh_result: '/ksnet/kspay_m_wh_result',
   },
   // E-Learning
   eLearning: {
