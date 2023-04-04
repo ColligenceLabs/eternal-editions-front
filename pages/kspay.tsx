@@ -87,8 +87,7 @@ export default function KSPay() {
       _frm[0].sndReply.value = getLocalUrl("api/ksnet/kspay_m_wh_result/");
 
       //_frm.target = '_blank';
-      // _frm.action ='http://kspay.ksnet.to/store/KSPayMobileV1.4/KSPayPWeb.jsp';    //리얼
-      _frm[0].action ='http://210.181.28.134/store/KSPayMobileV1.4/KSPayPWeb.jsp';  //테스트
+      _frm.action ='https://kspay.ksnet.to/store/KSPayMobileV1.4/KSPayPWeb.jsp';    //리얼
 
       _frm[0].submit();
     } else {
