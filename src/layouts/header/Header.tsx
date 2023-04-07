@@ -1,68 +1,29 @@
-// next
-import NextLink from 'next/link';
-// @mui
 import _ from 'lodash';
 import { useTheme } from '@mui/material/styles';
-import {
-  Box,
-  Stack,
-  Button,
-  AppBar,
-  Divider,
-  Container,
-  Link,
-  Modal,
-  Backdrop,
-  Fade,
-  Input,
-  TextField,
-} from '@mui/material';
-// hooks
+import { Box, Stack, Button, AppBar, Container, Modal, Backdrop, Fade, Input } from '@mui/material';
 import { useOffSetTop, useResponsive } from '../../hooks';
-// routes
-import Routes from '../../routes';
-// config
 import { HEADER_DESKTOP_HEIGHT } from '../../config';
-// components
-import { Logo, Label, Image } from '../../components';
-//
-import Searchbar from '../Searchbar';
-import LanguagePopover from '../LanguagePopover';
+import { Logo } from '../../components';
 import { NavMobile, NavDesktop, navConfig } from '../nav';
 import { ToolbarStyle, ToolbarShadowStyle } from './HeaderToolbarStyle';
-import useWallets from '../../hooks/useWallets';
-import { getIconByType } from '../../utils/wallet';
 import React, { ChangeEvent, useEffect } from 'react';
 import { ConnectWallet, DisconnectWallet } from '../../components/wallet';
 import { SignUp } from '../../components/user';
 import WalletPopover from '../../components/WalletPopover';
-import { useWeb3React } from '@web3-react/core';
 import { useEagerConnect, useInactiveListener } from '../../hooks/useEagerConnect';
-
-// TODO : dkeys WASM Go Initialize...
 import '../../abc/sandbox/index';
-
-import { controllers, accountRestApi, services, nonceTracker } from '../../abc/background/init';
-import { AbcLoginDto, AbcLoginResult } from '../../abc/main/abc/interface';
+import { controllers, accountRestApi, services } from '../../abc/background/init';
+import { AbcLoginResult } from '../../abc/main/abc/interface';
 import { setAbcAuth } from '../../store/slices/abcAuth';
 import { useDispatch, useSelector } from 'react-redux';
 import { ethers } from 'ethers';
-import TransactionUtil from '../../abc/utils/transaction';
-import KlaytnUtil from '../../abc/utils/klaytn';
-import { isKlaytn } from '../../abc/utils/network';
-import { DekeyData } from '../../abc/dekeyData';
-import { makeTxData } from '../../utils/makeTxData';
-
 import { checkWasm } from '../../abc/sandbox';
-
 import secureLocalStorage from 'react-secure-storage';
-import { TxParams } from '../../abc/main/transactions/interface';
 import useAccount from '../../hooks/useAccount';
 import { abcSendTx } from '../../utils/abcTransactions';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
-import { abcLogin, requestWalletLogin } from '../../services/services';
+import { abcLogin } from '../../services/services';
 import tokenAbi from '../../config/abi/ERC20Token.json';
-import { tokenize } from 'protobufjs';
 import { AbcLoginResponse } from '../../abc/schema/account';
 
 const modalStyle = {
@@ -91,8 +52,6 @@ export default function Header({ transparent }: Props) {
   const { library, deactivate } = useActiveWeb3React();
   const dispatch = useDispatch();
   const webUser = useSelector((state: any) => state.webUser);
-  // const abcAccount = useSelector((state: any) => state.user);
-  // console.log(abcAccount.accounts[0].ethAddress);
   const theme = useTheme();
 
   const isDesktop = useResponsive('up', 'md');
@@ -117,16 +76,7 @@ export default function Header({ transparent }: Props) {
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const abcSnsLogin = async () => {
-    // ABC Wallet Test
     console.log('!! start sns login !!');
-    // // const dto: AbcLoginDto = { username: 'hwnahm@gmail.com', password: '!owdin001' };
-    // // const abcAuth: AbcLoginResult = await abcController.login(dto);
-    // const abcAuth: AbcLoginResult = await abcController.snsLogin(
-    //   webUser?.user?.session?.providerAuthInfo?.provider_token,
-    //   webUser?.user?.session?.providerAuthInfo?.provider
-    // );
-    // console.log('===>', webUser?.user?.session?.providerAuthInfo?.provider_token);
-    // console.log('===>', webUser?.user?.session?.providerAuthInfo?.provider);
     const res = await abcLogin({
       token: webUser?.user?.session?.providerAuthInfo?.provider_token,
       service: webUser?.user?.session?.providerAuthInfo?.provider,
@@ -147,8 +97,6 @@ export default function Header({ transparent }: Props) {
         expiresIn: resData.expire_in,
       };
       await dispatch(setAbcAuth(abcAuth));
-
-      // window.localStorage.setItem('abcAuth', JSON.stringify(abcAuth));
       secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
 
       const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
@@ -181,48 +129,6 @@ export default function Header({ transparent }: Props) {
     return () => clearInterval(timer);
   }, [intervalTime]);
 
-  // useEffect(() => {
-  //   const walletLogin = async () => {
-  //     if (!library) return;
-  //     const target_copy = Object.assign({}, library.provider);
-  //     const isAbc = target_copy.isABC === true;
-  //     // const isKaikas = typeof target_copy._kaikas !== 'undefined';
-  //     let signature;
-  //     const message = `apps.talken.io wants you to sign in with your Ethereum account.
-  //
-  // Talken Drops Signature Request
-  //
-  // Type: Login request`;
-  //     // if (isKaikas) {
-  //     //   const caver = new Caver(window.klaytn);
-  //     //   signature = await caver.klay.sign(message, account ?? '').catch(() => deactivate());
-  //     // } else {
-  //     //   signature = await library
-  //     //     .getSigner()
-  //     //     .signMessage(message)
-  //     //     .catch(() => deactivate());
-  //     // }
-  //     signature = await library
-  //       .getSigner()
-  //       .signMessage(message)
-  //       .catch(() => deactivate());
-  //     if (!signature) return; // 서명 거부
-  //     // const data = { message, signature, isKaikas, isAbc };
-  //     const data = { message, signature, isAbc };
-  //     const res = await requestWalletLogin(data);
-  //     console.log(res);
-  //     if (res.data === 'loginSuccess') location.replace('/');
-  //     if (res.data === 'User not found!') {
-  //       deactivate();
-  //       window.localStorage.removeItem('loginBy');
-  //       alert('Please continue with SNS and register wallet address on My Profile page.');
-  //     }
-  //     // setDoSign(false);
-  //   };
-  //
-  //   walletLogin();
-  // }, [library]);
-
   const handleAbcConfirmClick = async () => {
     console.log(`abc token : ${abcToken}`); // Google OTP
 
@@ -242,7 +148,6 @@ export default function Header({ transparent }: Props) {
     event.preventDefault();
     const { value } = event.target;
     setAbcToken(value);
-    // console.log(value);
   };
   const handleAbcClose = () => {
     setAbcToken('');
@@ -258,28 +163,19 @@ export default function Header({ transparent }: Props) {
   };
 
   const handleJoinClose = () => setJoinOpen(false);
-
-  // const {account, accountShot, type, disconnect} = useWallets();
-  // const { account } = useWeb3React();
   const triedEager = useEagerConnect();
-  // useInactiveListener(!triedEager || !!activatingConnector);
   useInactiveListener(!triedEager);
   const isLight = theme.palette.mode === 'light';
-
   const isScrolling = useOffSetTop(HEADER_DESKTOP_HEIGHT);
 
-  useEffect(() => {
-    console.log(account);
-  }, [account]);
-
   return (
-    <AppBar sx={{ boxShadow: 0, bgcolor: 'transparent' }}>
+    <AppBar sx={{ boxShadow: 0, backgroundColor: 'transparent' }}>
       <ToolbarStyle disableGutters transparent={transparent} scrolling={isScrolling}>
         <Container
           sx={{
             display: 'flex',
             alignItems: 'center',
-            justifyContent: 'flex-start',
+            justifyContent: 'space-between',
           }}
         >
           <Box sx={{ lineHeight: 0, position: 'relative' }}>
@@ -294,91 +190,50 @@ export default function Header({ transparent }: Props) {
             />
           )}
 
-          {/*<Box sx={{flexGrow: 1}}/>*/}
-
           <Stack spacing={2} direction="row" alignItems="center">
-            {/*<Searchbar*/}
-            {/*    sx={{*/}
-            {/*        ...(isScrolling && {color: 'text.primary'}),*/}
-            {/*    }}*/}
-            {/*/>*/}
-
-            {/*<LanguagePopover*/}
-            {/*  sx={{*/}
-            {/*    ...(isScrolling && { color: 'text.primary' }),*/}
-            {/*  }}*/}
-            {/*/>*/}
-
-            {/*<Divider orientation="vertical" sx={{height: 24}}/>*/}
-
             {isDesktop && <></>}
           </Stack>
 
-          {!isDesktop && (
-            <NavMobile
-              navConfig={navConfig}
-              sx={{
-                ml: 1,
-                ...(isScrolling && { color: 'text.primary' }),
-              }}
-            />
-          )}
-          <Stack direction="row" spacing={1}>
-            {/*<NextLink href={Routes.registerIllustration} prefetch={false} passHref>*/}
-            {/*<Button*/}
-            {/*  color="inherit"*/}
-            {/*  variant="outlined"*/}
-            {/*  sx={{*/}
-            {/*    ...(transparent && {*/}
-            {/*      color: 'common.white',*/}
-            {/*    }),*/}
-            {/*    ...(isScrolling && isLight && { color: 'text.primary' }),*/}
-            {/*  }}*/}
-            {/*>*/}
-            {/*  Join Us*/}
-            {/*</Button>*/}
-            {/*</NextLink>*/}
-
-            {/*<Button variant="contained" href={'/'} target="_blank" rel="noopener">*/}
-            {/*    Connect Wallet*/}
-            {/*</Button>*/}
-
-            {/* 지갑 연동 */}
-
-            {account ? (
-              <>
-                <WalletPopover />
-              </>
-            ) : (
-              <>
-                {isDesktop && (
-                  <Button
-                    variant="contained"
-                    onClick={() => handleJoinOpen()}
-                    sx={{
-                      width: {
-                        md: 120,
-                      },
-                      color: 'white'
-                    }}
-                  >
-                    SIGN UP
-                  </Button>
-                )}
-              </>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+            }}
+          >
+            <Stack direction="row" spacing={1}>
+              {account ? (
+                <>
+                  <WalletPopover />
+                </>
+              ) : (
+                <>
+                  {isDesktop && (
+                    <Button
+                      variant="contained"
+                      onClick={() => handleJoinOpen()}
+                      sx={{
+                        width: {
+                          md: 120,
+                        },
+                        color: 'white',
+                      }}
+                    >
+                      SIGN UP
+                    </Button>
+                  )}
+                </>
+              )}
+            </Stack>
+            {!isDesktop && (
+              <NavMobile
+                navConfig={navConfig}
+                sx={{
+                  ml: 1,
+                  ...(isScrolling && { color: 'text.primary' }),
+                }}
+              />
             )}
-            {/*<Button*/}
-            {/*  variant="contained"*/}
-            {/*  onClick={handleAbcOpen}*/}
-            {/*  sx={{*/}
-            {/*    width: {*/}
-            {/*      md: 120,*/}
-            {/*    },*/}
-            {/*  }}*/}
-            {/*>*/}
-            {/*  ABC Test*/}
-            {/*</Button>*/}
-          </Stack>
+          </Box>
         </Container>
       </ToolbarStyle>
 

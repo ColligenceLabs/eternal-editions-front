@@ -36,7 +36,8 @@ import searchIcon from '@iconify/icons-carbon/search';
 import {
   getBuyersService,
   getSession,
-  getTicketInfoService, getUser,
+  getTicketInfoService,
+  getUser,
   registerBuy,
   savePoint,
 } from '../../src/services/services';
@@ -49,12 +50,12 @@ import { buyItem, getItemSold, getWhlBalanceNoSigner } from '../../src/utils/tra
 import CSnackbar from '../../src/components/common/CSnackbar';
 import { BuyerTypes } from '../../src/@types/buyer/buyer';
 import { abcSendTx } from '../../src/utils/abcTransactions';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { collectionAbi } from '../../src/config/abi/Collection';
 import tokenAbi from '../../src/config/abi/ERC20Token.json';
 import { LoadingButton } from '@mui/lab';
 import useAccount from '../../src/hooks/useAccount';
-import {setWebUser} from "../../src/store/slices/webUser";
+import { setWebUser } from '../../src/store/slices/webUser';
 
 // ----------------------------------------------------------------------
 
@@ -278,7 +279,8 @@ export default function TicketDetailPage() {
         if (res.data.status === SUCCESS) {
           const userRes = await getUser();
           console.log(userRes);
-          if (userRes.status === 200 && userRes.data.status != 0) dispatch(setWebUser(userRes.data.user));
+          if (userRes.status === 200 && userRes.data.status != 0)
+            dispatch(setWebUser(userRes.data.user));
           // res = await savePoint({
           //   order_id: res.data.data.id,
           //   point: ticketInfo?.price,
@@ -609,6 +611,7 @@ export default function TicketDetailPage() {
                       fullWidth={true}
                       variant="contained"
                       disabled={selectedTicketItem?.whlBool && selectedTicketItem?.whlBalance === 0}
+                      sx={{ backgroundColor: selectedItem ? '#08FF0C' : null }}
                     >
                       Payment
                     </Button>

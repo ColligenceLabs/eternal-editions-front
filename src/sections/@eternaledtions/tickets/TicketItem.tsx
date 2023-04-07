@@ -6,9 +6,11 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { fDate } from '../../../utils/formatTime';
 import axios from 'axios';
 import QRCode from 'react-qr-code';
-import { isMobile } from 'react-device-detect';
+// import { isMobile } from 'react-device-detect';
+import { useResponsive } from '../../../hooks';
 
 export default function TicketItem({ ticket }: any) {
+  const isMobile = useResponsive('down', 'md');
   const [maticPrice, setMaticPrice] = useState(0);
   const [klayPrice, setKlayPrice] = useState(0);
   const [ticketInfo, setTicketInfo] = useState({
@@ -168,6 +170,7 @@ type LineItemProps = {
 };
 
 function LineItem({ icon, label, value }: LineItemProps) {
+  const isMobile = useResponsive('down', 'md');
   return (
     <TextIconLabel
       icon={icon}
