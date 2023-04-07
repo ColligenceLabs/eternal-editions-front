@@ -30,6 +30,7 @@ import { useDispatch } from 'react-redux';
 import { ChangeEvent } from 'react';
 import { Base64 } from 'js-base64';
 import Router from 'next/router';
+import Link from "next/link";
 
 // ----------------------------------------------------------------------
 
@@ -402,6 +403,12 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                 CONNECT TO WALLET CONNECT
               </WalletConnectButton>
             </Stack>
+          </Stack>
+          <Divider sx={{mt:1, mb:1}}/>
+          <Stack sx={{textAlign: "center"}}>
+            <a style={{textDecoration: 'none', color: 'black'}} href={'https://eedao.notion.site/Eternal-Editions-168957fedc5a4ffe8ea7fcbc2ae1d05f'} target={"_blank"}>
+              <Typography variant={"caption"}>회원가입 가이드</Typography>
+            </a>
           </Stack>
         </Stack>
       )}
