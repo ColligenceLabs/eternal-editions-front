@@ -89,8 +89,8 @@ export default function NFTTransactionPoint() {
                 <TableRow sx={{ background: 'transparent', boxShadow: 'none' }}>
                   <HeaderTableCell>Date</HeaderTableCell>
                   {/*<HeaderTableCell align="right">User Id</HeaderTableCell>*/}
-                  <HeaderTableCell align="right">Order</HeaderTableCell>
-                  <HeaderTableCell align="right">Price</HeaderTableCell>
+                  <HeaderTableCell align="right">Order#</HeaderTableCell>
+                  <HeaderTableCell align="right">+/-Amount</HeaderTableCell>
                   <HeaderTableCell align="right">Type</HeaderTableCell>
 
                   {/*<HeaderTableCell align="right">-</HeaderTableCell>*/}
