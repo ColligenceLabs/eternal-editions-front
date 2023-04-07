@@ -6,8 +6,11 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { fDate } from '../../../utils/formatTime';
 import axios from 'axios';
 import QRCode from 'react-qr-code';
+// import { isMobile } from 'react-device-detect';
+import { useResponsive } from '../../../hooks';
 
 export default function TicketItem({ ticket }: any) {
+  const isMobile = useResponsive('down', 'md');
   const [maticPrice, setMaticPrice] = useState(0);
   const [klayPrice, setKlayPrice] = useState(0);
   const [ticketInfo, setTicketInfo] = useState({
@@ -78,7 +81,7 @@ export default function TicketItem({ ticket }: any) {
       <Stack
         justifyContent="space-between"
         sx={{
-          p: 3,
+          p: isMobile ? 1 : 3,
           borderRadius: 2,
           height: 1,
           zIndex: 1000,
@@ -102,17 +105,17 @@ export default function TicketItem({ ticket }: any) {
           <LineItem icon={<></>} label="Location" value={ticketInfo.location} />
           <LineItem icon={<></>} label="Number of tickets" value={ticketInfo.ticketNumber} />
 
-          <Stack sx={{ mt: 3 }} justifyContent="center" alignItems="center">
+          <Stack sx={{ mt: isMobile ? 2 : 3 }} justifyContent="center" alignItems="center">
             {/*<img src={'/assets/example/qr.png'} style={{ maxWidth: '120px' }} />*/}
             <QRCode
               value={`https://entrace2023.eternaleditions.io/entrace-confirm?contractAddress=${ticketInfo.boxContractAddress}&tokenId=${ticketInfo.tokenId}
 `}
-              size={120}
+              size={isMobile ? 50 : 120}
             />
           </Stack>
 
-          <Stack sx={{ mt: 4 }}>
-            <Button size="large" variant="contained" fullWidth={true}>
+          <Stack sx={{ mt: isMobile ? 2 : 4 }}>
+            <Button size={isMobile ? 'small' : 'large'} variant="contained" fullWidth={true}>
               TO ENTER
             </Button>
           </Stack>
@@ -167,19 +170,24 @@ type LineItemProps = {
 };
 
 function LineItem({ icon, label, value }: LineItemProps) {
+  const isMobile = useResponsive('down', 'md');
   return (
     <TextIconLabel
       icon={icon}
       value={
         <>
-          <Typography sx={{ fontSize: '14px' }}>{label}</Typography>
+          <Typography
+            sx={{ fontSize: isMobile ? '12px' : '14px', marginRight: isMobile ? '10px' : '0px' }}
+          >
+            {label}
+          </Typography>
           <Typography
             variant="subtitle2"
             sx={{
               color: 'common.black',
               flexGrow: 1,
               textAlign: 'right',
-              fontSize: '16px',
+              fontSize: isMobile ? '12px' : '16px',
               fontWeight: 'bold',
             }}
           >

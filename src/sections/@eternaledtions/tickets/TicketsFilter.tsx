@@ -18,6 +18,8 @@ import axios from 'axios';
 import { getTicketsService } from '../../../services/services';
 import { SUCCESS } from '../../../config';
 import { TicketInfoTypes } from '../../../@types/ticket/ticketTypes';
+// import { isMobile } from 'react-device-detect';
+import { useResponsive } from '../../../hooks';
 
 // ----------------------------------------------------------------------
 
@@ -31,6 +33,7 @@ const defaultValues = {
 };
 
 export default function TicketsFilter({ tickets, categories }: Props) {
+  const isMobile = useResponsive('down', 'sm');
   const theme = useTheme();
   const [curPage, setCurPage] = useState(1);
   const [perPage, setPerPage] = useState(5);
@@ -54,7 +57,7 @@ export default function TicketsFilter({ tickets, categories }: Props) {
 
   const getTickets = async () => {
     const res = await getTicketsService(1, perPage, selected);
-    console.log(res)
+    console.log(res);
     if (res.status === 200) {
       setTicketInfoList(res.data.list);
       setLastPage(res.data.headers.x_pages_count);
@@ -82,8 +85,9 @@ export default function TicketsFilter({ tickets, categories }: Props) {
       <Stack direction="row" sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
         <Box
           sx={{
-            pb: { xs: 2, md: 3 },
+            pb: { xs: 1, md: 3 },
             flexGrow: 1,
+            width: isMobile ? '330px' : '100%',
           }}
         >
           <Tabs
