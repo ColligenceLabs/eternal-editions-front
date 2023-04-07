@@ -1,16 +1,17 @@
 import React from 'react';
 // icons
 // @mui
-import {styled, useTheme} from '@mui/material/styles';
-import {Box, Button} from '@mui/material';
+import { styled, useTheme } from '@mui/material/styles';
+import { Box, Button } from '@mui/material';
 // components
-import {Swiper, SwiperSlide} from 'swiper/react';
+import { Swiper, SwiperSlide } from 'swiper/react';
 // styles
 import 'swiper/swiper.min.css';
+import Link from 'next/link';
 
 // ----------------------------------------------------------------------
 
-const RootStyle = styled('div')(({theme}) => ({
+const RootStyle = styled('div')(({ theme }) => ({
   position: 'relative',
   overflow: 'hidden',
   borderRadius: 24,
@@ -36,8 +37,7 @@ const BANNERS = [
   '/assets/background/bg-banner.jpg',
   '/assets/background/bg-banner.jpg',
   '/assets/background/bg-banner.jpg',
-]
-
+];
 
 // ----------------------------------------------------------------------
 
@@ -64,7 +64,7 @@ export default function HomeHero() {
                   component="p"
                   sx={{
                     typography: 'h5',
-                    mb: {xs: '24px', lg: '34px'}
+                    mb: { xs: '24px', lg: '34px' },
                   }}
                 >
                   2023 water bomb with Eternal Editons
@@ -75,20 +75,22 @@ export default function HomeHero() {
                     typography: 'banner1',
                     color: theme.palette.primary.main,
                     textAlign: 'center',
-                    mb: {xs: '24px', lg: '32px'}
+                    mb: { xs: '24px', lg: '32px' },
                   }}
                 >
                   Music festival
                 </Box>
-                <Button
-                  variant="contained"
-                  sx={{
-                    width: 240,
-                    height: 48,
-                  }}
-                >
-                  BUY TICKET
-                </Button>
+                <Link href={'/tickets'} style={{ textDecoration: 'none' }}>
+                  <Button
+                    variant="contained"
+                    sx={{
+                      width: 240,
+                      height: 48,
+                    }}
+                  >
+                    BUY TICKET
+                  </Button>
+                </Link>
               </Box>
             </BgCover>
           </SwiperSlide>
