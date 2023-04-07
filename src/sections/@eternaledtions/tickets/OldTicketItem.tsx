@@ -21,6 +21,12 @@ type Props = {
 };
 
 export default function OldTicketItem({ ticket }: Props) {
+  console.log(ticket);
+  const checkTicketId = (id: number) => {
+    if (id >= 5758 && id <= 7787) return '2023';
+    else return '2022';
+  };
+
   return ticket ? (
     <Stack
       component={m.div}
@@ -77,19 +83,8 @@ export default function OldTicketItem({ ticket }: Props) {
         }}
       >
         <Stack spacing={1} sx={{ position: 'absolute', zIndex: 999, left: 20, top: 20 }}>
-          {/*<Stack*/}
-          {/*  direction="row"*/}
-          {/*  spacing={1}*/}
-          {/*  alignItems="center"*/}
-          {/*  sx={{ opacity: 0.72, typography: 'caption' }}*/}
-          {/*>*/}
-          {/*  <EEAvatar src={ticketInfo.companyImage!} sx={{ mr: 0, width: 24, height: 24 }} />*/}
-
-          {/*  <Typography>{ticketInfo.company}</Typography>*/}
-          {/*</Stack>*/}
-
           <TextMaxLine variant="h3" sx={{ width: '100%' }}>
-            2022 {ticket.name.replaceAll('"', '')}
+            {checkTicketId(ticket.id)} {ticket.name.replaceAll('"', '')}
           </TextMaxLine>
           <Typography
             variant="body1"
