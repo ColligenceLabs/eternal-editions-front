@@ -112,3 +112,7 @@ export const getExchange = async () => {
 export const getOldMyTicket = async () => {
   return await apiAuthAxios.get('/api/users/tickets');
 };
+
+export const checkUserEmail = async (email: string) => {
+  return await apiAuthAxios.get(`/api/users/checkUser?email=${email}`);
+};
