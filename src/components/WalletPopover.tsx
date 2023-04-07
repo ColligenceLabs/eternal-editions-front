@@ -99,6 +99,10 @@ export default function WalletPopover({}) {
     }
   };
 
+  useEffect(() => {
+    handleClose();
+  }, [router]);
+
   return (
     <>
       <Button onClick={handleOpen}>
@@ -205,9 +209,9 @@ export default function WalletPopover({}) {
                 {/*    <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>BUY POINT</Typography>*/}
                 {/*  </Box>*/}
                 {/*) : (*/}
-                  <NextLink href={Routes.eternalEditions.payment.point} passHref>
-                    <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>BUY POINT</Typography>
-                  </NextLink>
+                <NextLink href={Routes.eternalEditions.payment.point} passHref>
+                  <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>BUY POINT</Typography>
+                </NextLink>
                 {/*)}*/}
               </Box>
             </Box>
