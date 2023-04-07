@@ -190,7 +190,7 @@ Type: Address verification`;
               display: 'flex',
             }}
           >
-            {!isDesktop && (
+            {isDesktop && (
               <Box sx={{ width: '370px', borderRight: '1px solid #0000000A' }}>
                 <Box
                   sx={{
@@ -377,7 +377,9 @@ Type: Address verification`;
                   {user.abc_address && (
                     <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.7rem', mt: '14px' }}>
                       <Image src="/assets/icons/abc-logo.png" sx={{ width: '24px' }} />
-                      <Typography>{user.abc_address}</Typography>
+                      <Typography>
+                        {isDesktop ? user.eth_address : getShotAddress(user.abc_address)}
+                      </Typography>
                     </Box>
                   )}
                   {user.eth_address && (

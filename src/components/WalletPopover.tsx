@@ -1,41 +1,24 @@
-import { useSnackbar } from 'notistack';
 import { useEffect, useState } from 'react';
-// next
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-// @mui
-import { Box, Button, Divider, List, ListSubheader, Stack, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
-// routes
-// hooks
-// components
 import MenuPopover from './MenuPopover';
-import useWallets from '../hooks/useWallets';
-import {
-  ClipboardCopy,
-  getIconByType,
-  getShotAddress,
-  MATIC_VERSION,
-  toChain,
-  toSymbolImage,
-} from '../utils/wallet';
+import { ClipboardCopy, getIconByType, getShotAddress } from '../utils/wallet';
 import Image from './Image';
 import Routes from '../routes';
-import { Iconify } from './index';
-import launchIcon from '@iconify/icons-carbon/launch';
 import { useWeb3React } from '@web3-react/core';
 import { WALLET_ABC, WALLET_METAMASK, WALLET_WALLECTCONNECT } from '../config';
 import { useDispatch, useSelector } from 'react-redux';
 import useAccount from '../hooks/useAccount';
 import env from '../env';
 import { delUser } from '../store/slices/user';
-import profileLogo from '../../public/assets/icons/profile-logo.png';
 import { styled } from '@mui/material/styles';
 import palette from '../theme/palette';
-import maticIcon from '../../public/assets/img/matic-token-icon.png';
 import getBalances from '../utils/getBalances';
-import { isMobile } from 'react-device-detect';
+// import { isMobile } from 'react-device-detect';
+import { useResponsive } from '../hooks';
 
 // ----------------------------------------------------------------------
 WalletPopover.propTypes = {};
@@ -59,6 +42,7 @@ export default function WalletPopover({}) {
   const [accountShot, setAccountShot] = useState('');
   const [type, setType] = useState('');
   const router = useRouter();
+  const isMobile = useResponsive('down', 'md');
 
   const balance = getBalances(account, library);
 
