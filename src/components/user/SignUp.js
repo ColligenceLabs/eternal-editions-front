@@ -214,9 +214,9 @@ export default function SignUp({ onClose, hideSns, ...other }) {
       const isAbc = target_copy.isABC === true;
       // const isKaikas = typeof target_copy._kaikas !== 'undefined';
       let signature;
-      const message = `apps.talken.io wants you to sign in with your Ethereum account.
+      const message = `apps.eternaleditions.io wants you to sign in with your Ethereum account.
 
-  Talken Drops Signature Request
+  EternalEditions Signature Request
 
   Type: Login request`;
       signature = await library
