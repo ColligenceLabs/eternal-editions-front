@@ -89,7 +89,7 @@ export default function OldTicketItem({ ticket }: Props) {
           {/*</Stack>*/}
 
           <TextMaxLine variant="h3" sx={{ width: '100%' }}>
-            {ticket.name.replaceAll('"', '')}
+            2022 {ticket.name.replaceAll('"', '')}
           </TextMaxLine>
           <Typography
             variant="body1"
