@@ -67,7 +67,7 @@ export default function HomeHero() {
                     mb: { xs: '24px', lg: '34px' },
                   }}
                 >
-                  2023 water bomb with Eternal Editons
+                  2023 water bomb with Eternal Editions
                 </Box>
                 <Box
                   component="h1"
