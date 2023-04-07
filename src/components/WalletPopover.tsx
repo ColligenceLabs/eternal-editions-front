@@ -117,7 +117,7 @@ export default function WalletPopover({}) {
         sx={{
           bgcolor: 'common.white',
           color: 'common.black',
-          width: 448,
+          width: isMobile ? '100%' : '448px',
           p: 0,
           mt: 1.5,
           pb: 1.5,
