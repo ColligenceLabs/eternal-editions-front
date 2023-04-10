@@ -11,14 +11,17 @@ import {
 import Layout from '../src/layouts';
 import { Page } from '../src/components';
 import {
+  Backdrop,
   Box,
   Button,
   Checkbox,
   CircularProgress,
   Container,
   Divider,
+  Fade,
   FormControlLabel,
   Input,
+  Modal,
   TextField,
   Typography,
 } from '@mui/material';
@@ -45,6 +48,20 @@ const RootStyle = styled('div')(({ theme }) => ({
     paddingTop: HEADER_DESKTOP_HEIGHT,
   },
 }));
+
+const modalStyle = {
+  position: 'absolute',
+  top: '30%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  width: 400,
+  bgcolor: 'common.white',
+  color: 'common.black',
+  boxShadow: 24,
+  p: 4,
+  borderRadius: '24px',
+};
+
 export default function Register(effect: React.EffectCallback, deps?: React.DependencyList) {
   const router = useRouter();
 
@@ -83,7 +100,32 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     router.query.eternal ? Base64.decode(router.query.eternal) : undefined
   );
   const [emailCheckCode, setEmailCheckCode] = useState('');
+  const [resetPass, setResetPass] = useState(false);
+  const [rpEmailCheckCode, setRpEmailCheckCode] = useState('');
+  const [rpPassword, setRpPassword] = useState('');
+  const [rpConfirmPassword, setRpConfirmPassword] = useState('');
   console.log(router);
+
+  const handleChangeRpConfirmPassword = (event: ChangeEvent<HTMLInputElement>) => {
+    setRpConfirmPassword(event.target.value);
+  };
+  const handleChangeRpEmailCheckCode = (event: ChangeEvent<HTMLInputElement>) => {
+    setRpEmailCheckCode(event.target.value);
+  };
+
+  const handleChangeRpPassword = (event: ChangeEvent<HTMLInputElement>) => {
+    setRpPassword(event.target.value);
+  };
+
+  const handleClickResetPassword = () => {
+    console.log('click reset password');
+    console.log(rpEmailCheckCode);
+    console.log(rpPassword);
+    console.log(rpConfirmPassword);
+  };
+  const handleResetPassClose = () => {
+    setResetPass(false);
+  };
 
   const handleAbcTokenChange = (event: ChangeEvent<HTMLInputElement>) => {
     event.preventDefault();
@@ -427,11 +469,12 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         } else {
           // TODO : What ?
           if (loginFail)
-            alert(
-              '로그인에 실패했습니다. uaername과 password를 다시 확인하세요. 구글 또는 페이스북으로 이미 가입하신 사용자는 지갑암호 설정이 필요합니다. 지갑암호 설정 메뉴를 확인하세요.'
-            );
-          setResetPass(true);
+            // alert(
+            //   '로그인에 실패했습니다. uaername과 password를 다시 확인하세요. 구글 또는 페이스북으로 이미 가입하신 사용자는 지갑암호 설정이 필요합니다. 지갑암호 설정 메뉴를 확인하세요.',
+            // );
+            setResetPass(true);
           console.log('===== ABC Wallet ... Login ... Failed !! =====');
+
           location.replace('/');
         }
       } else {
@@ -905,6 +948,109 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
               )}
             </>
           )}
+          <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            open={resetPass}
+            onClose={handleResetPassClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 500,
+            }}
+          >
+            <Fade in={resetPass}>
+              <Box sx={modalStyle}>
+                <Box sx={{ fontSize: '14px' }}>
+                  로그인에 실패했습니다. uaername과 password를 다시 확인하세요. 구글 또는
+                  페이스북으로 이미 가입하신 사용자는 지갑암호 설정이 필요합니다. 지갑암호 설정
+                  메뉴를 확인하세요.
+                </Box>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '1rem',
+                    fontSize: '14px',
+                    marginTop: '20px',
+                  }}
+                >
+                  <Box
+                    sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                  >
+                    Email Check Code
+                    <TextField
+                      variant="outlined"
+                      size={'small'}
+                      inputProps={{ style: { color: '#999999' } }}
+                      value={rpEmailCheckCode}
+                      onChange={handleChangeRpEmailCheckCode}
+                      // value={emailCheckCode}
+                      // onChange={handleChangeEmailCheckCode}
+                    />
+                  </Box>
+                  <Box
+                    sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                  >
+                    New Password
+                    <TextField
+                      type="password"
+                      variant="outlined"
+                      size={'small'}
+                      inputProps={{ style: { color: '#999999' } }}
+                      value={rpPassword}
+                      onChange={handleChangeRpPassword}
+                    />
+                  </Box>
+                  <Box
+                    sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                  >
+                    Password Confirm
+                    <TextField
+                      type="password"
+                      variant="outlined"
+                      size={'small'}
+                      inputProps={{ style: { color: '#999999' } }}
+                      value={rpConfirmPassword}
+                      onChange={handleChangeRpConfirmPassword}
+                    />
+                  </Box>
+                  {rpPassword !== rpConfirmPassword && (
+                    <Box
+                      sx={{
+                        fontSize: '12px',
+                        color: 'red',
+                        textAlign: 'center',
+                      }}
+                    >
+                      패스워드가 일치하지 않습니다.
+                    </Box>
+                  )}
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginTop: '10px',
+                      gap: '1rem',
+                    }}
+                  >
+                    <Button variant={'outlined'} fullWidth onClick={handleResetPassClose}>
+                      Cancel
+                    </Button>
+                    <Button
+                      variant={'outlined'}
+                      fullWidth
+                      disabled={rpPassword !== rpConfirmPassword}
+                      onClick={handleClickResetPassword}
+                    >
+                      OK
+                    </Button>
+                  </Box>
+                </Box>
+              </Box>
+            </Fade>
+          </Modal>
         </Container>
       </RootStyle>
     </Page>
