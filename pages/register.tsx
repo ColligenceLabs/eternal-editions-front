@@ -461,7 +461,8 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         };
       } else {
         // TODO : What ?
-        alert('로그인에 실패했습니다. SNS 계정을 다시 확인하세요.');
+        if (flCreate) alert('신규 가입을 진행하겠습니다.');
+        else alert('로그인에 실패했습니다. SNS 계정을 다시 확인하세요.');
         console.log('===== ABC Wallet ... SNS Login ... Failed !! =====');
       }
     }
