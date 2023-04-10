@@ -426,7 +426,11 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
           abcAuth = result;
         } else {
           // TODO : What ?
-          if (loginFail) alert('로그인에 실패했습니다. uaername과 password를 다시 확인하세요.');
+          if (loginFail)
+            alert(
+              '로그인에 실패했습니다. uaername과 password를 다시 확인하세요. 구글 또는 페이스북으로 이미 가입하신 사용자는 지갑암호 설정이 필요합니다. 지갑암호 설정 메뉴를 확인하세요.'
+            );
+          setResetPass(true);
           console.log('===== ABC Wallet ... Login ... Failed !! =====');
           location.replace('/');
         }
