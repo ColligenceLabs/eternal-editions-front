@@ -105,7 +105,13 @@ export default function Header({ transparent }: Props) {
   };
 
   useEffect(() => {
-    if (webUser?.user?.session?.providerAuthInfo?.provider_token !== '' && temp) {
+    const loginType = localStorage.getItem('loginType');
+    console.log('!! login type = ', loginType);
+    if (
+      loginType !== 'password' &&
+      webUser?.user?.session?.providerAuthInfo?.provider_token !== '' &&
+      temp
+    ) {
       if (_.isEmpty(abcUser) || abcUser.uid === '') {
         abcSnsLogin();
       }

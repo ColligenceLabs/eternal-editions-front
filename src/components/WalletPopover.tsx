@@ -75,6 +75,7 @@ export default function WalletPopover({}) {
       window.localStorage.setItem('walletStatus', 'disconnected');
       window.localStorage.removeItem('jwtToken');
       window.localStorage.removeItem('loginBy');
+      window.localStorage.removeItem('loginType');
       window.location.href = `${env.REACT_APP_API_URL}/auth/logout`;
       dispatch(delUser());
     } catch (e) {

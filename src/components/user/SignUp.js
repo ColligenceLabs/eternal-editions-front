@@ -193,6 +193,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
     console.log(res);
     if (res.data.status === SUCCESS) {
       console.log('로그인 성공');
+      window.localStorage.setItem('loginType', 'password');
       Router.push({
         pathname: '/register',
         query: { eternal: Base64.encode(userPWD) },
@@ -236,6 +237,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
       if (res.data === 'User not found!') {
         deactivate();
         window.localStorage.removeItem('loginBy');
+        window.localStorage.removeItem('loginType');
         alert('Please continue with SNS and register wallet address on My Profile page.');
       }
     };
@@ -272,6 +274,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
   console.log('googleredirecturl:::', `${env.REACT_APP_API_URL}/auth/google?redirectUrl=/`);
   const handleSnsLogin = async (snsType) => {
     window.localStorage.setItem('loginBy', 'sns');
+    window.localStorage.removeItem('loginType');
     window.location.href = `${env.REACT_APP_API_URL}/auth/${snsType}?redirectUrl=/`;
   };
 
@@ -369,6 +372,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                 variant="contained"
                 onClick={async () => {
                   window.localStorage.setItem('loginBy', 'wallet');
+                  window.localStorage.removeItem('loginType');
                   await connectWallet(WALLET_METAMASK);
                   // await connectMetamask();
                   // onClose();
@@ -389,6 +393,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                 variant="contained"
                 onClick={async () => {
                   window.localStorage.setItem('loginBy', 'wallet');
+                  window.localStorage.removeItem('loginType');
                   await connectWallet(WALLET_WALLECTCONNECT);
                   // onClose();
                 }}
