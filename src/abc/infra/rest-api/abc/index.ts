@@ -109,12 +109,13 @@ export class AbcRestApi {
 
   sendEmailAuthCode = async (dto: AbcSendEmailAuthCodeDto): Promise<any> => {
     try {
-      const { email, lang } = dto;
+      const { email, lang, template } = dto;
 
+      const url = template
+        ? `/mail-service/${email}/sendcode?serviceid=${process.env.ABC_SERVICE_ID}&lang=${lang}&template=${template}`
+        : `/mail-service/${email}/sendcode?serviceid=${process.env.ABC_SERVICE_ID}&lang=${lang}`;
       const res = await axios.request({
-        url:
-          memberBaseURL +
-          `/mail-service/${email}/sendcode?serviceid=${process.env.ABC_SERVICE_ID}&lang=${lang}`,
+        url: memberBaseURL + url,
         method: 'get',
         // adapter: fetchAdapter,
       });

@@ -38,6 +38,7 @@ export interface AbcGetUserDto {
 export interface AbcSendEmailAuthCodeDto {
   email: string;
   lang?: string;
+  template?: string;
 }
 
 export interface AbcVerifyEmailAuthCodeDto {
