@@ -519,6 +519,12 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         alert('Email Check Code를 입력하신 Email로 발송했습니다.');
       }
     } else {
+      const isExist = await abcController.getUser({
+        email: email,
+        successIfUserExist: true,
+      });
+      console.log('!! getUser =', isExist);
+
       result = await abcLogin({
         token: token,
         service: serv,
