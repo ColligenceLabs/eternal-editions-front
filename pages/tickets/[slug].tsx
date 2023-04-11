@@ -221,6 +221,11 @@ export default function TicketDetailPage() {
         } else {
           // setIsBuyingWithMatic(false);
           // return false;
+          setOpenSnackbar({
+            open: true,
+            type: 'error',
+            message: `Purchase failed! TX Hash = ${result.transactionHash}`,
+          });
         }
       } catch (e: any) {
         setIsBuyingWithMatic(false);
@@ -392,6 +397,12 @@ export default function TicketDetailPage() {
         } else {
           // setIsBuyingWithMatic(false);
           // return false;
+          // 구입 실패
+          setOpenSnackbar({
+            open: true,
+            type: 'error',
+            message: `Purchase failed! Tx Hash = ${result.txHash}`,
+          });
         }
       } catch (e: any) {
         setIsBuyingWithMatic(false);
