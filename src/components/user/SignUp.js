@@ -30,7 +30,7 @@ import { useDispatch } from 'react-redux';
 import { ChangeEvent } from 'react';
 import { Base64 } from 'js-base64';
 import Router from 'next/router';
-import Link from "next/link";
+import Link from 'next/link';
 
 // ----------------------------------------------------------------------
 
@@ -327,6 +327,18 @@ export default function SignUp({ onClose, hideSns, ...other }) {
             {!hideSns && (
               <>
                 <Stack>
+                  <IDPWDButton
+                    variant="contained"
+                    onClick={() => {
+                      setOpenIDPWD(true);
+                    }}
+                    startIcon={<Iconify icon="ic:sharp-supervised-user-circle" />}
+                    // startIcon={<Iconify icon={'mdi:facebook'} />}
+                  >
+                    ID / PASSWORD (기존 회원)
+                  </IDPWDButton>
+                </Stack>
+                <Stack>
                   <GoogleButton
                     variant="contained"
                     onClick={() => handleSnsLogin('google')}
@@ -343,18 +355,6 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                   >
                     CONTINUE WITH FACEBOOK
                   </FacebookButton>
-                </Stack>
-                <Stack>
-                  <IDPWDButton
-                    variant="contained"
-                    onClick={() => {
-                      setOpenIDPWD(true);
-                    }}
-                    startIcon={<Iconify icon="ic:sharp-supervised-user-circle" />}
-                    // startIcon={<Iconify icon={'mdi:facebook'} />}
-                  >
-                    ID / PASSWORD (기존회원)
-                  </IDPWDButton>
                 </Stack>
                 <Stack direction="row" justifyContent="center" alignItems="center">
                   <Typography variant="caption">Or</Typography>
@@ -404,10 +404,14 @@ export default function SignUp({ onClose, hideSns, ...other }) {
               </WalletConnectButton>
             </Stack>
           </Stack>
-          <Divider sx={{mt:1, mb:1}}/>
-          <Stack sx={{textAlign: "center"}}>
-            <a style={{textDecoration: 'none', color: 'black'}} href={'https://eedao.notion.site/Eternal-Editions-168957fedc5a4ffe8ea7fcbc2ae1d05f'} target={"_blank"}>
-              <Typography variant={"caption"}>회원가입 가이드</Typography>
+          <Divider sx={{ mt: 1, mb: 1 }} />
+          <Stack sx={{ textAlign: 'center' }}>
+            <a
+              style={{ textDecoration: 'none', color: 'black' }}
+              href={'https://eedao.notion.site/Eternal-Editions-168957fedc5a4ffe8ea7fcbc2ae1d05f'}
+              target={'_blank'}
+            >
+              <Typography variant={'caption'}>회원가입 가이드</Typography>
             </a>
           </Stack>
         </Stack>
