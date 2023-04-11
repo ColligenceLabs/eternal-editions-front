@@ -28,7 +28,7 @@ export const abcSendTx = async (
   txArgs: any,
   user: any,
   value?: string
-): Promise<txResult> => {
+): Promise<any> => {
   const { abcController, accountController } = controllers;
   const { mpcService, providerService, providerConnManager, gasService } = services;
 
