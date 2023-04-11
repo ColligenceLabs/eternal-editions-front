@@ -15,11 +15,11 @@ import AbcUtil from '../../utils/abc';
 import { DekeyStore } from '../store';
 
 class AbcService extends EventEmitter {
-  mykey;
-  pubkey;
-  channelid;
-  publickey;
-  encrypted;
+  mykey: any;
+  pubkey: any;
+  channelid: any;
+  publickey: any;
+  encrypted: any;
 
   // constructor(private restApi: AbcRestApi, private dekeyStore: DekeyStore) {
   constructor(private restApi: AbcRestApi) {
@@ -29,13 +29,19 @@ class AbcService extends EventEmitter {
   async login(dto: AbcLoginDto): Promise<AbcLoginResult> {
     const { encrypted, channelid } = await this.encryptSecureData(dto.password);
 
-    console.log('----------->', dto, encrypted);
-    const lResult = await this.restApi.login({ ...dto, password: encrypted }, channelid);
+    let lResult: AbcLoginResult;
+    if (encrypted !== null && channelid !== null) {
+      // console.log('!! abc login info : ', dto, encrypted);
+      lResult = await this.restApi.login({ ...dto, password: encrypted }, channelid);
 
-    // this.dekeyStore.updateStore({
-    //   abcAuth: lResult,
-    // });
-    console.log('===>', lResult);
+      // this.dekeyStore.updateStore({
+      //   abcAuth: lResult,
+      // });
+      // console.log('!! login result : ', lResult);
+    } else {
+      // @ts-ignore
+      lResult = { code: 602 };
+    }
     return lResult;
   }
 
@@ -73,7 +79,8 @@ class AbcService extends EventEmitter {
 
     const decryptedText = AbcUtil.decrypt(secretKey, encrypted);
     if (decryptedText !== plain) {
-      throw new Error();
+      // throw new Error();
+      return { encrypted: null, channelid: null };
     }
 
     return {
