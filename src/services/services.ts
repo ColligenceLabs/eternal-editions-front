@@ -1,7 +1,7 @@
 import axios from 'axios';
 import env from '../env';
 import { apiAuthAxios, customAxios } from './customAxios';
-import { AbcAddUserDto } from '../abc/main/abc/interface';
+import { AbcAddUserDto, AbcInitPasswordDto } from '../abc/main/abc/interface';
 import { services } from '../../src/abc/background/init';
 import queryString from 'query-string';
 
@@ -54,6 +54,20 @@ export const abcAddUser = async (dto: AbcAddUserDto) => {
   const { encrypted, channelid } = await abcService.encryptSecureData(dto.password);
 
   return await customAxios.post(`api/abc/adduser`, {
+    data: queryString.stringify({
+      ...dto,
+      password: encrypted,
+      serviceid: process.env.ABC_SERVICE_ID,
+    }),
+    channelid: channelid,
+  });
+};
+
+export const resetPassword = async (dto: AbcInitPasswordDto) => {
+  const { abcService } = services;
+  const { encrypted, channelid } = await abcService.encryptSecureData(dto.password);
+
+  return await customAxios.post(`api/abc/initpassword`, {
     data: queryString.stringify({
       ...dto,
       password: encrypted,

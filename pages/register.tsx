@@ -3,8 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   abcAddUser,
   abcLogin,
-  abcVerifyCode,
   getSession,
+  resetPassword,
   updateAbcAddress,
   userRegister,
 } from '../src/services/services';
@@ -33,7 +33,7 @@ import secureLocalStorage from 'react-secure-storage';
 
 // TODO : dkeys WASM Go Initialize...
 import '../src/abc/sandbox/index';
-import { controllers, accountRestApi } from '../src/abc/background/init';
+import { controllers, accountRestApi, services } from '../src/abc/background/init';
 import { AbcAddUserDto, AbcLoginResult, AbcSnsAddUserDto } from '../src/abc/main/abc/interface';
 import { setAbcAuth } from '../src/store/slices/abcAuth';
 import { setTwoFa } from '../src/store/slices/twoFa';
@@ -41,6 +41,8 @@ import { setProvider } from '../src/store/slices/webUser';
 import { AbcLoginResponse } from '../src/abc/schema/account';
 import { useRouter } from 'next/router';
 import { emitter } from 'next/client';
+import { Deblur } from '@mui/icons-material';
+import queryString from 'query-string';
 
 const RootStyle = styled('div')(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,
@@ -69,6 +71,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   const user = useSelector((state: any) => state.user);
   const twoFa = useSelector((state: any) => state.twoFa);
   const { abcController, accountController } = controllers;
+  const { abcService } = services;
   const [isCheck, setIsCheck] = useState({
     check1: false,
     check2: false,
@@ -97,14 +100,14 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   const [qrOnly, setQrOnly] = useState(false);
   const [oldUser, setOldUser] = useState(false);
   const [password, setPassword] = useState(
-    router.query.eternal ? Base64.decode(router.query.eternal) : undefined
+    router.query.eternal ? Base64.decode(router.query.eternal as string) : undefined
   );
   const [emailCheckCode, setEmailCheckCode] = useState('');
   const [resetPass, setResetPass] = useState(false);
   const [rpEmailCheckCode, setRpEmailCheckCode] = useState('');
   const [rpPassword, setRpPassword] = useState('');
   const [rpConfirmPassword, setRpConfirmPassword] = useState('');
-  console.log(router);
+  // console.log(router);
 
   const handleChangeRpConfirmPassword = (event: ChangeEvent<HTMLInputElement>) => {
     setRpConfirmPassword(event.target.value);
@@ -117,14 +120,35 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     setRpPassword(event.target.value);
   };
 
-  const handleClickResetPassword = () => {
+  const handleClickResetPassword = async () => {
     console.log('click reset password');
+    console.log(email);
     console.log(rpEmailCheckCode);
     console.log(rpPassword);
     console.log(rpConfirmPassword);
+
+    const result = await resetPassword({
+      username: email,
+      password: rpPassword,
+      code: rpEmailCheckCode,
+    });
+
+    // const result = await abcController.initPassword({
+    //   username: email,
+    //   password: rpPassword,
+    //   code: rpEmailCheckCode,
+    // });
+
+    console.log('!! Reset Password :', result);
+    if (result?.status === 200) {
+      alert('암호가 설정 되었습니다. 다시 로그인하세요.');
+      location.replace('/');
+    }
   };
+
   const handleResetPassClose = () => {
     setResetPass(false);
+    location.replace('/');
   };
 
   const handleAbcTokenChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -377,7 +401,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         // }
 
         if ('code' in abcAuth) {
-          alert('로그인에 실패 했습니다.', abcAuth?.msg);
+          alert('로그인에 실패 했습니다.');
         } else {
           // 새 토큰 저장
           await dispatch(setAbcAuth(abcAuth));
@@ -443,7 +467,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       console.log('!! login info =', loginEmail, password);
 
       const isExist = await abcController.getUser({
-        email: loginEmail,
+        email: loginEmail!,
         successIfUserExist: true,
       });
       console.log('!! getUser =', isExist);
@@ -468,14 +492,21 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
           abcAuth = result;
         } else {
           // TODO : What ?
-          if (loginFail)
+          if (loginFail) {
             // alert(
             //   '로그인에 실패했습니다. uaername과 password를 다시 확인하세요. 구글 또는 페이스북으로 이미 가입하신 사용자는 지갑암호 설정이 필요합니다. 지갑암호 설정 메뉴를 확인하세요.',
             // );
+            console.log('!! send check code to ', loginEmail);
+            // Send Email Check Code
+            result = await abcController.sendEmailAuthCode({
+              email: loginEmail!,
+              template: 'initpassword',
+            });
+            alert('Email Check Code를 입력하신 Email로 발송했습니다.');
             setResetPass(true);
-          console.log('===== ABC Wallet ... Login ... Failed !! =====');
-
-          location.replace('/');
+          }
+          // console.log('===== ABC Wallet ... Login ... Failed !! =====');
+          // location.replace('/');
         }
       } else {
         flCreate = true;
@@ -483,7 +514,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         console.log('!! send check code to ', loginEmail);
         // Send Email Check Code
         result = await abcController.sendEmailAuthCode({
-          email: loginEmail,
+          email: loginEmail!,
         });
         alert('Email Check Code를 입력하신 Email로 발송했습니다.');
       }
@@ -952,7 +983,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
             aria-labelledby="transition-modal-title"
             aria-describedby="transition-modal-description"
             open={resetPass}
-            onClose={handleResetPassClose}
+            // onClose={handleResetPassClose}
             closeAfterTransition
             BackdropComponent={Backdrop}
             BackdropProps={{
@@ -961,10 +992,9 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
           >
             <Fade in={resetPass}>
               <Box sx={modalStyle}>
-                <Box sx={{ fontSize: '14px' }}>
-                  로그인에 실패했습니다. uaername과 password를 다시 확인하세요. 구글 또는
-                  페이스북으로 이미 가입하신 사용자는 지갑암호 설정이 필요합니다. 지갑암호 설정
-                  메뉴를 확인하세요.
+                <Box sx={{ fontSize: '16px' }}>
+                  {`암호가 변경되었거나 구글/페이스북으로 이미 가입하신 사용자는 지갑암호
+                  (재)설정이 필요합니다.`}
                 </Box>
                 <Box
                   sx={{
@@ -989,6 +1019,8 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                       // onChange={handleChangeEmailCheckCode}
                     />
                   </Box>
+                  <Box sx={{ fontSize: '12px' }}>{`* ${email}로 발송된 확인 코드 사용`}</Box>
+                  <Divider sx={{ marginY: '14px' }} />
                   <Box
                     sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                   >
