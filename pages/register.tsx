@@ -51,6 +51,15 @@ const RootStyle = styled('div')(({ theme }) => ({
   },
 }));
 
+export const NumberInput = styled(TextField)(() => ({
+  '& input::-webkit-outer-spin-button, & input::-webkit-inner-spin-button': {
+    display: 'none',
+  },
+  '& input[type=number]': {
+    MozAppearance: 'textfield',
+  },
+}));
+
 const modalStyle = {
   position: 'absolute',
   top: '30%',
@@ -890,7 +899,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                   {oldUser && (
                     <Box sx={{ marginY: '20px' }}>
                       {/*<Typography>Email Check Code</Typography>*/}
-                      <TextField
+                      <NumberInput
                         label="Email Check Code"
                         variant="outlined"
                         fullWidth
@@ -1016,8 +1025,10 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                     sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                   >
                     Email Check Code
-                    <TextField
+                    <NumberInput
+                      type="number"
                       variant="outlined"
+                      autoComplete="off"
                       size={'small'}
                       inputProps={{ style: { color: '#999999' } }}
                       value={rpEmailCheckCode}
@@ -1035,6 +1046,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                     <TextField
                       type="password"
                       variant="outlined"
+                      autoComplete="off"
                       size={'small'}
                       inputProps={{ style: { color: '#999999' } }}
                       value={rpPassword}
@@ -1048,6 +1060,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                     <TextField
                       type="password"
                       variant="outlined"
+                      autoComplete="off"
                       size={'small'}
                       inputProps={{ style: { color: '#999999' } }}
                       value={rpConfirmPassword}
@@ -1080,7 +1093,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                     <Button
                       variant={'outlined'}
                       fullWidth
-                      disabled={rpPassword !== rpConfirmPassword}
+                      disabled={rpEmailCheckCode === '' || rpPassword !== rpConfirmPassword}
                       onClick={handleClickResetPassword}
                     >
                       OK
