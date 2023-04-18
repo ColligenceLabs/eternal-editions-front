@@ -82,12 +82,24 @@ export default function TicketsFilter({ tickets, categories }: Props) {
 
   return (
     <>
-      <Stack direction="row" sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+      <Stack
+        direction="row"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          mx: {
+            xs: -2.5,
+            md: 0,
+          },
+        }}
+      >
         <Box
           sx={{
             pb: { xs: 1, md: 3 },
             flexGrow: 1,
-            width: isMobile ? '330px' : '100%',
+            // width: isMobile ? 330 : '100%',
+            /* 2023.04.18 320px 화면에서 깨지는 현상 수정 */
+            width: '100%',
           }}
         >
           <Tabs
