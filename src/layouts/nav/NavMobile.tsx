@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // icons
-import menuIcon from '@iconify/icons-carbon/menu';
+import MenuIcon from '../../../src/assets/icons/menu';
+import DiscordIcon from '../../../src/assets/icons/discord';
 import chevronRight from '@iconify/icons-carbon/chevron-right';
 import chevronDown from '@iconify/icons-carbon/chevron-down';
 // next
@@ -122,8 +123,53 @@ export default function NavMobile({ navConfig, sx }: NavProps) {
 
   return (
     <>
-      <IconButtonAnimate color="inherit" onClick={handleDrawerOpen} sx={sx}>
-        <Iconify icon={menuIcon} />
+      <IconButtonAnimate
+        color="inherit"
+        onClick={handleDrawerOpen}
+        sx={{
+          ...sx,
+          bgcolor: 'rgba(0,0,0,.3)',
+          transition: 'all .3s',
+          '&:hover': {
+            bgcolor: '#454F5B',
+          },
+        }}
+      >
+        <Box
+          sx={{
+            width: 24,
+            height: 24,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <DiscordIcon />
+        </Box>
+      </IconButtonAnimate>
+      <IconButtonAnimate
+        color="inherit"
+        onClick={handleDrawerOpen}
+        sx={{
+          ...sx,
+          bgcolor: 'rgba(0,0,0,.3)',
+          transition: 'all .3s',
+          '&:hover': {
+            bgcolor: '#454F5B',
+          },
+        }}
+      >
+        <Box
+          sx={{
+            width: 24,
+            height: 24,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+        >
+          <MenuIcon />
+        </Box>
       </IconButtonAnimate>
 
       <Drawer
