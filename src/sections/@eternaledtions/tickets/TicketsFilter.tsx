@@ -127,7 +127,7 @@ export default function TicketsFilter({ tickets, categories }: Props) {
       </Stack>
 
       {ticketInfoList && (
-        <Masonry columns={{ xs: 1, md: 2 }} spacing={2}>
+        <Masonry columns={{ xs: 1, md: 2 }} spacing={2} sx={{ width: 'auto' }}>
           {ticketInfoList.map((ticket, index) => (
             <TicketPostItem key={index} ticket={ticket} />
           ))}

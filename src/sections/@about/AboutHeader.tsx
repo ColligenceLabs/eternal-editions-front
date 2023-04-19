@@ -48,7 +48,15 @@ export default function AboutHeader() {
   return (
     <RootStyle>
       <AboutHeaderSection>
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
         <Container maxWidth={false} sx={{ px: { xs: '12px', lg: '80px' } }}>
+=======
+        <Container maxWidth={false} sx={{ px: { xs: '12px', lg: '80px' }, color: 'common.white' }}>
+>>>>>>> Stashed changes
+=======
+        <Container maxWidth={false} sx={{ px: { xs: '12px', lg: '80px' }, color: 'common.white' }}>
+>>>>>>> Stashed changes
           <Box
             component="h1"
             sx={{
@@ -57,7 +65,15 @@ export default function AboutHeader() {
               mb: { xs: '16px', lg: '40px' },
             }}
           >
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
             ETER
+=======
+            ETERNAL
+>>>>>>> Stashed changes
+=======
+            ETERNAL
+>>>>>>> Stashed changes
             <br />
             EDITIONS
             <br />

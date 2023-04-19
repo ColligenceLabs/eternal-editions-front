@@ -181,9 +181,7 @@ export default function NavMobile({ navConfig, sx }: NavProps) {
         }}
       >
         <Scrollbar>
-          <Box sx={{ px: 2.5, py: 3, lineHeight: 0 }}>
-            <Logo />
-          </Box>
+          <Box sx={{ px: 2.5, py: 3, lineHeight: 0 }}>{/* <Logo isSimple /> */}</Box>
 
           <List sx={{ px: 0 }}>
             {navConfig.map((link) => (

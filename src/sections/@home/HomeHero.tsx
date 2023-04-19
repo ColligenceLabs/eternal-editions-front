@@ -64,6 +64,7 @@ export default function HomeHero() {
                   component="p"
                   sx={{
                     typography: 'h5',
+                    color: 'common.white',
                     mb: { xs: '24px', lg: '34px' },
                   }}
                 >

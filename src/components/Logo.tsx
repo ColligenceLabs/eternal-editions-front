@@ -28,7 +28,7 @@ function Logo({ onDark = false, isSimple = false, sx }: LogoProps) {
           ...sx,
         }}
       >
-        {isSimple ? <SimpleLogo /> : <HeaderLogo light={isLight} />}
+        {isSimple || !isDesktop ? <SimpleLogo /> : <HeaderLogo light={isLight} />}
       </Box>
     </NextLink>
   );

@@ -1,7 +1,15 @@
 // icons
 // @mui
 import { styled } from '@mui/material/styles';
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
 import { Box, Container } from '@mui/material';
+=======
+import { Box, Container, Typography } from '@mui/material';
+>>>>>>> Stashed changes
+=======
+import { Box, Container, Typography } from '@mui/material';
+>>>>>>> Stashed changes
 import React, { useEffect, useState } from 'react';
 import { useTheme } from '@mui/system';
 // hooks
@@ -90,9 +98,23 @@ export default function HomeEternalEditions() {
               sx={{
                 maxWidth: { lg: '768px' },
                 fontSize: { xs: '20px', lg: '40px' },
+<<<<<<< Updated upstream
+<<<<<<< Updated upstream
                 fontWeight: 'bold',
                 lineHeight: { xs: '26px', lg: '44px' },
                 textTransform: 'uppercase',
+=======
+=======
+>>>>>>> Stashed changes
+                color: theme.palette.common.white,
+                fontWeight: 'bold',
+                textTransform: 'uppercase',
+                typography: 'h4',
+                lineHeight: 1.3,
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
+>>>>>>> Stashed changes
               }}
             >
               Eternal Editions gives new values in the live event industry.In the WEB 3.0 world,
