@@ -67,11 +67,13 @@ const modalStyle = {
   top: '30%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  maxWidth: 400,
+  width: 'calc(100% - 2rem)',
   bgcolor: 'common.white',
   color: 'common.black',
   boxShadow: 24,
-  p: 4,
+  py: 4,
+  px: 2.5,
   borderRadius: '24px',
 };
 

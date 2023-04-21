@@ -56,11 +56,13 @@ const modalStyle = {
   top: '30%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  maxWidth: 400,
+  width: 'calc(100% - 2rem)',
   bgcolor: 'common.white',
   color: 'common.black',
   boxShadow: 24,
-  p: 4,
+  py: 4,
+  px: 2.5,
   borderRadius: '24px',
 };
 
@@ -545,7 +547,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         };
       } else {
         // TODO : What ?
-        if (flCreate) alert('신규 가입을 진행하겠습니다.');
+        if (flCreate) console.log('신규 가입 진행.');
         else alert('로그인에 실패했습니다. SNS 계정을 다시 확인하세요.');
         console.log('===== ABC Wallet ... SNS Login ... Failed !! =====');
       }
@@ -650,25 +652,20 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   return (
     <Page title="Register">
       <RootStyle>
-        <Container
-          maxWidth={'sm'}
-          sx={{
-            my: 5,
-            backgroundColor: '#fff',
-            color: '#000',
-            borderRadius: '40px',
-          }}
-        >
+        <Container sx={{ display: 'flex', py: 5, justifyContent: 'center' }}>
           {memberCheck ? (
             <Box
               sx={{
                 minHeight: '300px',
-                marginY: 'auto',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'center',
                 alignItems: 'center',
-                gap: '2rem',
+                backgroundColor: '#fff',
+                color: '#000',
+                borderRadius: '40px',
+                maxWidth: 400,
+                width: '100%',
               }}
             >
               <CircularProgress />
@@ -696,7 +693,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                           onClick={handleCheckEternalAll}
                         />
                       }
-                      label="Eternal Editions의 모든 약관에 동의합니다."
+                      label="Eternal Editions의 모든 약관에 동의합니다22."
                     />
                   </Box>
                   <Box sx={{ display: 'flex', flexDirection: 'column', paddingLeft: '15px' }}>

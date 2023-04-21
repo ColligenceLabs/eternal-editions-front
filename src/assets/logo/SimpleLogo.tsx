@@ -12,7 +12,7 @@ interface Props extends BoxProps {
 
 function HeaderLogo({ children, hide = false, sx, ...other }: Props) {
   return (
-    <Box sx={{ position: 'absolute', ...sx }} {...other}>
+    <Box sx={sx} {...other}>
       {!hide && (
         <svg
           width="40"

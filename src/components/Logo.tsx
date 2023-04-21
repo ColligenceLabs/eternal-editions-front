@@ -22,12 +22,7 @@ function Logo({ onDark = false, isSimple = false, sx }: LogoProps) {
 
   return (
     <NextLink href="/" passHref>
-      <Box
-        sx={{
-          cursor: 'pointer',
-          ...sx,
-        }}
-      >
+      <Box sx={{ cursor: 'pointer', ...sx }}>
         {isSimple || !isDesktop ? <SimpleLogo /> : <HeaderLogo light={isLight} />}
       </Box>
     </NextLink>

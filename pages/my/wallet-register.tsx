@@ -43,19 +43,6 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const modalStyle = {
-  position: 'absolute',
-  top: '30%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'common.white',
-  color: 'common.black',
-  boxShadow: 24,
-  p: 4,
-  borderRadius: '24px',
-};
-
 export default function WalletRegister() {
   const context = useWeb3React();
   const { activate, chainId, deactivate, library } = context;
