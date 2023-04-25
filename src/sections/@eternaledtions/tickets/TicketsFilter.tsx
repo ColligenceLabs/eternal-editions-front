@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 // @mui
-import { Box, Button, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Grid, Button, Stack, Tab, Tabs, Typography } from '@mui/material';
 // @types
 import { CaseStudyProps } from '../../../@types/marketing';
 //
@@ -126,12 +126,21 @@ export default function TicketsFilter({ tickets, categories }: Props) {
         {/*<TicketSortByFilter filterSortBy={filters.filterSortBy} onChangeSortBy={handleChangeSortBy}/>*/}
       </Stack>
 
-      {ticketInfoList && (
+      {/* {ticketInfoList && (
         <Masonry columns={{ xs: 1, md: 2 }} spacing={2} sx={{ width: 'auto' }}>
           {ticketInfoList.map((ticket, index) => (
             <TicketPostItem key={index} ticket={ticket} />
           ))}
         </Masonry>
+      )} */}
+      {ticketInfoList.length ? (
+        <Grid container spacing={2}>
+          {ticketInfoList.map((ticket, index) => (
+            <TicketPostItem key={index} ticket={ticket} />
+          ))}
+        </Grid>
+      ) : (
+        'Data not found'
       )}
 
       {/*{ticketInfoList && (*/}

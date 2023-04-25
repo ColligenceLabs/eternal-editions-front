@@ -84,7 +84,7 @@ export default function MyTicketList({ tickets, loading }: Props) {
           </Grid>
         </Grid>
       ) : myTicketList.length ? (
-        <Grid container spacing={1}>
+        <Grid container spacing={2}>
           {myTicketList.map((ticket, index) => (
             <TicketItem key={index} ticket={ticket} />
           ))}
