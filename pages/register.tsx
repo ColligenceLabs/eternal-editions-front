@@ -1,4 +1,7 @@
 import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
+import * as Yup from 'yup';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { useForm, Controller, Path, Paths } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
 import {
   abcAddUser,
@@ -9,7 +12,7 @@ import {
   userRegister,
 } from '../src/services/services';
 import Layout from '../src/layouts';
-import { Page } from '../src/components';
+import { Page, Iconify } from '../src/components';
 import {
   Backdrop,
   Box,
@@ -40,9 +43,10 @@ import { setTwoFa } from '../src/store/slices/twoFa';
 import { setProvider } from '../src/store/slices/webUser';
 import { AbcLoginResponse } from '../src/abc/schema/account';
 import { useRouter } from 'next/router';
-import { emitter } from 'next/client';
-import { Deblur } from '@mui/icons-material';
-import queryString from 'query-string';
+import checkmarkIcon from '@iconify/icons-carbon/checkmark';
+import checkboxIcon from '@iconify/icons-carbon/checkbox';
+import checkboxCheckedFilledIcon from '@iconify/icons-carbon/checkbox-checked-filled';
+import checkboxIndeterminateFilledIcon from '@iconify/icons-carbon/checkbox-indeterminate-filled';
 
 const RootStyle = styled('div')(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,
@@ -65,13 +69,28 @@ const modalStyle = {
   top: '30%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  maxWidth: 400,
+  width: 'calc(100% - 2rem)',
   bgcolor: 'common.white',
   color: 'common.black',
   boxShadow: 24,
-  p: 4,
+  py: 4,
+  px: 2.5,
   borderRadius: '24px',
 };
+
+const FormSchema = Yup.object().shape({
+  eeTerms: Yup.bool().required(),
+  eePrivate: Yup.bool().required(),
+  eeTirdParty: Yup.bool().required(),
+  eeMarketing: Yup.bool(),
+
+  abcAge: Yup.bool().required(),
+  abcTerms: Yup.bool().required(),
+  abcPrivate: Yup.bool().required(),
+  abcTirdParty: Yup.bool().required(),
+  abcMarketing: Yup.bool(),
+});
 
 export default function Register(effect: React.EffectCallback, deps?: React.DependencyList) {
   const router = useRouter();
@@ -81,23 +100,39 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   const twoFa = useSelector((state: any) => state.twoFa);
   const { abcController, accountController } = controllers;
   const { abcService } = services;
-  const [isCheck, setIsCheck] = useState({
-    check1: false,
-    check2: false,
-    check3: false,
-    check4: false,
-    check5: false,
-    check6: false,
-    check7: false,
-    check8: false,
-    check9: false,
+
+  const {
+    reset,
+    control,
+    handleSubmit,
+    watch,
+    getValues,
+    setValue,
+    formState: { isSubmitting },
+  } = useForm({
+    mode: 'onTouched',
+    resolver: yupResolver(FormSchema),
+    defaultValues: {
+      eeTerms: false,
+      eePrivate: false,
+      eeTirdParty: false,
+      eeMarketing: false,
+
+      abcAge: false,
+      abcTerms: false,
+      abcPrivate: false,
+      abcTirdParty: false,
+      abcMarketing: false,
+    },
   });
-  const [isCheckAbcAll, setIsCheckAbcAll] = useState(
-    isCheck.check1 && isCheck.check2 && isCheck.check3 && isCheck.check4
-  );
-  const [isCheckEternalAll, setIsCheckEternalAll] = useState(
-    isCheck.check6 && isCheck.check7 && isCheck.check8
-  );
+
+  const getCheckboxStatus = (keys: Paths): string | null => {
+    const booleans = keys.map((v) => watch(v));
+    if (booleans.every((v) => v)) return 'checked';
+    else if (booleans.some((v) => v)) return 'indeterminate';
+    else return null;
+  };
+
   const [idToken, setIdToken] = useState('');
   const [service, setService] = useState('');
   const [email, setEmail] = useState('');
@@ -168,7 +203,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   };
 
   const handleAbcConfirmClick = async () => {
-    // // optToken : 입력 받은 OTP 값을 입력 받은 후 아래 코드 실행
+    // optToken : 입력 받은 OTP 값을 입력 받은 후 아래 코드 실행
     const twofaResetCode = await accountController.verifyTwoFactorGen({ token: otpToken });
     // console.log('=== 가입 완료 단계 ===>', qrSecret, twofaResetCode);
     dispatch(setTwoFa({ secret: qrSecret, reset: twofaResetCode }));
@@ -191,45 +226,79 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     }
   };
 
-  const handleCheckItem = (
-    check:
-      | 'check1'
-      | 'check2'
-      | 'check3'
-      | 'check4'
-      | 'check5'
-      | 'check6'
-      | 'check7'
-      | 'check8'
-      | 'check9'
-  ) => {
-    const newCheck = { ...isCheck, [check]: !isCheck[check] };
-    setIsCheck(newCheck);
-  };
-  // const isCheckAll = isCheck.check1 && isCheck.check2 && isCheck.check3;
-  const handleCheckAbcAll = () => {
-    setIsCheckAbcAll((cur) => !cur);
-    setIsCheck({
-      ...isCheck,
-      check1: !isCheckAbcAll,
-      check2: !isCheckAbcAll,
-      check3: !isCheckAbcAll,
-      check4: !isCheckAbcAll,
-      check5: !isCheckAbcAll,
-    });
-  };
-
-  const handleCheckEternalAll = () => {
-    setIsCheckEternalAll((cur) => !cur);
-    setIsCheck({
-      ...isCheck,
-      check6: !isCheckEternalAll,
-      check7: !isCheckEternalAll,
-      check8: !isCheckEternalAll,
-      check9: !isCheckEternalAll,
-    });
-  };
-
+  const terms = [
+    {
+      title: 'Eternal Editions의 모든 약관에 동의합니다.',
+      children: [
+        {
+          key: 'eeTerms',
+          require: true,
+          name: '이용약관',
+          href: '#',
+          append: '을 모두 확인하였으며, 이에 동의합니다.',
+        },
+        {
+          key: 'eePrivate',
+          require: true,
+          name: '개인정보처리방침',
+          href: '#',
+          append: '을 모두 확인하였으며, 이에 동의합니다.',
+        },
+        {
+          key: 'eeTirdParty',
+          require: true,
+          name: '개인정보 제3자 제공 동의',
+          href: '#',
+          append: '를 모두 확인하였으며, 이에 동의합니다.',
+        },
+        {
+          key: 'eeMarketing',
+          require: false,
+          name: '마케팅 활용 및 광고성 정보 수신',
+          href: '#',
+          append: '에 동의합니다.',
+        },
+      ],
+    },
+    {
+      title: 'ABC WALLET의 모든 약관에 동의합니다.',
+      children: [
+        {
+          key: 'abcAge',
+          require: true,
+          append: '14세 이상 사용자입니다.',
+        },
+        {
+          key: 'abcTerms',
+          require: true,
+          name: '이용약관',
+          href: 'https://api.id.myabcwallet.com/query/terms?language=1&service=16',
+          append: '을 모두 확인하였으며, 이에 동의합니다.',
+        },
+        {
+          key: 'abcPrivate',
+          require: true,
+          name: '개인정보 수집 및 이용',
+          href: 'https://api.id.myabcwallet.com/query/privacy?language=1&service=16',
+          append: '을 모두 확인하였으며, 이에 동의합니다.',
+        },
+        {
+          key: 'abcTirdParty',
+          require: true,
+          name: '개인정보 제3자 제공 동의',
+          href: 'https://api.id.myabcwallet.com/query/third-party?language=1&service=16',
+          append: '를 모두 확인하였으며, 이에 동의합니다.',
+        },
+        {
+          key: 'abcMarketing',
+          require: false,
+          name: '마케팅 활용 및 광고성 정보 수신',
+          href: 'https://api.id.myabcwallet.com/query/marketing?language=1&service=16',
+          append: '에 동의합니다.',
+        },
+      ],
+    },
+  ];
   const handleClickRegister = async () => {
     // ABC Wallet 로그임
     const result = await abcLogin({
@@ -257,11 +326,11 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         username: email,
         code: sixCode,
         joinpath: 'https://colligence.io',
-        overage: isCheck.check1 ? 1 : 0,
-        agree: isCheck.check2 ? 1 : 0,
-        collect: isCheck.check3 ? 1 : 0,
-        advertise: isCheck.check4 ? 1 : 0,
-        thirdparty: isCheck.check5 ? 1 : 0,
+        overage: Number(getValues('abcAge')),
+        agree: Number(getValues('abcTerms')),
+        collect: Number(getValues('abcPrivate')),
+        thirdparty: Number(getValues('abcTirdParty')),
+        advertise: Number(getValues('abcMarketing')),
       };
       const newAccount = await abcController.snsAddUser(dto);
       console.log('!! created account =', newAccount);
@@ -370,11 +439,11 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         password: password,
         code: emailCheckCode,
         serviceid: 'https://mw.myabcwallet.com',
-        overage: isCheck.check1 ? 1 : 0,
-        agree: isCheck.check2 ? 1 : 0,
-        collect: isCheck.check3 ? 1 : 0,
-        advertise: isCheck.check4 ? 1 : 0,
-        thirdparty: isCheck.check5 ? 1 : 0,
+        overage: Number(getValues('abcAge')),
+        agree: Number(getValues('abcTerms')),
+        collect: Number(getValues('abcPrivate')),
+        thirdparty: Number(getValues('abcTirdParty')),
+        advertise: Number(getValues('abcMarketing')),
       };
       console.log('!! user info =', dto);
       // TODO : 브라우저에서 요청 시에는 CORS 발생
@@ -489,6 +558,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
           password,
           audience: 'https://mw.myabcwallet.com',
         });
+
         // 기 가입자인지 신규 가입자인지 확인
         console.log('!! tryRecoverABC login result =', result);
         if ('code' in result) {
@@ -554,7 +624,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         };
       } else {
         // TODO : What ?
-        if (flCreate) alert('신규 가입을 진행하겠습니다.');
+        if (flCreate) console.log('신규 가입 진행.');
         else alert('로그인에 실패했습니다. SNS 계정을 다시 확인하세요.');
         console.log('===== ABC Wallet ... SNS Login ... Failed !! =====');
       }
@@ -588,7 +658,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
           setQrOnly(true);
         } else {
           // 성공. 리다이렉트..
-          alert('이미 가입되어 있습니다. 로그인 처리합니다.');
+          console.log('이미 가입되어 있습니다. 로그인 처리합니다.');
           location.replace('/');
         }
       } else {
@@ -596,24 +666,27 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         console.log('!! ABC Address =', user.accounts[0].ethAddress);
 
         // ABC 기가입자로 DB에 사용자 정보가 없어서 신규로 생성
-        const res = await userRegister({ abc_address: user.accounts[0].ethAddress });
-        console.log(res);
-        if (res.status === 200) {
-          if (!user.twoFactorEnabled) {
-            setMemberCheck(false);
-            // TODO : OTP 미등록 상태 처리
-            const { qrcode, secret } = await accountController.generateTwoFactor({ reset: false });
-            console.log('!! OTP =', qrcode, secret);
-            setQrCode(qrcode);
-            setQrSecret(secret);
-            setQrOnly(true);
-          } else {
+        try {
+          const res = await userRegister({ abc_address: user.accounts[0].ethAddress });
+          console.log(':::: 여기', res);
+
+          if (user.twoFactorEnabled) {
             // 성공. 리다이렉트..
-            alert('이미 가입되어 있습니다. 로그인 처리합니다.');
+            console.log('이미 가입되어 있습니다. 로그인 처리합니다.');
             location.replace('/');
+          } else {
+            throw new Error('user.twoFactorEnabled is false');
           }
-        } else {
+        } catch (error) {
           setMemberCheck(false);
+          // TODO : OTP 미등록 상태 처리
+          const { qrcode, secret } = await accountController.generateTwoFactor({
+            reset: false,
+          });
+          console.log('!! OTP =', qrcode, secret);
+          setQrCode(qrcode);
+          setQrSecret(secret);
+          setQrOnly(true);
         }
       }
     } else if (!loginFail) {
@@ -629,6 +702,19 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       let service: string;
       let loginEmail: string;
       let flag: boolean;
+
+      // providerAuthInfo가 로컬에서는 넘어오지 않으므로 강제 추가
+      if (process.env.NODE_ENV === 'development') {
+        res.data.providerAuthInfo = {
+          provider: 'google',
+          provider_token:
+            'eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg2OTY5YWVjMzdhNzc4MGYxODgwNzg3NzU5M2JiYmY4Y2Y1ZGU1Y2UiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIxMDcyMTM4Nzc0MzU3LWloZWRpZzcwMWZ2dXIxY2txNWc0bXFlcDA2cXJrN2ZxLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMTA3MjEzODc3NDM1Ny1paGVkaWc3MDFmdnVyMWNrcTVnNG1xZXAwNnFyazdmcS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjEwODI2NzU4MzM0ODEwNTYwNzkxMSIsImVtYWlsIjoiaGFwanVuZ21lbkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6Im9oSUY5aGxkN0lxclBObXgyTzFudEEiLCJuYW1lIjoibWVuIGhhcGp1bmciLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUdObXl4WjliMmxoY21pdEI3dDV5ZE5fM1lQYjZ6OVI1ZDRHS2haang2X3o9czk2LWMiLCJnaXZlbl9uYW1lIjoibWVuIiwiZmFtaWx5X25hbWUiOiJoYXBqdW5nIiwibG9jYWxlIjoia28iLCJpYXQiOjE2ODIzMDAyMTAsImV4cCI6MTY4MjMwMzgxMH0.eVSwHfEZEn42OhEbpZtHRruHOSreyEzKZ_xI2f8vsv9AvzKuory8-LD3XhedtzGLddCvQXAoYeFcX2Hzplx5_zTFc-Q9SMCQ7jDq1YwNP5LyVhMxq79Ug_vjW3IrA4OvbzIwyRn5RVXMEQDfmqIiYT3G2cgMBhTWMustHwd1u-KhbsW3N-GzdOA3Joxfhrp7i1xVCp0nQgumzUKDGP4hnwwnfeU27kzXX7dXLoNs5YnS-eO_aixZpzgh-5mgJhh7ypIeIxXB12TT7yVEgt9JMOT9YxkvqUg2xqgWAb93Zl4tS0fb6f-qGZ5FWmsNKUNJEMSY_rShJcjyip1B2CiU9w',
+          provider_id: '108267583348105607911',
+          provider_username: 'men',
+          provider_data:
+            '{"sub":"108267583348105607911","name":"men hapjung","given_name":"men","family_name":"hapjung","picture":"https://lh3.googleusercontent.com/a/AGNmyxZ9b2lhcmitB7t5ydN_3YPb6z9R5d4GKhZjx6_z=s96-c","email":"hapjungmen@gmail.com","email_verified":true,"locale":"ko"}',
+        };
+      }
 
       if (res.data?.providerAuthInfo) {
         console.log('!! Session Info =', res.data?.providerAuthInfo);
@@ -656,348 +742,226 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     fetchSession();
   }, []);
 
+  const onSubmit = async (data: FormValuesProps) => {
+    await new Promise((resolve) => setTimeout(resolve, 500));
+    alert(JSON.stringify(data, null, 2));
+    reset();
+  };
+
   return (
     <Page title="Register">
       <RootStyle>
-        <Container
-          maxWidth={'sm'}
-          sx={{
-            my: 5,
-            backgroundColor: '#fff',
-            color: '#000',
-            borderRadius: '40px',
-          }}
-        >
-          {memberCheck ? (
-            <Box
-              sx={{
-                minHeight: '300px',
-                marginY: 'auto',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'center',
-                alignItems: 'center',
-                gap: '2rem',
-              }}
-            >
-              <CircularProgress />
-              <Typography>ABC Wallet 가입여부 확인 중...</Typography>
-            </Box>
-          ) : (
-            <>
-              {!qrOnly && (
-                <Box
-                  sx={{
-                    border: '1px solid white',
-                    borderRadius: '15px',
-                    p: 2,
-                  }}
-                >
-                  <Box sx={{ textAlign: 'center', marginBottom: '20px' }}>
-                    <h1>회원가입</h1>
-                  </Box>
-                  <Box>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={qrCode !== ''}
-                          checked={isCheckEternalAll}
-                          onClick={handleCheckEternalAll}
-                        />
-                      }
-                      label="Eternal Editions의 모든 약관에 동의합니다."
-                    />
-                  </Box>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', paddingLeft: '15px' }}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={qrCode !== ''}
-                          checked={isCheck.check6}
-                          onClick={() => handleCheckItem('check6')}
-                        />
-                      }
-                      label={
-                        <p>
-                          [필수]{' '}
-                          <a href="" target="_blank" style={{ color: '#000' }}>
-                            이용약관
-                          </a>
-                          을 모두 확인하였으며, 이에 동의합니다.
-                        </p>
-                      }
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={qrCode !== ''}
-                          checked={isCheck.check7}
-                          onClick={() => handleCheckItem('check7')}
-                        />
-                      }
-                      label={
-                        <p>
-                          [필수]{' '}
-                          <a href="" target="_blank" style={{ color: '#000' }}>
-                            개인정보처리방침
-                          </a>
-                          을 모두 확인하였으며, 이에 동의합니다.
-                        </p>
-                      }
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={qrCode !== ''}
-                          checked={isCheck.check8}
-                          onClick={() => handleCheckItem('check8')}
-                        />
-                      }
-                      label={
-                        <p>
-                          [필수]{' '}
-                          <a href="" target="_blank" style={{ color: '#000' }}>
-                            개인정보 제3자 제공 동의
-                          </a>
-                          를 모두 확인하였으며, 이에 동의합니다.
-                        </p>
-                      }
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={qrCode !== ''}
-                          checked={isCheck.check9}
-                          onClick={() => handleCheckItem('check9')}
-                        />
-                      }
-                      label={
-                        <p>
-                          [선택]{' '}
-                          <a href="" target="_blank" style={{ color: '#000' }}>
-                            마케팅 활용 및 광고성 정보 수신
-                          </a>
-                          에 동의합니다.
-                        </p>
-                      }
-                    />
-                  </Box>
-                  <Divider sx={{ marginY: '10px' }} />
-                  <Box>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={qrCode !== ''}
-                          checked={isCheckAbcAll}
-                          onClick={handleCheckAbcAll}
-                        />
-                      }
-                      label="ABC WALLET의 모든 약관에 동의합니다."
-                    />
-                  </Box>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', paddingLeft: '15px' }}>
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={qrCode !== ''}
-                          checked={isCheck.check1}
-                          onClick={() => handleCheckItem('check1')}
-                        />
-                      }
-                      label="[필수] 14세 이상 사용자입니다."
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={qrCode !== ''}
-                          checked={isCheck.check2}
-                          onClick={() => handleCheckItem('check2')}
-                        />
-                      }
-                      label={
-                        <p>
-                          [필수]{' '}
-                          <a
-                            href="https://api.id.myabcwallet.com/query/terms?language=1&service=16"
-                            target="_blank"
-                            style={{ color: '#000' }}
-                            rel="noreferrer"
-                          >
-                            이용약관을
-                          </a>
-                          모두 확인하였으며, 이에 동의합니다.
-                        </p>
-                      }
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={qrCode !== ''}
-                          checked={isCheck.check3}
-                          onClick={() => handleCheckItem('check3')}
-                        />
-                      }
-                      label={
-                        <p>
-                          [필수]{' '}
-                          <a
-                            href="https://api.id.myabcwallet.com/query/privacy?language=1&service=16"
-                            target="_blank"
-                            style={{ color: '#000' }}
-                            rel="noreferrer"
-                          >
-                            개인정보 수집 및 이용
-                          </a>
-                          을 모두 확인하였으며, 이에 동의합니다.
-                        </p>
-                      }
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={qrCode !== ''}
-                          checked={isCheck.check4}
-                          onClick={() => handleCheckItem('check4')}
-                        />
-                      }
-                      label={
-                        <p>
-                          [필수]{' '}
-                          <a
-                            href="https://api.id.myabcwallet.com/query/third-party?language=1&service=16"
-                            target="_blank"
-                            style={{ color: '#000' }}
-                            rel="noreferrer"
-                          >
-                            개인정보 제3자 제공 동의
-                          </a>
-                          를 모두 확인하였으며, 이에 동의합니다.
-                        </p>
-                      }
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          disabled={qrCode !== ''}
-                          checked={isCheck.check5}
-                          onClick={() => handleCheckItem('check5')}
-                        />
-                      }
-                      label={
-                        <p>
-                          [선택]{' '}
-                          <a
-                            href="https://api.id.myabcwallet.com/query/marketing?language=1&service=16"
-                            target="_blank"
-                            style={{ color: '#000' }}
-                            rel="noreferrer"
-                          >
-                            마케팅 활용 및 광고성 정보 수신
-                          </a>
-                          에 동의합니다.
-                        </p>
-                      }
-                    />
-                  </Box>
-                  {oldUser && (
-                    <Box sx={{ marginY: '20px' }}>
-                      {/*<Typography>Email Check Code</Typography>*/}
-                      <NumberInput
-                        label="Email Check Code"
-                        variant="outlined"
-                        fullWidth
-                        size={'small'}
-                        inputProps={{ style: { color: '#999999' } }}
-                        value={emailCheckCode}
-                        onChange={handleChangeEmailCheckCode}
-                      />
+        <Container sx={{ display: 'flex', py: 5, justifyContent: 'center' }}>
+          <Box
+            sx={{
+              minHeight: '300px',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'center',
+              alignItems: memberCheck ? 'center' : null,
+              backgroundColor: '#fff',
+              color: '#000',
+              borderRadius: '40px',
+              maxWidth: 550,
+              p: 3,
+              width: '100%',
+            }}
+          >
+            {memberCheck ? (
+              <>
+                <CircularProgress />
+                <Typography>ABC Wallet 가입여부 확인 중...</Typography>
+              </>
+            ) : (
+              <>
+                {!qrOnly && (
+                  <form onSubmit={handleSubmit(onSubmit)}>
+                    <Box sx={{ mb: 3 }}>
+                      <Typography variant="h4">SIGN UP</Typography>
                     </Box>
-                  )}
-                  <Box sx={{ mt: '14px' }}>
-                    <Button
-                      onClick={oldUser ? handleCRegisterOldUser : handleClickRegister}
-                      fullWidth
-                      disabled={
-                        !isCheck.check1 ||
-                        !isCheck.check2 ||
-                        !isCheck.check3 ||
-                        !isCheck.check4 ||
-                        !isCheck.check6 ||
-                        !isCheck.check7 ||
-                        !isCheck.check8 ||
-                        qrCode !== ''
-                      }
-                      variant={'outlined'}
-                    >
-                      가입
-                    </Button>
-                  </Box>
-                </Box>
-              )}
-              {qrCode && (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    gap: '2rem',
-                    border: '1px solid white',
-                    borderRadius: '15px',
-                    p: 2,
-                    my: 2,
-                  }}
-                >
-                  <Typography>Register 2FA Google OTP</Typography>
-                  <Box sx={{ textAlign: 'center' }}>
-                    <img className="QRCode" src={qrCode} alt="qrapp" />
-                    {/*<Box>{qrSecret}</Box>*/}
-                  </Box>
-                  <Typography sx={{ fontSize: '12px', color: '#999999' }}>
-                    Verification Code
-                  </Typography>
-                  <Box sx={{ display: 'flex', gap: 1 }}>
-                    <Input
-                      fullWidth={true}
-                      id="outlined-basic"
-                      value={otpToken}
-                      onChange={handleAbcTokenChange}
-                      sx={{ color: '#000' }}
-                    />
-                    <Button
-                      variant="outlined"
-                      size="medium"
-                      sx={{
-                        // width: '100% !important',
-                        height: '36px',
-                        fontSize: 12,
-                        backgroundColor: '#f1f2f5',
-                        borderColor: '#f1f2f5',
-                        color: '#000000',
-                        boxShadow: 'none',
-                        '&:hover': {
-                          backgroundColor: '#08FF0C',
-                          borderColor: '#08FF0C',
-                          color: '#ffffff',
+
+                    {terms?.map(({ title, children }, index) => (
+                      <React.Fragment key={index}>
+                        <FormControlLabel
+                          control={
+                            <Checkbox
+                              disabled={qrCode !== ''}
+                              checked={
+                                getCheckboxStatus(children.map(({ key }) => key)) === 'checked'
+                              }
+                              indeterminate={
+                                getCheckboxStatus(children.map(({ key }) => key)) ===
+                                'indeterminate'
+                              }
+                              icon={<Iconify icon={checkboxIcon} />}
+                              checkedIcon={<Iconify icon={checkboxCheckedFilledIcon} />}
+                              indeterminateIcon={<Iconify icon={checkboxIndeterminateFilledIcon} />}
+                            />
+                          }
+                          onChange={(event) => {
+                            const value = event?.nativeEvent?.target?.checked;
+                            children.forEach(({ key }) => {
+                              console.log('key', key);
+                              setValue(key, value);
+                            });
+                          }}
+                          label={title}
+                        />
+                        {/* children */}
+                        {children?.length && (
+                          <Box sx={{ paddingLeft: '15px' }}>
+                            {children.map(
+                              ({
+                                require,
+                                name,
+                                href,
+                                append,
+                                key,
+                              }: {
+                                key: Path;
+                                require?: boolean;
+                                name?: string;
+                                href?: string;
+                                append?: string;
+                              }) => (
+                                <Controller
+                                  key={key}
+                                  name={key}
+                                  control={control}
+                                  render={({ field, fieldState: { error } }) => (
+                                    <FormControlLabel
+                                      key={key}
+                                      control={
+                                        <Checkbox
+                                          {...field}
+                                          checked={field.value}
+                                          disabled={qrCode !== ''}
+                                          icon={<Iconify icon={checkmarkIcon} />}
+                                          checkedIcon={<Iconify icon={checkmarkIcon} />}
+                                        />
+                                      }
+                                      label={
+                                        <p>
+                                          [{require ? '필수' : '선택'}]{' '}
+                                          <a
+                                            href={href}
+                                            target="_blank"
+                                            style={{ color: '#000' }}
+                                            rel="noreferrer"
+                                          >
+                                            {name}
+                                          </a>
+                                          {append}
+                                        </p>
+                                      }
+                                    />
+                                  )}
+                                />
+                              )
+                            )}
+                          </Box>
+                        )}
+                      </React.Fragment>
+                    ))}
+
+                    {oldUser && (
+                      <Box sx={{ marginY: '20px' }}>
+                        {/*<Typography>Email Check Code</Typography>*/}
+                        <TextField
+                          label="Email Check Code"
+                          variant="outlined"
+                          fullWidth
+                          size={'small'}
+                          inputProps={{ style: { color: '#999999' } }}
+                          value={emailCheckCode}
+                          onChange={handleChangeEmailCheckCode}
+                        />
+                      </Box>
+                    )}
+                    <Box sx={{ mt: '14px' }}>
+                      <Button
+                        onClick={oldUser ? handleCRegisterOldUser : handleClickRegister}
+                        fullWidth
+                        disabled={
+                          // todo disabled 조건
+                          getCheckboxStatus(
+                            terms.flatMap((term) =>
+                              term.children.filter(({ require }) => require).map(({ key }) => key)
+                            )
+                          ) !== 'checked' || qrCode !== ''
+                        }
+                        variant={'outlined'}
+                      >
+                        다음
+                      </Button>
+                    </Box>
+                  </form>
+                )}
+                {qrCode && (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      gap: '2rem',
+                      border: '1px solid white',
+                      borderRadius: '15px',
+                      p: 2,
+                      my: 2,
+                    }}
+                  >
+                    <Typography>Register 2FA Google OTP</Typography>
+                    <Box sx={{ textAlign: 'center' }}>
+                      <img className="QRCode" src={qrCode} alt="qrapp" />
+                      {/*<Box>{qrSecret}</Box>*/}
+                    </Box>
+                    <Typography sx={{ fontSize: '12px', color: '#999999' }}>
+                      Verification Code
+                    </Typography>
+                    <Box sx={{ display: 'flex', gap: 1 }}>
+                      <Input
+                        fullWidth={true}
+                        id="outlined-basic"
+                        value={otpToken}
+                        onChange={handleAbcTokenChange}
+                        sx={{ color: '#000' }}
+                      />
+                      <Button
+                        variant="outlined"
+                        size="medium"
+                        sx={{
+                          // width: '100% !important',
+                          height: '36px',
+                          fontSize: 12,
+                          backgroundColor: '#f1f2f5',
+                          borderColor: '#f1f2f5',
+                          color: '#000000',
                           boxShadow: 'none',
-                        },
-                        '&:active': {
-                          boxShadow: 'none',
-                          backgroundColor: 'background.paper',
-                          borderColor: 'background.paper',
-                          color: '#ffffff',
-                        },
-                      }}
-                      onClick={handleAbcConfirmClick}
-                    >
-                      확인
-                    </Button>
+                          '&:hover': {
+                            backgroundColor: '#08FF0C',
+                            borderColor: '#08FF0C',
+                            color: '#ffffff',
+                            boxShadow: 'none',
+                          },
+                          '&:active': {
+                            boxShadow: 'none',
+                            backgroundColor: 'background.paper',
+                            borderColor: 'background.paper',
+                            color: '#ffffff',
+                          },
+                        }}
+                        onClick={handleAbcConfirmClick}
+                      >
+                        확인
+                      </Button>
+                    </Box>
+                    {resetCode && <Box>{resetCode}</Box>}
                   </Box>
-                  {resetCode && <Box>{resetCode}</Box>}
-                </Box>
-              )}
-            </>
-          )}
+                )}
+              </>
+            )}
+          </Box>
           <Modal
             aria-labelledby="transition-modal-title"
             aria-describedby="transition-modal-description"
@@ -1005,9 +969,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
             // onClose={handleResetPassClose}
             closeAfterTransition
             BackdropComponent={Backdrop}
-            BackdropProps={{
-              timeout: 500,
-            }}
+            BackdropProps={{ timeout: 500 }}
           >
             <Fade in={resetPass}>
               <Box sx={modalStyle}>
@@ -1045,7 +1007,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                   <Box
                     sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                   >
-                    Eternal Password
+                    New Password
                     <TextField
                       type="password"
                       variant="outlined"
@@ -1070,9 +1032,6 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                       onChange={handleChangeRpConfirmPassword}
                     />
                   </Box>
-                  <Box
-                    sx={{ fontSize: '12px' }}
-                  >{`* 기존 이터널 로그인 비번과 빈드시 동일하게 설정하세요.`}</Box>
                   {rpPassword !== rpConfirmPassword && (
                     <Box
                       sx={{

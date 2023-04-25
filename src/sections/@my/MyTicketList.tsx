@@ -1,5 +1,5 @@
 // @mui
-import { Box, Pagination, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Pagination, Stack, Tab, Tabs, Typography, Grid } from '@mui/material';
 // import TicketItem from "../@eternaledtions/tickets/TicketItem";
 import { JobItemSkeleton } from '../../components';
 import { MYTicketProps, TicketProps } from '../../@types/ticket/ticket';
@@ -40,42 +40,58 @@ export default function MyTicketList({ tickets, loading }: Props) {
 
   return (
     <>
-      <Stack spacing={1}>
-        {/*<Stack direction="row" sx={{display: 'flex', alignItems: 'center', width: '100%'}}>*/}
-        {/*    <Box sx={{*/}
-        {/*        pb: {xs: 2, md: 3},*/}
-        {/*        flexGrow: 1,*/}
-        {/*    }}>*/}
-        {/*        <Tabs*/}
-        {/*            value={selected}*/}
-        {/*            scrollButtons="auto"*/}
-        {/*            variant="scrollable"*/}
-        {/*            allowScrollButtonsMobile*/}
-        {/*            onChange={handleChangeTab}>*/}
+      {/*<Stack direction="row" sx={{display: 'flex', alignItems: 'center', width: '100%'}}>*/}
+      {/*    <Box sx={{*/}
+      {/*        pb: {xs: 2, md: 3},*/}
+      {/*        flexGrow: 1,*/}
+      {/*    }}>*/}
+      {/*        <Tabs*/}
+      {/*            value={selected}*/}
+      {/*            scrollButtons="auto"*/}
+      {/*            variant="scrollable"*/}
+      {/*            allowScrollButtonsMobile*/}
+      {/*            onChange={handleChangeTab}>*/}
 
-        {/*            {["Available Tickets", "Ticket History"].map((category) => (*/}
-        {/*                <Tab*/}
-        {/*                    key={category}*/}
-        {/*                    value={category}*/}
-        {/*                    label={<Typography variant="body2" sx={{fontSize: '14px'}}>{category}</Typography>}*/}
-        {/*                />*/}
-        {/*            ))}*/}
+      {/*            {["Available Tickets", "Ticket History"].map((category) => (*/}
+      {/*                <Tab*/}
+      {/*                    key={category}*/}
+      {/*                    value={category}*/}
+      {/*                    label={<Typography variant="body2" sx={{fontSize: '14px'}}>{category}</Typography>}*/}
+      {/*                />*/}
+      {/*            ))}*/}
 
-        {/*        </Tabs>*/}
-        {/*    </Box>*/}
+      {/*        </Tabs>*/}
+      {/*    </Box>*/}
 
-        {/*    /!*<TicketSortByFilter filterSortBy={filters.filterSortBy} onChangeSortBy={handleChangeSortBy}/>*!/*/}
-        {/*</Stack>*/}
+      {/*    /!*<TicketSortByFilter filterSortBy={filters.filterSortBy} onChangeSortBy={handleChangeSortBy}/>*!/*/}
+      {/*</Stack>*/}
 
-        {!loading ?? <JobItemSkeleton />}
-        {/*{tickets.map((ticket, index) => {*/}
-        {/*  console.log(ticket, 'ticket - ' + index);*/}
-        {/*  return <TicketItem key={ticket.slug} ticket={ticket} />;*/}
-        {/*})}*/}
-        {myTicketList.map((ticket, index) => {
-          return <TicketItem key={index} ticket={ticket} />;
-        })}
-      </Stack>
+      {/*{tickets.map((ticket, index) => {*/}
+      {/*  console.log(ticket, 'ticket - ' + index);*/}
+      {/*  return <TicketItem key={ticket.slug} ticket={ticket} />;*/}
+      {/*})}*/}
+
+      {loading ? (
+        <Grid container spacing={1}>
+          <Grid item>
+            <JobItemSkeleton />
+          </Grid>
+          <Grid item>
+            <JobItemSkeleton />
+          </Grid>
+          <Grid item>
+            <JobItemSkeleton />
+          </Grid>
+        </Grid>
+      ) : myTicketList.length ? (
+        <Grid container spacing={1}>
+          {myTicketList.map((ticket, index) => (
+            <TicketItem key={index} ticket={ticket} />
+          ))}
+        </Grid>
+      ) : (
+        'Data not found'
+      )}
     </>
   );
 }
