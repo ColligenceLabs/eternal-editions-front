@@ -22,19 +22,22 @@ export default function MyOldTicketList({ loading }: Props) {
 
   const fetchOldMyTickets = async () => {
     const result = await getOldMyTicket();
-    const temp = result.data.data.map((ticket: any) => {
-      const time = new Date().setMinutes(new Date().getMinutes() + 5);
-      return {
-        id: ticket.id,
-        name: ticket.name,
-        thumbnail: ticket.thumbnail,
-        qrcode: `https://entrance.eternaleditions.io/admin-e-ticket/${ticket.code}?expireTime=${time}`,
-        createdAt: ticket.createdAt,
-        updatedAt: ticket.updatedAt,
-        status: ticket.status,
-      };
-    });
-    setOldTicket(temp);
+    console.log(result);
+    if (result.data.data && result.data.data.length > 0) {
+      const temp = result.data.data.map((ticket: any) => {
+        const time = new Date().setMinutes(new Date().getMinutes() + 5);
+        return {
+          id: ticket.id,
+          name: ticket.name,
+          thumbnail: ticket.thumbnail,
+          qrcode: `https://entrance.eternaleditions.io/admin-e-ticket/${ticket.code}?expireTime=${time}`,
+          createdAt: ticket.createdAt,
+          updatedAt: ticket.updatedAt,
+          status: ticket.status,
+        };
+      });
+      setOldTicket(temp);
+    }
   };
 
   useEffect(() => {
