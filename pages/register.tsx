@@ -1041,7 +1041,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                   <Box
                     sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                   >
-                    New Password
+                    Eternal Password
                     <TextField
                       type="password"
                       variant="outlined"
@@ -1066,6 +1066,9 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                       onChange={handleChangeRpConfirmPassword}
                     />
                   </Box>
+                  <Box
+                    sx={{ fontSize: '12px' }}
+                  >{`* 기존 이터널 로그인 비번과 빈드시 동일하게 설정하세요.`}</Box>
                   {rpPassword !== rpConfirmPassword && (
                     <Box
                       sx={{
