@@ -821,6 +821,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                             href="https://api.id.myabcwallet.com/query/terms?language=1&service=16"
                             target="_blank"
                             style={{ color: '#000' }}
+                            rel="noreferrer"
                           >
                             이용약관을
                           </a>
@@ -843,6 +844,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                             href="https://api.id.myabcwallet.com/query/privacy?language=1&service=16"
                             target="_blank"
                             style={{ color: '#000' }}
+                            rel="noreferrer"
                           >
                             개인정보 수집 및 이용
                           </a>
@@ -865,6 +867,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                             href="https://api.id.myabcwallet.com/query/third-party?language=1&service=16"
                             target="_blank"
                             style={{ color: '#000' }}
+                            rel="noreferrer"
                           >
                             개인정보 제3자 제공 동의
                           </a>
@@ -887,6 +890,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                             href="https://api.id.myabcwallet.com/query/marketing?language=1&service=16"
                             target="_blank"
                             style={{ color: '#000' }}
+                            rel="noreferrer"
                           >
                             마케팅 활용 및 광고성 정보 수신
                           </a>

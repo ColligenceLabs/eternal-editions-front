@@ -44,16 +44,32 @@ export function pxToRem(value: number) {
   return `${value / 16}rem`;
 }
 
-export function responsiveFontSizes({ sm, md, lg }: { sm: number; md: number; lg: number }) {
+export function responsiveFontSizes({
+  xs,
+  sm,
+  md,
+  lg,
+  xl,
+}: {
+  xs?: number;
+  sm: number;
+  md: number;
+  lg: number;
+  xl?: number;
+}) {
   return {
-    '@media (min-width:320px)': {
+    fontSize: pxToRem(xs || sm),
+    '@media (min-width:600px)': {
       fontSize: pxToRem(sm),
     },
-    '@media (min-width:768px)': {
+    '@media (min-width:960px)': {
       fontSize: pxToRem(md),
     },
-    '@media (min-width:1025px)': {
+    '@media (min-width:1280px)': {
       fontSize: pxToRem(lg),
+    },
+    '@media (min-width:1920px)': {
+      fontSize: pxToRem(xl || lg),
     },
   };
 }

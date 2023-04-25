@@ -1,10 +1,10 @@
-import {styled, useTheme} from '@mui/material/styles';
-import {Box, Chip, Typography} from "@mui/material";
-import React from "react";
-import {TicketProps} from "../../../@types/ticket/ticket";
-import Link from "next/link";
+import { styled, useTheme } from '@mui/material/styles';
+import { Box, Chip, Typography } from '@mui/material';
+import React from 'react';
+import { TicketProps } from '../../../@types/ticket/ticket';
+import Link from 'next/link';
 
-const ContactCard = styled('div')(({theme}) => ({
+const ContactCard = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   padding: '12px',
@@ -18,16 +18,16 @@ const ContactCard = styled('div')(({theme}) => ({
   },
 }));
 
-const ContactCardHeader = styled('div')(({theme}) => ({}));
-const ContactCardButton = styled('div')(({theme}) => ({
+const ContactCardHeader = styled('div')(({ theme }) => ({}));
+const ContactCardButton = styled('div')(({ theme }) => ({
   display: 'flex',
   marginTop: 'auto',
 }));
 
-const Anchor = styled('a')(({theme}) => ({
+const Anchor = styled('a')(({ theme }) => ({
   textDecoration: 'none',
   cursor: 'pointer',
-  display: 'block'
+  display: 'block',
 }));
 
 type Props = {
@@ -38,22 +38,36 @@ type Props = {
   };
 };
 
-export default function ContactCardItem({contact}: Props) {
-  const {title, description, link} = contact;
+export default function ContactCardItem({ contact }: Props) {
+  const { title, description, link } = contact;
   return (
     <ContactCard>
       <ContactCardHeader>
-        <Typography variant="h2" sx={{ mb: '8px'}}>{title}</Typography>
-        <Typography variant="subtitle1" sx={{maxWidth: '384px', lineHeight: '20px'}}>
+        <Typography variant="h2" color="common.white" sx={{ mb: '8px' }}>
+          {title}
+        </Typography>
+        <Typography
+          variant="subtitle1"
+          color="common.white"
+          sx={{
+            maxWidth: '384px',
+            lineHeight: '20px',
+          }}
+        >
           {description}
         </Typography>
       </ContactCardHeader>
       <ContactCardButton>
-          {link && <Anchor href={link} target={"_blank"}>
-              <Chip label="SEND A E-MAIL" variant="outlined" />
-          </Anchor>}
-
+        {link && (
+          <Anchor href={link} target={'_blank'}>
+            <Chip
+              label="SEND A E-MAIL"
+              variant="outlined"
+              sx={{ borderColor: 'common.white', color: 'common.white' }}
+            />
+          </Anchor>
+        )}
       </ContactCardButton>
     </ContactCard>
-  )
+  );
 }
