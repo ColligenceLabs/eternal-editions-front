@@ -3,15 +3,11 @@ import { Box, Typography } from '@mui/material';
 import React from 'react';
 
 const TeamCard = styled('div')(({ theme }) => ({
-  maxWidth: '360px',
-  margin: '0 auto',
   padding: '12px',
   borderRadius: '24px',
   backdropFilter: 'blur(50px)',
   background: 'rgba(0,0,0,.1)',
   [theme.breakpoints.up('md')]: {
-    maxWidth: 'inherit',
-    margin: 'inherit',
     padding: '24px',
   },
   color: theme.palette.common.white,
