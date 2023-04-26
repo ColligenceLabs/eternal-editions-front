@@ -64,6 +64,14 @@ const PRIMARY = {
   darker: '#001E00',
   contrastText: contrastText.black,
 };
+const BLACK = {
+  lighter: '#999999',
+  light: '#333333',
+  main: '#000000',
+  dark: '#333333',
+  darker: '#999999',
+  contrastText: contrastText.white,
+};
 const SECONDARY = {
   lighter: '#D2FCF4',
   light: '#77F0ED',
@@ -143,6 +151,7 @@ const COMMON = {
   success: { ...SUCCESS, contrastText: GREY[800] },
   warning: { ...WARNING, contrastText: GREY[800] },
   error: { ...ERROR, contrastText: '#fff' },
+  black: { ...BLACK },
   grey: GREY,
   gradients: GRADIENTS,
   divider: GREY[500_24],

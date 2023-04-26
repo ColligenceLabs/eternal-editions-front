@@ -3,10 +3,10 @@ import { ReactElement, useEffect, useState } from 'react';
 // @types
 // _data
 // layouts
-import Layout from '../../src/layouts';
+import Layout from 'src/layouts';
 // components
-import { Iconify, Page } from '../../src/components';
-import { Box, Button, Container, Stack, Typography } from '@mui/material';
+import { Iconify, Page } from 'src/components';
+import { Box, Button, Container, Grid, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
   ChainId,
@@ -14,26 +14,26 @@ import {
   HEADER_MOBILE_HEIGHT,
   WALLET_METAMASK,
   WALLET_WALLECTCONNECT,
-} from '../../src/config';
-import { RegisterForm } from '../../src/sections/auth';
-import AccountForm from '../../src/sections/@my/AccountForm';
+} from 'src/config';
+import { RegisterForm } from 'src/sections/auth';
+import AccountForm from 'src/sections/@my/AccountForm';
 import * as React from 'react';
-import { ClipboardCopy, getShotAddress } from '../../src/utils/wallet';
+import { ClipboardCopy, getShotAddress } from 'src/utils/wallet';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
-import useAccount from '../../src/hooks/useAccount';
-import Image from '../../src/components/Image';
+import useAccount from 'src/hooks/useAccount';
+import Image from 'src/components/Image';
 import NextLink from 'next/link';
-import Routes from '../../src/routes';
+import Routes from 'src/routes';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteAddress, updateAddress } from '../../src/services/services';
-import { setWebUser } from '../../src/store/slices/webUser';
+import { deleteAddress, updateAddress } from 'src/services/services';
+import { setWebUser } from 'src/store/slices/webUser';
 import { useWeb3React } from '@web3-react/core';
-import env from '../../src/env';
-import { setupNetwork } from '../../src/utils/network';
-import { injected, walletconnect } from '../../src/hooks/connectors';
-import getBalances from '../../src/utils/getBalances';
-import useResponsive from '../../src/hooks/useResponsive';
+import env from 'src/env';
+import { setupNetwork } from 'src/utils/network';
+import { injected, walletconnect } from 'src/hooks/connectors';
+import getBalances from 'src/utils/getBalances';
+import useResponsive from 'src/hooks/useResponsive';
 // sections
 
 // ----------------------------------------------------------------------
@@ -126,7 +126,6 @@ export default function MyAccountPage({}: Props) {
         const target_copy = Object.assign({}, library.provider);
         const isAbc = target_copy.isABC === true;
         // const isKaikas = typeof target_copy._kaikas !== 'undefined';
-        let signature;
         const message = `apps.eternaleditions.io wants you to sign in with your Ethereum account.
 
 EternalEditions Signature Request
@@ -141,7 +140,7 @@ Type: Address verification`;
         //     .signMessage(message)
         //     .catch(() => deactivate());
         // }
-        signature = await library
+        const signature = await library
           .getSigner()
           .signMessage(message)
           .catch(() => deactivate());
@@ -182,16 +181,14 @@ Type: Address verification`;
           {/*</Box>*/}
           <Box
             sx={{
-              width: '100%',
-              backgroundColor: '#fff',
+              bgcolor: '#fff',
               color: '#000',
-              borderRadius: '24px',
+              borderRadius: 2,
               // padding: '28px 24px',
-              display: 'flex',
             }}
           >
-            {isDesktop && (
-              <Box sx={{ width: '370px', borderRight: '1px solid #0000000A' }}>
+            <Grid container>
+              <Grid item xs={12} md={4} lg={3}>
                 <Box
                   sx={{
                     borderBottom: '1px solid #0000000A',
@@ -315,117 +312,121 @@ Type: Address verification`;
                     </Box>
                   </Box>
                 </Box>
-              </Box>
-            )}
-            <Box sx={{ width: '100%' }}>
-              <Box
-                sx={{
-                  padding: '28px 24px',
-                  borderBottom: '1px solid #0000000A',
-                }}
-              >
-                <Typography sx={{ color: '#BBBBBB', fontSize: '12px', fontWeight: 400 }}>
-                  SIGNED-IN SOCIAL ACCOUNT
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.7rem', mt: '14px' }}>
-                  <Box
-                    sx={{
-                      width: '32px',
-                      height: '32px',
-                      backgroundColor: '#F5F5F5',
-                      borderRadius: '50px',
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                    }}
-                  >
-                    <Image src="/assets/icons/google-icon.png" sx={{ width: '18px' }} />
-                  </Box>
-                  <Typography>{user.email}</Typography>
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  padding: '28px 24px',
-                  borderBottom: '1px solid #0000000A',
-                }}
-              >
-                <Typography sx={{ color: '#BBBBBB', fontSize: '12px', fontWeight: 400 }}>
-                  NAME
-                </Typography>
-                <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.7rem', mt: '14px' }}>
-                  <Typography>{user.name}</Typography>
-                </Box>
-              </Box>
-              <Box
-                sx={{
-                  padding: '28px 24px',
-                  borderBottom: '1px solid #0000000A',
-                }}
-              >
-                <Typography sx={{ color: '#BBBBBB', fontSize: '12px', fontWeight: 400 }}>
-                  WALLET ADDRESS
-                </Typography>
+              </Grid>
+              <Grid item xs={12} md={8} lg={9}>
                 <Box
                   sx={{
-                    display: 'flex',
-                    flexDirection: 'column',
-                    // alignItems: 'center',
-                    mt: '7px',
+                    padding: '28px 24px',
+                    borderBottom: '1px solid #0000000A',
                   }}
                 >
-                  {user.abc_address && (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.7rem', mt: '14px' }}>
-                      <Image src="/assets/icons/abc-logo.png" sx={{ width: '24px' }} />
-                      <Typography>
-                        {isDesktop ? user.eth_address : getShotAddress(user.abc_address)}
-                      </Typography>
-                    </Box>
-                  )}
-                  {user.eth_address && (
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.7rem', mt: '14px' }}>
-                      <Image src="/assets/icons/metamask-logo.png" sx={{ width: '24px' }} />
-                      <Typography>
-                        {isDesktop ? user.eth_address : getShotAddress(user.eth_address)}
-                      </Typography>
-                    </Box>
-                  )}
-                </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'column', mt: '14px' }}>
-                  {user.eth_address ? (
-                    <CButton onClick={handleDeleteAddressClick}>DELETE</CButton>
-                  ) : (
-                    <CButton
-                      onClick={() => {
-                        setDoAddWallet(true);
-                        setOpenSignUp(true);
+                  <Typography sx={{ color: '#BBBBBB', fontSize: '12px', fontWeight: 400 }}>
+                    SIGNED-IN SOCIAL ACCOUNT
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.7rem', mt: '14px' }}>
+                    <Box
+                      sx={{
+                        width: '32px',
+                        height: '32px',
+                        backgroundColor: '#F5F5F5',
+                        borderRadius: '50px',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
                       }}
                     >
-                      ADD
-                    </CButton>
-                  )}
-
-                  {openSignUp && (
-                    <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
-                      <CButton
-                        onClick={async () => {
-                          await connectWallet(WALLET_METAMASK);
-                        }}
-                      >
-                        Metamask
-                      </CButton>
-                      <CButton
-                        onClick={async () => {
-                          await connectWallet(WALLET_WALLECTCONNECT);
-                        }}
-                      >
-                        WalletConnect
-                      </CButton>
+                      <Image src="/assets/icons/google-icon.png" sx={{ width: '18px' }} />
                     </Box>
-                  )}
+                    <Typography>{user.email}</Typography>
+                  </Box>
                 </Box>
-              </Box>
-            </Box>
+                <Box
+                  sx={{
+                    padding: '28px 24px',
+                    borderBottom: '1px solid #0000000A',
+                  }}
+                >
+                  <Typography sx={{ color: '#BBBBBB', fontSize: '12px', fontWeight: 400 }}>
+                    NAME
+                  </Typography>
+                  <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.7rem', mt: '14px' }}>
+                    <Typography>{user.name}</Typography>
+                  </Box>
+                </Box>
+                <Box
+                  sx={{
+                    padding: '28px 24px',
+                    borderBottom: '1px solid #0000000A',
+                  }}
+                >
+                  <Typography sx={{ color: '#BBBBBB', fontSize: '12px', fontWeight: 400 }}>
+                    WALLET ADDRESS
+                  </Typography>
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      flexDirection: 'column',
+                      // alignItems: 'center',
+                      mt: '7px',
+                    }}
+                  >
+                    {user.abc_address && (
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', gap: '0.7rem', mt: '14px' }}
+                      >
+                        <Image src="/assets/icons/abc-logo.png" sx={{ width: '24px' }} />
+                        <Typography>
+                          {isDesktop ? user.eth_address : getShotAddress(user.abc_address)}
+                        </Typography>
+                      </Box>
+                    )}
+                    {user.eth_address && (
+                      <Box
+                        sx={{ display: 'flex', alignItems: 'center', gap: '0.7rem', mt: '14px' }}
+                      >
+                        <Image src="/assets/icons/metamask-logo.png" sx={{ width: '24px' }} />
+                        <Typography>
+                          {isDesktop ? user.eth_address : getShotAddress(user.eth_address)}
+                        </Typography>
+                      </Box>
+                    )}
+                  </Box>
+                  <Box sx={{ display: 'flex', flexDirection: 'column', mt: '14px' }}>
+                    {user.eth_address ? (
+                      <CButton onClick={handleDeleteAddressClick}>DELETE</CButton>
+                    ) : (
+                      <CButton
+                        onClick={() => {
+                          setDoAddWallet(true);
+                          setOpenSignUp(true);
+                        }}
+                      >
+                        ADD
+                      </CButton>
+                    )}
+
+                    {openSignUp && (
+                      <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
+                        <CButton
+                          onClick={async () => {
+                            await connectWallet(WALLET_METAMASK);
+                          }}
+                        >
+                          Metamask
+                        </CButton>
+                        <CButton
+                          onClick={async () => {
+                            await connectWallet(WALLET_WALLECTCONNECT);
+                          }}
+                        >
+                          WalletConnect
+                        </CButton>
+                      </Box>
+                    )}
+                  </Box>
+                </Box>
+              </Grid>
+            </Grid>
           </Box>
         </Container>
       </RootStyle>

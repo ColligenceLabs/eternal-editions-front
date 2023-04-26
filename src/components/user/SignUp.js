@@ -418,7 +418,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
               rel="noreferrer"
               >
             </a> */}
-            <Button fullWidth size="large" vavid variant="contained" href="#">
+            <Button fullWidth size="large" variant="vavid" href="#">
               <Typography variant={'caption'}>회원가입 가이드</Typography>
             </Button>
           </Stack>

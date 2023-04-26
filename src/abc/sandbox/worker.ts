@@ -70,19 +70,19 @@ WebAssembly.instantiateStreaming(fetch('/wasm/dkeyswasm.wasm'), go.importObject)
 const ErrStr = 'wasmerror';
 
 console.log('!! APP_SERVER_ADDRESS = ', env.APP_SERVER_ADDRESS);
-var appPropNcloud = {
+const appPropNcloud = {
   // csAddr: process.env.APP_SERVER_ADDRESS,
   csAddr: env.APP_SERVER_ADDRESS,
   useTLS: false,
   skipInsecureTLS: true,
 };
-var appProp1 = appPropNcloud;
+const appProp1 = appPropNcloud;
 
-var bgStatusKG = 0;
-var bgStatusSG = 0;
-var bgStatusRG = 0;
-var bgStatusESR = 0;
-var bgStatusAG = 0;
+let bgStatusKG = 0;
+let bgStatusSG = 0;
+let bgStatusRG = 0;
+let bgStatusESR = 0;
+const bgStatusAG = 0;
 
 const UCID = 1;
 const CSID = 2;
@@ -160,7 +160,7 @@ function connectToCSForKG(dto, appProp): Promise<GenereateKeyResult> {
     let rsws: WebSocket;
     csws.onmessage = (event) => {
       try {
-        let recData = JSON.parse(event.data);
+        const recData = JSON.parse(event.data);
         switch (recData.cmd) {
           case 'res-init-conn':
             // JobID = recData.job_id;
@@ -183,7 +183,7 @@ function connectToCSForKG(dto, appProp): Promise<GenereateKeyResult> {
             break;
 
           case 'KGBC01':
-            let sendDataKGBC01 = WASMKGFunction11(JSON.stringify(recData), CSID, uid, wid);
+            const sendDataKGBC01 = WASMKGFunction11(JSON.stringify(recData), CSID, uid, wid);
             if (sendDataKGBC01.indexOf(ErrStr) != -1) {
               throw new Error(sendDataKGBC01);
             }
@@ -191,7 +191,7 @@ function connectToCSForKG(dto, appProp): Promise<GenereateKeyResult> {
             break;
 
           case 'KGBC02':
-            let sendDataKGBC02 = WASMKGFunction21(JSON.stringify(recData), CSID);
+            const sendDataKGBC02 = WASMKGFunction21(JSON.stringify(recData), CSID);
             if (sendDataKGBC02.indexOf(ErrStr) != -1) {
               throw new Error();
             }
@@ -199,7 +199,7 @@ function connectToCSForKG(dto, appProp): Promise<GenereateKeyResult> {
             break;
 
           case 'KGPS01':
-            let sendDataKGPS01 = WASMKGFunction22(JSON.stringify(recData), CSID);
+            const sendDataKGPS01 = WASMKGFunction22(JSON.stringify(recData), CSID);
             if (sendDataKGPS01.indexOf(ErrStr) != -1) {
               throw new Error();
             }
@@ -207,7 +207,7 @@ function connectToCSForKG(dto, appProp): Promise<GenereateKeyResult> {
             break;
 
           case 'KGBC03':
-            let sendDataKGBC03 = WASMKGFunction23(JSON.stringify(recData), CSID);
+            const sendDataKGBC03 = WASMKGFunction23(JSON.stringify(recData), CSID);
             if (!sendDataKGBC03 || sendDataKGBC03.indexOf(ErrStr) != -1) {
               throw new Error();
             }
@@ -215,7 +215,7 @@ function connectToCSForKG(dto, appProp): Promise<GenereateKeyResult> {
             break;
 
           case 'KGPS02': // CS only
-            let sendDataPDLZK01 = WASMKGFunction31(JSON.stringify(recData), CSID); // return format is PDLZK01
+            const sendDataPDLZK01 = WASMKGFunction31(JSON.stringify(recData), CSID); // return format is PDLZK01
             if (!sendDataPDLZK01 || sendDataPDLZK01.indexOf(ErrStr) != -1) {
               throw new Error();
             }
@@ -223,7 +223,7 @@ function connectToCSForKG(dto, appProp): Promise<GenereateKeyResult> {
             break;
 
           case 'PDLZK02': // CS only
-            let sendDataPDLZK03 = WASMKGFunction41(JSON.stringify(recData), CSID); // return format is PDLZK03
+            const sendDataPDLZK03 = WASMKGFunction41(JSON.stringify(recData), CSID); // return format is PDLZK03
             if (!sendDataPDLZK03 || sendDataPDLZK03.indexOf(ErrStr) != -1) {
               throw new Error();
             }
@@ -231,7 +231,7 @@ function connectToCSForKG(dto, appProp): Promise<GenereateKeyResult> {
             break;
 
           case 'PDLZK04': // CS only
-            let sendDataKGPS03 = WASMKGFunction42(JSON.stringify(recData), CSID); // return format is PDLZK03
+            const sendDataKGPS03 = WASMKGFunction42(JSON.stringify(recData), CSID); // return format is PDLZK03
             if (!sendDataKGPS03 || sendDataKGPS03.indexOf(ErrStr) != -1) {
               throw new Error();
             }
@@ -239,17 +239,17 @@ function connectToCSForKG(dto, appProp): Promise<GenereateKeyResult> {
             break;
 
           case 'KGPS04': // CS only
-            let isSuccess = WASMKGFunction51(JSON.stringify(recData), CSID); // return format is PDLZK03
+            const isSuccess = WASMKGFunction51(JSON.stringify(recData), CSID); // return format is PDLZK03
             break;
 
           case 'DBPS01': /// dummy always ok
-            let dbok = { cmd: 'DBPS01', is_ok: 1 };
+            const dbok = { cmd: 'DBPS01', is_ok: 1 };
             csws.send(JSON.stringify(dbok));
             break;
 
           case 'DBPS02': /// final MpcRequest 마지막에는 양쪽에서 보내온 mpcrequest로 대사를 진행함
-            let final_res = WASMKGFunction61(password);
-            let r: GenereateKeyResult = JSON.parse(final_res);
+            const final_res = WASMKGFunction61(password);
+            const r: GenereateKeyResult = JSON.parse(final_res);
 
             csws.close();
             bgStatusKG = 0;
@@ -270,11 +270,11 @@ function connectToCSForKG(dto, appProp): Promise<GenereateKeyResult> {
 }
 
 function connectToRSForKG(rst, appProp, addr, path, JobID, csws, authToken, reject) {
-  let rsws = ConnectTo(addr, path, appProp.useTLS, appProp.skipInsecureTLS, authToken);
+  const rsws = ConnectTo(addr, path, appProp.useTLS, appProp.skipInsecureTLS, authToken);
   const purposeCode = 'KG';
 
   rsws.addEventListener('open', function (event) {
-    let sendData = {
+    const sendData = {
       cmd: 'req-init-conn',
       type: 'app',
       purpose: purposeCode,
@@ -294,11 +294,11 @@ function connectToRSForKG(rst, appProp, addr, path, JobID, csws, authToken, reje
   rsws.onclose = (event) => {};
 
   rsws.onmessage = (event) => {
-    let recData = JSON.parse(event.data);
+    const recData = JSON.parse(event.data);
     try {
       switch (recData.cmd) {
         case 'res-init-conn':
-          let sendData = {
+          const sendData = {
             cmd: 'notify-all-connected',
             job_id: JobID,
             init: rst,
@@ -310,7 +310,7 @@ function connectToRSForKG(rst, appProp, addr, path, JobID, csws, authToken, reje
           break;
 
         case 'KGBC01':
-          let sendDataKGBC01 = WASMKGFunction11(
+          const sendDataKGBC01 = WASMKGFunction11(
             JSON.stringify(recData),
             RSID,
             rst.user_id,
@@ -323,7 +323,7 @@ function connectToRSForKG(rst, appProp, addr, path, JobID, csws, authToken, reje
           break;
 
         case 'KGBC02':
-          let sendDataKGBC02 = WASMKGFunction21(JSON.stringify(recData), RSID);
+          const sendDataKGBC02 = WASMKGFunction21(JSON.stringify(recData), RSID);
           if (sendDataKGBC02.indexOf(ErrStr) != -1) {
             throw new Error();
           }
@@ -331,7 +331,7 @@ function connectToRSForKG(rst, appProp, addr, path, JobID, csws, authToken, reje
           break;
 
         case 'KGPS01':
-          let sendDataKGPS01 = WASMKGFunction22(JSON.stringify(recData), RSID);
+          const sendDataKGPS01 = WASMKGFunction22(JSON.stringify(recData), RSID);
           if (sendDataKGPS01.indexOf(ErrStr) != -1) {
             throw new Error();
           }
@@ -339,7 +339,7 @@ function connectToRSForKG(rst, appProp, addr, path, JobID, csws, authToken, reje
           break;
 
         case 'KGBC03':
-          let sendDataKGBC03 = WASMKGFunction23(JSON.stringify(recData), RSID);
+          const sendDataKGBC03 = WASMKGFunction23(JSON.stringify(recData), RSID);
           if (sendDataKGBC03.indexOf(ErrStr) != -1) {
             throw new Error();
           }
@@ -347,7 +347,7 @@ function connectToRSForKG(rst, appProp, addr, path, JobID, csws, authToken, reje
           break;
 
         case 'DBPS01': /// dummy always ok
-          let dbok = { cmd: 'DBPS01', is_ok: 1 };
+          const dbok = { cmd: 'DBPS01', is_ok: 1 };
           rsws.send(JSON.stringify(dbok));
           break;
 
@@ -491,7 +491,7 @@ function connectToCSForSign(dto, appProp, { resolve, reject }) {
 function RecoverShare(dto) {
   // if (!bgStatusRG) {
   bgStatusRG = 1;
-  var appProp = appProp1;
+  const appProp = appProp1;
   const { password, uid, wid, sid, mpcToken } = dto;
   return connectToCSForRG(password, appProp, uid, wid, sid, mpcToken);
   bgStatusRG = 0;
@@ -508,10 +508,10 @@ function connectToCSForRG(aessource, appProp, userID, walletID, shareID, authTok
     }
 
     // var authToken = 'DUMMYTOKEN';
-    var purposeCode = 'RG';
+    const purposeCode = 'RG';
     ///////////////////////////////////////////
     // KG MpcRequest
-    var rst = {
+    const rst = {
       user_id: userID,
       wallet_id: walletID,
       share_id: shareID,
@@ -524,7 +524,7 @@ function connectToCSForRG(aessource, appProp, userID, walletID, shareID, authTok
       wasm_enabled: true,
     };
 
-    let csws = ConnectTo(
+    const csws = ConnectTo(
       appProp.csAddr,
       '/gen',
       appProp.useTLS,
@@ -534,7 +534,7 @@ function connectToCSForRG(aessource, appProp, userID, walletID, shareID, authTok
     let rsws;
 
     csws.addEventListener('open', function (event) {
-      let sendData = {
+      const sendData = {
         cmd: 'req-init-conn',
         type: 'app',
         purpose: purposeCode,
@@ -544,7 +544,7 @@ function connectToCSForRG(aessource, appProp, userID, walletID, shareID, authTok
     });
 
     csws.onmessage = (event) => {
-      let recData = JSON.parse(event.data);
+      const recData = JSON.parse(event.data);
       let res;
       switch (recData.cmd) {
         case 'res-init-conn':
@@ -660,11 +660,11 @@ function connectToCSForRG(aessource, appProp, userID, walletID, shareID, authTok
 }
 
 function connectToRSForRG(rst, appProp, addr, path, JobID, csws, authToken, reject) {
-  let rsws = ConnectTo(addr, path, appProp.useTLS, appProp.skipInsecureTLS, authToken);
-  var purposeCode = 'RG';
+  const rsws = ConnectTo(addr, path, appProp.useTLS, appProp.skipInsecureTLS, authToken);
+  const purposeCode = 'RG';
 
   rsws.addEventListener('open', function (event) {
-    let sendData = {
+    const sendData = {
       cmd: 'req-init-conn',
       type: 'app',
       purpose: purposeCode,
@@ -760,7 +760,7 @@ function EmSeedRequest(dto) {
     }
     if (!bgStatusESR) {
       bgStatusESR = 1;
-      var appProp = appProp1;
+      const appProp = appProp1;
       connectToCSForESR(dto, appProp, { resolve, reject });
       bgStatusESR = 0;
     }
@@ -775,7 +775,7 @@ function connectToCSForESR(dto, appProp, { resolve, reject }) {
   const csws = ConnectTo(appProp.csAddr, '/gen', appProp.useTLS, appProp.skipInsecureTLS, mpcToken);
 
   csws.addEventListener('open', function (event) {
-    let sendData = {
+    const sendData = {
       cmd: 'req-init-conn',
       type: 'app',
       purpose: purposeCode,
@@ -848,7 +848,7 @@ function Unlock(dto: MpcUnlockDto) {
 
 function ChangeActiveAccount(dto) {
   const { accountId } = dto;
-  let res = WASMChangeActiveAccount(accountId);
+  const res = WASMChangeActiveAccount(accountId);
   if (res.indexOf(ErrStr) != -1) {
     throw new Error(res);
   }

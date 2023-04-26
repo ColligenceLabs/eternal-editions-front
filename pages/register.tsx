@@ -10,14 +10,16 @@ import {
   resetPassword,
   updateAbcAddress,
   userRegister,
-} from '../src/services/services';
-import Layout from '../src/layouts';
-import { Page, Iconify } from '../src/components';
+} from 'src/services/services';
+import { Image } from 'src/components';
+import Layout from 'src/layouts';
+import { Page, Iconify } from 'src/components';
 import {
   Backdrop,
   Box,
   Button,
   Checkbox,
+  Stack,
   CircularProgress,
   Container,
   Divider,
@@ -30,18 +32,18 @@ import {
 } from '@mui/material';
 import { Base64 } from 'js-base64';
 import { styled } from '@mui/material/styles';
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../src/config';
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
 
 import secureLocalStorage from 'react-secure-storage';
 
 // TODO : dkeys WASM Go Initialize...
-import '../src/abc/sandbox/index';
-import { controllers, accountRestApi, services } from '../src/abc/background/init';
-import { AbcAddUserDto, AbcLoginResult, AbcSnsAddUserDto } from '../src/abc/main/abc/interface';
-import { setAbcAuth } from '../src/store/slices/abcAuth';
-import { setTwoFa } from '../src/store/slices/twoFa';
-import { setProvider } from '../src/store/slices/webUser';
-import { AbcLoginResponse } from '../src/abc/schema/account';
+import 'src/abc/sandbox/index';
+import { controllers, accountRestApi, services } from 'src/abc/background/init';
+import { AbcAddUserDto, AbcLoginResult, AbcSnsAddUserDto } from 'src/abc/main/abc/interface';
+import { setAbcAuth } from 'src/store/slices/abcAuth';
+import { setTwoFa } from 'src/store/slices/twoFa';
+import { setProvider } from 'src/store/slices/webUser';
+import { AbcLoginResponse } from 'src/abc/schema/account';
 import { useRouter } from 'next/router';
 import checkmarkIcon from '@iconify/icons-carbon/checkmark';
 import checkboxIcon from '@iconify/icons-carbon/checkbox';
@@ -136,6 +138,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   const [idToken, setIdToken] = useState('');
   const [service, setService] = useState('');
   const [email, setEmail] = useState('');
+  const [picture, setPicture] = useState('');
   const [otpToken, setOtpToken] = useState('');
   const [resetCode, setResetCode] = useState('');
   const [qrCode, setQrCode] = useState('');
@@ -300,7 +303,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     },
   ];
   const handleClickRegister = async () => {
-    // ABC Wallet 로그임
+    // ABC Wallet 로그인
     const result = await abcLogin({
       token: idToken,
       service,
@@ -319,7 +322,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     };
 
     if (flCreate) {
-      // 신규 가립자 생성
+      // 신규 가입자 생성
       const sixCode = JSON.parse(result.data.msg).sixcode;
       console.log('!! sixcode =', sixCode);
       const dto: AbcSnsAddUserDto = {
@@ -378,6 +381,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       const { qrcode, secret } = await accountController.generateTwoFactor({ reset: false });
       console.log('!! OPT =', qrcode, secret);
       setQrCode(qrcode);
+      setQrOnly(true);
       setQrSecret(secret);
     } else {
       // 기 가입자 지갑 복구
@@ -697,24 +701,10 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
   useEffect(() => {
     const fetchSession = async () => {
       const res = await getSession();
-      console.log('session res::::', res);
       let id_token: string;
       let service: string;
       let loginEmail: string;
       let flag: boolean;
-
-      // providerAuthInfo가 로컬에서는 넘어오지 않으므로 강제 추가
-      if (process.env.NODE_ENV === 'development') {
-        res.data.providerAuthInfo = {
-          provider: 'google',
-          provider_token:
-            'eyJhbGciOiJSUzI1NiIsImtpZCI6Ijg2OTY5YWVjMzdhNzc4MGYxODgwNzg3NzU5M2JiYmY4Y2Y1ZGU1Y2UiLCJ0eXAiOiJKV1QifQ.eyJpc3MiOiJodHRwczovL2FjY291bnRzLmdvb2dsZS5jb20iLCJhenAiOiIxMDcyMTM4Nzc0MzU3LWloZWRpZzcwMWZ2dXIxY2txNWc0bXFlcDA2cXJrN2ZxLmFwcHMuZ29vZ2xldXNlcmNvbnRlbnQuY29tIiwiYXVkIjoiMTA3MjEzODc3NDM1Ny1paGVkaWc3MDFmdnVyMWNrcTVnNG1xZXAwNnFyazdmcS5hcHBzLmdvb2dsZXVzZXJjb250ZW50LmNvbSIsInN1YiI6IjEwODI2NzU4MzM0ODEwNTYwNzkxMSIsImVtYWlsIjoiaGFwanVuZ21lbkBnbWFpbC5jb20iLCJlbWFpbF92ZXJpZmllZCI6dHJ1ZSwiYXRfaGFzaCI6Im9oSUY5aGxkN0lxclBObXgyTzFudEEiLCJuYW1lIjoibWVuIGhhcGp1bmciLCJwaWN0dXJlIjoiaHR0cHM6Ly9saDMuZ29vZ2xldXNlcmNvbnRlbnQuY29tL2EvQUdObXl4WjliMmxoY21pdEI3dDV5ZE5fM1lQYjZ6OVI1ZDRHS2haang2X3o9czk2LWMiLCJnaXZlbl9uYW1lIjoibWVuIiwiZmFtaWx5X25hbWUiOiJoYXBqdW5nIiwibG9jYWxlIjoia28iLCJpYXQiOjE2ODIzMDAyMTAsImV4cCI6MTY4MjMwMzgxMH0.eVSwHfEZEn42OhEbpZtHRruHOSreyEzKZ_xI2f8vsv9AvzKuory8-LD3XhedtzGLddCvQXAoYeFcX2Hzplx5_zTFc-Q9SMCQ7jDq1YwNP5LyVhMxq79Ug_vjW3IrA4OvbzIwyRn5RVXMEQDfmqIiYT3G2cgMBhTWMustHwd1u-KhbsW3N-GzdOA3Joxfhrp7i1xVCp0nQgumzUKDGP4hnwwnfeU27kzXX7dXLoNs5YnS-eO_aixZpzgh-5mgJhh7ypIeIxXB12TT7yVEgt9JMOT9YxkvqUg2xqgWAb93Zl4tS0fb6f-qGZ5FWmsNKUNJEMSY_rShJcjyip1B2CiU9w',
-          provider_id: '108267583348105607911',
-          provider_username: 'men',
-          provider_data:
-            '{"sub":"108267583348105607911","name":"men hapjung","given_name":"men","family_name":"hapjung","picture":"https://lh3.googleusercontent.com/a/AGNmyxZ9b2lhcmitB7t5ydN_3YPb6z9R5d4GKhZjx6_z=s96-c","email":"hapjungmen@gmail.com","email_verified":true,"locale":"ko"}',
-        };
-      }
 
       if (res.data?.providerAuthInfo) {
         console.log('!! Session Info =', res.data?.providerAuthInfo);
@@ -725,6 +715,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         setIdToken(id_token);
         setService(service);
         setEmail(data.email);
+        setPicture(data.picture);
         dispatch(setProvider({ id_token, service }));
         flag = false; // SNS User
       } else {
@@ -780,8 +771,25 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                       <Typography variant="h4">SIGN UP</Typography>
                     </Box>
 
+                    <Stack
+                      direction="row"
+                      sx={{ ml: -3 }}
+                      alignItems="center"
+                      justifyContent="center"
+                    >
+                      <Stack sx={{ width: 32, mr: 0.5 }}>
+                        <Image src={picture} sx={{ borderRadius: 50 }} ratio="1/1" />
+                      </Stack>
+                      <Typography variant="h6" sx={{ mb: 0.5 }}>
+                        {email}
+                      </Typography>
+                    </Stack>
+
                     {terms?.map(({ title, children }, index) => (
-                      <React.Fragment key={index}>
+                      <Box
+                        key={index}
+                        sx={{ mt: 2, pt: 2, borderTop: index ? '1px solid #ccc' : 'none' }}
+                      >
                         <FormControlLabel
                           control={
                             <Checkbox
@@ -801,7 +809,6 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                           onChange={(event) => {
                             const value = event?.nativeEvent?.target?.checked;
                             children.forEach(({ key }) => {
-                              console.log('key', key);
                               setValue(key, value);
                             });
                           }}
@@ -861,7 +868,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                             )}
                           </Box>
                         )}
-                      </React.Fragment>
+                      </Box>
                     ))}
 
                     {oldUser && (
@@ -890,7 +897,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                             )
                           ) !== 'checked' || qrCode !== ''
                         }
-                        variant={'outlined'}
+                        variant={'vavid'}
                       >
                         다음
                       </Button>
@@ -900,19 +907,18 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                 {qrCode && (
                   <Box
                     sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      gap: '2rem',
-                      border: '1px solid white',
-                      borderRadius: '15px',
-                      p: 2,
+                      p: 1,
                       my: 2,
                     }}
                   >
-                    <Typography>Register 2FA Google OTP</Typography>
-                    <Box sx={{ textAlign: 'center' }}>
+                    <Typography variant="h4" sx={{ mb: 2 }}>
+                      Creating a Wallet
+                    </Typography>
+                    <Typography>
+                      After scanning the QR code below in Google Authenticator, Please enter 6
+                      digits of the authentication number
+                    </Typography>
+                    <Box sx={{ textAlign: 'center', my: 3 }}>
                       <img className="QRCode" src={qrCode} alt="qrapp" />
                       {/*<Box>{qrSecret}</Box>*/}
                     </Box>
@@ -927,35 +933,17 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                         onChange={handleAbcTokenChange}
                         sx={{ color: '#000' }}
                       />
-                      <Button
-                        variant="outlined"
-                        size="medium"
-                        sx={{
-                          // width: '100% !important',
-                          height: '36px',
-                          fontSize: 12,
-                          backgroundColor: '#f1f2f5',
-                          borderColor: '#f1f2f5',
-                          color: '#000000',
-                          boxShadow: 'none',
-                          '&:hover': {
-                            backgroundColor: '#08FF0C',
-                            borderColor: '#08FF0C',
-                            color: '#ffffff',
-                            boxShadow: 'none',
-                          },
-                          '&:active': {
-                            boxShadow: 'none',
-                            backgroundColor: 'background.paper',
-                            borderColor: 'background.paper',
-                            color: '#ffffff',
-                          },
-                        }}
-                        onClick={handleAbcConfirmClick}
-                      >
-                        확인
-                      </Button>
                     </Box>
+                    <Button
+                      sx={{ mt: 3 }}
+                      variant="outlined"
+                      size="large"
+                      fullWidth
+                      variant="vavid"
+                      onClick={handleAbcConfirmClick}
+                    >
+                      COMPLETE
+                    </Button>
                     {resetCode && <Box>{resetCode}</Box>}
                   </Box>
                 )}

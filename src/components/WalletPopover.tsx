@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-import { Box, Button, Typography } from '@mui/material';
+import { Box, Button, Typography, Stack } from '@mui/material';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
 import MenuPopover from './MenuPopover';
@@ -42,7 +42,7 @@ export default function WalletPopover({}) {
   const [accountShot, setAccountShot] = useState('');
   const [type, setType] = useState('');
   const router = useRouter();
-  const isMobile = useResponsive('down', 'md');
+  const isMobile = useResponsive('down', 'sm');
 
   const balance = getBalances(account, library);
 
@@ -160,112 +160,82 @@ export default function WalletPopover({}) {
               </Box>
             </Box>
           </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.7rem',
-              marginTop: '24px',
-              backgroundColor: '#F5F5F5',
-              borderRadius: '12px',
-              padding: '20px',
-            }}
-          >
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <Box sx={{ width: '20px' }}>
-                  <Image src="/assets/img/ee-logo.svg" sx={{ width: '100%' }} />
-                </Box>
-                <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
-                  {user.point ? user.point : 0} EDCP
-                </Typography>
-              </Box>
-              <Box
-                sx={{
-                  border: '1.5px solid',
-                  width: '150px',
-                  textAlign: 'center',
-                  borderRadius: '12px',
-                  cursor: 'pointer',
-                }}
+
+          <Stack sx={{ mt: 2 }} spacing={2}>
+            <Stack
+              spacing={2}
+              sx={{
+                backgroundColor: '#F5F5F5',
+                borderRadius: 1.5,
+                p: 3,
+              }}
+            >
+              <Stack
+                spacing={2}
+                direction={isMobile ? 'column' : 'row'}
+                justifyContent={isMobile ? 'space-between' : 'space-between'}
+                alignItems={isMobile ? 'stretch' : 'center'}
               >
-                {/*{isMobile ? (*/}
-                {/*  <Box onClick={() => alert('PC 환경에서만 가능합니다.')}>*/}
-                {/*    <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>BUY POINT</Typography>*/}
-                {/*  </Box>*/}
-                {/*) : (*/}
+                <Stack spacing={2} justifyContent={isMobile ? 'space-around' : 'space-around'}>
+                  <Stack direction="row">
+                    <Box sx={{ width: 20, mr: 1 }}>
+                      <Image src="/assets/img/ee-logo.svg" />
+                    </Box>
+                    <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
+                      {user.point ? user.point : 0} EDCP
+                    </Typography>
+                  </Stack>
+                  <Stack direction="row">
+                    <Box sx={{ width: 20, mr: 1 }}>
+                      <Image src="/assets/img/matic-token-icon.png" sx={{ width: '100%' }} />
+                    </Box>
+                    <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
+                      {balance.toFixed(5)} MATIC
+                    </Typography>
+                  </Stack>
+                </Stack>
                 <NextLink href={Routes.eternalEditions.payment.point} passHref>
-                  <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>BUY POINT</Typography>
+                  <Button variant="outlined" color={'black'}>
+                    BUY POINT
+                  </Button>
                 </NextLink>
-                {/*)}*/}
-              </Box>
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                <Box sx={{ width: '20px' }}>
-                  <Image src="/assets/img/matic-token-icon.png" sx={{ width: '100%' }} />
-                </Box>
-                <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
-                  {balance.toFixed(5)} MATIC
-                </Typography>
-              </Box>
-              {/*<Box*/}
-              {/*  sx={{*/}
-              {/*    border: '1.5px solid',*/}
-              {/*    width: '150px',*/}
-              {/*    textAlign: 'center',*/}
-              {/*    borderRadius: '12px',*/}
-              {/*    cursor: 'pointer',*/}
-              {/*  }}*/}
-              {/*>*/}
-              {/*  <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>*/}
-              {/*    BUY SIMPLEX CREDIT*/}
-              {/*  </Typography>*/}
-              {/*</Box>*/}
-            </Box>
-          </Box>
-          <Box
-            sx={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '0.7rem',
-              marginTop: '24px',
-              backgroundColor: '#F5F5F5',
-              borderRadius: '12px',
-              padding: '20px',
-            }}
-          >
-            <NextLink href={Routes.eternalEditions.my.account} passHref>
-              <MenuItem>ACCOUNT</MenuItem>
-            </NextLink>
-            <NextLink href={Routes.eternalEditions.my.tickets} passHref>
-              <MenuItem>MY TICKETS</MenuItem>
-            </NextLink>
-            <NextLink href={Routes.eternalEditions.my.transaction} passHref>
-              <MenuItem>TRANSACTION</MenuItem>
-            </NextLink>
-            <NextLink href={Routes.eternalEditions.faq} passHref>
-              <MenuItem>FAQ</MenuItem>
-            </NextLink>
-            <NextLink href={Routes.eternalEditions.notice} passHref>
-              <MenuItem>NOTICE</MenuItem>
-            </NextLink>
-          </Box>
-          <Box
-            sx={{
-              backgroundColor: palette.dark.primary.main,
-              height: '45px',
-              borderRadius: '12px',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              marginTop: '24px',
-              cursor: 'pointer',
-            }}
-            onClick={handleDisconnect}
-          >
-            Disconnect
-          </Box>
+              </Stack>
+            </Stack>
+
+            <Stack
+              spacing={1}
+              sx={{
+                backgroundColor: '#F5F5F5',
+                borderRadius: 1.5,
+                padding: '20px',
+              }}
+            >
+              <NextLink href={Routes.eternalEditions.my.account} passHref>
+                <MenuItem>ACCOUNT</MenuItem>
+              </NextLink>
+              <NextLink href={Routes.eternalEditions.my.tickets} passHref>
+                <MenuItem>MY TICKETS</MenuItem>
+              </NextLink>
+              <NextLink href={Routes.eternalEditions.my.transaction} passHref>
+                <MenuItem>TRANSACTION</MenuItem>
+              </NextLink>
+              <NextLink href={Routes.eternalEditions.faq} passHref>
+                <MenuItem>FAQ</MenuItem>
+              </NextLink>
+              <NextLink href={Routes.eternalEditions.notice} passHref>
+                <MenuItem>NOTICE</MenuItem>
+              </NextLink>
+            </Stack>
+            <Button
+              variant="vavid"
+              color="primary"
+              size="large"
+              onClick={handleDisconnect}
+              fullWidth
+            >
+              Disconnect
+            </Button>
+          </Stack>
         </Box>
 
         {/*<Box sx={{ my: 1.5, px: 2.5, mt: 2, mb: 2 }}>*/}

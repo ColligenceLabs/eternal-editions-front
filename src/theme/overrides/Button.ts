@@ -24,13 +24,17 @@ export default function Button(theme: Theme) {
           },
         },
         {
-          props: { vavid: true },
+          props: { variant: 'vavid' },
           style: {
             color: 'black',
             backdropFilter: 'blur(50px)',
             background: theme.palette.primary.main,
             '&:hover': {
               backgroundColor: isLight ? theme.palette.grey[700] : theme.palette.primary.light,
+            },
+            '&:disabled': {
+              color: 'black',
+              opacity: 0.5,
             },
           },
         },

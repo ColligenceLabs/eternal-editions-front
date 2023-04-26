@@ -50,7 +50,9 @@ export default function KSPay() {
   const [orderInfo, setOrderInfo] = useState({
     sndPaymethod: '1000000000',
     sndStoreid: env.KSPAY_STORE_ID,
-    sndOrdernumber: `EE${format(new Date(), 'yyyyMMddHHmmss')}-${Math.floor(Math.random() * 89999) + 10000}`,
+    sndOrdernumber: `EE${format(new Date(), 'yyyyMMddHHmmss')}-${
+      Math.floor(Math.random() * 89999) + 10000
+    }`,
     sndGoodname: router.query['amount'] ? `${router.query['amount']} EDCP` : 'EDCP',
     sndAmount: router.query['price'] ? router.query['price'] : '0',
     sndOrdername: user.name,
@@ -81,13 +83,12 @@ export default function KSPay() {
   };
 
   const _submit = (_frm: any) => {
-    console.log('isMobile', isMobile);
     if (isMobile) {
       // sndReply는 kspay_wh_rcv.php (결제승인 후 결과값들을 본창의 KSPayWeb Form에 넘겨주는 페이지)의 절대경로를 넣어줍니다.
-      _frm[0].sndReply.value = getLocalUrl("api/ksnet/kspay_m_wh_result/");
+      _frm[0].sndReply.value = getLocalUrl('api/ksnet/kspay_m_wh_result/');
 
       //_frm.target = '_blank';
-      _frm[0].action ='https://kspay.ksnet.to/store/KSPayMobileV1.4/KSPayPWeb.jsp';    //리얼
+      _frm[0].action = 'https://kspay.ksnet.to/store/KSPayMobileV1.4/KSPayPWeb.jsp'; //리얼
       // _frm[0].action ='http://210.181.28.134/store/KSPayMobileV1.4/KSPayPWeb.jsp';
 
       _frm[0].submit();
@@ -112,47 +113,47 @@ export default function KSPay() {
               <form name="KSPayWeb" method="post">
                 {/*<Typography>KSNET WebHost Sample V1.4[PHP]</Typography>*/}
                 {/*<SectionWrapper>*/}
-                  {/*<Typography>고객에게보여지지 않아야 하는 설정값 항목</Typography>*/}
-                  {/*<Rows>*/}
-                  {/*  <Title>결제 수단</Title>*/}
-                  <Input type="hidden" name="sndPaymethod" value={orderInfo.sndPaymethod} />
-                    {/*<Select*/}
-                    {/*  size={'small'}*/}
-                    {/*  value={orderInfo.sndPaymethod}*/}
-                    {/*  name="sndPaymethod"*/}
-                    {/*  onChange={(event: SelectChangeEvent<string>) =>*/}
-                    {/*    setOrderInfo({ ...orderInfo, sndPaymethod: event.target.value })*/}
-                    {/*  }*/}
-                    {/*  sx={{ color: '#000' }}*/}
-                    {/*>*/}
-                    {/*  <MenuItem value={'1000000000'}>신용카드</MenuItem>*/}
-                    {/*  <MenuItem value={'0100000000'}>가상계좌</MenuItem>*/}
-                    {/*  <MenuItem value={'0010000000'}>계좌이체</MenuItem>*/}
-                    {/*  <MenuItem value={'0000010000'}>휴대폰결제</MenuItem>*/}
-                    {/*</Select>*/}
-                  {/*</Rows>*/}
-                  <Input type="hidden" name="sndStoreid" value={orderInfo.sndStoreid} />
-                  {/*<Rows>*/}
-                  {/*  <Title>상점아이디</Title>*/}
-                  {/*  <Input*/}
-                  {/*    name="sndStoreid"*/}
-                  {/*    value={orderInfo.sndStoreid}*/}
-                  {/*    fullWidth*/}
-                  {/*    // onChange={handleChangeOrderInfo}*/}
-                  {/*    sx={{ color: '#000' }}*/}
-                  {/*  />*/}
-                  {/*</Rows>*/}
-                  <Input type="hidden" name="sndOrdernumber" value={orderInfo.sndOrdernumber} />
-                  {/*<Rows>*/}
-                  {/*  <Title>주문번호</Title>*/}
-                  {/*  <Input*/}
-                  {/*    name="sndOrdernumber"*/}
-                  {/*    value={orderInfo.sndOrdernumber}*/}
-                  {/*    fullWidth*/}
-                  {/*    // onChange={handleChangeOrderInfo}*/}
-                  {/*    sx={{ color: '#000' }}*/}
-                  {/*  />*/}
-                  {/*</Rows>*/}
+                {/*<Typography>고객에게보여지지 않아야 하는 설정값 항목</Typography>*/}
+                {/*<Rows>*/}
+                {/*  <Title>결제 수단</Title>*/}
+                <Input type="hidden" name="sndPaymethod" value={orderInfo.sndPaymethod} />
+                {/*<Select*/}
+                {/*  size={'small'}*/}
+                {/*  value={orderInfo.sndPaymethod}*/}
+                {/*  name="sndPaymethod"*/}
+                {/*  onChange={(event: SelectChangeEvent<string>) =>*/}
+                {/*    setOrderInfo({ ...orderInfo, sndPaymethod: event.target.value })*/}
+                {/*  }*/}
+                {/*  sx={{ color: '#000' }}*/}
+                {/*>*/}
+                {/*  <MenuItem value={'1000000000'}>신용카드</MenuItem>*/}
+                {/*  <MenuItem value={'0100000000'}>가상계좌</MenuItem>*/}
+                {/*  <MenuItem value={'0010000000'}>계좌이체</MenuItem>*/}
+                {/*  <MenuItem value={'0000010000'}>휴대폰결제</MenuItem>*/}
+                {/*</Select>*/}
+                {/*</Rows>*/}
+                <Input type="hidden" name="sndStoreid" value={orderInfo.sndStoreid} />
+                {/*<Rows>*/}
+                {/*  <Title>상점아이디</Title>*/}
+                {/*  <Input*/}
+                {/*    name="sndStoreid"*/}
+                {/*    value={orderInfo.sndStoreid}*/}
+                {/*    fullWidth*/}
+                {/*    // onChange={handleChangeOrderInfo}*/}
+                {/*    sx={{ color: '#000' }}*/}
+                {/*  />*/}
+                {/*</Rows>*/}
+                <Input type="hidden" name="sndOrdernumber" value={orderInfo.sndOrdernumber} />
+                {/*<Rows>*/}
+                {/*  <Title>주문번호</Title>*/}
+                {/*  <Input*/}
+                {/*    name="sndOrdernumber"*/}
+                {/*    value={orderInfo.sndOrdernumber}*/}
+                {/*    fullWidth*/}
+                {/*    // onChange={handleChangeOrderInfo}*/}
+                {/*    sx={{ color: '#000' }}*/}
+                {/*  />*/}
+                {/*</Rows>*/}
                 {/*</SectionWrapper>*/}
                 <SectionWrapper>
                   {/*<Typography>고객에게 보여주는 항목</Typography>*/}
