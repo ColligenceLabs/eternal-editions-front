@@ -19,15 +19,11 @@ import * as React from 'react';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
-  backgroundImage: `url(/assets/background/bg-main.jpg)`,
-  height: '100%',
-  backgroundPosition: 'center',
-  backgroundRepeat: 'no-repeat',
-  backgroundSize: 'cover',
-  paddingTop: HEADER_MOBILE_HEIGHT,
   paddingBottom: HEADER_MOBILE_HEIGHT,
+  paddingTop: HEADER_MOBILE_HEIGHT,
   [theme.breakpoints.up('md')]: {
     paddingTop: HEADER_DESKTOP_HEIGHT,
+    paddingBottom: HEADER_DESKTOP_HEIGHT,
   },
 }));
 
@@ -41,7 +37,15 @@ export default function NoticePage({}: Props) {
     setExpanded(isExpanded ? panel : false);
   };
   return (
-    <Page title="Notice">
+    <Page
+      title="Notice"
+      background={{
+        backgroundImage: `url(/assets/background/bg-main.jpg)`,
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      }}
+    >
       <RootStyle>
         <Container sx={{ mt: 3 }}>
           <PageHeader title="Notice" />
@@ -99,6 +103,17 @@ export default function NoticePage({}: Props) {
 
 // ----------------------------------------------------------------------
 
-NoticePage.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>;
+NoticePage.getLayout = function getLayout(Page: ReactElement) {
+  return (
+    <Layout
+      background={{
+        backgroundImage: `url(/assets/background/bg-main.jpg)`,
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      }}
+    >
+      {Page}
+    </Layout>
+  );
 };

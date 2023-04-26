@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
 // next
 import dynamic from 'next/dynamic';
+import { Box } from '@mui/material';
 //
 const Header = dynamic(() => import('./header/Header'), { ssr: false });
 const HeaderSimple = dynamic(() => import('./header/HeaderSimple'), { ssr: false });
@@ -16,6 +17,9 @@ type Props = {
   disabledFooter?: boolean;
   simpleHeader?: boolean;
   simpleFooter?: boolean;
+  verticalAlign?: 'top' | 'center' | 'bottom';
+  headerSx?: object;
+  background?: object;
 };
 
 export default function Layout({
@@ -25,21 +29,27 @@ export default function Layout({
   disabledFooter,
   simpleHeader,
   simpleFooter,
+  verticalAlign = 'center',
+  background,
+  headerSx,
 }: Props) {
   return (
-    <>
+    <Box sx={{ ...background }}>
       {disabledHeader ? null : (
         <>
           {simpleHeader ? (
             <HeaderSimple transparent={transparentHeader} />
           ) : (
-            <Header transparent={transparentHeader} />
+            <Header sx={headerSx} transparent={transparentHeader} />
           )}
         </>
       )}
-      {children}
-
+      <Box className="ORIGIN" sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
+        {['center', 'bottom'].includes(verticalAlign) && <Box sx={{ flexGrow: 1 }} />}
+        {children}
+        {['center', 'top'].includes(verticalAlign) && <Box sx={{ flexGrow: 1 }} />}
+      </Box>
       {disabledFooter ? null : <>{simpleFooter ? <FooterSimple /> : <Footer />}</>}
-    </>
+    </Box>
   );
 }

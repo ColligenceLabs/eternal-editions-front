@@ -38,9 +38,11 @@ import useResponsive from 'src/hooks/useResponsive';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
+  paddingBottom: HEADER_MOBILE_HEIGHT,
   paddingTop: HEADER_MOBILE_HEIGHT,
   [theme.breakpoints.up('md')]: {
     paddingTop: HEADER_DESKTOP_HEIGHT,
+    paddingBottom: HEADER_DESKTOP_HEIGHT,
   },
 }));
 
@@ -376,7 +378,7 @@ Type: Address verification`;
                       >
                         <Image src="/assets/icons/abc-logo.png" sx={{ width: '24px' }} />
                         <Typography>
-                          {isDesktop ? user.eth_address : getShotAddress(user.abc_address)}
+                          {isDesktop ? user.abc_address : getShotAddress(user.abc_address)}
                         </Typography>
                       </Box>
                     )}

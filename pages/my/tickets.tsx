@@ -11,9 +11,11 @@ import MyOldTicketList from '../../src/sections/@my/MyOldTicketList';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
+  paddingBottom: HEADER_MOBILE_HEIGHT,
   paddingTop: HEADER_MOBILE_HEIGHT,
   [theme.breakpoints.up('md')]: {
     paddingTop: HEADER_DESKTOP_HEIGHT,
+    paddingBottom: HEADER_DESKTOP_HEIGHT,
   },
 }));
 
@@ -26,7 +28,7 @@ export default function MyTicketPage({}: Props) {
     <Page title="Account">
       <RootStyle>
         <Container sx={{ mt: 3 }}>
-          <PageHeader title="My Ticket" />
+          <PageHeader title="My Tickets" />
 
           <Stack sx={{ mb: 3 }}>
             <MyTicketList loading={false} tickets={TICKET.myTickets} />
@@ -41,5 +43,5 @@ export default function MyTicketPage({}: Props) {
 // ----------------------------------------------------------------------
 
 MyTicketPage.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>;
+  return <Layout verticalAlign="top">{page}</Layout>;
 };

@@ -33,7 +33,7 @@ const nextConfig = {
     // API_CLIENT_ADDRESS: 'http://test10.tickets-x.com',
     API_CLIENT_ADDRESS: 'https://market.eternaleditions.io',
     REMEMBER_ID_NAME: 'tx-remember-id',
-    ACCESS_TOKEN_NAME: 'tx-access-token'
+    ACCESS_TOKEN_NAME: 'tx-access-token',
   },
   images: {
     domains: ['flagcdn.com'],

@@ -145,11 +145,11 @@ const NAV_ITEMS = [
 ];
 
 const RootStyle = styled('div')(({ theme }) => ({
+  paddingBottom: HEADER_MOBILE_HEIGHT,
   paddingTop: HEADER_MOBILE_HEIGHT,
-  paddingBottom: theme.spacing(10),
   [theme.breakpoints.up('md')]: {
     paddingTop: HEADER_DESKTOP_HEIGHT,
-    paddingBottom: theme.spacing(15),
+    paddingBottom: HEADER_DESKTOP_HEIGHT,
   },
 }));
 

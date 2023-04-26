@@ -36,7 +36,7 @@ export default function TicketsFilter({ tickets, categories }: Props) {
   const isMobile = useResponsive('down', 'sm');
   const theme = useTheme();
   const [curPage, setCurPage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
+  const [perPage, setPerPage] = useState(6);
   const [lastPage, setLastPage] = useState(0);
   const [selected, setSelected] = useState('All');
   const [ticketInfoList, setTicketInfoList] = useState<TicketInfoTypes[]>([]);

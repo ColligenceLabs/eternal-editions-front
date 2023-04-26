@@ -2,7 +2,7 @@ import Head from 'next/head';
 import { forwardRef, ReactNode } from 'react';
 // @mui
 import { Box, BoxProps } from '@mui/material';
-import {useTheme} from "@mui/material/styles";
+import { useTheme } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 

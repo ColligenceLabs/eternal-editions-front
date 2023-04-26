@@ -3,29 +3,71 @@ import { useState, useEffect, ReactElement } from 'react';
 import { useDispatch } from 'react-redux';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Container, Typography } from '@mui/material';
+import { Box, Container, Typography, Stack } from '@mui/material';
 // config
-import { HEADER_MOBILE_HEIGHT, HEADER_DESKTOP_HEIGHT, SUCCESS } from '../src/config';
+import { HEADER_MOBILE_HEIGHT, HEADER_DESKTOP_HEIGHT, SUCCESS } from 'src/config';
 // layouts
-import Layout from '../src/layouts';
+import Layout from 'src/layouts';
 // components
-import { Page } from '../src/components';
+import { Page, Iconify, TextIconLabel } from 'src/components';
+import { IconButtonAnimate } from 'src/components/animate';
 // sections
 import axios, { AxiosResponse } from 'axios';
 import { useRouter } from 'next/router';
-import { getUser, savePoint } from '../src/services/services';
-import { setWebUser } from '../src/store/slices/webUser';
-import EECard from '../src/components/EECard';
+import { getUser, savePoint } from 'src/services/services';
+import { setWebUser } from 'src/store/slices/webUser';
+import EECard from 'src/components/EECard';
 import Link from 'next/link';
+import { LoadingButton } from '@mui/lab';
+import { useResponsive } from 'src/hooks';
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
+  paddingBottom: HEADER_MOBILE_HEIGHT,
   paddingTop: HEADER_MOBILE_HEIGHT,
   [theme.breakpoints.up('md')]: {
     paddingTop: HEADER_DESKTOP_HEIGHT,
+    paddingBottom: HEADER_DESKTOP_HEIGHT,
   },
 }));
+
+type LineItemProps = {
+  icon?: ReactElement;
+  label: string;
+  value: any;
+  isBuying?: boolean;
+};
+
+function LineItem({ icon, label, value }: LineItemProps) {
+  const isMobile = useResponsive('down', 'md');
+  return (
+    <TextIconLabel
+      icon={icon!}
+      value={
+        <>
+          <Typography sx={{ fontSize: '14px', color: 'common.black' }}>{label}</Typography>
+          <Typography
+            variant="subtitle2"
+            sx={{
+              color: 'common.black',
+              flexGrow: 1,
+              textAlign: 'right',
+              fontSize: isMobile ? '14px' : '16px',
+              fontWeight: 'bold',
+            }}
+          >
+            {value}
+          </Typography>
+        </>
+      }
+      sx={{
+        color: 'text.primary',
+        '& svg': { mr: 1, width: 24, height: 24 },
+      }}
+    />
+  );
+}
 
 const SectionWrapper = styled(Box)(({ theme }) => ({
   display: 'flex',
@@ -124,10 +166,17 @@ export default function KSPayResult() {
       <RootStyle>
         <Container maxWidth={'xs'} sx={{ my: '25px' }}>
           <EECard>
-            <Box sx={{ padding: '20px', textAlign: 'center' }}>
-              <Typography sx={{ fontSize: '14px' }}>결제 결과</Typography>
-            </Box>
-            <SectionWrapper>
+            <Stack spacing={2}>
+              <Box sx={{ padding: '20px', textAlign: 'center' }}>
+                <Typography sx={{ fontSize: '14px' }}>결제 결과</Typography>
+              </Box>
+              <LineItem label="결제방법" value={payResult.typeStr} />
+              <LineItem label="성공여부" value={payResult.authyn} />
+              <LineItem label="금액" value={payResult.amt} />
+              <LineItem label="거래번호" value={payResult.trno} />
+              <LineItem label="거래일자" value={payResult.trddt} />
+              <LineItem label="거래시간" value={payResult.trdtm} />
+              {/* <SectionWrapper>
               <InputWrapper sx={{ fontSize: '14px' }}>결제방법</InputWrapper>
               <InputWrapper>{payResult.typeStr}</InputWrapper>
             </SectionWrapper>
@@ -135,14 +184,6 @@ export default function KSPayResult() {
               <InputWrapper sx={{ fontSize: '14px' }}>성공여부</InputWrapper>
               <InputWrapper>{payResult.authyn}</InputWrapper>
             </SectionWrapper>
-            {/*<SectionWrapper>*/}
-            {/*  <InputWrapper>응답코드</InputWrapper>*/}
-            {/*  <InputWrapper>{payResult.resultcd}</InputWrapper>*/}
-            {/*</SectionWrapper>*/}
-            {/*<SectionWrapper>*/}
-            {/*  <InputWrapper>주문번호</InputWrapper>*/}
-            {/*  <InputWrapper>{payResult.ordno}</InputWrapper>*/}
-            {/*</SectionWrapper>*/}
             <SectionWrapper>
               <InputWrapper sx={{ fontSize: '14px' }}>금액</InputWrapper>
               <InputWrapper>{`${payResult.amt} 원`}</InputWrapper>
@@ -158,49 +199,28 @@ export default function KSPayResult() {
             <SectionWrapper>
               <InputWrapper sx={{ fontSize: '14px' }}>거래시간</InputWrapper>
               <InputWrapper>{payResult.trdtm}</InputWrapper>
-            </SectionWrapper>
+            </SectionWrapper> */}
 
-            {/*{payResult.authyn && 'O' === payResult.authyn && (*/}
-            {/*  <Box sx={{ display: 'flex', gap: '1rem' }}>*/}
-            {/*    <InputWrapper>카드사 승인번호/은행 코드번호</InputWrapper>*/}
-            {/*    <InputWrapper>{`${payResult.authno} :카드사에서 부여한 번호로 고유한값은 아닙니다.`}</InputWrapper>*/}
-            {/*  </Box>*/}
-            {/*)}*/}
+              {/*<SectionWrapper>*/}
+              {/*  <InputWrapper>응답코드</InputWrapper>*/}
+              {/*  <InputWrapper>{payResult.resultcd}</InputWrapper>*/}
+              {/*</SectionWrapper>*/}
+              {/*<SectionWrapper>*/}
+              {/*  <InputWrapper>주문번호</InputWrapper>*/}
+              {/*  <InputWrapper>{payResult.ordno}</InputWrapper>*/}
+              {/*</SectionWrapper>*/}
 
-            {/*<SectionWrapper>*/}
-            {/*  <InputWrapper>발급사코드/가상계좌번호/계좌이체번호</InputWrapper>*/}
-            {/*  <InputWrapper>{payResult.isscd}</InputWrapper>*/}
-            {/*</SectionWrapper>*/}
-
-            {/*<SectionWrapper>*/}
-            {/*  <InputWrapper>매입사코드</InputWrapper>*/}
-            {/*  <InputWrapper>{payResult.aqucd}</InputWrapper>*/}
-            {/*</SectionWrapper>*/}
-
-            {/*<SectionWrapper>*/}
-            {/*  <InputWrapper>메시지1</InputWrapper>*/}
-            {/*  <InputWrapper>{payResult.msg1}</InputWrapper>*/}
-            {/*</SectionWrapper>*/}
-
-            {/*<SectionWrapper>*/}
-            {/*  <InputWrapper>메시지2</InputWrapper>*/}
-            {/*  <InputWrapper>{payResult.msg2}</InputWrapper>*/}
-            {/*</SectionWrapper>*/}
-            <Link href={'/'}>
-              <Box
-                sx={{
-                  width: '100%',
-                  textAlign: 'center',
-                  marginTop: '15px',
-                  padding: '10px',
-                  backgroundColor: '#999999',
-                  borderRadius: '12px',
-                  cursor: 'pointer',
-                }}
-              >
-                확인
-              </Box>
-            </Link>
+              <Link href={'/'}>
+                <LoadingButton size="large" fullWidth variant="contained">
+                  MAIN
+                </LoadingButton>
+              </Link>
+              <Link href={'/tickets'}>
+                <LoadingButton size="large" fullWidth variant="vavid">
+                  BUY TICKET
+                </LoadingButton>
+              </Link>
+            </Stack>
           </EECard>
         </Container>
       </RootStyle>

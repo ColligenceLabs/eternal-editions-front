@@ -62,11 +62,11 @@ import { setWebUser } from 'src/store/slices/webUser';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
-  paddingTop: HEADER_MOBILE_HEIGHT + 30,
-  paddingBottom: 30,
+  paddingTop: HEADER_MOBILE_HEIGHT,
+  paddingBottom: HEADER_MOBILE_HEIGHT,
   [theme.breakpoints.up('md')]: {
-    paddingTop: HEADER_DESKTOP_HEIGHT + 30,
-    paddingBottom: 30,
+    paddingTop: HEADER_DESKTOP_HEIGHT,
+    paddingBottom: HEADER_DESKTOP_HEIGHT,
   },
   // background: 'red'
 }));
@@ -456,6 +456,7 @@ export default function TicketDetailPage() {
 
       if (ticketInfoRes.data.status === SUCCESS) {
         setTicketInfo({ ...ticketInfoRes.data.data, mysteryboxItems: temp });
+
         if (temp.length) setSelectedItem(temp[0].id);
       }
     }
@@ -500,19 +501,24 @@ export default function TicketDetailPage() {
   }, [ticketInfo, maticPrice]);
 
   return (
-    <Page
-      title={`${slug} - Ticket`}
-      sx={{
-        backgroundImage: `url(${ticketInfo?.packageImage})`,
-        height: '100%',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-        minHeight: '1000px',
-      }}
-    >
+    <Page title={`${slug} - Ticket`}>
+      {/* background */}
+      <Box
+        sx={{
+          backgroundImage: `url(${ticketInfo?.packageImage})`,
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+          position: 'fixed',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          top: 0,
+          zIndex: -1,
+        }}
+      />
       <RootStyle>
-        <Container sx={{ minHeight: '800px' }}>
+        <Container>
           <Grid container spacing={8} direction="row">
             <Grid item xs={12} md={5} lg={6}>
               {/*<Image*/}
@@ -598,6 +604,7 @@ export default function TicketDetailPage() {
                         onChange={handleItemChange}
                         displayEmpty
                         fullWidth
+                        placeholder="Select Options"
                         inputProps={{ 'aria-label': 'optione1' }}
                         sx={{ color: 'common.black' }}
                       >
@@ -840,7 +847,11 @@ export default function TicketDetailPage() {
 // ----------------------------------------------------------------------
 
 TicketDetailPage.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>;
+  return (
+    <Layout transparentHeader={false} headerSx={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+      {page}
+    </Layout>
+  );
 };
 
 // ----------------------------------------------------------------------
@@ -859,6 +870,7 @@ type LineItemProps = {
 };
 
 function LineItem({ icon, label, value }: LineItemProps) {
+  const isMobile = useResponsive('down', 'md');
   return (
     <TextIconLabel
       icon={icon!}
@@ -871,7 +883,7 @@ function LineItem({ icon, label, value }: LineItemProps) {
               color: 'common.black',
               flexGrow: 1,
               textAlign: 'right',
-              fontSize: '16px',
+              fontSize: isMobile ? '14px' : '16px',
               fontWeight: 'bold',
             }}
           >
