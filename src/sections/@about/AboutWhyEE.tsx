@@ -81,7 +81,6 @@ const BlurCard = styled('div')(({ theme }) => ({
   backdropFilter: 'blur(50px)',
   background: 'rgba(0,0,0,.1)',
   [theme.breakpoints.up('md')]: {
-    maxWidth: 'inherit',
     margin: 'inherit',
     padding: '24px',
   },
@@ -186,7 +185,7 @@ export default function AboutWhyEE() {
                       background: 'url("/assets/img/img-nft.png") no-repeat center',
                       backgroundSize: 'cover',
                     }}
-                  ></Box>
+                  />
                   <Typography variant="subtitle1" sx={{ lineHeight: '18px' }}>
                     Non-Fungible Token should be recognized as a medium for solving specific
                     problems for humanity, not as a new marketing forum. In the live event business,
@@ -212,7 +211,7 @@ export default function AboutWhyEE() {
                       background: 'url("/assets/img/img-token.png") no-repeat center',
                       backgroundSize: 'cover',
                     }}
-                  ></Box>
+                  />
                   <Typography variant="subtitle1" sx={{ lineHeight: '18px' }}>
                     In the Web 3.0 ecosystem, encouragement of community engagement and reward
                     structures are important. With limited issuance volume and transparent
@@ -237,7 +236,7 @@ export default function AboutWhyEE() {
                       background: 'url("/assets/img/img-core.png") no-repeat center',
                       backgroundSize: 'cover',
                     }}
-                  ></Box>
+                  />
                   <Typography variant="subtitle1" sx={{ lineHeight: '18px' }}>
                     In order to do Radical things, we need the power of various IPs and brands that
                     have existing influence right now. Eternal Editions already has five Core IPs

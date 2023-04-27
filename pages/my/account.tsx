@@ -300,7 +300,7 @@ Type: Address verification`;
                           {balance.toFixed(5)} MATIC
                         </Typography>
                       </Box>
-                      <Box
+                      {/* <Box
                         sx={{
                           backgroundColor: '#F5F5F5',
                           textAlign: 'center',
@@ -312,7 +312,7 @@ Type: Address verification`;
                         <Typography sx={{ fontSize: '13px', fontWeight: '700', color: '#999999' }}>
                           BUY
                         </Typography>
-                      </Box>
+                      </Box> */}
                     </Box>
                   </Box>
                 </Box>

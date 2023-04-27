@@ -402,17 +402,16 @@ function NavItemMobile({ item }: NavItemMobileProps) {
       <RootLinkStyle
         active={isActiveRoot}
         sx={{
-          color: 'text.primary',
           height: 'auto',
           lineHeight: 1.1,
           background: 'transparent',
 
           ...(isActiveRoot
             ? {
-                opacity: 1,
+                color: 'primary',
               }
             : {
-                opacity: 0.5,
+                color: 'text.primary',
               }),
         }}
       >
