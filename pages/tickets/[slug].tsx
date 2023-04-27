@@ -641,6 +641,10 @@ export default function TicketDetailPage() {
                       Description
                     </Typography>
                     <TextMaxLine line={5}>{ticketInfo?.introduction.en}</TextMaxLine>
+                    {/* text로된 introduction에 html 포함된 경우 rendering 하도록 수정된 코드*/}
+                    {/*<TextMaxLine line={5}>*/}
+                    {/*  <div dangerouslySetInnerHTML={ {__html: ticketInfo?.introduction.en ?? ''} }/>*/}
+                    {/*</TextMaxLine>*/}
                   </Stack>
                   <Divider />
                   {/*<Stack>*/}
