@@ -35,26 +35,15 @@ import { injected, walletconnect } from '../../src/hooks/connectors';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
+  paddingBottom: HEADER_MOBILE_HEIGHT,
   paddingTop: HEADER_MOBILE_HEIGHT,
   [theme.breakpoints.up('md')]: {
     paddingTop: HEADER_DESKTOP_HEIGHT,
+    paddingBottom: HEADER_DESKTOP_HEIGHT,
   },
 }));
 
 // ----------------------------------------------------------------------
-
-const modalStyle = {
-  position: 'absolute',
-  top: '30%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: 'common.white',
-  color: 'common.black',
-  boxShadow: 24,
-  p: 4,
-  borderRadius: '24px',
-};
 
 export default function WalletRegister() {
   const context = useWeb3React();

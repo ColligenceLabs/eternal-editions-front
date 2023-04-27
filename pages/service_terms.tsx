@@ -18,9 +18,11 @@ import { Box, Container, Divider, Stack } from '@mui/material';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
+  paddingBottom: HEADER_MOBILE_HEIGHT,
   paddingTop: HEADER_MOBILE_HEIGHT,
   [theme.breakpoints.up('md')]: {
     paddingTop: HEADER_DESKTOP_HEIGHT,
+    paddingBottom: HEADER_DESKTOP_HEIGHT,
   },
 }));
 

@@ -15,11 +15,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
-  backgroundImage: `url(/assets/background/bg-main.jpg)`,
-  height: '100%',
-  backgroundPosition: 'center',
-  backgroundRepeat: 'no-repeat',
-  backgroundSize: 'cover',
   paddingTop: HEADER_MOBILE_HEIGHT,
   paddingBottom: HEADER_MOBILE_HEIGHT,
   [theme.breakpoints.up('md')]: {
@@ -84,6 +79,7 @@ export default function FAQPage({}: Props) {
           <Stack sx={{ mb: 3, gap: '1rem' }}>
             {FAQs.map((faq) => (
               <Accordion
+                key={faq.id}
                 expanded={expanded === `panel${faq.id}`}
                 onChange={handleChange(`panel${faq.id}`)}
               >
@@ -137,5 +133,16 @@ export default function FAQPage({}: Props) {
 // ----------------------------------------------------------------------
 
 FAQPage.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>;
+  return (
+    <Layout
+      background={{
+        backgroundImage: `url(/assets/background/bg-main.jpg)`,
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      }}
+    >
+      {page}
+    </Layout>
+  );
 };

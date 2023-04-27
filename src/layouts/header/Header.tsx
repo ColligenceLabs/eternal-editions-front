@@ -31,7 +31,7 @@ const modalStyle = {
   top: '30%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 400,
+  maxWidth: 400,
   bgcolor: 'common.white',
   color: 'common.black',
   boxShadow: 24,
@@ -43,9 +43,10 @@ const modalStyle = {
 
 type Props = {
   transparent?: boolean;
+  sx?: object;
 };
 
-export default function Header({ transparent }: Props) {
+export default function Header({ transparent, sx }: Props) {
   const { abcController, accountController } = controllers;
   const { mpcService, providerService, providerConnManager } = services;
   const { account } = useAccount();
@@ -170,7 +171,7 @@ export default function Header({ transparent }: Props) {
   const isScrolling = useOffSetTop(HEADER_DESKTOP_HEIGHT);
 
   return (
-    <AppBar sx={{ boxShadow: 0, backgroundColor: 'transparent' }}>
+    <AppBar sx={{ boxShadow: 0, backgroundColor: 'transparent', ...sx }}>
       <ToolbarStyle disableGutters transparent={transparent} scrolling={isScrolling}>
         <Container
           sx={{

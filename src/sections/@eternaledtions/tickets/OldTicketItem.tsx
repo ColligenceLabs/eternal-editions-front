@@ -53,7 +53,7 @@ export default function OldTicketItem({ ticket }: Props) {
       >
         <Stack>
           <LineItem icon={<></>} label="Reserve Price" value={'-'} />
-          <LineItem icon={<></>} label="Location" value={'-'} />
+          {/* <LineItem icon={<></>} label="Location" value={'-'} /> */}
           <LineItem icon={<></>} label="Number of tickets" value={1} />
           <LineItem
             icon={<></>}

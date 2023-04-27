@@ -1,39 +1,40 @@
-import {ReactElement} from 'react';
+import { ReactElement } from 'react';
 // @mui
-import {styled} from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 // config
-import {HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT} from '../src/config';
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../src/config';
 // utils
 // @types
 // _data
 // layouts
 import Layout from '../src/layouts';
 // components
-import {Page} from '../src/components';
+import { Page } from '../src/components';
 // sections
-import AboutHeader from "../src/sections/@about/AboutHeader";
-import AboutVideo from "../src/sections/@about/AboutVideo";
-import AboutWhyEE from "../src/sections/@about/AboutWhyEE";
-import AboutIFSo from "../src/sections/@about/AboutIFSo";
+import AboutHeader from '../src/sections/@about/AboutHeader';
+import AboutVideo from '../src/sections/@about/AboutVideo';
+import AboutWhyEE from '../src/sections/@about/AboutWhyEE';
+import AboutIFSo from '../src/sections/@about/AboutIFSo';
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
+  paddingBottom: HEADER_MOBILE_HEIGHT,
   paddingTop: HEADER_MOBILE_HEIGHT,
   background: 'url("/assets/background/bg-about.jpg") no-repeat top center',
   backgroundSize: 'cover',
   borderRadius: '24px',
   [theme.breakpoints.up('md')]: {
     paddingTop: HEADER_DESKTOP_HEIGHT,
+    paddingBottom: HEADER_DESKTOP_HEIGHT,
   },
 }));
 
 // ----------------------------------------------------------------------
 
-type Props = {
-};
+type Props = {};
 
-export default function EEAboutUsPage({ }: Props) {
+export default function EEAboutUsPage({}: Props) {
   return (
     <Page title="About Us">
       <RootStyle>

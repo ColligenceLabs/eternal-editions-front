@@ -81,13 +81,7 @@ export default function HomeHero() {
                   Music festival
                 </Box>
                 <Link href={'/tickets'} style={{ textDecoration: 'none' }}>
-                  <Button
-                    variant="contained"
-                    sx={{
-                      width: 240,
-                      height: 48,
-                    }}
-                  >
+                  <Button variant="contained" sx={{ width: 240, height: 48 }}>
                     BUY TICKET
                   </Button>
                 </Link>

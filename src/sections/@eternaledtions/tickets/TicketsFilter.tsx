@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 // @mui
-import { Box, Button, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Grid, Button, Stack, Tab, Tabs, Typography } from '@mui/material';
 // @types
 import { CaseStudyProps } from '../../../@types/marketing';
 //
@@ -36,7 +36,7 @@ export default function TicketsFilter({ tickets, categories }: Props) {
   const isMobile = useResponsive('down', 'sm');
   const theme = useTheme();
   const [curPage, setCurPage] = useState(1);
-  const [perPage, setPerPage] = useState(5);
+  const [perPage, setPerPage] = useState(6);
   const [lastPage, setLastPage] = useState(0);
   const [selected, setSelected] = useState('All');
   const [ticketInfoList, setTicketInfoList] = useState<TicketInfoTypes[]>([]);
@@ -82,12 +82,24 @@ export default function TicketsFilter({ tickets, categories }: Props) {
 
   return (
     <>
-      <Stack direction="row" sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+      <Stack
+        direction="row"
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          mx: {
+            xs: -2.5,
+            md: 0,
+          },
+        }}
+      >
         <Box
           sx={{
             pb: { xs: 1, md: 3 },
             flexGrow: 1,
-            width: isMobile ? '330px' : '100%',
+            // width: isMobile ? 330 : '100%',
+            /* 2023.04.18 320px 화면에서 깨지는 현상 수정 */
+            width: '100%',
           }}
         >
           <Tabs
@@ -114,12 +126,21 @@ export default function TicketsFilter({ tickets, categories }: Props) {
         {/*<TicketSortByFilter filterSortBy={filters.filterSortBy} onChangeSortBy={handleChangeSortBy}/>*/}
       </Stack>
 
-      {ticketInfoList && (
-        <Masonry columns={{ xs: 1, md: 2 }} spacing={2}>
+      {/* {ticketInfoList && (
+        <Masonry columns={{ xs: 1, md: 2 }} spacing={2} sx={{ width: 'auto' }}>
           {ticketInfoList.map((ticket, index) => (
             <TicketPostItem key={index} ticket={ticket} />
           ))}
         </Masonry>
+      )} */}
+      {ticketInfoList.length ? (
+        <Grid container spacing={2}>
+          {ticketInfoList.map((ticket, index) => (
+            <TicketPostItem key={index} ticket={ticket} />
+          ))}
+        </Grid>
+      ) : (
+        'Data not found'
       )}
 
       {/*{ticketInfoList && (*/}

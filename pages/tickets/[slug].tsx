@@ -10,28 +10,28 @@ import {
   Divider,
   Fade,
   Grid,
-  Input,
+  TextField,
   Modal,
   SelectChangeEvent,
   Stack,
   Typography,
+  Select,
+  FormControl,
+  MenuItem,
 } from '@mui/material';
-import MenuItem from '@mui/material/MenuItem';
-import FormControl from '@mui/material/FormControl';
-import Select from '@mui/material/Select';
 // config
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT, SUCCESS } from '../../src/config';
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT, SUCCESS } from 'src/config';
 // @types
 import { BigNumber, ethers } from 'ethers';
 // layouts
-import Layout from '../../src/layouts';
+import Layout from 'src/layouts';
 // components
-import { Iconify, Page, TextIconLabel, TextMaxLine } from '../../src/components';
+import { Iconify, Page, TextIconLabel, TextMaxLine } from 'src/components';
 // sections
 import { useRouter } from 'next/router';
-import EECard from '../../src/components/EECard';
-import EEAvatar from '../../src/components/EEAvatar';
-import { fDate } from '../../src/utils/formatTime';
+import EECard from 'src/components/EECard';
+import EEAvatar from 'src/components/EEAvatar';
+import { fDate } from 'src/utils/formatTime';
 import searchIcon from '@iconify/icons-carbon/search';
 import {
   getBuyersService,
@@ -40,31 +40,33 @@ import {
   getUser,
   registerBuy,
   savePoint,
-} from '../../src/services/services';
-import { TicketInfoTypes, TicketItemTypes } from '../../src/@types/ticket/ticketTypes';
+} from 'src/services/services';
+import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import axios from 'axios';
-import contracts from '../../src/config/constants/contracts';
-import useActiveWeb3React from '../../src/hooks/useActiveWeb3React';
+import contracts from 'src/config/constants/contracts';
+import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
+import useAccount from 'src/hooks/useAccount';
+import { useResponsive } from 'src/hooks';
+
 import { parseEther } from 'ethers/lib/utils';
-import { buyItem, getItemSold, getWhlBalanceNoSigner } from '../../src/utils/transactions';
-import CSnackbar from '../../src/components/common/CSnackbar';
-import { BuyerTypes } from '../../src/@types/buyer/buyer';
-import { abcSendTx } from '../../src/utils/abcTransactions';
+import { buyItem, getItemSold, getWhlBalanceNoSigner } from 'src/utils/transactions';
+import CSnackbar from 'src/components/common/CSnackbar';
+import { BuyerTypes } from 'src/@types/buyer/buyer';
+import { abcSendTx } from 'src/utils/abcTransactions';
 import { useDispatch, useSelector } from 'react-redux';
-import { collectionAbi } from '../../src/config/abi/Collection';
-import tokenAbi from '../../src/config/abi/ERC20Token.json';
+import { collectionAbi } from 'src/config/abi/Collection';
+import tokenAbi from 'src/config/abi/ERC20Token.json';
 import { LoadingButton } from '@mui/lab';
-import useAccount from '../../src/hooks/useAccount';
-import { setWebUser } from '../../src/store/slices/webUser';
+import { setWebUser } from 'src/store/slices/webUser';
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
-  paddingTop: HEADER_MOBILE_HEIGHT + 30,
-  paddingBottom: 30,
+  paddingTop: HEADER_MOBILE_HEIGHT,
+  paddingBottom: HEADER_MOBILE_HEIGHT,
   [theme.breakpoints.up('md')]: {
-    paddingTop: HEADER_DESKTOP_HEIGHT + 30,
-    paddingBottom: 30,
+    paddingTop: HEADER_DESKTOP_HEIGHT,
+    paddingBottom: HEADER_DESKTOP_HEIGHT,
   },
   // background: 'red'
 }));
@@ -76,7 +78,8 @@ const modalStyle = {
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  minWidth: '350px',
+  maxWidth: 400,
+  width: 'calc(100% - 2rem)',
   bgcolor: 'common.white',
   color: 'common.black',
   border: 'none',
@@ -279,7 +282,7 @@ export default function TicketDetailPage() {
         };
 
         console.log(data);
-        let res = await registerBuy(data);
+        const res = await registerBuy(data);
         console.log(res.data);
         if (res.data.status === SUCCESS) {
           const userRes = await getUser();
@@ -451,8 +454,11 @@ export default function TicketDetailPage() {
         })
       );
 
-      if (ticketInfoRes.data.status === SUCCESS)
+      if (ticketInfoRes.data.status === SUCCESS) {
         setTicketInfo({ ...ticketInfoRes.data.data, mysteryboxItems: temp });
+
+        if (temp.length) setSelectedItem(temp[0].id);
+      }
     }
   };
 
@@ -495,19 +501,24 @@ export default function TicketDetailPage() {
   }, [ticketInfo, maticPrice]);
 
   return (
-    <Page
-      title={`${slug} - Ticket`}
-      sx={{
-        backgroundImage: `url(${ticketInfo?.packageImage})`,
-        height: '100%',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-        minHeight: '1000px',
-      }}
-    >
+    <Page title={`${slug} - Ticket`}>
+      {/* background */}
+      <Box
+        sx={{
+          backgroundImage: `url(${ticketInfo?.packageImage})`,
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          backgroundSize: 'cover',
+          position: 'fixed',
+          left: 0,
+          right: 0,
+          bottom: 0,
+          top: 0,
+          zIndex: -1,
+        }}
+      />
       <RootStyle>
-        <Container sx={{ minHeight: '800px' }}>
+        <Container>
           <Grid container spacing={8} direction="row">
             <Grid item xs={12} md={5} lg={6}>
               {/*<Image*/}
@@ -593,6 +604,7 @@ export default function TicketDetailPage() {
                         onChange={handleItemChange}
                         displayEmpty
                         fullWidth
+                        placeholder="Select Options"
                         inputProps={{ 'aria-label': 'optione1' }}
                         sx={{ color: 'common.black' }}
                       >
@@ -714,6 +726,7 @@ export default function TicketDetailPage() {
                     </Box>
                   ) : (
                     <LineItemByModal
+                      sx={{ whiteSpace: 'nowrap' }}
                       // icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
                       label={`${(dollarPrice / 10).toFixed(4)} EDCP`}
                       value={'PAY WITH EDCP'}
@@ -744,6 +757,7 @@ export default function TicketDetailPage() {
                     </Box>
                   ) : (
                     <LineItemByModal
+                      sx={{ whiteSpace: 'nowrap' }}
                       // icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
                       label={`${ticketInfo?.price} ${ticketInfo?.quote.toUpperCase()}`}
                       value={`PAY WITH ${ticketInfo?.quote.toUpperCase()}`}
@@ -775,11 +789,17 @@ export default function TicketDetailPage() {
       >
         <Fade in={abcOpen}>
           <Box sx={modalStyle}>
-            구글 OTP 인증 :
-            <Input
-              sx={{ color: 'black' }}
-              fullWidth={true}
-              id="outlined-basic"
+            Google OTP :
+            <Typography variant="body3">
+              Please check the 6-digit code in Google Authenticator and enter it.
+            </Typography>
+            <TextField
+              sx={{ mt: 2 }}
+              inputProps={{ style: { color: '#999999' } }}
+              fullWidth
+              variant="standard"
+              label="Verification code"
+              placeholder="Please Enter"
               value={abcToken}
               onChange={handleAbcTokenChange}
             />
@@ -831,7 +851,11 @@ export default function TicketDetailPage() {
 // ----------------------------------------------------------------------
 
 TicketDetailPage.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>;
+  return (
+    <Layout transparentHeader={false} headerSx={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+      {page}
+    </Layout>
+  );
 };
 
 // ----------------------------------------------------------------------
@@ -850,6 +874,7 @@ type LineItemProps = {
 };
 
 function LineItem({ icon, label, value }: LineItemProps) {
+  const isMobile = useResponsive('down', 'md');
   return (
     <TextIconLabel
       icon={icon!}
@@ -862,7 +887,7 @@ function LineItem({ icon, label, value }: LineItemProps) {
               color: 'common.black',
               flexGrow: 1,
               textAlign: 'right',
-              fontSize: '16px',
+              fontSize: isMobile ? '14px' : '16px',
               fontWeight: 'bold',
             }}
           >
@@ -879,19 +904,27 @@ function LineItem({ icon, label, value }: LineItemProps) {
 }
 
 function LineItemByModal({ icon, label, value, isBuying }: LineItemProps) {
+  const isXs = useResponsive('down', 'sm');
   return (
     <TextIconLabel
       icon={icon!}
       value={
         <>
-          <Typography sx={{ fontSize: '14px', color: 'common.black' }}>{label}</Typography>
+          <Typography
+            sx={{
+              fontSize: isXs ? '12px' : '14px',
+              color: 'common.black',
+            }}
+          >
+            {label}
+          </Typography>
           <Typography
             variant="subtitle2"
             sx={{
               flexGrow: 1,
               textAlign: 'right',
               color: 'common.black',
-              fontSize: '16px',
+              fontSize: isXs ? '14px' : '16px',
               fontWeight: 'bold',
             }}
           >

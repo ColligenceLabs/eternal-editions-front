@@ -360,7 +360,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                   </FacebookButton>
                 </Stack>
                 <Stack direction="row" justifyContent="center" alignItems="center">
-                  <Typography variant="caption">Or</Typography>
+                  <Typography variant="caption">or</Typography>
                 </Stack>
               </>
             )}
@@ -411,13 +411,16 @@ export default function SignUp({ onClose, hideSns, ...other }) {
           </Stack>
           <Divider sx={{ mt: 1, mb: 1 }} />
           <Stack sx={{ textAlign: 'center' }}>
-            <a
+            {/* <a
               style={{ textDecoration: 'none', color: 'black' }}
               href={'https://eedao.notion.site/Eternal-Editions-168957fedc5a4ffe8ea7fcbc2ae1d05f'}
               target={'_blank'}
-            >
+              rel="noreferrer"
+              >
+            </a> */}
+            <Button fullWidth size="large" variant="vavid" href="#">
               <Typography variant={'caption'}>회원가입 가이드</Typography>
-            </a>
+            </Button>
           </Stack>
         </Stack>
       )}
