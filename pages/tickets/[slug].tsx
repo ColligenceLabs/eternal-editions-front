@@ -651,9 +651,9 @@ export default function TicketDetailPage() {
                       onClick={handleOpen}
                       size={'large'}
                       fullWidth={true}
-                      variant="contained"
+                      variant="vivid"
                       disabled={selectedTicketItem?.whlBool && selectedTicketItem?.whlBalance === 0}
-                      sx={{ backgroundColor: selectedItem ? '#08FF0C' : null }}
+                      // sx={{ backgroundColor: selectedItem ? '#08FF0C' : null }}
                     >
                       Payment
                     </Button>

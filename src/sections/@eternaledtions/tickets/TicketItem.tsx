@@ -137,12 +137,7 @@ export default function TicketItem({ ticket }: any) {
 
               <Typography>{ticket.featured?.company.name.en}</Typography>
             </Stack>
-            <TextMaxLine variant="h3">
-              {ticketInfo.itemTitle} {ticketInfo.itemTitle} {ticketInfo.itemTitle}{' '}
-              {ticketInfo.itemTitle} {ticketInfo.itemTitle} {ticketInfo.itemTitle}{' '}
-              {ticketInfo.itemTitle} {ticketInfo.itemTitle} {ticketInfo.itemTitle}{' '}
-              {ticketInfo.itemTitle} {ticketInfo.itemTitle}
-            </TextMaxLine>
+            <TextMaxLine variant="h3">{ticketInfo.itemTitle}</TextMaxLine>
           </Box>
           {/* <Typography
             variant="body1"
