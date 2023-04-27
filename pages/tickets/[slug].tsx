@@ -4,6 +4,7 @@ import { styled } from '@mui/material/styles';
 import {
   Backdrop,
   Box,
+  Link,
   Button,
   CircularProgress,
   Container,
@@ -671,7 +672,10 @@ export default function TicketDetailPage() {
                     <Typography variant={'subtitle2'} sx={{ mb: 1 }}>
                       Description
                     </Typography>
-                    <TextMaxLine line={5}>{ticketInfo?.introduction.en}</TextMaxLine>
+                    {/* <TextMaxLine line={5}>{ticketInfo?.introduction.en}</TextMaxLine> */}
+                    <Link variant="subtitle2" color="primary" href="/">
+                      상품 설명 및 상품 고시 상세 보기
+                    </Link>
                     {/* text로된 introduction에 html 포함된 경우 rendering 하도록 수정된 코드*/}
                     {/*<TextMaxLine line={5}>*/}
                     {/*  <div dangerouslySetInnerHTML={ {__html: ticketInfo?.introduction.en ?? ''} }/>*/}

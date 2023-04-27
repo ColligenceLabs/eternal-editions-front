@@ -1,8 +1,13 @@
 import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
 import * as Yup from 'yup';
 import { yupResolver } from '@hookform/resolvers/yup';
-import { useForm, Controller, Path, Paths } from 'react-hook-form';
+import { useForm, Controller, Path } from 'react-hook-form';
 import { useDispatch, useSelector } from 'react-redux';
+import CheckIcon from 'src/assets/icons/check';
+import CheckFillIcon from 'src/assets/icons/checkFill';
+import CheckboxIcon from 'src/assets/icons/checkbox';
+import CheckboxFillIcon from 'src/assets/icons/checkboxFill';
+import CheckboxIndeterminateFillIcon from 'src/assets/icons/checkboxIndeterminateFill';
 import {
   abcAddUser,
   abcLogin,
@@ -45,10 +50,6 @@ import { setTwoFa } from 'src/store/slices/twoFa';
 import { setProvider } from 'src/store/slices/webUser';
 import { AbcLoginResponse } from 'src/abc/schema/account';
 import { useRouter } from 'next/router';
-import checkmarkIcon from '@iconify/icons-carbon/checkmark';
-import checkboxIcon from '@iconify/icons-carbon/checkbox';
-import checkboxCheckedFilledIcon from '@iconify/icons-carbon/checkbox-checked-filled';
-import checkboxIndeterminateFilledIcon from '@iconify/icons-carbon/checkbox-indeterminate-filled';
 
 const RootStyle = styled('div')(({ theme }) => ({
   paddingBottom: HEADER_MOBILE_HEIGHT,
@@ -225,7 +226,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       console.log(res);
       if (res.status === 200) {
         // 성공. 리다이렉트..
-        alert('가입이 완료되었습니다. 다시 로그인 해주세요.');
+        alert('가입이 완료되었습니다.');
         location.replace('/');
       }
     }
@@ -787,11 +788,8 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                       </Typography>
                     </Stack>
 
-                    {terms?.map(({ title, children }, index) => (
-                      <Box
-                        key={index}
-                        sx={{ mt: 2, pt: 2, borderTop: index ? '1px solid #ccc' : 'none' }}
-                      >
+                    {terms.map(({ title, children }, index) => (
+                      <Box key={index} sx={{ mt: 2, pt: 2, borderTop: '1px solid #ccc' }}>
                         <FormControlLabel
                           control={
                             <Checkbox
@@ -803,9 +801,9 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                                 getCheckboxStatus(children.map(({ key }) => key)) ===
                                 'indeterminate'
                               }
-                              icon={<Iconify icon={checkboxIcon} />}
-                              checkedIcon={<Iconify icon={checkboxCheckedFilledIcon} />}
-                              indeterminateIcon={<Iconify icon={checkboxIndeterminateFilledIcon} />}
+                              icon={<CheckboxIcon />}
+                              checkedIcon={<CheckboxFillIcon />}
+                              indeterminateIcon={<CheckboxIndeterminateFillIcon />}
                             />
                           }
                           onChange={(event) => {
@@ -845,8 +843,8 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                                           {...field}
                                           checked={field.value}
                                           disabled={qrCode !== ''}
-                                          icon={<Iconify icon={checkmarkIcon} />}
-                                          checkedIcon={<Iconify icon={checkmarkIcon} />}
+                                          icon={<CheckIcon />}
+                                          checkedIcon={<CheckFillIcon />}
                                         />
                                       }
                                       label={
@@ -899,7 +897,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                             )
                           ) !== 'checked' || qrCode !== ''
                         }
-                        variant={'vivid'}
+                        variant="vivid"
                       >
                         다음
                       </Button>
@@ -946,7 +944,6 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                     >
                       COMPLETE
                     </Button>
-                    {resetCode && <Box>{resetCode}</Box>}
                   </Box>
                 )}
               </>

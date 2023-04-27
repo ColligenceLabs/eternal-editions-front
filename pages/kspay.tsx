@@ -180,8 +180,10 @@ export default function KSPay() {
       target.sndReply.value = getLocalUrl('api/ksnet/kspay_m_wh_result/');
 
       //_frm.target = '_blank';
-      // target.action = 'https://kspay.ksnet.to/store/KSPayMobileV1.4/KSPayPWeb.jsp'; //리얼
-      target.action = 'http://210.181.28.134/store/KSPayMobileV1.4/KSPayPWeb.jsp';
+      target.action =
+        process.env.NODE_ENV !== 'development'
+          ? 'https://kspay.ksnet.to/store/KSPayMobileV1.4/KSPayPWeb.jsp'
+          : 'http://210.181.28.134/store/KSPayMobileV1.4/KSPayPWeb.jsp';
 
       target.submit();
     } else {
@@ -278,7 +280,7 @@ export default function KSPay() {
                   fullWidth
                   size="large"
                   type="submit"
-                  variant="contained"
+                  variant="vivid"
                   loading={isSubmitting}
                 >
                   Payment
