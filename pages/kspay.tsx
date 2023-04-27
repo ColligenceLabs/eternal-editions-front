@@ -309,6 +309,8 @@ export default function KSPay() {
                     'sndStoreid',
                     'sndPaymethod',
                     'sndOrdernumber',
+                    'a',
+                    'ECHA',
                   ].map((name: Paths) => (
                     <Controller
                       key={name}
