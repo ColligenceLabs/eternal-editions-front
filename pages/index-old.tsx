@@ -2,11 +2,11 @@ import { ReactElement } from 'react';
 // _data
 import { _pricingHome } from '../_data/mock';
 // layouts
-import Layout from '../src/layouts';
+import Layout from 'src/layouts';
 // components
-import { Page } from '../src/components';
+import { Page } from 'src/components';
 // sections
-import { PricingHome } from '../src/sections/pricing';
+import { PricingHome } from 'src/sections/pricing';
 import {
   HomeHero,
   // HomeFAQs,
@@ -17,7 +17,7 @@ import {
   HomeAdvertisement,
   HomeFeatureHighlights,
   HomeFlexibleComponents,
-} from '../src/sections/home';
+} from 'src/sections/home';
 
 // ----------------------------------------------------------------------
 

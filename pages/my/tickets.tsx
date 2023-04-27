@@ -1,13 +1,13 @@
 import { ReactElement } from 'react';
-import Layout from '../../src/layouts';
-import { Page } from '../../src/components';
+import Layout from 'src/layouts';
+import { Page } from 'src/components';
 import { Container, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../../src/config';
-import MyTicketList from '../../src/sections/@my/MyTicketList';
-import TICKET from '../../src/sample/ticket';
-import PageHeader from '../../src/components/common/PageHeader';
-import MyOldTicketList from '../../src/sections/@my/MyOldTicketList';
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
+import MyTicketList from 'src/sections/@my/MyTicketList';
+import TICKET from 'src/sample/ticket';
+import PageHeader from 'src/components/common/PageHeader';
+import MyOldTicketList from 'src/sections/@my/MyOldTicketList';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({

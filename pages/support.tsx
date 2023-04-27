@@ -5,16 +5,16 @@ import menuIcon from '@iconify/icons-carbon/menu';
 import { styled } from '@mui/material/styles';
 import { Container, Stack, Typography } from '@mui/material';
 // config
-import { HEADER_MOBILE_HEIGHT, HEADER_DESKTOP_HEIGHT } from '../src/config';
+import { HEADER_MOBILE_HEIGHT, HEADER_DESKTOP_HEIGHT } from 'src/config';
 // _data
 import { _faqsSupport } from '../_data/mock';
 // layouts
-import Layout from '../src/layouts';
+import Layout from 'src/layouts';
 // components
-import { Iconify, Page } from '../src/components';
-import { IconButtonAnimate } from '../src/components/animate';
+import { Iconify, Page } from 'src/components';
+import { IconButtonAnimate } from 'src/components/animate';
 // sections
-import { SupportHero, SupportSidebar, SupportContent } from '../src/sections/support';
+import { SupportHero, SupportSidebar, SupportContent } from 'src/sections/support';
 
 // ----------------------------------------------------------------------
 

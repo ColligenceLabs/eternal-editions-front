@@ -8,7 +8,7 @@ link: https://frontend-collective.github.io/react-image-lightbox
 </Block>
 
 ```tsx
-import { LightboxModal } from '../../src/components';
+import { LightboxModal } from 'src/components';
 
 // ----------------------------------------------------------------------
 
@@ -53,7 +53,7 @@ function LightboxDemo() {
 
       <LightboxModal
         images={imgs}
-        mainSrc={imgs[selectedImage]}
+        mainsrc={imgs[selectedImage]}
         photoIndex={selectedImage}
         setPhotoIndex={setSelectedImage}
         isOpen={openLightbox}

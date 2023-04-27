@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 // icons
-import MenuIcon from '../../../src/assets/icons/menu';
-import DiscordIcon from '../../../src/assets/icons/discord';
+import MenuIcon from 'src/assets/icons/menu';
+import DiscordIcon from 'src/assets/icons/discord';
 import chevronRight from '@iconify/icons-carbon/chevron-right';
 import chevronDown from '@iconify/icons-carbon/chevron-down';
 // next

@@ -11,26 +11,26 @@ import {
   ChainId,
   WALLET_METAMASK,
   WALLET_WALLECTCONNECT,
-} from '../../src/config';
+} from 'src/config';
 // _data
 import { _faqsSupport } from '../../_data/mock';
 // layouts
-import Layout from '../../src/layouts';
+import Layout from 'src/layouts';
 // components
-import { Iconify, Page } from '../../src/components';
-import { IconButtonAnimate } from '../../src/components/animate';
+import { Iconify, Page } from 'src/components';
+import { IconButtonAnimate } from 'src/components/animate';
 // sections
-import { SupportHero, SupportSidebar, SupportContent } from '../../src/sections/support';
+import { SupportHero, SupportSidebar, SupportContent } from 'src/sections/support';
 import { useDispatch, useSelector } from 'react-redux';
 import { useWeb3React } from '@web3-react/core';
-import useActiveWeb3React from '../../src/hooks/useActiveWeb3React';
-import useAccount from '../../src/hooks/useAccount';
-import { setWebUser } from '../../src/store/slices/webUser';
-import { deleteAddress, updateAddress } from '../../src/services/services';
-import { SignUp } from '../../src/components/user';
-import env from '../../src/env';
-import { setupNetwork } from '../../src/utils/network';
-import { injected, walletconnect } from '../../src/hooks/connectors';
+import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
+import useAccount from 'src/hooks/useAccount';
+import { setWebUser } from 'src/store/slices/webUser';
+import { deleteAddress, updateAddress } from 'src/services/services';
+import { SignUp } from 'src/components/user';
+import env from 'src/env';
+import { setupNetwork } from 'src/utils/network';
+import { injected, walletconnect } from 'src/hooks/connectors';
 
 // ----------------------------------------------------------------------
 

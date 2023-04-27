@@ -32,19 +32,19 @@ import {
   IconButtonProps,
 } from '@mui/material';
 // utils
-import { getAllComponentSlugs, getComponentData } from '../../src/utils/get-mardown/components-ui';
+import { getAllComponentSlugs, getComponentData } from 'src/utils/get-mardown/components-ui';
 // _data
 import _mock, { _offices } from '../../_data/mock';
 // routes
-import Routes from '../../src/routes';
+import Routes from 'src/routes';
 // config
-import { HEADER_MOBILE_HEIGHT, HEADER_DESKTOP_HEIGHT, DRAWER_WIDTH } from '../../src/config';
+import { HEADER_MOBILE_HEIGHT, HEADER_DESKTOP_HEIGHT, DRAWER_WIDTH } from 'src/config';
 // @types
 import { ComponentProps } from './';
 // layouts
-import Layout from '../../src/layouts';
+import Layout from 'src/layouts';
 // components
-import { components as MDXComponents, RootStyle as MDXStyle } from '../../src/components/Markdown';
+import { components as MDXComponents, RootStyle as MDXStyle } from 'src/components/Markdown';
 import {
   Page,
   Label,
@@ -66,9 +66,9 @@ import {
   PlayerWithButton,
   FabButtonAnimate,
   IconButtonAnimate,
-} from '../../src/components';
+} from 'src/components';
 //
-const ContactMap = dynamic(() => import('../../src/components/map/ContactMap'));
+const ContactMap = dynamic(() => import('src/components/map/ContactMap'));
 
 // ----------------------------------------------------------------------
 
@@ -337,7 +337,7 @@ function Lightbox() {
 
       <LightboxModal
         images={IMAGES}
-        mainSrc={IMAGES[selectedImage]}
+        mainsrc={IMAGES[selectedImage]}
         photoIndex={selectedImage}
         setPhotoIndex={setSelectedImage}
         isOpen={openLightbox}

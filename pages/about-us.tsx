@@ -2,19 +2,19 @@ import { ReactElement } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 // config
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../src/config';
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
 // utils
 // @types
 // _data
 // layouts
-import Layout from '../src/layouts';
+import Layout from 'src/layouts';
 // components
-import { Page } from '../src/components';
+import { Page } from 'src/components';
 // sections
-import AboutHeader from '../src/sections/@about/AboutHeader';
-import AboutVideo from '../src/sections/@about/AboutVideo';
-import AboutWhyEE from '../src/sections/@about/AboutWhyEE';
-import AboutIFSo from '../src/sections/@about/AboutIFSo';
+import AboutHeader from 'src/sections/@about/AboutHeader';
+import AboutVideo from 'src/sections/@about/AboutVideo';
+import AboutWhyEE from 'src/sections/@about/AboutWhyEE';
+import AboutIFSo from 'src/sections/@about/AboutIFSo';
 
 // ----------------------------------------------------------------------
 

@@ -28,27 +28,27 @@ import { AppProps } from 'next/app';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 // contexts
-import { SettingsProvider } from '../src/contexts/SettingsContext';
+import { SettingsProvider } from 'src/contexts/SettingsContext';
 // theme
-import ThemeProvider from '../src/theme';
+import ThemeProvider from 'src/theme';
 // utils
-import axios from '../src/utils/axios';
+import axios from 'src/utils/axios';
 // components
-import Settings from '../src/components/settings';
-import RtlLayout from '../src/components/RtlLayout';
-import ProgressBar from '../src/components/ProgressBar';
-import ThemeColorPresets from '../src/components/ThemeColorPresets';
-import MotionLazyContainer from '../src/components/animate/MotionLazyContainer';
-import { WalletProvider } from '../src/contexts/WalletContext';
+import Settings from 'src/components/settings';
+import RtlLayout from 'src/components/RtlLayout';
+import ProgressBar from 'src/components/ProgressBar';
+import ThemeColorPresets from 'src/components/ThemeColorPresets';
+import MotionLazyContainer from 'src/components/animate/MotionLazyContainer';
+import { WalletProvider } from 'src/contexts/WalletContext';
 
-import { wrapper } from '../src/store/store';
+import { wrapper } from 'src/store/store';
 import { useDispatch } from 'react-redux';
-import { getUser } from '../src/services/services';
-import { initWebUser, setWebUser } from '../src/store/slices/webUser';
+import { getUser } from 'src/services/services';
+import { initWebUser, setWebUser } from 'src/store/slices/webUser';
 import { persistStore } from 'redux-persist';
 import { createStore } from 'redux';
-import { persistedReducer } from '../src/store/rootReducers';
-import {PayPalScriptProvider} from "@paypal/react-paypal-js";
+import { persistedReducer } from 'src/store/rootReducers';
+import { PayPalScriptProvider } from '@paypal/react-paypal-js';
 
 // ----------------------------------------------------------------------
 function getLibrary(provider: any) {
@@ -78,8 +78,8 @@ function MyApp(props: MyAppProps) {
 
   const initialOptions = {
     'client-id': process.env.PAYPAL_CLIENT_ID ?? 'test',
-    currency: "USD",
-    intent: "capture",
+    currency: 'USD',
+    intent: 'capture',
   };
 
   const updateUserRedux = async () => {

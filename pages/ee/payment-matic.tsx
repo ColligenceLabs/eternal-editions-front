@@ -3,15 +3,15 @@ import { ReactElement } from 'react';
 // @types
 // _data
 // layouts
-import Layout from '../../src/layouts';
+import Layout from 'src/layouts';
 // components
-import { Page } from '../../src/components';
+import { Page } from 'src/components';
 import { Container, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../../src/config';
-import { RegisterForm } from '../../src/sections/auth';
-import PaymentPoint from '../../src/sections/@my/PaymentPoint';
-import PaymentMatic from '../../src/sections/@my/PaymentMatic';
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
+import { RegisterForm } from 'src/sections/auth';
+import PaymentPoint from 'src/sections/@my/PaymentPoint';
+import PaymentMatic from 'src/sections/@my/PaymentMatic';
 // sections
 
 // ----------------------------------------------------------------------

@@ -1,10 +1,10 @@
 import { ReactElement } from 'react';
-import Layout from '../../src/layouts';
-import { Page } from '../../src/components';
+import Layout from 'src/layouts';
+import { Page } from 'src/components';
 import { Container, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../../src/config';
-import PaymentPoint from '../../src/sections/@my/PaymentPoint';
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
+import PaymentPoint from 'src/sections/@my/PaymentPoint';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({

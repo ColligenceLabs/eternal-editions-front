@@ -3,13 +3,13 @@ import { ReactElement } from 'react';
 // @types
 // _data
 // layouts
-import Layout from '../../src/layouts';
+import Layout from 'src/layouts';
 // components
-import { Page } from '../../src/components';
+import { Page } from 'src/components';
 import { Container, Stack, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../../src/config';
-import PageHeader from '../../src/components/common/PageHeader';
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
+import PageHeader from 'src/components/common/PageHeader';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';

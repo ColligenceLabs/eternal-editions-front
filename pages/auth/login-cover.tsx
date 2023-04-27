@@ -4,11 +4,11 @@ import NextLink from 'next/link';
 import { styled } from '@mui/material/styles';
 import { Link, Stack, Divider, Typography } from '@mui/material';
 // routes
-import Routes from '../../src/routes';
+import Routes from 'src/routes';
 // components
-import { Page, Logo } from '../../src/components';
+import { Page, Logo } from 'src/components';
 // sections
-import { AuthWithSocial, AuthCarousel, LoginForm } from '../../src/sections/auth';
+import { AuthWithSocial, AuthCarousel, LoginForm } from 'src/sections/auth';
 
 // ----------------------------------------------------------------------
 
