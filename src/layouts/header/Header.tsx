@@ -213,7 +213,7 @@ export default function Header({ transparent, sx }: Props) {
                     <Button
                       variant="contained"
                       onClick={() => handleJoinOpen()}
-                      sx={{ width: { md: 120 }, color: 'white' }}
+                      sx={{ color: 'white', whiteSpace: 'nowrap', px: 2 }}
                     >
                       LOG IN / SIGN UP
                     </Button>

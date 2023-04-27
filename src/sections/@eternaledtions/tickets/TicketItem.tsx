@@ -181,7 +181,10 @@ export default function TicketItem({ ticket }: any) {
               })`}
             />
             {/* <LineItem label="Location" value={ticketInfo.location} /> */}
-            <LineItem label="Used" value={ticket.status.toLowerCase() === 'used' ? 'Used' : '-'} />
+            <LineItem
+              label="Used"
+              value={ticket?.status?.toLowerCase() === 'used' ? 'Used' : '-'}
+            />
             {/* <LineItem label="Number of tickets" value={ticketInfo.ticketNumber} /> */}
 
             {/* <img src={'/assets/example/qr.png'} style={{ maxWidth: '120px' }} /> */}
