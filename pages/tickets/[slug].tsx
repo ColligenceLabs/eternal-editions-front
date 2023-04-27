@@ -151,6 +151,10 @@ export default function TicketDetailPage() {
   };
   const handleClose = () => setOpen(false);
 
+  function hexToAddress(hexVal: any) {
+    return '0x' + hexVal.substr(-40);
+  }
+
   const handleAbcConfirmClick = async () => {
     setOtpLoading(true);
     console.log(`abc token : ${abcToken}`); // Google OTP
@@ -183,6 +187,13 @@ export default function TicketDetailPage() {
           payment!.toHexString()
         );
 
+        // TODO: Get tokenId in the receipt and save into DB drops ?
+        const events = result.logs;
+        const recipient = hexToAddress(events[1].topics[2]);
+        const tokenIdHex = ethers.utils.defaultAbiCoder.decode(['uint256'], events[1].topics[3]);
+        const tokenId = parseInt(tokenIdHex.toString());
+        console.log('== ABC buyItem event ==>', recipient, tokenId);
+
         if (parseInt(result.status.toString(), 16) === SUCCESS) {
           // const left = await getItemAmount(
           //   contract,
@@ -197,9 +208,10 @@ export default function TicketDetailPage() {
             buyer: user.uid,
             buyer_address: abcUser.accounts[0].ethAddress,
             isSent: true,
-            txHash: result?.txHash,
+            txHash: result?.transactionHash,
             price: ticketInfo?.price,
             itemId: selectedTicketItem?.id,
+            tokenId: tokenId,
           };
 
           const res = await registerBuy(data);
@@ -457,7 +469,7 @@ export default function TicketDetailPage() {
       if (ticketInfoRes.data.status === SUCCESS) {
         setTicketInfo({ ...ticketInfoRes.data.data, mysteryboxItems: temp });
 
-        if (temp.length) setSelectedItem(temp[0].id);
+        // if (temp.length) setSelectedItem(temp[0].id);
       }
     }
   };
