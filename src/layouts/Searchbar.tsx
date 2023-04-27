@@ -7,8 +7,8 @@ import { Input, Slide, Button, InputAdornment, ClickAwayListener, SxProps } from
 // config
 import { HEADER_MOBILE_HEIGHT, HEADER_DESKTOP_HEIGHT } from '../config';
 // components
-import { Iconify } from '../components';
-import { IconButtonAnimate } from '../components/animate';
+import { Iconify } from 'src/components';
+import { IconButtonAnimate } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 

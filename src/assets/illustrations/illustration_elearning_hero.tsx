@@ -4,7 +4,7 @@ import { m } from 'framer-motion';
 import { styled, alpha, useTheme } from '@mui/material/styles';
 import { Box, Typography, BoxProps } from '@mui/material';
 // components
-import { Image } from '../../components';
+import { Image } from 'src/components';
 // pattern
 import { Icon, Label, Shape, Pattern01, Pattern02 } from '../pattern';
 

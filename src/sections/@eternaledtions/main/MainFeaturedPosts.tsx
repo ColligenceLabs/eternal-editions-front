@@ -13,7 +13,7 @@ import cssStyles from '../../../utils/cssStyles';
 // @types
 import { BlogPostProps } from '../../../@types/blog';
 // components
-import { Image, BgOverlay, CarouselDots, CarouselArrows, TextMaxLine } from '../../../components';
+import { Image, BgOverlay, CarouselDots, CarouselArrows, TextMaxLine } from 'src/components';
 
 // ----------------------------------------------------------------------
 

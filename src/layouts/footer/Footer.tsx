@@ -5,7 +5,7 @@ import Link from 'next/link';
 // hooks
 import { useResponsive } from '../../hooks';
 // components
-import { Image } from '../../components';
+import { Image } from 'src/components';
 //
 import { PageLinks } from '../nav/NavConfig';
 

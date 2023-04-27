@@ -2,24 +2,24 @@ import { useEffect, useState } from 'react';
 // @mui
 import { Box, Grid, Button, Stack, Tab, Tabs, Typography } from '@mui/material';
 // @types
-import { CaseStudyProps } from '../../../@types/marketing';
+import { CaseStudyProps } from 'src/@types/marketing';
 //
 import Masonry from '@mui/lab/Masonry';
 import TicketPostItem from './TicketPostItem';
-import { BlogPostProps } from '../../../@types/blog';
-import { Iconify } from '../../../components';
+import { BlogPostProps } from 'src/@types/blog';
+import { Iconify } from 'src/components';
 import arrowDown from '@iconify/icons-carbon/arrow-down';
-import { TicketsFiltersProps } from '../../../@types/eternaleditions/tickets';
+import { TicketsFiltersProps } from 'src/@types/eternaleditions/tickets';
 import TicketSortByFilter from './TicketSortByFilter';
 import { SelectChangeEvent } from '@mui/material/Select';
-import { CategoryProps, TicketProps } from '../../../@types/ticket/ticket';
+import { CategoryProps, TicketProps } from 'src/@types/ticket/ticket';
 import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
-import { getTicketsService } from '../../../services/services';
-import { SUCCESS } from '../../../config';
-import { TicketInfoTypes } from '../../../@types/ticket/ticketTypes';
+import { getTicketsService } from 'src/services/services';
+import { SUCCESS } from 'src/config';
+import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 // import { isMobile } from 'react-device-detect';
-import { useResponsive } from '../../../hooks';
+import { useResponsive } from 'src/hooks';
 
 // ----------------------------------------------------------------------
 

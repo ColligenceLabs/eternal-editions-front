@@ -9,7 +9,7 @@ import { useBoundingClientRect } from '../../hooks';
 // routes
 import Routes from '../../routes';
 // components
-import { Image, Iconify } from '../../components';
+import { Image, Iconify } from 'src/components';
 
 // ----------------------------------------------------------------------
 

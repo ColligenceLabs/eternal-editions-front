@@ -3,7 +3,7 @@ import { Stack, Typography } from '@mui/material';
 // @types
 import { Pricing02Props } from '../../../@types/pricing';
 // components
-import { Label, Image } from '../../../components';
+import { Label, Image } from 'src/components';
 
 // ----------------------------------------------------------------------
 

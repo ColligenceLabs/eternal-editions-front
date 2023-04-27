@@ -98,5 +98,5 @@ export default function TransactionPage({}) {
 // ----------------------------------------------------------------------
 
 TransactionPage.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>;
+  return <Layout verticalAlign="top">{page}</Layout>;
 };

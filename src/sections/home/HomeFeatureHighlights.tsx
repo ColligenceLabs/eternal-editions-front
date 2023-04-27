@@ -21,8 +21,8 @@ import cssStyles from '../../utils/cssStyles';
 // routes
 import Routes from '../../routes';
 // components
-import { Iconify, SvgIconStyle } from '../../components';
-import { MotionViewport, varFade } from '../../components/animate';
+import { Iconify, SvgIconStyle } from 'src/components';
+import { MotionViewport, varFade } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 

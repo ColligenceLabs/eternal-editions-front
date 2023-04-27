@@ -4,7 +4,7 @@ import { styled } from '@mui/material/styles';
 import { Box, Chip, Container, Typography, Link } from '@mui/material';
 import React from 'react';
 import { useTheme } from '@mui/system';
-import { Image } from '../../components';
+import { Image } from 'src/components';
 // hooks
 import useResponsive from '../../hooks/useResponsive';
 // routes

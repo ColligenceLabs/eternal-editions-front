@@ -8,7 +8,7 @@ import { useResponsive } from '../../hooks';
 // components
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper';
-import PageHeader from '../../components/common/PageHeader';
+import PageHeader from 'src/components/common/PageHeader';
 import TeamCard from '../@eternaledtions/main/TeamCard';
 // styles
 import 'swiper/swiper.min.css';

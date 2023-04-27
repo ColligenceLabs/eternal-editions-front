@@ -8,6 +8,7 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 // styles
 import 'swiper/swiper.min.css';
 import Link from 'next/link';
+import { useResponsive } from 'src/hooks';
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +43,7 @@ const BANNERS = [
 // ----------------------------------------------------------------------
 
 export default function HomeHero() {
+  const isMobile = useResponsive('down', 'sm');
   const theme = useTheme();
 
   return (
@@ -64,6 +66,7 @@ export default function HomeHero() {
                   component="p"
                   sx={{
                     typography: 'h5',
+                    px: 3,
                     mb: { xs: '24px', lg: '34px' },
                   }}
                 >

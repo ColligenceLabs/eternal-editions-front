@@ -28,3 +28,4 @@ export { default as CountUpNumber } from './CountUpNumber';
 export { default as AppStoreButton } from './AppStoreButton';
 export { default as FavoriteButton } from './FavoriteButton';
 export { default as SearchNotFound } from './SearchNotFound';
+export { default as EEAvatar } from './EEAvatar';

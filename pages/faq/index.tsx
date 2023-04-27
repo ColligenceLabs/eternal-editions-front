@@ -141,6 +141,7 @@ FAQPage.getLayout = function getLayout(page: ReactElement) {
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
       }}
+      verticalAlign="top"
     >
       {page}
     </Layout>

@@ -6,7 +6,7 @@ import { Container, Box, Typography } from '@mui/material';
 // hooks
 // routes
 // components
-import PageHeader from '../../components/common/PageHeader';
+import PageHeader from 'src/components/common/PageHeader';
 import Masonry from '@mui/lab/Masonry';
 
 // ----------------------------------------------------------------------

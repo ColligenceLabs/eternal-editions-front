@@ -19,7 +19,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import EECard from '../../components/EECard';
+import EECard from 'src/components/EECard';
 import { useTheme } from '@mui/material/styles';
 import { PayPalButtons } from '@paypal/react-paypal-js';
 import React, { ChangeEvent, useEffect, useState } from 'react';

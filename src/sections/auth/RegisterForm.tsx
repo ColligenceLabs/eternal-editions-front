@@ -9,7 +9,7 @@ import viewOff from '@iconify/icons-carbon/view-off';
 import { LoadingButton } from '@mui/lab';
 import { Typography, Stack, Link, TextField, IconButton, InputAdornment } from '@mui/material';
 // components
-import { Iconify } from '../../components';
+import { Iconify } from 'src/components';
 
 // ----------------------------------------------------------------------
 

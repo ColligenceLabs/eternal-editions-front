@@ -4,8 +4,8 @@ import contentDeliveryNetwork from '@iconify/icons-carbon/content-delivery-netwo
 // @mui
 import { MenuItem, Box, SxProps, Popover } from '@mui/material';
 // components
-import { Iconify } from '../components';
-import { IconButtonAnimate } from '../components/animate';
+import { Iconify } from 'src/components';
+import { IconButtonAnimate } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 

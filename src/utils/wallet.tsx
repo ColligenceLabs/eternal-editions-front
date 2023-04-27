@@ -10,7 +10,7 @@ import {
 import Promise from 'lodash/_Promise';
 import Web3 from 'web3';
 import { SxProps } from '@mui/material';
-import Image from '../components/Image';
+import Image from 'src/components/Image';
 
 export function getShotAddress(address: string) {
   return address && address.length > 10

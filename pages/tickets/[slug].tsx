@@ -251,10 +251,13 @@ export default function TicketDetailPage() {
   };
 
   const handleItemChange = (event: SelectChangeEvent) => {
+    console.log('handleItemChange', event.target.value);
     setSelectedItem(event.target.value);
+
     const result = ticketInfo?.mysteryboxItems.find(
       (item: TicketItemTypes) => item.id.toString() === event.target.value.toString()
     );
+
     if (result) setSelectedTicketItem(result);
   };
 
@@ -457,7 +460,9 @@ export default function TicketDetailPage() {
       if (ticketInfoRes.data.status === SUCCESS) {
         setTicketInfo({ ...ticketInfoRes.data.data, mysteryboxItems: temp });
 
-        if (temp.length) setSelectedItem(temp[0].id);
+        // if (temp.length) {
+        //   setTimeout(() => handleItemChange({ target: { value: `${temp[0].id}` } }), 200);
+        // }
       }
     }
   };
@@ -604,10 +609,12 @@ export default function TicketDetailPage() {
                         onChange={handleItemChange}
                         displayEmpty
                         fullWidth
-                        placeholder="Select Options"
                         inputProps={{ 'aria-label': 'optione1' }}
                         sx={{ color: 'common.black' }}
                       >
+                        <MenuItem value="" disabled>
+                          <span style={{ color: '#9E9E9E' }}>Choose an option</span>
+                        </MenuItem>
                         {ticketInfo?.mysteryboxItems.map((item: TicketItemTypes) => (
                           <MenuItem key={item.id} value={item.id}>
                             <Box

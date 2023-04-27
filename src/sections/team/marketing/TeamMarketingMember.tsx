@@ -4,8 +4,8 @@ import { Typography, Box } from '@mui/material';
 // @types
 import { TeamMemberProps } from '../../../@types/team';
 // components
-import { Image, SocialsButton, BgOverlay } from '../../../components';
-import { varHover, varTranHover } from '../../../components/animate';
+import { Image, SocialsButton, BgOverlay } from 'src/components';
+import { varHover, varTranHover } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 

@@ -19,7 +19,7 @@ import {
 // utils
 import { fShortenNumber } from '../../utils/formatNumber';
 // components
-import { Iconify } from '../../components';
+import { Iconify } from 'src/components';
 
 // ----------------------------------------------------------------------
 

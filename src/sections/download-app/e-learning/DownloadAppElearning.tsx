@@ -2,7 +2,7 @@
 import { alpha, styled } from '@mui/material/styles';
 import { Container, Typography, Stack, Grid, Divider } from '@mui/material';
 // components
-import { Image, AppStoreButton, SvgIconStyle } from '../../../components';
+import { Image, AppStoreButton, SvgIconStyle } from 'src/components';
 
 // ----------------------------------------------------------------------
 

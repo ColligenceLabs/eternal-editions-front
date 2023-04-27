@@ -8,7 +8,7 @@ import { useResponsive } from '../../hooks';
 // components
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Pagination } from 'swiper';
-import PageHeader from '../../components/common/PageHeader';
+import PageHeader from 'src/components/common/PageHeader';
 import Masonry from '@mui/lab/Masonry';
 import TicketPostItem from '../@eternaledtions/tickets/TicketPostItem';
 import { TicketProps } from '../../@types/ticket/ticket';

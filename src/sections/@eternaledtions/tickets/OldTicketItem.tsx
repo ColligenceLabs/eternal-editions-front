@@ -1,7 +1,7 @@
 // @mui
 import { Box, Button, Stack, Typography } from '@mui/material';
 import { m } from 'framer-motion';
-import { Image, TextIconLabel, TextMaxLine, varHover, varTranHover } from '../../../components';
+import { Image, TextIconLabel, TextMaxLine, varHover, varTranHover } from 'src/components';
 import React, { ReactElement } from 'react';
 import { fDate } from '../../../utils/formatTime';
 import QRCode from 'react-qr-code';

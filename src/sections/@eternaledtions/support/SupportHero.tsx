@@ -4,7 +4,7 @@ import { Box, Typography, Stack } from '@mui/material';
 // utils
 import cssStyles from '../../../utils/cssStyles';
 // components
-import { SearchInput } from '../../../components';
+import { SearchInput } from 'src/components';
 
 // ----------------------------------------------------------------------
 

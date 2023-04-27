@@ -5,7 +5,7 @@ import { Card, Stack, Button, Typography } from '@mui/material';
 // @types
 import { PricingMarketingProps } from '../../../@types/pricing';
 //
-import { Iconify, Label, TextIconLabel, Image } from '../../../components';
+import { Iconify, Label, TextIconLabel, Image } from 'src/components';
 
 // ----------------------------------------------------------------------
 

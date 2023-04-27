@@ -6,7 +6,7 @@ import { Box, BoxProps } from '@mui/material';
 // hooks
 import { useHoverParallax } from '../../hooks';
 // components
-import { SvgIconStyle, Image } from '../../components';
+import { SvgIconStyle, Image } from 'src/components';
 // pattern
 import { Icon, Label, Character, Pattern01, Pattern02 } from '../pattern';
 

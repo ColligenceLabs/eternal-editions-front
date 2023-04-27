@@ -5,7 +5,6 @@ import { Container, Stack } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
 import MyTicketList from 'src/sections/@my/MyTicketList';
-import TICKET from 'src/sample/ticket';
 import PageHeader from 'src/components/common/PageHeader';
 import MyOldTicketList from 'src/sections/@my/MyOldTicketList';
 
@@ -31,7 +30,7 @@ export default function MyTicketPage({}: Props) {
           <PageHeader title="My Tickets" />
 
           <Stack sx={{ mb: 3 }}>
-            <MyTicketList loading={false} tickets={TICKET.myTickets} />
+            <MyTicketList loading={false} />
             <MyOldTicketList loading={false} />
           </Stack>
         </Container>

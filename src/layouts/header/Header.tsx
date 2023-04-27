@@ -3,13 +3,13 @@ import { useTheme } from '@mui/material/styles';
 import { Box, Stack, Button, AppBar, Container, Modal, Backdrop, Fade, Input } from '@mui/material';
 import { useOffSetTop, useResponsive } from '../../hooks';
 import { HEADER_DESKTOP_HEIGHT } from '../../config';
-import { Logo } from '../../components';
+import { Logo } from 'src/components';
 import { NavMobile, NavDesktop, navConfig } from '../nav';
 import { ToolbarStyle, ToolbarShadowStyle } from './HeaderToolbarStyle';
 import React, { ChangeEvent, useEffect } from 'react';
-import { ConnectWallet, DisconnectWallet } from '../../components/wallet';
-import { SignUp } from '../../components/user';
-import WalletPopover from '../../components/WalletPopover';
+import { ConnectWallet, DisconnectWallet } from 'src/components/wallet';
+import { SignUp } from 'src/components/user';
+import WalletPopover from 'src/components/WalletPopover';
 import { useEagerConnect, useInactiveListener } from '../../hooks/useEagerConnect';
 import '../../abc/sandbox/index';
 import { controllers, accountRestApi, services } from '../../abc/background/init';
@@ -213,14 +213,9 @@ export default function Header({ transparent, sx }: Props) {
                     <Button
                       variant="contained"
                       onClick={() => handleJoinOpen()}
-                      sx={{
-                        width: {
-                          md: 120,
-                        },
-                        color: 'white',
-                      }}
+                      sx={{ width: { md: 120 }, color: 'white' }}
                     >
-                      SIGN UP
+                      LOG IN / SIGN UP
                     </Button>
                   )}
                 </>

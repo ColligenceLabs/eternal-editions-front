@@ -11,7 +11,7 @@ import { Link, Stack, LinkProps } from '@mui/material';
 // @types
 import { NavProps, NavItemDesktopProps } from '../../@types/layout';
 // components
-import { Iconify } from '../../components';
+import { Iconify } from 'src/components';
 //
 import NavDesktopMenu from './NavDesktopMenu';
 
@@ -89,8 +89,8 @@ export default function NavDesktop({ isScrolling, isTransparent, navConfig }: Na
           color: 'common.white',
         }),
         width: {
-          md: '100%'
-        }
+          md: '100%',
+        },
       }}
     >
       {navConfig.map((link) => (

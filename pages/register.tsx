@@ -899,7 +899,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                             )
                           ) !== 'checked' || qrCode !== ''
                         }
-                        variant={'vavid'}
+                        variant={'vivid'}
                       >
                         다음
                       </Button>
@@ -941,7 +941,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                       variant="outlined"
                       size="large"
                       fullWidth
-                      variant="vavid"
+                      variant="vivid"
                       onClick={handleAbcConfirmClick}
                     >
                       COMPLETE

@@ -10,7 +10,7 @@ import groupPresentation from '@iconify/icons-carbon/group-presentation';
 import skillLevelAdvanced from '@iconify/icons-carbon/skill-level-advanced';
 import skillLevelIntermediate from '@iconify/icons-carbon/skill-level-intermediate';
 //
-import { Iconify } from '../components';
+import { Iconify } from 'src/components';
 
 // ----------------------------------------------------------------------
 

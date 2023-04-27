@@ -112,6 +112,7 @@ NoticePage.getLayout = function getLayout(Page: ReactElement) {
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
       }}
+      verticalAlign="top"
     >
       {Page}
     </Layout>

@@ -4,19 +4,19 @@ import { m } from 'framer-motion';
 import { styled, useTheme } from '@mui/material/styles';
 import { Button, Box, Grid, Chip, Stack, Typography } from '@mui/material';
 // routes
-import Routes from '../../../routes';
+import Routes from 'src/routes';
 // utils
 // @types
 // components
-import { Image, TextMaxLine } from '../../../components';
-import { varHover, varTranHover } from '../../../components/animate';
-import { TicketProps } from '../../../@types/ticket/ticket';
-import EEAvatar from '../../../components/EEAvatar';
+import { Image, TextMaxLine } from 'src/components';
+import { varHover, varTranHover } from 'src/components/animate';
+import { TicketProps } from 'src/@types/ticket/ticket';
+import EEAvatar from 'src/components/EEAvatar';
 import { useRouter } from 'next/router';
-import { fDate } from '../../../utils/formatTime';
+import { fDate } from 'src/utils/formatTime';
 import NextLink from 'next/link';
-import { useResponsive } from '../../../hooks';
-import { TicketInfoTypes } from '../../../@types/ticket/ticketTypes';
+import { useResponsive } from 'src/hooks';
+import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 
 // ----------------------------------------------------------------------
 
@@ -35,7 +35,7 @@ export default function TicketPostItem({ ticket }: Props) {
   };
 
   return (
-    <Grid item xs={12} sm={6} md={4}>
+    <Grid item xs={12} sm={6}>
       <NextLink
         passHref
         // as={Routes.eternalEditions.ticket(id.toString())}

@@ -216,7 +216,7 @@ export default function KSPayResult() {
                 </LoadingButton>
               </Link>
               <Link href={'/tickets'}>
-                <LoadingButton size="large" fullWidth variant="vavid">
+                <LoadingButton size="large" fullWidth variant="vivid">
                   BUY TICKET
                 </LoadingButton>
               </Link>

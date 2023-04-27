@@ -3,7 +3,7 @@ import Slider from 'react-slick';
 import { styled, useTheme } from '@mui/material/styles';
 import { Box, Typography } from '@mui/material';
 // components
-import { Image, BgOverlay, CarouselDots } from '../../components';
+import { Image, BgOverlay, CarouselDots } from 'src/components';
 
 // ----------------------------------------------------------------------
 
