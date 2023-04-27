@@ -1,6 +1,6 @@
 // @mui
 import { Stack } from '@mui/material';
-import { JobItemSkeleton } from '../../components';
+import { JobItemSkeleton } from 'src/components';
 import { useEffect, useState } from 'react';
 import { getOldMyTicket } from '../../services/services';
 import OldTicketItem from '../@eternaledtions/tickets/OldTicketItem';
@@ -48,9 +48,7 @@ export default function MyOldTicketList({ loading }: Props) {
       <Stack spacing={1} marginTop={1}>
         {!loading ?? <JobItemSkeleton />}
         {oldTicket &&
-          oldTicket.map((ticket, index) => {
-            return <OldTicketItem key={index} ticket={ticket} />;
-          })}
+          oldTicket.map((ticket, index) => <OldTicketItem key={index} ticket={ticket} />)}
       </Stack>
     </>
   );

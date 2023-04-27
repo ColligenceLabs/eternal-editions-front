@@ -1,15 +1,23 @@
 // @mui
 import { Box, Button, Stack, Grid, Typography } from '@mui/material';
 import { m } from 'framer-motion';
-import { Image, TextIconLabel, TextMaxLine, varHover, varTranHover } from '../../../components';
+import {
+  Image,
+  TextIconLabel,
+  TextMaxLine,
+  varHover,
+  varTranHover,
+  EEAvatar,
+} from 'src/components';
 import React, { ReactElement, useEffect, useState } from 'react';
-import { fDate } from '../../../utils/formatTime';
+import { fDate } from 'src/utils/formatTime';
 import axios from 'axios';
 import QRCode from 'react-qr-code';
 // import { isMobile } from 'react-device-detect';
-import { useResponsive } from '../../../hooks';
+import { useResponsive } from 'src/hooks';
 
 export default function TicketItem({ ticket }: any) {
+  const isXs = useResponsive('down', 'sm');
   const isMobile = useResponsive('down', 'md');
   const [maticPrice, setMaticPrice] = useState(0);
   const [klayPrice, setKlayPrice] = useState(0);
@@ -78,8 +86,6 @@ export default function TicketItem({ ticket }: any) {
       variants={varHover(1)}
       transition={varTranHover()}
       xs={12}
-      sm={6}
-      md={4}
     >
       <Stack
         component={'div'}
@@ -91,8 +97,16 @@ export default function TicketItem({ ticket }: any) {
         }}
         alignContent="center"
         justifyContent={'space-between'}
+        // 반응형
+        direction={isMobile ? 'column' : 'row'}
       >
-        <Image src={ticketInfo.itemImage} alt={ticketInfo.itemTitle} ratio="21/9" />
+        <Box sx={{ width: { xs: '100%', md: 'calc(50% + 3rem)' }, mr: { xs: 0, md: '-3rem' } }}>
+          <Image
+            src={ticketInfo.itemImage}
+            alt={ticketInfo.itemTitle}
+            ratio={isXs ? '16/9' : isMobile ? '21/9' : '16/9'}
+          />
+        </Box>
 
         <Stack
           spacing={1}
@@ -107,21 +121,30 @@ export default function TicketItem({ ticket }: any) {
             py: isMobile ? 2 : 4,
           }}
         >
-          {/*<Stack*/}
-          {/*  direction="row"*/}
-          {/*  spacing={1}*/}
-          {/*  alignItems="center"*/}
-          {/*  sx={{ opacity: 0.72, typography: 'caption' }}*/}
-          {/*>*/}
-          {/*  <EEAvatar src={ticketInfo.companyImage!} sx={{ mr: 0, width: 24, height: 24 }} />*/}
+          <Box sx={{ p: 1, width: '100%', pr: { md: 'calc(50% + 1rem)' } }}>
+            <Stack
+              direction="row"
+              spacing={1}
+              alignItems="center"
+              sx={{ opacity: 0.72, typography: 'caption', mb: 2 }}
+            >
+              <EEAvatar
+                // account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
+                image={ticket.featured?.company.image}
+                nickname={ticket.featured?.company.name.en || '-'}
+                sx={{ mr: 0, width: 24, height: 24 }}
+              />
 
-          {/*  <Typography>{ticketInfo.company}</Typography>*/}
-          {/*</Stack>*/}
-
-          <TextMaxLine variant="h3" sx={{ width: '100%' }}>
-            {ticketInfo.itemTitle}
-          </TextMaxLine>
-          <Typography
+              <Typography>{ticket.featured?.company.name.en}</Typography>
+            </Stack>
+            <TextMaxLine variant="h3">
+              {ticketInfo.itemTitle} {ticketInfo.itemTitle} {ticketInfo.itemTitle}{' '}
+              {ticketInfo.itemTitle} {ticketInfo.itemTitle} {ticketInfo.itemTitle}{' '}
+              {ticketInfo.itemTitle} {ticketInfo.itemTitle} {ticketInfo.itemTitle}{' '}
+              {ticketInfo.itemTitle} {ticketInfo.itemTitle}
+            </TextMaxLine>
+          </Box>
+          {/* <Typography
             variant="body1"
             sx={{
               mb: 1,
@@ -130,13 +153,13 @@ export default function TicketItem({ ticket }: any) {
             }}
           >
             {ticketInfo.createdAt && fDate(ticketInfo.createdAt)}
-          </Typography>
+          </Typography> */}
         </Stack>
         <Stack
           justifyContent="space-between"
           sx={{
             overflow: 'hidden',
-            mt: -2,
+            mt: isMobile ? -2 : 0,
             borderTopLeftRadius: '16px',
             borderTopRightRadius: '16px',
             flexGrow: 1,
@@ -150,28 +173,29 @@ export default function TicketItem({ ticket }: any) {
             backgroundColor: 'common.white',
           }}
         >
-          <Stack>
+          <Stack sx={{ height: 1 }}>
             <LineItem
-              icon={<></>}
               label="Reserve Price"
               value={`$${((ticketInfo?.price ?? 0) * maticPrice).toFixed(4)} (Ξ ${
                 ticketInfo?.price
               })`}
             />
-            <LineItem icon={<></>} label="Location" value={ticketInfo.location} />
-            <LineItem icon={<></>} label="Number of tickets" value={ticketInfo.ticketNumber} />
+            {/* <LineItem label="Location" value={ticketInfo.location} /> */}
+            <LineItem label="Used" value={ticket.status.toLowerCase() === 'used' ? 'Used' : '-'} />
+            {/* <LineItem label="Number of tickets" value={ticketInfo.ticketNumber} /> */}
 
-            <Stack sx={{ mt: isMobile ? 2 : 3 }} justifyContent="center" alignItems="center">
-              {/*<img src={'/assets/example/qr.png'} style={{ maxWidth: '120px' }} />*/}
+            {/* <img src={'/assets/example/qr.png'} style={{ maxWidth: '120px' }} /> */}
+            {/* 팝업 변경 예정 */}
+            {/* <Stack sx={{ mt: isMobile ? 2 : 3 }} justifyContent="center" alignItems="center">
               <QRCode
-                value={`https://entrace2023.eternaleditions.io/entrace-confirm?contractAddress=${ticketInfo.boxContractAddress}&tokenId=${ticketInfo.tokenId}
-`}
+                value={`https://entrace2023.eternaleditions.io/entrace-confirm?contractAddress=${ticketInfo.boxContractAddress}&tokenId=${ticketInfo.tokenId}`}
                 size={isMobile ? 50 : 120}
               />
-            </Stack>
+            </Stack> */}
+            <Box sx={{ flexGrow: 1 }} />
 
             <Stack sx={{ mt: isMobile ? 2 : 4 }}>
-              <Button size={isMobile ? 'small' : 'large'} variant="contained" fullWidth={true}>
+              <Button size={isMobile ? 'small' : 'large'} variant="vivid" fullWidth={true} disabled>
                 TO ENTER
               </Button>
             </Stack>
@@ -183,12 +207,13 @@ export default function TicketItem({ ticket }: any) {
 }
 
 type LineItemProps = {
-  icon: ReactElement;
+  icon?: ReactElement;
   label: string;
   value: any;
 };
 
 function LineItem({ icon, label, value }: LineItemProps) {
+  const isXs = useResponsive('down', 'sm');
   const isMobile = useResponsive('down', 'md');
   return (
     <TextIconLabel

@@ -5,12 +5,12 @@ import NextLink from 'next/link';
 import { styled } from '@mui/material/styles';
 import { Grid, Link, Stack, Divider, Container, Typography } from '@mui/material';
 // routes
-import Routes from '../../src/routes';
+import Routes from 'src/routes';
 // layouts
-import Layout from '../../src/layouts';
+import Layout from 'src/layouts';
 // components
-import { Page, Image } from '../../src/components';
-import { AuthWithSocial, LoginForm } from '../../src/sections/auth';
+import { Page, Image } from 'src/components';
+import { AuthWithSocial, LoginForm } from 'src/sections/auth';
 
 // ----------------------------------------------------------------------
 

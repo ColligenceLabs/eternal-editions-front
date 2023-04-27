@@ -19,7 +19,7 @@ import {
   LinkProps as MUILinkProps,
 } from '@mui/material';
 // components
-import { Image, Iconify } from '../components';
+import { Image, Iconify } from 'src/components';
 
 // ----------------------------------------------------------------------
 

@@ -17,8 +17,8 @@ import {
 } from '@mui/material';
 import { Pattern01 } from '../../assets';
 // components
-import { Iconify } from '../../components';
-import { MotionViewport, varFade } from '../../components/animate';
+import { Iconify } from 'src/components';
+import { MotionViewport, varFade } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 

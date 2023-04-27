@@ -4,7 +4,7 @@ import { Typography, Stack, Container } from '@mui/material';
 // @types
 import { BrandProps } from '../../../@types/brand';
 // components
-import { Image } from '../../../components';
+import { Image } from 'src/components';
 
 // ----------------------------------------------------------------------
 

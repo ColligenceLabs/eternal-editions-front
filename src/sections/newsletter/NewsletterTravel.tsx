@@ -14,7 +14,7 @@ import {
 // utils
 import cssStyles from '../../utils/cssStyles';
 // components
-import { Iconify } from '../../components';
+import { Iconify } from 'src/components';
 
 // ----------------------------------------------------------------------
 

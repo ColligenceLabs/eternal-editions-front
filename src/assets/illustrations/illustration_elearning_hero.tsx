@@ -4,7 +4,7 @@ import { m } from 'framer-motion';
 import { styled, alpha, useTheme } from '@mui/material/styles';
 import { Box, Typography, BoxProps } from '@mui/material';
 // components
-import { Image } from '../../components';
+import { Image } from 'src/components';
 // pattern
 import { Icon, Label, Shape, Pattern01, Pattern02 } from '../pattern';
 
@@ -59,7 +59,7 @@ function ElearningHeroIllustration({ ...other }: BoxProps) {
     <RootStyle {...other}>
       <Box sx={{ position: 'absolute', right: 18, bottom: 28, zIndex: 8 }}>
         <Image
-          placeholderSrc=""
+          placeholdersrc=""
           alt="teacher"
           src="https://zone-assets-api.vercel.app/assets/images/e-learning/course_teacher_hero.png"
           sx={{ width: 546, height: 650 }}

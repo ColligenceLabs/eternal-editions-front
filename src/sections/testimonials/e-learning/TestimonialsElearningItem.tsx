@@ -5,7 +5,7 @@ import { Typography, Stack, Avatar } from '@mui/material';
 // @types
 import { TestimonialProps } from '../../../@types/testimonial';
 // components
-import { Iconify } from '../../../components';
+import { Iconify } from 'src/components';
 
 // ----------------------------------------------------------------------
 

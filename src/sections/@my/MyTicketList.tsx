@@ -1,7 +1,7 @@
 // @mui
 import { Box, Pagination, Stack, Tab, Tabs, Typography, Grid } from '@mui/material';
 // import TicketItem from "../@eternaledtions/tickets/TicketItem";
-import { JobItemSkeleton } from '../../components';
+import { JobItemSkeleton } from 'src/components';
 import { MYTicketProps, TicketProps } from '../../@types/ticket/ticket';
 import { useEffect, useState } from 'react';
 import { TicketsFiltersProps } from '../../@types/eternaleditions/tickets';
@@ -12,13 +12,13 @@ import { SUCCESS } from '../../config';
 
 // ----------------------------------------------------------------------
 
-type Props = { tickets: MYTicketProps[]; loading?: boolean };
+type Props = { loading?: boolean };
 
 const defaultValues = {
   filterSortBy: '',
 };
 
-export default function MyTicketList({ tickets, loading }: Props) {
+export default function MyTicketList({ loading }: Props) {
   const { user } = useSelector((state: any) => state.webUser);
   const [myTicketList, setMyTicketList] = useState([]);
   const getMyTicketList = async () => {
@@ -31,12 +31,12 @@ export default function MyTicketList({ tickets, loading }: Props) {
     if (user.uid) getMyTicketList();
   }, [user]);
 
-  const [selected, setSelected] = useState('All');
-  const [filters, setFilters] = useState<TicketsFiltersProps>(defaultValues);
+  // const [selected, setSelected] = useState('All');
+  // const [filters, setFilters] = useState<TicketsFiltersProps>(defaultValues);
 
-  const handleChangeTab = (event: React.SyntheticEvent, newValue: string) => {
-    setSelected(newValue);
-  };
+  // const handleChangeTab = (event: React.SyntheticEvent, newValue: string) => {
+  //   setSelected(newValue);
+  // };
 
   return (
     <>

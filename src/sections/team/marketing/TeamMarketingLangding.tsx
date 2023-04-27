@@ -10,7 +10,7 @@ import { useBoundingClientRect } from '../../../hooks';
 // @types
 import { TeamMemberProps } from '../../../@types/team';
 // components
-import { CarouselArrows, CarouselDots } from '../../../components';
+import { CarouselArrows, CarouselDots } from 'src/components';
 //
 import TeamMarketingMember from './TeamMarketingMember';
 

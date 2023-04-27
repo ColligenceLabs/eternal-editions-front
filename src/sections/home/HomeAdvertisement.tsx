@@ -7,7 +7,7 @@ import { useHoverParallax } from '../../hooks';
 // routes
 import Routes from '../../routes';
 // components
-import { Image } from '../../components';
+import { Image } from 'src/components';
 
 // ----------------------------------------------------------------------
 

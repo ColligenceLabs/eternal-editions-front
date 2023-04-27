@@ -44,8 +44,8 @@ import Routes from '../../routes';
 // _data
 import _mock from '../../../_data/mock';
 // components
-import { FabButtonAnimate, Iconify } from '../../components';
-import { MotionViewport, varFade } from '../../components/animate';
+import { FabButtonAnimate, Iconify } from 'src/components';
+import { MotionViewport, varFade } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 

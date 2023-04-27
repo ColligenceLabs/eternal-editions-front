@@ -6,10 +6,10 @@ import NextLink from 'next/link';
 import { styled } from '@mui/material/styles';
 import { Stack, Button, Typography } from '@mui/material';
 // layouts
-import Layout from '../src/layouts';
+import Layout from 'src/layouts';
 // components
-import { Page, Image } from '../src/components';
-import { MotionContainer, varBounce } from '../src/components/animate';
+import { Page, Image } from 'src/components';
+import { MotionContainer, varBounce } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 

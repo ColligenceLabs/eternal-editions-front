@@ -7,13 +7,13 @@ import chevronLeft from '@iconify/icons-carbon/chevron-left';
 import { styled } from '@mui/material/styles';
 import { Box, Button, Link, Typography } from '@mui/material';
 // routes
-import Routes from '../../src/routes';
+import Routes from 'src/routes';
 // layouts
-import Layout from '../../src/layouts';
+import Layout from 'src/layouts';
 // components
-import { Page, Iconify, Image } from '../../src/components';
+import { Page, Iconify, Image } from 'src/components';
 // sections
-import { VerifyCodeForm } from '../../src/sections/auth';
+import { VerifyCodeForm } from 'src/sections/auth';
 
 // ----------------------------------------------------------------------
 

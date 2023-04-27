@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 // icons
-import MenuIcon from '../../../src/assets/icons/menu';
-import DiscordIcon from '../../../src/assets/icons/discord';
+import { ToolbarStyle } from 'src/layouts/header/HeaderToolbarStyle';
+import MenuIcon from 'src/assets/icons/menu';
+import DiscordIcon from 'src/assets/icons/discord';
+import CloseIcon from 'src/assets/icons/close';
 import chevronRight from '@iconify/icons-carbon/chevron-right';
 import chevronDown from '@iconify/icons-carbon/chevron-down';
 // next
@@ -10,10 +12,13 @@ import { useRouter } from 'next/router';
 // @mui
 import { alpha, styled } from '@mui/material/styles';
 import {
+  AppBar,
+  Container,
   Box,
   List,
   Link,
   Stack,
+  Typography,
   Button,
   Drawer,
   Collapse,
@@ -25,18 +30,18 @@ import {
   Modal,
 } from '@mui/material';
 // routes
-import Routes from '../../routes';
+import Routes from 'src/routes';
 // config
-import { DRAWER_WIDTH } from '../../config';
+import { DRAWER_WIDTH } from 'src/config';
 // @types
-import { NavProps, NavItemMobileProps } from '../../@types/layout';
+import { NavProps, NavItemMobileProps } from 'src/@types/layout';
 // components
-import { Logo, Scrollbar, Iconify, NavSection } from '../../components';
-import { IconButtonAnimate } from '../../components/animate';
-import SignUp from '../../components/user/SignUp';
-import useAccount from '../../hooks/useAccount';
-import env from '../../env';
-import { delUser } from '../../store/slices/user';
+import { Logo, Scrollbar, Iconify, NavSection } from 'src/components';
+import { IconButtonAnimate } from 'src/components/animate';
+import SignUp from 'src/components/user/SignUp';
+import useAccount from 'src/hooks/useAccount';
+import env from 'src/env';
+import { delUser } from 'src/store/slices/user';
 import { useDispatch } from 'react-redux';
 import { useWeb3React } from '@web3-react/core';
 
@@ -179,36 +184,107 @@ export default function NavMobile({ navConfig, sx }: NavProps) {
         onClose={handleDrawerClose}
         ModalProps={{ keepMounted: true }}
         PaperProps={{
-          sx: { width: DRAWER_WIDTH },
+          sx: {
+            borderRadius: 3,
+            overflow: 'hidden',
+            width: DRAWER_WIDTH,
+          },
         }}
       >
-        <Scrollbar>
-          <Box sx={{ px: 2.5, py: 3, lineHeight: 0 }}>{/* <Logo isSimple /> */}</Box>
+        <Box
+          sx={{
+            flexGrow: 1,
+            borderRadius: 3,
+            backgroundImage: `url(/assets/background/bg-main.jpg)`,
+            backgroundPosition: 'center',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+          }}
+        >
+          <Scrollbar>
+            <AppBar sx={{ boxShadow: 0, background: 'transparent' }}>
+              <ToolbarStyle disableGutters transparent>
+                <Container
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <Box sx={{ lineHeight: 0, position: 'relative' }}>
+                    <Logo />
+                  </Box>
+                  <Box sx={{ flexGrow: 1 }} />
+                  <IconButtonAnimate
+                    color="inherit"
+                    onClick={handleDrawerOpen}
+                    sx={{
+                      ...sx,
+                      bgcolor: 'rgba(0,0,0,.3)',
+                      transition: 'all .3s',
+                      '&:hover': {
+                        bgcolor: '#454F5B',
+                      },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: 24,
+                        height: 24,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <DiscordIcon />
+                    </Box>
+                  </IconButtonAnimate>
+                  <IconButtonAnimate
+                    color="inherit"
+                    onClick={handleDrawerClose}
+                    sx={{
+                      ...sx,
+                      bgcolor: 'rgba(0,0,0,.3)',
+                      transition: 'all .3s',
+                      '&:hover': {
+                        bgcolor: '#454F5B',
+                      },
+                    }}
+                  >
+                    <Box
+                      sx={{
+                        width: 24,
+                        height: 24,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <CloseIcon />
+                    </Box>
+                  </IconButtonAnimate>
+                </Container>
+              </ToolbarStyle>
+            </AppBar>
 
-          <List sx={{ px: 0 }}>
-            {navConfig.map((link) => (
-              <NavItemMobile key={link.title} item={link} />
-            ))}
-          </List>
+            <Box sx={{ px: 2.5, py: 3, lineHeight: 0 }}>{/* <Logo isSimple /> */}</Box>
 
-          <Stack spacing={2} sx={{ p: 2.5, pb: 5 }}>
-            {!account ? (
-              <Button onClick={() => handleJoinOpen()} fullWidth variant="outlined">
-                SIGN UP
-              </Button>
-            ) : (
-              <Button onClick={() => handleDisconnect()} fullWidth variant="outlined">
-                Disconnect
-              </Button>
-            )}
-
-            {/*<NextLink href={Routes.registerIllustration} passHref>*/}
-            {/*  <Button fullWidth variant="contained" color="inherit">*/}
-            {/*    Join Us*/}
-            {/*  </Button>*/}
-            {/*</NextLink>*/}
-          </Stack>
-        </Scrollbar>
+            <List sx={{ px: 0, py: 5 }}>
+              {navConfig.map((link) => (
+                <NavItemMobile key={link.title} item={link} />
+              ))}
+            </List>
+          </Scrollbar>
+        </Box>
+        {!account ? (
+          <Button onClick={() => handleJoinOpen()} variant="vivid" size="large" fullWidth>
+            LOG IN / SIGN UP
+          </Button>
+        ) : (
+          <Button onClick={() => handleDisconnect()} variant="vivid" size="large" fullWidth>
+            Disconnect
+          </Button>
+        )}
         <Modal
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"
@@ -323,8 +399,33 @@ function NavItemMobile({ item }: NavItemMobileProps) {
 
   return (
     <NextLink key={title} href={path} passHref>
-      <RootLinkStyle active={isActiveRoot}>
-        <ListItemText disableTypography primary={title} />
+      <RootLinkStyle
+        active={isActiveRoot}
+        sx={{
+          color: 'text.primary',
+          height: 'auto',
+          lineHeight: 1.1,
+          background: 'transparent',
+
+          ...(isActiveRoot
+            ? {
+                opacity: 1,
+              }
+            : {
+                opacity: 0.5,
+              }),
+        }}
+      >
+        <Typography
+          variant="h4"
+          component="span"
+          sx={{
+            lineHeight: 1,
+            fontSize: 48,
+          }}
+        >
+          <ListItemText disableTypography primary={title} />
+        </Typography>
       </RootLinkStyle>
     </NextLink>
   );

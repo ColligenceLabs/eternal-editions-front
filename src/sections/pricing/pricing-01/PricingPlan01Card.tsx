@@ -3,7 +3,7 @@ import { Card, Stack, Button, Typography } from '@mui/material';
 // @types
 import { Pricing01Props } from '../../../@types/pricing';
 //
-import { Label, Image } from '../../../components';
+import { Label, Image } from 'src/components';
 
 // ----------------------------------------------------------------------
 

@@ -142,8 +142,8 @@ export default function LightboxModal({
       {isOpen && (
         <Lightbox
           animationDuration={240}
-          nextSrc={images[(photoIndex + 1) % images.length]}
-          prevSrc={images[(photoIndex + images.length - 1) % images.length]}
+          nextsrc={images[(photoIndex + 1) % images.length]}
+          prevsrc={images[(photoIndex + images.length - 1) % images.length]}
           onMovePrevRequest={() => setPhotoIndex((photoIndex + images.length - 1) % images.length)}
           onMoveNextRequest={() => setPhotoIndex((photoIndex + 1) % images.length)}
           toolbarButtons={toolbarButtons}

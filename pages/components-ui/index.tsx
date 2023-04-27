@@ -8,15 +8,15 @@ import NextLink from 'next/link';
 import { styled } from '@mui/material/styles';
 import { Container, Typography, Stack, Box, Link, Paper } from '@mui/material';
 // config
-import { HEADER_MOBILE_HEIGHT, HEADER_DESKTOP_HEIGHT } from '../../src/config';
+import { HEADER_MOBILE_HEIGHT, HEADER_DESKTOP_HEIGHT } from 'src/config';
 // utils
-import { getAllComponents } from '../../src/utils/get-mardown/components-ui';
+import { getAllComponents } from 'src/utils/get-mardown/components-ui';
 // routes
-import Routes from '../../src/routes';
+import Routes from 'src/routes';
 // layouts
-import Layout from '../../src/layouts';
+import Layout from 'src/layouts';
 // components
-import { Page, Iconify, TextIconLabel } from '../../src/components';
+import { Page, Iconify, TextIconLabel } from 'src/components';
 
 // ----------------------------------------------------------------------
 

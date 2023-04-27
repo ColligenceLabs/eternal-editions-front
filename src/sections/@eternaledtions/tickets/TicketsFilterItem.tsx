@@ -7,7 +7,7 @@ import Routes from '../../../routes';
 // @types
 import { CaseStudyProps } from '../../../@types/marketing';
 // components
-import { Image, TextMaxLine } from '../../../components';
+import { Image, TextMaxLine } from 'src/components';
 
 // ----------------------------------------------------------------------
 

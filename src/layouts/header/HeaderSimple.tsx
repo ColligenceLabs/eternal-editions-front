@@ -9,7 +9,7 @@ import useOffSetTop from '../../hooks/useOffSetTop';
 // routes
 import Routes from '../../routes';
 // components
-import { Logo } from '../../components';
+import { Logo } from 'src/components';
 //
 import LanguagePopover from '../LanguagePopover';
 import { ToolbarStyle, ToolbarShadowStyle } from './HeaderToolbarStyle';

@@ -5,7 +5,7 @@ import { fShortenNumber } from '../../../utils/formatNumber';
 // _data
 import _mock from '../../../../_data/mock';
 // components
-import { Image, CountUpNumber } from '../../../components';
+import { Image, CountUpNumber } from 'src/components';
 
 // ----------------------------------------------------------------------
 

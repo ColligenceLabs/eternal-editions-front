@@ -9,7 +9,7 @@ import Routes from '../../../routes';
 // @types
 import { PricingHomeProps } from '../../../@types/pricing';
 // components
-import { Iconify, TextIconLabel, Image } from '../../../components';
+import { Iconify, TextIconLabel, Image } from 'src/components';
 
 // ----------------------------------------------------------------------
 

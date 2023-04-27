@@ -2,7 +2,7 @@
 import { styled } from '@mui/material/styles';
 import { Stack, Container, Typography, Grid, Card } from '@mui/material';
 // components
-import { Image } from '../../../components';
+import { Image } from 'src/components';
 
 // ----------------------------------------------------------------------
 

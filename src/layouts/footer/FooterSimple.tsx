@@ -1,7 +1,7 @@
 // @mui
 import { Container, Typography } from '@mui/material';
 // components
-import { Logo } from '../../components';
+import { Logo } from 'src/components';
 
 // ----------------------------------------------------------------------
 

@@ -18,7 +18,7 @@ import { fDate } from '../../../utils/formatTime';
 // @types
 import { ReviewProp } from '../../../@types/review';
 // components
-import { Iconify } from '../../../components';
+import { Iconify } from 'src/components';
 
 // ----------------------------------------------------------------------
 

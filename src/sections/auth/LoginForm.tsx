@@ -13,7 +13,7 @@ import { Stack, Link, TextField, IconButton, InputAdornment } from '@mui/materia
 // routes
 import Routes from '../../routes';
 // components
-import { Iconify } from '../../components';
+import { Iconify } from 'src/components';
 
 // ----------------------------------------------------------------------
 

@@ -5,7 +5,7 @@ import { Box, Container } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useTheme } from '@mui/system';
 // hooks
-import PageHeader from '../../components/common/PageHeader';
+import PageHeader from 'src/components/common/PageHeader';
 // routes
 // components
 import moment from 'moment';

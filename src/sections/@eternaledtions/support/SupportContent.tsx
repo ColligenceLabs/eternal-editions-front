@@ -6,7 +6,7 @@ import chevronRight from '@iconify/icons-carbon/chevron-right';
 import { styled } from '@mui/material/styles';
 import { Accordion, AccordionSummary, Typography, Stack, AccordionDetails } from '@mui/material';
 // components
-import { Iconify } from '../../../components';
+import { Iconify } from 'src/components';
 
 // ----------------------------------------------------------------------
 

@@ -3,21 +3,21 @@ import React, { ReactElement } from 'react';
 // @types
 // _data
 // layouts
-import Layout from '../../src/layouts';
+import Layout from 'src/layouts';
 // components
-import { Page } from '../../src/components';
+import { Page } from 'src/components';
 import { Container } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../../src/config';
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
 // sections
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import PageHeader from '../../src/components/common/PageHeader';
-import NFTTransactionNFT from '../../src/sections/@my/NFTTransactionNFT';
-import NFTTransactionPoint from '../../src/sections/@my/NFTTransactionPoint';
-// import PointTransactionGrid from "../../src/sections/@my/PointTransactionGrid";
+import PageHeader from 'src/components/common/PageHeader';
+import NFTTransactionNFT from 'src/sections/@my/NFTTransactionNFT';
+import NFTTransactionPoint from 'src/sections/@my/NFTTransactionPoint';
+// import PointTransactionGrid from "src/sections/@my/PointTransactionGrid";
 
 // ----------------------------------------------------------------------
 
@@ -98,5 +98,5 @@ export default function TransactionPage({}) {
 // ----------------------------------------------------------------------
 
 TransactionPage.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>;
+  return <Layout verticalAlign="top">{page}</Layout>;
 };

@@ -6,7 +6,7 @@ import { Typography, Grid, Container, Stack, Rating } from '@mui/material';
 // @types
 import { TestimonialProps } from '../../../@types/testimonial';
 // components
-import { CarouselArrows } from '../../../components';
+import { CarouselArrows } from 'src/components';
 
 // ----------------------------------------------------------------------
 

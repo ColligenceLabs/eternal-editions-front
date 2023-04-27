@@ -1,12 +1,12 @@
 import { ReactElement } from 'react';
 import * as React from 'react';
-import Layout from '../../src/layouts';
+import Layout from 'src/layouts';
 // components
-import { Page } from '../../src/components';
+import { Page } from 'src/components';
 import { Container, Stack, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from '../../src/config';
-import PageHeader from '../../src/components/common/PageHeader';
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
+import PageHeader from 'src/components/common/PageHeader';
 import Accordion from '@mui/material/Accordion';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -141,6 +141,7 @@ FAQPage.getLayout = function getLayout(page: ReactElement) {
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
       }}
+      verticalAlign="top"
     >
       {page}
     </Layout>

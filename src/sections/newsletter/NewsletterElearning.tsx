@@ -2,7 +2,7 @@
 import { alpha, styled } from '@mui/material/styles';
 import { Grid, Button, Container, Typography, FilledInput, InputAdornment } from '@mui/material';
 // components
-import { Image } from '../../components';
+import { Image } from 'src/components';
 
 // ----------------------------------------------------------------------
 

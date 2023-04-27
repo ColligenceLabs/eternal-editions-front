@@ -44,6 +44,7 @@ export default function Layout({
           )}
         </>
       )}
+
       <Box className="ORIGIN" sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column' }}>
         {['center', 'bottom'].includes(verticalAlign) && <Box sx={{ flexGrow: 1 }} />}
         {children}

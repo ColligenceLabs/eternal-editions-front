@@ -4,7 +4,7 @@ import logoGithub from '@iconify/icons-carbon/logo-github';
 // @mui
 import { Stack, Button } from '@mui/material';
 // components
-import { Image, Iconify } from '../../components';
+import { Image, Iconify } from 'src/components';
 
 // ----------------------------------------------------------------------
 

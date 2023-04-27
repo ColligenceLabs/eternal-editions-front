@@ -4,7 +4,7 @@ import { Typography, Stack, Box } from '@mui/material';
 // @types
 import { TeamMemberProps } from '../../../@types/team';
 // components
-import { Image, SocialsButton, BgOverlay } from '../../../components';
+import { Image, SocialsButton, BgOverlay } from 'src/components';
 
 // ----------------------------------------------------------------------
 

@@ -19,7 +19,7 @@ import useResponsive from '../../../hooks/useResponsive';
 // utils
 import { DRAWER_WIDTH } from '../../../config';
 // components
-import { Scrollbar, Iconify, Image } from '../../../components';
+import { Scrollbar, Iconify, Image } from 'src/components';
 
 // ----------------------------------------------------------------------
 

@@ -3,11 +3,11 @@ import { ReactElement } from 'react';
 import { styled } from '@mui/material/styles';
 import { Button, Stack, Typography, InputAdornment, FilledInput } from '@mui/material';
 // layouts
-import Layout from '../src/layouts';
+import Layout from 'src/layouts';
 // hooks
-import useCountdown from '../src/hooks/useCountdown';
+import useCountdown from 'src/hooks/useCountdown';
 // components
-import { Page, Image, SocialsButton } from '../src/components';
+import { Page, Image, SocialsButton } from 'src/components';
 
 // ----------------------------------------------------------------------
 

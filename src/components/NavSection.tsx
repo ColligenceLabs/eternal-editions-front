@@ -20,7 +20,7 @@ import {
   ListItemButtonProps,
 } from '@mui/material';
 // components
-import { Iconify } from '../components';
+import { Iconify } from 'src/components';
 
 // ----------------------------------------------------------------------
 

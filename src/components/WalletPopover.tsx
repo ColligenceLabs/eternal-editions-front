@@ -91,7 +91,7 @@ export default function WalletPopover({}) {
   return (
     <>
       <Button onClick={handleOpen}>
-        {accountShot}
+        <Typography>{accountShot}</Typography>
         <Image src={getIconByType(type)} sx={{ width: 23, ml: 1 }} />
       </Button>
 
@@ -99,6 +99,7 @@ export default function WalletPopover({}) {
         open={Boolean(open!)}
         anchorEl={open}
         onClose={handleClose}
+        disabledArrow
         sx={{
           bgcolor: 'common.white',
           color: 'common.black',
@@ -115,50 +116,49 @@ export default function WalletPopover({}) {
       >
         <Box sx={{ p: '24px' }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Box sx={{ display: 'flex', gap: '12px' }}>
-              <Box>
+            <Stack spacing={2} direction="row" sx={{ width: 1 }}>
+              <Box sx={{ width: 48 }}>
                 <Image
                   src={user.profile_image ? user.profile_image : '/assets/icons/profile-logo.png'}
-                  sx={{ width: 48 }}
                 />
               </Box>
-              <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+              <Box sx={{ flexGrow: 1, width: '10px' }}>
                 <Typography sx={{ fontSize: '16px', fontWeight: '500' }}>{user.name}</Typography>
-                <Typography>{`${account?.substring(0, 20)}...`}</Typography>
+                <Typography noWrap>{isMobile ? accountShot : account}</Typography>
               </Box>
-            </Box>
-            <Box sx={{ display: 'flex', gap: '0.5rem' }}>
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: '50%',
-                  backgroundColor: '#F5F5F5',
-                  width: '32px',
-                  height: '32px',
-                  cursor: 'pointer',
-                }}
-                onClick={() => ClipboardCopy(account ?? '', '지갑주소가 복사되었습니다.')}
-              >
-                <ContentCopyOutlinedIcon sx={{ fontSize: '14px', m: 0, p: 0 }} />
-              </Box>
+              <Box sx={{ display: 'flex', gap: '0.5rem' }}>
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: '50%',
+                    backgroundColor: '#F5F5F5',
+                    width: '32px',
+                    height: '32px',
+                    cursor: 'pointer',
+                  }}
+                  onClick={() => ClipboardCopy(account ?? '', '지갑주소가 복사되었습니다.')}
+                >
+                  <ContentCopyOutlinedIcon sx={{ fontSize: '14px', m: 0, p: 0 }} />
+                </Box>
 
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  borderRadius: '50%',
-                  backgroundColor: '#F5F5F5',
-                  width: '32px',
-                  height: '32px',
-                  cursor: 'pointer',
-                }}
-              >
-                <OpenInNewOutlinedIcon sx={{ fontSize: '14px' }} />
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    borderRadius: '50%',
+                    backgroundColor: '#F5F5F5',
+                    width: '32px',
+                    height: '32px',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <OpenInNewOutlinedIcon sx={{ fontSize: '14px' }} />
+                </Box>
               </Box>
-            </Box>
+            </Stack>
           </Box>
 
           <Stack sx={{ mt: 2 }} spacing={2}>
@@ -227,7 +227,7 @@ export default function WalletPopover({}) {
               </NextLink>
             </Stack>
             <Button
-              variant="vavid"
+              variant="vivid"
               color="primary"
               size="large"
               onClick={handleDisconnect}

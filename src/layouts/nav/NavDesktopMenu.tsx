@@ -23,8 +23,8 @@ import { HEADER_DESKTOP_HEIGHT } from '../../config';
 // @types
 import { NavDesktopMenuProps } from '../../@types/layout';
 //
-import { Image, CarouselDots, CarouselArrows } from '../../components';
-import { DialogAnimate, MotionContainer, varFade } from '../../components/animate';
+import { Image, CarouselDots, CarouselArrows } from 'src/components';
+import { DialogAnimate, MotionContainer, varFade } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 

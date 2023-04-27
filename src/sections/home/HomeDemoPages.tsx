@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import { Box, Tabs, Tab, Container, Typography, Link } from '@mui/material';
 // components
-import { Image } from '../../components';
-import { MotionViewport, MotionContainer, varFade } from '../../components/animate';
+import { Image } from 'src/components';
+import { MotionViewport, MotionContainer, varFade } from 'src/components/animate';
 //
 import { PageLinks } from '../../layouts/nav/NavConfig';
 

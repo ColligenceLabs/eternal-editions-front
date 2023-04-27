@@ -24,7 +24,7 @@ export default function Button(theme: Theme) {
           },
         },
         {
-          props: { variant: 'vavid' },
+          props: { variant: 'vivid' },
           style: {
             color: 'black',
             backdropFilter: 'blur(50px)',
@@ -35,6 +35,7 @@ export default function Button(theme: Theme) {
             '&:disabled': {
               color: 'black',
               opacity: 0.5,
+              background: isLight ? theme.palette.grey[700] : theme.palette.grey[300],
             },
           },
         },

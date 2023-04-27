@@ -7,8 +7,8 @@ import { Button, Box, Container, Typography, Paper } from '@mui/material';
 // routes
 import Routes from '../../routes';
 // components
-import { Image, Iconify } from '../../components';
-import { MotionViewport, varFade } from '../../components/animate';
+import { Image, Iconify } from 'src/components';
+import { MotionViewport, varFade } from 'src/components/animate';
 
 // ----------------------------------------------------------------------
 

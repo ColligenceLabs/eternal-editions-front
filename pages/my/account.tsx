@@ -1,4 +1,5 @@
 import { ReactElement, useEffect, useState } from 'react';
+import PageHeader from 'src/components/common/PageHeader';
 // utils
 // @types
 // _data
@@ -170,17 +171,18 @@ Type: Address verification`;
     <Page title="Account">
       <RootStyle>
         <Container sx={{ my: 5 }}>
-          {/*<Box sx={{ display: 'flex' }}>*/}
-          {/*  <Box sx={{ border: '1px solid yellow', width: '200px' }}>*/}
-          {/*    <Box>PROFILE</Box>*/}
-          {/*    <Box>MY ITEMS</Box>*/}
-          {/*    <Box>TRANSACTION</Box>*/}
-          {/*    <Box>FAQ</Box>*/}
-          {/*    <Box>NOTICE</Box>*/}
-          {/*    <Box>CONTACT US</Box>*/}
-          {/*  </Box>*/}
-          {/*  <Box sx={{ border: '1px solid yellow', flex: 1 }}>contents area</Box>*/}
-          {/*</Box>*/}
+          {/* <Box sx={{ display: 'flex' }}>
+            <Box sx={{ border: '1px solid yellow', width: '200px' }}>
+              <Box>PROFILE</Box>
+              <Box>MY ITEMS</Box>
+              <Box>TRANSACTION</Box>
+              <Box>FAQ</Box>
+              <Box>NOTICE</Box>
+              <Box>CONTACT US</Box>
+            </Box>
+            <Box sx={{ border: '1px solid yellow', flex: 1 }}>contents area</Box>
+          </Box> */}
+          <PageHeader title="Account" />
           <Box
             sx={{
               bgcolor: '#fff',
@@ -439,5 +441,5 @@ Type: Address verification`;
 // ----------------------------------------------------------------------
 
 MyAccountPage.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>;
+  return <Layout verticalAlign="top">{page}</Layout>;
 };

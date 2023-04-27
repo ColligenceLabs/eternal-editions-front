@@ -7,7 +7,7 @@ import cssStyles from '../../../utils/cssStyles';
 // @types
 import { PricingHomeProps } from '../../../@types/pricing';
 // components
-import { MotionViewport, varFade } from '../../../components/animate';
+import { MotionViewport, varFade } from 'src/components/animate';
 //
 import PricingHomeCard from './PricingHomeCard';
 

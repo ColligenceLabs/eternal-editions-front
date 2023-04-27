@@ -1,25 +1,25 @@
 // icons
 // @mui
-import {styled} from '@mui/material/styles';
-import {Box, Chip, Container, Typography, Link} from '@mui/material';
-import React from "react";
-import {useTheme} from "@mui/system";
-import { Image } from '../../components';
+import { styled } from '@mui/material/styles';
+import { Box, Chip, Container, Typography, Link } from '@mui/material';
+import React from 'react';
+import { useTheme } from '@mui/system';
+import { Image } from 'src/components';
 // hooks
-import useResponsive from "../../hooks/useResponsive";
+import useResponsive from '../../hooks/useResponsive';
 // routes
 // components
 
 // ----------------------------------------------------------------------
 
-const RootStyle = styled('div')(({theme}) => ({
+const RootStyle = styled('div')(({ theme }) => ({
   position: 'relative',
   overflow: 'hidden',
   borderRadius: 24,
   [theme.breakpoints.up('md')]: {},
 }));
 
-const EventSection = styled('section')(({theme}) => ({
+const EventSection = styled('section')(({ theme }) => ({
   position: 'relative',
   background: 'url(/assets/background/bg-event.jpg) no-repeat top center',
   backgroundSize: 'cover',
@@ -55,9 +55,9 @@ const TagThumbnail = styled('figure')(() => ({
   marginRight: '8px',
   borderRadius: '50%',
   overflow: 'hidden',
-  'img': {
+  img: {
     width: '100%',
-  }
+  },
 }));
 
 const LinkLine = styled('div')(() => ({
@@ -67,12 +67,11 @@ const LinkLine = styled('div')(() => ({
   marginBottom: '12px',
 }));
 
-const EventInfoBox = styled('div')(({theme}) => ({
+const EventInfoBox = styled('div')(({ theme }) => ({
   maxWidth: '270px',
   fontSize: '16px',
   color: theme.palette.grey[0],
 }));
-
 
 // ----------------------------------------------------------------------
 
@@ -83,20 +82,30 @@ export default function HomeEvent() {
   return (
     <RootStyle>
       <EventSection>
-        <Container maxWidth={false} sx={{ px: { xs: '12px', lg: '80px' }}}>
+        <Container maxWidth={false} sx={{ px: { xs: '12px', lg: '80px' } }}>
           <EventContents>
             <Box
               component="h1"
               sx={{
                 typography: 'banner1',
                 color: theme.palette.primary.main,
-                mb: {xs: '24px', lg: '64px'}
+                mb: { xs: '24px', lg: '64px' },
               }}
             >
               {isDesktop ? (
-                <span>UPCOMING<br />EVENT</span>
+                <span>
+                  UPCOMING
+                  <br />
+                  EVENT
+                </span>
               ) : (
-                <span>UPCOM-<br />ING<br />EVENT</span>
+                <span>
+                  UPCOM-
+                  <br />
+                  ING
+                  <br />
+                  EVENT
+                </span>
               )}
             </Box>
             <LinkLine>
@@ -121,23 +130,27 @@ export default function HomeEvent() {
               component="h2"
               sx={{
                 fontSize: { xs: '48px', lg: '80px' },
-                lineHeight: { xs: '44px', lg: '76px'},
+                lineHeight: { xs: '44px', lg: '76px' },
                 textTransform: 'uppercase',
                 color: theme.palette.grey[0],
                 mb: '12px',
               }}
             >
-              General<br />
-              Admission<br />
+              General
+              <br />
+              Admission
+              <br />
               NFT.London
             </Box>
             <Typography
-              variant='subtitle1'
+              variant="subtitle1"
               sx={{
                 color: theme.palette.grey[0],
-                pb: {xs: '263px', lg: '412px'},
+                pb: { xs: '263px', lg: '412px' },
               }}
-            >November 11 - 13, 2023</Typography>
+            >
+              November 11 - 13, 2023
+            </Typography>
 
             <EventInfoBox>
               <Box
@@ -146,33 +159,35 @@ export default function HomeEvent() {
                 }}
               >
                 <Typography
-                  variant='subtitle1'
+                  variant="subtitle1"
                   sx={{
                     lineHeight: 1,
                     mb: '6px',
                   }}
-                >Reserve Price</Typography>
+                >
+                  Reserve Price
+                </Typography>
                 <Typography
-                  variant='subtitle1'
+                  variant="subtitle1"
                   sx={{
                     mb: '12px',
                   }}
-                >$ 37.45(Ξ 0.02871)</Typography>
+                >
+                  $ 37.45(Ξ 0.02871)
+                </Typography>
               </Box>
               <Box>
                 <Typography
-                  variant='subtitle1'
+                  variant="subtitle1"
                   sx={{
                     lineHeight: 1,
                     mt: '12px',
                     mb: '6px',
                   }}
-                >Location</Typography>
-                <Typography
-                  variant='subtitle1'
                 >
-                  HQ Beercade Nashville Nashville, TN
+                  Location
                 </Typography>
+                <Typography variant="subtitle1">HQ Beercade Nashville Nashville, TN</Typography>
               </Box>
             </EventInfoBox>
           </EventContents>

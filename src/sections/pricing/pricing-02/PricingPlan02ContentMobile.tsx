@@ -9,7 +9,7 @@ import { Link, Stack, Button, Collapse, Typography } from '@mui/material';
 // @types
 import { Pricing02Props } from '../../../@types/pricing';
 // components
-import { Iconify } from '../../../components';
+import { Iconify } from 'src/components';
 
 // ----------------------------------------------------------------------
 

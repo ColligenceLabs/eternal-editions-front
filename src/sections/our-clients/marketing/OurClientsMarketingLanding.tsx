@@ -5,7 +5,7 @@ import { Container } from '@mui/material';
 // @types
 import { BrandProps } from '../../../@types/brand';
 // components
-import { SvgIconStyle } from '../../../components';
+import { SvgIconStyle } from 'src/components';
 
 // ----------------------------------------------------------------------
 

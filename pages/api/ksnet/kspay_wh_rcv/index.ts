@@ -1,10 +1,10 @@
-import {NextApiRequest, NextApiResponse} from "next";
+import { NextApiRequest, NextApiResponse } from 'next';
 
 export default function handler(req: NextApiRequest, res: NextApiResponse) {
-    // res.status(200).json({ message: 'Hello from Next.js!' });
-    const {reCommConId, reCommType, reHash, reCnclType} = req.body;
-    res.status(200).send(
-        `
+  // res.status(200).json({ message: 'Hello from Next.js!' });
+  const { reCommConId, reCommType, reHash, reCnclType } = req.body;
+  res.status(200).send(
+    `
 <title>KSPay(${reCommConId})</title>
 <script language="JavaScript">
   function init()
@@ -49,5 +49,5 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 </body>
 </html>
         `
-    )
+  );
 }

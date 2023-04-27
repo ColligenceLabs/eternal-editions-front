@@ -8,7 +8,7 @@ import { Typography, Grid, Container, Stack, Box } from '@mui/material';
 // @types
 import { TestimonialProps } from '../../../@types/testimonial';
 // components
-import { Image, Iconify, CarouselArrows } from '../../../components';
+import { Image, Iconify, CarouselArrows } from 'src/components';
 
 // ----------------------------------------------------------------------
 

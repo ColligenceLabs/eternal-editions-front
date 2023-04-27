@@ -328,7 +328,7 @@
             sp >>>= 0;
             //// legacy implementation
             // setInt64(sp + 8, (timeOrigin + performance.now()) * 1000000);
-            setInt64(sp + 8, (timeOrigin) * 1000000);
+            setInt64(sp + 8, timeOrigin * 1000000);
           },
 
           // func walltime() (sec int64, nsec int32)
