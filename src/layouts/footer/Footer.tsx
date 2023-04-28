@@ -112,13 +112,15 @@ export default function Footer() {
             mb: '16px',
           }}
         >
-          Eternal Editions CEO : Joon Young Lim
+          Representative Director : Joon Young Lim
           <br />
-          Business registration number : 353-88-02481
+          Biz. Number : 353-88-02481
           <br />
-          Mail order number : 123-435-2859
+          Registration No. : 제 2017-서울마포-2244호
           <br />
           Address : 7th floor, 14, Teheran-ro 26 gil, Gangnam-gu, Seoul, Republic of Korea
+          <br />
+          CS Email : eternaleditions@gmail.com
         </Box>
         <Box>
           <Link href="/privacy" color="black">

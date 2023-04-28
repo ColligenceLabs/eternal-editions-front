@@ -20,6 +20,8 @@ import {
   FormControl,
   MenuItem,
 } from '@mui/material';
+import CloseIcon from 'src/assets/icons/close';
+import { IconButtonAnimate } from 'src/components/animate';
 // config
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT, SUCCESS } from 'src/config';
 // @types
@@ -27,7 +29,7 @@ import { BigNumber, ethers } from 'ethers';
 // layouts
 import Layout from 'src/layouts';
 // components
-import { Iconify, Page, TextIconLabel, TextMaxLine } from 'src/components';
+import { Iconify, Page, Scrollbar, TextIconLabel, TextMaxLine } from 'src/components';
 // sections
 import { useRouter } from 'next/router';
 import EECard from 'src/components/EECard';
@@ -59,6 +61,7 @@ import { collectionAbi } from 'src/config/abi/Collection';
 import tokenAbi from 'src/config/abi/ERC20Token.json';
 import { LoadingButton } from '@mui/lab';
 import { setWebUser } from 'src/store/slices/webUser';
+import { GifBoxOutlined } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
@@ -109,7 +112,8 @@ export default function TicketDetailPage() {
   const [dollarPrice, setDollarPrice] = useState(0);
   const [isBuyingWithMatic, setIsBuyingWithMatic] = useState(false);
   const [isBuyingWithPoint, setIsBuyingWithPoint] = useState(false);
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = useState(false);
+  const [descriptionOpen, setDescriptionOpen] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState({
     open: false,
     type: '',
@@ -117,8 +121,8 @@ export default function TicketDetailPage() {
   });
 
   const abcUser = useSelector((state: any) => state.user);
-  const [abcToken, setAbcToken] = React.useState('');
-  const [abcOpen, setAbcOpen] = React.useState(false);
+  const [abcToken, setAbcToken] = useState('');
+  const [abcOpen, setAbcOpen] = useState(false);
   const [reload, setReload] = useState(false);
   const [otpLoading, setOtpLoading] = useState(false);
 
@@ -647,18 +651,16 @@ export default function TicketDetailPage() {
                     </FormControl>
                   </Stack>
 
-                  <Stack sx={{ pb: 4 }}>
-                    <Button
-                      onClick={handleOpen}
-                      size={'large'}
-                      fullWidth={true}
-                      variant="vivid"
-                      disabled={selectedTicketItem?.whlBool && selectedTicketItem?.whlBalance === 0}
-                      // sx={{ backgroundColor: selectedItem ? '#08FF0C' : null }}
-                    >
-                      Payment
-                    </Button>
-                  </Stack>
+                  <Button
+                    onClick={handleOpen}
+                    size={'large'}
+                    fullWidth={true}
+                    variant="vivid"
+                    disabled={selectedTicketItem?.whlBool && selectedTicketItem?.whlBalance === 0}
+                    // sx={{ backgroundColor: selectedItem ? '#08FF0C' : null }}
+                  >
+                    Payment
+                  </Button>
 
                   <Divider />
 
@@ -673,6 +675,16 @@ export default function TicketDetailPage() {
                       Description
                     </Typography>
                     {/* <TextMaxLine line={5}>{ticketInfo?.introduction.en}</TextMaxLine> */}
+                    <Button
+                      onClick={() => setDescriptionOpen(true)}
+                      size={'large'}
+                      fullWidth={true}
+                      variant="contained"
+                      disabled={selectedTicketItem?.whlBool && selectedTicketItem?.whlBalance === 0}
+                      // sx={{ backgroundColor: selectedItem ? '#08FF0C' : null }}
+                    >
+                      상품 설명 및 상품 고시
+                    </Button>
                     {/* <Link variant="subtitle2" href="/">
                       상품 설명 및 상품 고시 상세 보기
                     </Link> */}
@@ -861,6 +873,67 @@ export default function TicketDetailPage() {
           </Box>
         </Fade>
       </Modal>
+
+      <Modal
+        open={descriptionOpen}
+        onClose={() => setDescriptionOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            ...modalStyle,
+            maxWidth: 1200,
+          }}
+        >
+          <Box
+            sx={{
+              position: 'absolute',
+              right: '2rem',
+              top: '2rem',
+              zIndex: 1,
+            }}
+          >
+            <IconButtonAnimate
+              color="inherit"
+              onClick={() => setDescriptionOpen(false)}
+              sx={{
+                bgcolor: 'rgba(0,0,0,.3)',
+                transition: 'all .3s',
+                '&:hover': {
+                  bgcolor: '#454F5B',
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  width: 24,
+                  height: 24,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <CloseIcon />
+              </Box>
+            </IconButtonAnimate>
+          </Box>
+
+          <Box
+            sx={{
+              overflow: 'scroll',
+              maxHeight: 'calc(100vh - 6rem)',
+              position: 'relative',
+              img: { width: 1 },
+            }}
+          >
+            <Scrollbar sx={{ py: { xs: 3, md: 0 } }}>
+              <img src="/assets/img/WATERBOMB_SEOUL_2023.jpeg" alt="description" />
+            </Scrollbar>
+          </Box>
+        </Box>
+      </Modal>
+
       <CSnackbar
         open={openSnackbar.open}
         type={openSnackbar.type}
