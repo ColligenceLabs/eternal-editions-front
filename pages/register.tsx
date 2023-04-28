@@ -789,7 +789,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                     </Stack>
 
                     {terms.map(({ title, children }, index) => (
-                      <Box key={index} sx={{ mt: 2, pt: 2, borderTop: '1px solid #ccc' }}>
+                      <Box key={index} sx={{ mt: 2, pt: 2, borderTop: '1px solid common.divider' }}>
                         <FormControlLabel
                           control={
                             <Checkbox
@@ -936,7 +936,6 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                     </Box>
                     <Button
                       sx={{ mt: 3 }}
-                      variant="outlined"
                       size="large"
                       fullWidth
                       variant="vivid"

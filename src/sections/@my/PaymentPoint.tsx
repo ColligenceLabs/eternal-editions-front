@@ -12,6 +12,8 @@ import {
   FormControlLabel,
   Input,
   InputAdornment,
+  Popover,
+  FormHelperText,
   InputLabel,
   Radio,
   RadioGroup,
@@ -19,6 +21,7 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
+import { Iconify } from 'src/components';
 import EECard from 'src/components/EECard';
 import { useTheme } from '@mui/material/styles';
 import { PayPalButtons } from '@paypal/react-paypal-js';
@@ -30,51 +33,72 @@ import { setWebUser } from '../../store/slices/webUser';
 import { useDispatch } from 'react-redux';
 import Link from 'next/link';
 import useAccount from '../../hooks/useAccount';
+import { boolean } from 'zod';
 
 // ----------------------------------------------------------------------
 
 const FormSchema = Yup.object().shape({
-  krw: Yup.number().required('KRW is required').default(0),
-  edc: Yup.number().required('EDCP is required').default(0),
+  // krw: Yup.number().required('KRW is required').default(0),
+  // edc: Yup.number().required('EDCP is required').default(0),
+  amount: Yup.number()
+    .required('KRW is required')
+    .default(0)
+    .max(60, 'The maximum rechargeable amount is 60 EDCP.')
+    .min(1),
+  price: Yup.number().required('EDCP is required').default(0),
 });
 
 type FormValuesProps = {
-  krw: number;
-  edc: number;
+  // krw: number;
+  // edc: number;
+  price: number;
+  amount: number;
 };
 
 export default function PaymentPoint() {
   const dispatch = useDispatch();
   const { account } = useAccount();
-  const [price, setPrice] = useState('');
-  const [amount, setAmount] = useState('');
   const [exchange, setExchange] = useState(0);
   const [enablePaypal, setEnablePaypal] = useState(true);
   const [method, setMethod] = useState('credit');
 
+  const {
+    reset,
+    control,
+    watch,
+    setValue,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm<FormValuesProps>({
+    mode: 'onTouched',
+    resolver: yupResolver(FormSchema),
+    defaultValues: {
+      amount: 0,
+      price: 0,
+    },
+  });
+
   useEffect(() => {
-    if (price !== '') setEnablePaypal(false);
+    if (watch('price') !== 0) setEnablePaypal(false);
     else setEnablePaypal(true);
-  }, [price]);
+  }, [watch('price')]);
 
   useEffect(() => {
     const getUSDExchange = async () => {
-      const tmp = await getExchange();
-      console.log('-----', tmp);
-      setExchange(tmp.data);
+      setExchange(process.env.NODE_ENV === 'development' ? 100 : (await getExchange()).data);
     };
     if (exchange === 0) getUSDExchange();
-  });
+  }, []);
 
   // creates a paypal order
   const createOrder = (data: any, actions: any) => {
     // todo 세션체크를 한번 해야하나?
-    console.log(price);
+    console.log(watch('price'));
     const purchaseData = {
       purchase_units: [
         {
           amount: {
-            value: parseFloat(price),
+            value: parseFloat(watch('price')),
           },
         },
       ],
@@ -100,7 +124,7 @@ export default function PaymentPoint() {
         console.log('details', details, payer);
         const result = await savePoint({
           order_id: details.id,
-          point: parseFloat(price),
+          point: parseFloat(watch(price)),
           type: 'BUY',
         });
         if (result.data.status === SUCCESS) {
@@ -113,47 +137,34 @@ export default function PaymentPoint() {
       })
       .catch((err: any) => console.log('Something went wrong.', err));
 
-  const handleChangePrice = (event: ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    if (value) {
-      setPrice((value * 10 * exchange).toString());
-      setAmount(value);
-    } else {
-      setPrice('');
-      setAmount('');
-    }
-  };
+  // const handleChangePrice = (event: ChangeEvent<HTMLInputElement>) => {
+  //   const { value } = event.target;
+  //   if (value) {
+  //     setValue('price', (value * 10 * exchange).toString());
+  //     setValue('amount', value);
+  //   } else {
+  //     setValue('price', '');
+  //     setValue('amount', '');
+  //   }
+  // };
 
   const handleChangeAmount = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    if (value < 0) return;
-    if (value) {
+    console.log('handleChangeAmount', method, +value * 10 * exchange);
+    if (+value < 0) return;
+    if (+value) {
       if (method == 'credit') {
-        setPrice((value * 10 * exchange).toString());
+        setValue('price', +value * 10 * exchange);
       } else {
-        setPrice((value * 10).toString());
+        setValue('price', +value * 10);
       }
 
-      setAmount(value);
+      setValue('amount', +value);
     } else {
-      setPrice('');
-      setAmount('');
+      setValue('price', 0);
+      setValue('amount', 0);
     }
   };
-  const theme = useTheme();
-  const {
-    reset,
-    control,
-    handleSubmit,
-    formState: { isSubmitting },
-  } = useForm<FormValuesProps>({
-    mode: 'onTouched',
-    resolver: yupResolver(FormSchema),
-    defaultValues: {
-      krw: 0,
-      edc: 0,
-    },
-  });
 
   const onSubmit = async (data: FormValuesProps) => {
     console.log(JSON.stringify(data, null, 2), 'submit');
@@ -162,12 +173,13 @@ export default function PaymentPoint() {
 
   useEffect(() => {
     if (method == 'credit') {
-      setPrice((amount * 10 * exchange).toString());
+      setValue('price', watch('amount') * 10 * exchange);
     } else {
-      setPrice((amount * 10).toString());
+      setValue('price', watch('amount') * 10);
     }
   }, [method]);
 
+  const [open, setOpen] = useState<HTMLElement | null>(null);
   return (
     <EECard>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -176,23 +188,66 @@ export default function PaymentPoint() {
             <Typography sx={{ fontColor: '#999999', fontSize: '12px' }}>WALLET ADDRESS</Typography>
             <Typography sx={{ wordBreak: 'break-all' }}>{account}</Typography>
           </Box>
-          <Box>
-            <Typography sx={{ fontColor: '#999999', fontSize: '12px' }}>
-              PURCHASE QUANTITY
-            </Typography>
+          <Stack spacing={2}>
+            <Controller
+              name="amount"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <FormControl variant="standard" fullWidth>
+                  <InputLabel>PURCHASE QUANTITY</InputLabel>
+                  <Input
+                    {...field}
+                    onChange={handleChangeAmount}
+                    error={Boolean(error)}
+                    inputProps={{ style: { color: 'black' } }}
+                    endAdornment={<InputAdornment position="end">EDCP</InputAdornment>}
+                  />
+                  {error && <FormHelperText id="my-helper-text">{error?.message}</FormHelperText>}
+                </FormControl>
+              )}
+            />
+            <Controller
+              name="price"
+              control={control}
+              render={({ field, fieldState: { error } }) => (
+                <FormControl variant="standard" fullWidth>
+                  <InputLabel>PURCHASE AMOUNT</InputLabel>
+                  <Input
+                    {...field}
+                    readOnly
+                    inputProps={{ style: { color: 'black' } }}
+                    endAdornment={
+                      <InputAdornment position="end">
+                        {method === 'credit' ? '₩' : '$'}
+                      </InputAdornment>
+                    }
+                  />
+                </FormControl>
+              )}
+            />
+          </Stack>
+          {/* <Stack direction="row" alignItems={'center'}>
+              <Typography sx={{ fontColor: '#999999', fontSize: '12px' }}>
+                PURCHASE QUANTITY
+              </Typography>
+            </Stack>
             <FormControl fullWidth variant="standard">
               <Input
                 id="standard-adornment-amount"
                 type="number"
                 // placeholder="Please enter purchase quantity"
+
                 value={amount}
                 onChange={handleChangeAmount}
                 endAdornment={<InputAdornment position="end">EDCP</InputAdornment>}
-                inputProps={{ style: { color: theme.palette.grey[900], width: '100%' } }}
+                inputProps={{
+                  style: { color: theme.palette.grey[900], width: '100%' },
+                  max: 60,
+                  type: 'number',
+                }}
               />
-            </FormControl>
-          </Box>
-          <Box>
+            </FormControl> */}
+          {/* <Box>
             <Typography sx={{ fontColor: '#999999', fontSize: '12px' }}>PAYMENT AMOUNT</Typography>
             <FormControl fullWidth variant="standard">
               <Input
@@ -205,7 +260,7 @@ export default function PaymentPoint() {
                 }
               />
             </FormControl>
-          </Box>
+          </Box> */}
           <Box>
             <Typography sx={{ fontColor: '#999999', fontSize: '12px' }}>PAYMENT METHOD</Typography>
             <FormControl>
@@ -236,75 +291,47 @@ export default function PaymentPoint() {
               fundingSource={'paypal'}
               createOrder={createOrder}
               onApprove={onApprove}
-              forceReRender={[price]}
-              disabled={enablePaypal || !amount}
+              forceReRender={[watch('price')]}
+              disabled={enablePaypal || !watch('amount')}
             />
           )}
           {method === 'credit' && (
-            <Link href={{ pathname: '/kspay', query: { price, amount } }}>
-              <LoadingButton
-                fullWidth
-                size="large"
-                type="submit"
-                variant="contained"
-                loading={isSubmitting}
-                disabled={!amount}
-                // onClick={() => {
-                //   window.location.href = '/kspay';
-                // }}
+            <Box sx={{ pb: 2 }}>
+              <Link
+                href={{
+                  pathname: '/kspay',
+                  query: { price: watch('price'), amount: watch('amount') },
+                }}
               >
-                결제하기
-              </LoadingButton>
-            </Link>
+                <LoadingButton
+                  fullWidth
+                  size="large"
+                  type="submit"
+                  variant="vivid"
+                  loading={isSubmitting}
+                  disabled={!watch('amount')}
+                >
+                  결제하기
+                </LoadingButton>
+              </Link>
+            </Box>
           )}
+          <Divider />
+          <Box sx={{ pt: 2 }}>
+            <LoadingButton
+              onClick={() => {
+                window.location.href =
+                  'https://docs.google.com/forms/d/e/1FAIpQLScJ3sUZBB19edQ01hzp3rOgdBgJIRpufqzAQFHfbgdyJKnnGQ/viewform';
+              }}
+              fullWidth
+              size="large"
+              type="button"
+              variant="contained"
+            >
+              환불요청
+            </LoadingButton>
+          </Box>
         </Stack>
-        {/*<Stack sx={{ mt: 2, mb: 2 }} spacing={1}>*/}
-        {/*  <Stack>*/}
-        {/*    <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>*/}
-        {/*      <Box sx={{ flexGrow: 1 }}>*/}
-        {/*        <Controller*/}
-        {/*          name="edc"*/}
-        {/*          control={control}*/}
-        {/*          render={({ field, fieldState: { error } }) => (*/}
-        {/*            <TextField*/}
-        {/*              {...field}*/}
-        {/*              label="포인트 구매 수량"*/}
-        {/*              value={amount}*/}
-        {/*              onChange={handleChangeAmount}*/}
-        {/*              error={Boolean(error)}*/}
-        {/*              helperText={error?.message}*/}
-        {/*              inputProps={{ style: { color: theme.palette.grey[900], width: '100%' } }}*/}
-        {/*            />*/}
-        {/*          )}*/}
-        {/*        />*/}
-        {/*      </Box>*/}
-
-        {/*      <Typography>EDC</Typography>*/}
-        {/*    </Box>*/}
-        {/*  </Stack>*/}
-        {/*  <Stack>*/}
-        {/*    <Box sx={{ display: 'flex', alignItems: 'center', width: '100%' }}>*/}
-        {/*      <Box sx={{ flexGrow: 1 }}>*/}
-        {/*        <Controller*/}
-        {/*          name="krw"*/}
-        {/*          control={control}*/}
-        {/*          render={({ field, fieldState: { error } }) => (*/}
-        {/*            <TextField*/}
-        {/*              {...field}*/}
-        {/*              label="결제 금액"*/}
-        {/*              value={price}*/}
-        {/*              onChange={handleChangePrice}*/}
-        {/*              error={Boolean(error)}*/}
-        {/*              helperText={error?.message}*/}
-        {/*              inputProps={{ style: { color: theme.palette.grey[900], width: '100%' } }}*/}
-        {/*            />*/}
-        {/*          )}*/}
-        {/*        />*/}
-        {/*      </Box>*/}
-
-        {/*      <Typography>KRW</Typography>*/}
-        {/*    </Box>*/}
-        {/*  </Stack>*/}
 
         {/*  <Divider sx={{ md: 3, pt: 3 }} />*/}
 
