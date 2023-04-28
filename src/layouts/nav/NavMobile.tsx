@@ -142,17 +142,19 @@ export default function NavMobile({ navConfig, sx }: NavProps) {
           },
         }}
       >
-        <Box
-          sx={{
-            width: 24,
-            height: 24,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-          }}
-        >
-          <DiscordIcon />
-        </Box>
+        <Link href="https://discord.com/invite/eternaleditions">
+          <Box
+            sx={{
+              width: 24,
+              height: 24,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+            }}
+          >
+            <DiscordIcon />
+          </Box>
+        </Link>
       </IconButtonAnimate>
       <IconButtonAnimate
         color="inherit"
@@ -227,17 +229,19 @@ export default function NavMobile({ navConfig, sx }: NavProps) {
                       },
                     }}
                   >
-                    <Box
-                      sx={{
-                        width: 24,
-                        height: 24,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <DiscordIcon />
-                    </Box>
+                    <Link href="https://discord.com/invite/eternaleditions">
+                      <Box
+                        sx={{
+                          width: 24,
+                          height: 24,
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <DiscordIcon />
+                      </Box>
+                    </Link>
                   </IconButtonAnimate>
                   <IconButtonAnimate
                     color="inherit"

@@ -118,7 +118,7 @@ export default function TicketItem({ ticket }: any) {
             bottom: 0,
             bgcolor: 'rgba(0,0,0,.3)',
             px: isMobile ? 1 : 3,
-            py: isMobile ? 2 : 4,
+            py: isMobile ? 2 : 2,
           }}
         >
           <Box sx={{ p: 1, width: '100%', pr: { md: 'calc(50% + 1rem)' } }}>
@@ -126,16 +126,16 @@ export default function TicketItem({ ticket }: any) {
               direction="row"
               spacing={1}
               alignItems="center"
-              sx={{ opacity: 0.72, typography: 'caption', mb: 2 }}
+              sx={{ opacity: 0.72, typography: 'caption', mb: 1 }}
             >
               <EEAvatar
                 // account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
-                image={ticket.featured?.company.image}
-                nickname={ticket.featured?.company.name.en || '-'}
+                image={ticket.mysteryboxInfo?.featured?.image}
+                nickname={ticket.mysteryboxInfo?.featured?.name.en || '-'}
                 sx={{ mr: 0, width: 24, height: 24 }}
               />
 
-              <Typography>{ticket.featured?.company.name.en}</Typography>
+              <Typography>{ticket.mysteryboxInfo?.featured?.name.en}</Typography>
             </Stack>
             <TextMaxLine variant="h3">{ticketInfo.itemTitle}</TextMaxLine>
           </Box>
