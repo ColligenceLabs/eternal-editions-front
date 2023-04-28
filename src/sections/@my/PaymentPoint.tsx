@@ -1,6 +1,7 @@
 import * as Yup from 'yup';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
+import { useRouter } from 'next/router';
 // icons
 // @mui
 import { LoadingButton } from '@mui/lab';
@@ -18,7 +19,6 @@ import {
   Radio,
   RadioGroup,
   Stack,
-  TextField,
   Typography,
 } from '@mui/material';
 import { Iconify } from 'src/components';
@@ -61,6 +61,8 @@ export default function PaymentPoint() {
   const [exchange, setExchange] = useState(0);
   const [enablePaypal, setEnablePaypal] = useState(true);
   const [method, setMethod] = useState('credit');
+  const theme = useTheme();
+  const router = useRouter();
 
   const {
     reset,
@@ -116,26 +118,31 @@ export default function PaymentPoint() {
   };
 
   // handles when a payment is confirmed for paypal
-  const onApprove = (data: any, actions: any) =>
-    actions.order
-      .capture()
-      .then(async (details: any) => {
-        const { payer } = details;
-        console.log('details', details, payer);
-        const result = await savePoint({
-          order_id: details.id,
-          point: parseFloat(watch(price)),
-          type: 'BUY',
-        });
-        if (result.data.status === SUCCESS) {
-          const userRes = await getUser();
-          if (userRes.status === 200 && userRes.data.status != 0)
-            dispatch(setWebUser(userRes.data.user));
+  const onApprove = async (data: any, actions: any) => {
+    try {
+      const details = await actions.order.capture();
+      // .then(async (details: any) => {
+      console.log('details', details);
+      const result = await savePoint({
+        order_id: details.id,
+        point: watch('price'),
+        type: 'BUY',
+      });
+      if (result.data.status === SUCCESS) {
+        const userRes = await getUser();
+
+        if (userRes.status === 200 && userRes.data.status != 0) {
+          await dispatch(setWebUser(userRes.data.user));
+          router.push('/paypal_result');
         }
-        // setBillingDetails(payer);
-        // setSucceeded(true);
-      })
-      .catch((err: any) => console.log('Something went wrong.', err));
+      }
+      // setBillingDetails(payer);
+      // setSucceeded(true);
+      // })
+    } catch (error) {
+      console.log('Something went wrong.', error);
+    }
+  };
 
   // const handleChangePrice = (event: ChangeEvent<HTMLInputElement>) => {
   //   const { value } = event.target;
@@ -194,7 +201,40 @@ export default function PaymentPoint() {
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <FormControl variant="standard" fullWidth>
-                  <InputLabel>PURCHASE QUANTITY</InputLabel>
+                  <InputLabel>
+                    <Stack direction="row" alignItems="center">
+                      PURCHASE QUANTITY
+                      <Iconify
+                        icon="mdi:information-outline"
+                        fontSize={20}
+                        sx={{ mx: 0.5 }}
+                        onClick={(e: React.MouseEvent<HTMLElement>) => setOpen(e.currentTarget)}
+                      />
+                      <Popover
+                        open={Boolean(open)}
+                        onClose={() => setOpen(null)}
+                        anchorEl={open}
+                        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                        PaperProps={{
+                          sx: {
+                            px: 2,
+                            py: 1,
+                            mt: 1,
+                            backgroundColor: 'white',
+                            color: theme.palette.common.black,
+                            borderRadius: 0,
+                            border: `1px solid ${theme.palette.common.black}`,
+                            boxShadow: 'none',
+                          },
+                        }}
+                      >
+                        <Typography variant="body3">
+                          The maximum rechargeable amount is 60 EDCP.
+                        </Typography>
+                      </Popover>
+                    </Stack>
+                  </InputLabel>
                   <Input
                     {...field}
                     onChange={handleChangeAmount}
