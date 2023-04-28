@@ -167,8 +167,10 @@ export default function KSPayResult() {
         <Container maxWidth={'xs'} sx={{ my: '25px' }}>
           <EECard>
             <Stack spacing={2}>
-              <Box sx={{ padding: '20px', textAlign: 'center' }}>
-                <Typography sx={{ fontSize: '14px' }}>결제 결과</Typography>
+              <Box sx={{ py: 2 }}>
+                <Typography variant="h6" sx={{ fontSize: '14px' }}>
+                  EDCP 충전이 완료되었습니다.
+                </Typography>
               </Box>
               <LineItem label="결제방법" value={payResult.typeStr} />
               <LineItem label="성공여부" value={payResult.authyn} />

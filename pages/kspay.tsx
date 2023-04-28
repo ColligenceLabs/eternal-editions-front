@@ -202,6 +202,11 @@ export default function KSPay() {
       <RootStyle>
         <Container maxWidth={'xs'} sx={{ my: '25px' }}>
           <EECard>
+            <Box sx={{ pb: 3 }}>
+              <Typography variant="h6" sx={{ fontSize: '14px' }}>
+                결제 정보 확인
+              </Typography>
+            </Box>
             <form name="KSPayWeb" method="POST" onSubmit={handleSubmit(onSubmit)}>
               <Stack spacing={2}>
                 <Controller
