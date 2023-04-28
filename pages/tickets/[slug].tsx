@@ -579,9 +579,7 @@ export default function TicketDetailPage() {
                         <Typography>{ticketInfo?.featured?.company.name.en}</Typography>
                       </Stack>
 
-                      <TextMaxLine variant="h3" sx={{ width: '80%' }}>
-                        {ticketInfo?.title.en}
-                      </TextMaxLine>
+                      <TextMaxLine variant="h3">{ticketInfo?.title.en}</TextMaxLine>
 
                       <Typography
                         variant="subtitle2"

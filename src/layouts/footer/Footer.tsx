@@ -114,7 +114,7 @@ export default function Footer() {
         >
           Representative Director : Joon Young Lim
           <br />
-          Biz. Number : 353-88-02481
+          Business No. : 353-88-02481
           <br />
           Registration No. : 제 2017-서울마포-2244호
           <br />
