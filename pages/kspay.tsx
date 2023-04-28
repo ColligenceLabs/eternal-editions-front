@@ -108,7 +108,7 @@ export default function KSPay() {
       }`,
       sndGoodname: router.query['amount'] ? `${router.query['amount']} EDCP` : 'EDCP',
       sndAmount: router.query['price'] ? router.query['price'] : '0',
-      sndOrdername: user.name,
+      sndOrdername: user.name.replaceAll('"', ''),
       sndEmail: user.email,
       sndMobile: '',
       sndReply: '',
