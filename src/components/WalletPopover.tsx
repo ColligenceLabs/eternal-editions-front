@@ -154,6 +154,11 @@ export default function WalletPopover({}) {
                     height: '32px',
                     cursor: 'pointer',
                   }}
+                  onClick={() => {
+                      if(account) {
+                          window.open(`https://polygonscan.com/address/${account}`);
+                      }
+                  }}
                 >
                   <OpenInNewOutlinedIcon sx={{ fontSize: '14px' }} />
                 </Box>
