@@ -98,7 +98,7 @@ export default function PaymentPoint() {
       purchase_units: [
         {
           amount: {
-            value: parseFloat(watch('price')),
+            value: watch('price'),
           },
         },
       ],
