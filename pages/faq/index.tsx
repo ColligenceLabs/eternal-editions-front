@@ -53,7 +53,7 @@ const FAQs = [
   {
     id: 6,
     q: 'EDCP란 무엇인가요?',
-    a: 'EDCP는 Eternal Editions에서 NFT 콘텐츠를 구매하기 위한 가상 포인트입니다. 1 EDCP는 10원의 가치를 가지고 있습니다.',
+    a: 'EDCP는 Eternal Editions에서 NFT 콘텐츠를 구매하기 위한 가상 포인트입니다. 1 EDCP는 $10 의 가치를 가지고 있습니다.',
   },
   {
     id: 7,

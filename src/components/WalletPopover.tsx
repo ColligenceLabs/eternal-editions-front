@@ -227,9 +227,9 @@ export default function WalletPopover({}) {
               <NextLink href={Routes.eternalEditions.faq} passHref>
                 <MenuItem>FAQ</MenuItem>
               </NextLink>
-              <NextLink href={Routes.eternalEditions.notice} passHref>
-                <MenuItem>NOTICE</MenuItem>
-              </NextLink>
+              {/*<NextLink href={Routes.eternalEditions.notice} passHref>*/}
+              {/*  <MenuItem>NOTICE</MenuItem>*/}
+              {/*</NextLink>*/}
             </Stack>
             <Button
               variant="vivid"
