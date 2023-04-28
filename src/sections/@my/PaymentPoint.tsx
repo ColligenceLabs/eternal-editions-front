@@ -73,6 +73,7 @@ export default function PaymentPoint() {
     formState: { isSubmitting },
   } = useForm<FormValuesProps>({
     mode: 'onTouched',
+    reValidateMode: 'onChange',
     resolver: yupResolver(FormSchema),
     defaultValues: {
       amount: 0,
@@ -157,16 +158,16 @@ export default function PaymentPoint() {
 
   const handleChangeAmount = (event: ChangeEvent<HTMLInputElement>) => {
     const { value } = event.target;
-    console.log('handleChangeAmount', method, +value * 10 * exchange);
-    if (+value < 0) return;
-    if (+value) {
+    const val = Math.min(60, +value);
+    if (val < 0) return;
+    if (val) {
       if (method == 'credit') {
-        setValue('price', +value * 10 * exchange);
+        setValue('price', val * 10 * exchange);
       } else {
-        setValue('price', +value * 10);
+        setValue('price', val * 10);
       }
 
-      setValue('amount', +value);
+      setValue('amount', val);
     } else {
       setValue('price', 0);
       setValue('amount', 0);
@@ -239,7 +240,8 @@ export default function PaymentPoint() {
                     {...field}
                     onChange={handleChangeAmount}
                     error={Boolean(error)}
-                    inputProps={{ style: { color: 'black' } }}
+                    inputProps={{ style: { color: 'black' }, max: 60, type: 'number' }}
+                    // eslint-disable-next-line react/jsx-no-duplicate-props
                     endAdornment={<InputAdornment position="end">EDCP</InputAdornment>}
                   />
                   {error && <FormHelperText id="my-helper-text">{error?.message}</FormHelperText>}
