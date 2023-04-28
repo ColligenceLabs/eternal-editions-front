@@ -7,6 +7,7 @@ type ENV = {
   KSPAY_STORE_ID: string;
   APP_SERVER_ADDRESS_PROTOCOL: string;
   ABC_SERVER_ADDRESS: string;
+  PAYPAL_CLIENT_ID: string;
 };
 
 const development: ENV = {
@@ -18,6 +19,8 @@ const development: ENV = {
   APP_SERVER_ADDRESS: 'cs.dev-mw.myabcwallet.com:9000',
   ABC_SERVER_ADDRESS: 'dev-api.id.myabcwallet.com',
   KSPAY_STORE_ID: '2999199999',
+  PAYPAL_CLIENT_ID:
+    'AV5hU4TbGl7mLklHuzp2Zv5m47PwKDyKOmVKigLWl9CP9weg1S9GbCHaVbQaKCThJaWpHYwNweQYPTek',
 };
 
 const staging: ENV = {
@@ -29,6 +32,8 @@ const staging: ENV = {
   APP_SERVER_ADDRESS: 'cs.dev-mw.myabcwallet.com:9000',
   ABC_SERVER_ADDRESS: 'dev-api.id.myabcwallet.com',
   KSPAY_STORE_ID: '2999199999',
+  PAYPAL_CLIENT_ID:
+    'AV5hU4TbGl7mLklHuzp2Zv5m47PwKDyKOmVKigLWl9CP9weg1S9GbCHaVbQaKCThJaWpHYwNweQYPTek',
 };
 
 const production: ENV = {
@@ -40,6 +45,8 @@ const production: ENV = {
   APP_SERVER_ADDRESS: 'cs.mw.myabcwallet.com:9000',
   ABC_SERVER_ADDRESS: 'api.id.myabcwallet.com',
   KSPAY_STORE_ID: '2034700002',
+  PAYPAL_CLIENT_ID:
+    'AcWHLL4-YeK_CtZyYmJni1zLTK7cxVU56m-bfI909cBP4wm1si5ZSEeBl8OhOOiYsuZlG-lc1nnCFtdN',
 };
 
 const env =

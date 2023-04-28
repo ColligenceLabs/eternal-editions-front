@@ -49,6 +49,7 @@ import { persistStore } from 'redux-persist';
 import { createStore } from 'redux';
 import { persistedReducer } from 'src/store/rootReducers';
 import { PayPalScriptProvider } from '@paypal/react-paypal-js';
+import env from '../src/env';
 
 // ----------------------------------------------------------------------
 function getLibrary(provider: any) {
@@ -77,7 +78,7 @@ function MyApp(props: MyAppProps) {
   console.info('[INFO] baseAPI', axios.defaults.baseURL);
 
   const initialOptions = {
-    'client-id': process.env.PAYPAL_CLIENT_ID ?? 'test',
+    'client-id': env.PAYPAL_CLIENT_ID ?? 'test',
     currency: 'USD',
     intent: 'capture',
   };
