@@ -140,7 +140,9 @@ export default function TicketsFilter({ tickets, categories }: Props) {
           ))}
         </Grid>
       ) : (
-        'Data not found'
+        <Typography textAlign="center" color="grey" sx={{ py: 5 }}>
+          No items hav been registered.
+        </Typography>
       )}
 
       {/*{ticketInfoList && (*/}

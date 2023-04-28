@@ -90,7 +90,9 @@ export default function MyTicketList({ loading }: Props) {
           ))}
         </Grid>
       ) : (
-        'Data not found'
+        <Typography textAlign="center" color="grey" sx={{ py: 5 }}>
+          No items hav been registered.
+        </Typography>
       )}
     </>
   );
