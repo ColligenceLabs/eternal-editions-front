@@ -418,7 +418,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
               rel="noreferrer"
               >
             </a> */}
-            <Button fullWidth size="large" variant="vivid" href="#">
+            <Button fullWidth size="large" variant="vivid" href="https://eedao.notion.site/Eternal-Editions-168957fedc5a4ffe8ea7fcbc2ae1d05f" target="_blank">
               <Typography variant={'caption'}>회원가입 가이드</Typography>
             </Button>
           </Stack>

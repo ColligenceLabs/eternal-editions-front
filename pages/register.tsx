@@ -771,7 +771,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                 {!qrOnly && (
                   <form onSubmit={handleSubmit(onSubmit)}>
                     <Box sx={{ mb: 3 }}>
-                      <Typography variant="h4">SIGN UP</Typography>
+                      <Typography variant="h4">SIGN UP / LOGIN</Typography>
                     </Box>
 
                     <Stack
