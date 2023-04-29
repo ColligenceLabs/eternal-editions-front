@@ -237,12 +237,14 @@ export default function PaymentPoint() {
                     </Stack>
                   </InputLabel>
                   <Input
-                    {...field}
-                    onChange={handleChangeAmount}
-                    error={Boolean(error)}
-                    inputProps={{ style: { color: 'black' }, max: 60, type: 'number' }}
+                    {...{
+                      ...field,
+                      onChange: handleChangeAmount,
+                      error: Boolean(error),
+                      inputProps: { style: { color: 'black' }, max: 60 },
+                      endAdornment: <InputAdornment position="end">EDCP</InputAdornment>,
+                    }}
                     // eslint-disable-next-line react/jsx-no-duplicate-props
-                    endAdornment={<InputAdornment position="end">EDCP</InputAdornment>}
                   />
                   {error && <FormHelperText id="my-helper-text">{error?.message}</FormHelperText>}
                 </FormControl>

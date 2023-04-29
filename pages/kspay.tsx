@@ -91,6 +91,9 @@ export default function KSPay() {
   const { user } = useSelector((state: any) => state.webUser);
   const router = useRouter();
 
+  const getLocalUrl = (str: string): string =>
+    location.href.substring(0, location.href.lastIndexOf('/')).replaceAll('/kspay', '') + '/' + str;
+
   const {
     reset,
     control,
@@ -111,7 +114,7 @@ export default function KSPay() {
       sndOrdername: user.name.replaceAll('"', ''),
       sndEmail: user.email,
       sndMobile: '',
-      sndReply: '',
+      sndReply: getLocalUrl(isMobile ? 'api/ksnet/kspay_m_wh_result/' : 'api/ksnet/kspay_wh_rcv/'),
 
       //공통 환경설정
       sndCharSet: 'UTF-8',
@@ -170,15 +173,8 @@ export default function KSPay() {
   });
 
   const onSubmit = (data: FormValuesProps, { nativeEvent: { target } }) => {
-    const getLocalUrl = (str: string): string =>
-      location.href.substring(0, location.href.lastIndexOf('/')).replaceAll('/kspay', '') +
-      '/' +
-      str;
-
     if (isMobile) {
       // sndReply는 kspay_wh_rcv.php (결제승인 후 결과값들을 본창의 KSPayWeb Form에 넘겨주는 페이지)의 절대경로를 넣어줍니다.
-      target.sndReply.value = getLocalUrl('api/ksnet/kspay_m_wh_result/');
-
       //_frm.target = '_blank';
       target.action =
         process.env.NODE_ENV !== 'development'
@@ -187,11 +183,6 @@ export default function KSPay() {
 
       target.submit();
     } else {
-      console.log(typeof target);
-      target.sndReply.value = getLocalUrl('api/ksnet/kspay_wh_rcv/');
-      // target.sndReply.value = 'http://localhost:8888/api/ksnet/kspay_wh_rcv/';
-      // console.log('=====>', target, target.sndReply);
-
       // @ts-ignore
       _pay(target);
     }
