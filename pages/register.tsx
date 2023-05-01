@@ -50,6 +50,7 @@ import { setTwoFa } from 'src/store/slices/twoFa';
 import { setProvider } from 'src/store/slices/webUser';
 import { AbcLoginResponse } from 'src/abc/schema/account';
 import { useRouter } from 'next/router';
+import { ClipboardCopy } from 'src/utils/wallet';
 
 const RootStyle = styled('div')(({ theme }) => ({
   paddingBottom: HEADER_MOBILE_HEIGHT,
@@ -921,6 +922,15 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                     <Box sx={{ textAlign: 'center', my: 3 }}>
                       <img className="QRCode" src={qrCode} alt="qrapp" />
                       {/*<Box>{qrSecret}</Box>*/}
+                      <Box
+                        sx={{
+                          cursor: 'pointer',
+                          fontSize: '13px',
+                        }}
+                        onClick={() => ClipboardCopy(qrSecret ?? '', '복사되었습니다.')}
+                      >
+                        <Typography noWrap={true}>{qrSecret}</Typography>
+                      </Box>
                     </Box>
                     <Typography sx={{ fontSize: '12px', color: '#999999' }}>
                       Verification Code
