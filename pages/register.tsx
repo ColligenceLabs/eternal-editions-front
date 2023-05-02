@@ -736,8 +736,8 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         // @ts-ignore
         await tryRecoverABC(id_token, service, loginEmail, flag);
       } catch (error: any) {
-        alert(error.message);
         setMemberCheck(false);
+        alert(error.message);
       }
     };
     fetchSession();
