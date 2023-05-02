@@ -51,6 +51,7 @@ import { setProvider } from 'src/store/slices/webUser';
 import { AbcLoginResponse } from 'src/abc/schema/account';
 import { useRouter } from 'next/router';
 import { ClipboardCopy } from 'src/utils/wallet';
+import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 
 const RootStyle = styled('div')(({ theme }) => ({
   paddingBottom: HEADER_MOBILE_HEIGHT,
@@ -924,12 +925,29 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                       {/*<Box>{qrSecret}</Box>*/}
                       <Box
                         sx={{
-                          cursor: 'pointer',
-                          fontSize: '13px',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
                         }}
-                        onClick={() => ClipboardCopy(qrSecret ?? '', '복사되었습니다.')}
                       >
-                        <Typography noWrap={true}>{qrSecret}</Typography>
+                        <Typography noWrap={true} sx={{ fontSize: '13px' }}>
+                          {qrSecret}
+                        </Typography>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: '50%',
+                            backgroundColor: '#F5F5F5',
+                            width: '32px',
+                            height: '32px',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => ClipboardCopy(qrSecret ?? '', '복사되었습니다.')}
+                        >
+                          <ContentCopyOutlinedIcon sx={{ fontSize: '14px', m: 0, p: 0 }} />
+                        </Box>
                       </Box>
                     </Box>
                     <Typography sx={{ fontSize: '12px', color: '#999999' }}>
