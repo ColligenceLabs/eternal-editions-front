@@ -732,8 +732,13 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
 
       // TODO : ABC Wallet 기가입자 인지 확인
       setMemberCheck(true);
-      // @ts-ignore
-      await tryRecoverABC(id_token, service, loginEmail, flag);
+      try {
+        // @ts-ignore
+        await tryRecoverABC(id_token, service, loginEmail, flag);
+      } catch (error: any) {
+        alert(error.message);
+        setMemberCheck(false);
+      }
     };
     fetchSession();
   }, []);
