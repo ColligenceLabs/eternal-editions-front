@@ -1051,6 +1051,9 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                       onChange={handleChangeRpConfirmPassword}
                     />
                   </Box>
+                  <Box sx={{ fontSize: '12px' }}>
+                    * 이터널에디션 로그인 암호와 동일한 암호로 설정하세요.
+                  </Box>
                   {rpPassword !== rpConfirmPassword && (
                     <Box
                       sx={{
