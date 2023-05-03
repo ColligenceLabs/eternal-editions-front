@@ -575,6 +575,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         if ('code' in result) {
           flCreate = result?.code !== undefined && result?.code === 601;
           if (result?.code === 602 || result?.code === 619) loginFail = true;
+          if (result?.code === 999) alert('보안 채널 생성 지연. 잠시 후 다시 로그인...!');
         }
 
         // 기 가입자 토큰 처리
@@ -1013,7 +1014,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                   }}
                 >
                   {/* <NumberInput
-                      
+
                       // value={emailCheckCode}
                       // onChange={handleChangeEmailCheckCode}
                     /> */}

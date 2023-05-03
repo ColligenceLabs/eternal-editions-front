@@ -40,7 +40,8 @@ class AbcService extends EventEmitter {
       // console.log('!! login result : ', lResult);
     } else {
       // @ts-ignore
-      lResult = { code: 602 };
+      // lResult = { code: 602 };
+      lResult = { code: 999 };
     }
     return lResult;
   }
