@@ -34,6 +34,7 @@ import {
   Modal,
   TextField,
   Typography,
+  FormHelperText,
 } from '@mui/material';
 import { Base64 } from 'js-base64';
 import { styled } from '@mui/material/styles';
@@ -73,17 +74,18 @@ export const NumberInput = styled(TextField)(() => ({
 
 const modalStyle = {
   position: 'absolute',
-  top: '30%',
+  top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
   maxWidth: 400,
   width: 'calc(100% - 2rem)',
   bgcolor: 'common.white',
   color: 'common.black',
+  border: 'none',
+  borderRadius: '24px',
   boxShadow: 24,
   py: 4,
   px: 2.5,
-  borderRadius: '24px',
 };
 
 const FormSchema = Yup.object().shape({
@@ -737,6 +739,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         await tryRecoverABC(id_token, service, loginEmail, flag);
       } catch (error: any) {
         setMemberCheck(false);
+        if (!error) return;
         alert(error.message);
       }
     };
@@ -889,7 +892,6 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                           inputProps={{ style: { color: '#999999' } }}
                           value={emailCheckCode}
                           onChange={handleChangeEmailCheckCode}
-                          ㅋ
                         />
                       </Box>
                     )}
@@ -993,10 +995,14 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
           >
             <Fade in={resetPass}>
               <Box sx={modalStyle}>
-                <Box sx={{ fontSize: '16px' }}>
-                  {`암호가 변경되었거나 구글/페이스북으로 이미 가입하신 사용자는 지갑암호
-                  (재)설정이 필요합니다.`}
-                </Box>
+                <Typography variant="h4" sx={{ mb: 2 }}>
+                  비밀번호 재설정
+                </Typography>
+                <Typography>
+                  기존 이터널에디션즈 마켓에 가입하신 계정의 암호를 변경하셨거나, 신규
+                  이터널에디션즈에 구글 혹은 페이스북 소셜 계정으로 이미 가입하신 경우 지갑의 암호를
+                  재설정 해야 합니다.
+                </Typography>
                 <Box
                   sx={{
                     display: 'flex',
@@ -1006,31 +1012,30 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                     marginTop: '20px',
                   }}
                 >
-                  <Box
-                    sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
-                  >
-                    Email Check Code
-                    <NumberInput
-                      type="number"
-                      variant="outlined"
-                      autoComplete="off"
-                      size={'small'}
-                      inputProps={{ style: { color: '#999999' } }}
-                      value={rpEmailCheckCode}
-                      onChange={handleChangeRpEmailCheckCode}
+                  {/* <NumberInput
+                      
                       // value={emailCheckCode}
                       // onChange={handleChangeEmailCheckCode}
-                    />
-                  </Box>
-                  <Box sx={{ fontSize: '12px' }}>{`* ${email}로 발송된 확인 코드 사용`}</Box>
-                  <Divider sx={{ marginY: '14px' }} />
+                    /> */}
+                  <TextField
+                    label="이메일 인증코드"
+                    inputProps={{ style: { color: '#999999' }, maxlength: 6 }}
+                    fullWidth
+                    variant="standard"
+                    autoComplete="off"
+                    size={'small'}
+                    value={rpEmailCheckCode}
+                    onChange={handleChangeRpEmailCheckCode}
+                    helperText={`* ${email}로 발송된 인증코드를 입력해주세요.`}
+                  />
                   <Box
                     sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                   >
-                    New Password
                     <TextField
+                      label="새 비밀번호"
+                      fullWidth
                       type="password"
-                      variant="outlined"
+                      variant="standard"
                       autoComplete="off"
                       size={'small'}
                       inputProps={{ style: { color: '#999999' } }}
@@ -1041,10 +1046,11 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                   <Box
                     sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
                   >
-                    Password Confirm
                     <TextField
+                      label="새 비밀번호 확인"
+                      fullWidth
                       type="password"
-                      variant="outlined"
+                      variant="standard"
                       autoComplete="off"
                       size={'small'}
                       inputProps={{ style: { color: '#999999' } }}
@@ -1052,10 +1058,10 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                       onChange={handleChangeRpConfirmPassword}
                     />
                   </Box>
-                  <Box sx={{ fontSize: '12px' }}>
-                    * 이터널에디션 로그인 암호와 동일한 암호로 설정하세요. [참고 : ABC Wallet 암호가
-                    설정/변경됩니다.]
-                  </Box>
+                  <FormHelperText sx={{ fontSize: 12 }}>
+                    * 이터널에디션즈에서 신규로 생성한 계정의 암호와 동일하게 설정해주세요. 변경하신
+                    암호는 계정에 연동된 ABC Wallet의 암호도 동일하게 적용됩니다.
+                  </FormHelperText>
                   {rpPassword !== rpConfirmPassword && (
                     <Box
                       sx={{
@@ -1067,27 +1073,25 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                       패스워드가 일치하지 않습니다.
                     </Box>
                   )}
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      marginTop: '10px',
-                      gap: '1rem',
-                    }}
-                  >
-                    <Button variant={'outlined'} fullWidth onClick={handleResetPassClose}>
-                      Cancel
-                    </Button>
+                  <Stack spacing={2}>
                     <Button
-                      variant={'outlined'}
+                      variant="vivid"
+                      size="large"
                       fullWidth
                       disabled={rpEmailCheckCode === '' || rpPassword !== rpConfirmPassword}
                       onClick={handleClickResetPassword}
                     >
-                      OK
+                      비밀번호 재설정 완료
                     </Button>
-                  </Box>
+                    <Button
+                      fullWidth
+                      onClick={handleResetPassClose}
+                      variant="contained"
+                      size="large"
+                    >
+                      뒤로
+                    </Button>
+                  </Stack>
                 </Box>
               </Box>
             </Fade>
