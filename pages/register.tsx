@@ -1053,7 +1053,8 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                     />
                   </Box>
                   <Box sx={{ fontSize: '12px' }}>
-                    * 이터널에디션 로그인 암호와 동일한 암호로 설정하세요.
+                    * 이터널에디션 로그인 암호와 동일한 암호로 설정하세요. [참고 : ABC Wallet 암호가
+                    설정/변경됩니다.]
                   </Box>
                   {rpPassword !== rpConfirmPassword && (
                     <Box
