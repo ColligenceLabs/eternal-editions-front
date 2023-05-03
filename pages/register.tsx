@@ -572,7 +572,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         console.log('!! tryRecoverABC login result =', result);
         if ('code' in result) {
           flCreate = result?.code !== undefined && result?.code === 601;
-          if (result?.code === 602) loginFail = true;
+          if (result?.code === 602 || result?.code === 619) loginFail = true;
         }
 
         // 기 가입자 토큰 처리
@@ -889,6 +889,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
                           inputProps={{ style: { color: '#999999' } }}
                           value={emailCheckCode}
                           onChange={handleChangeEmailCheckCode}
+                          ㅋ
                         />
                       </Box>
                     )}
