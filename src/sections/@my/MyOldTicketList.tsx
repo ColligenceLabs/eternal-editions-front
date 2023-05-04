@@ -2,8 +2,9 @@
 import { Stack } from '@mui/material';
 import { JobItemSkeleton } from 'src/components';
 import { useEffect, useState } from 'react';
-import { getOldMyTicket } from '../../services/services';
+import { getOldMyTicket, getOldMyTicket2 } from '../../services/services';
 import OldTicketItem from '../@eternaledtions/tickets/OldTicketItem';
+import { useSelector } from 'react-redux';
 
 type Props = { loading?: boolean };
 
@@ -18,10 +19,14 @@ type OldTicketTypes = {
 };
 
 export default function MyOldTicketList({ loading }: Props) {
+  const { user } = useSelector((state: any) => state.webUser);
   const [oldTicket, setOldTicket] = useState<OldTicketTypes[]>([]);
 
   const fetchOldMyTickets = async () => {
-    const result = await getOldMyTicket();
+    let result;
+    // const result = await getOldMyTicket();
+    if (user?.uid) result = await getOldMyTicket2(user?.uid);
+    else result = await getOldMyTicket();
     console.log(result);
     if (result.data && result.data.data.length > 0) {
       const temp = result.data.data.map((ticket: any) => {
