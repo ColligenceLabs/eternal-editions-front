@@ -79,7 +79,13 @@ class AbcService extends EventEmitter {
     const secretKey = AbcUtil.createSecretKey(publickey, mykey);
 
     const decryptedText = AbcUtil.decrypt(secretKey, encrypted);
-    if (decryptedText !== plain) {
+    console.log(
+      '!! Encryption Key Test ---> ',
+      decryptedText,
+      plain,
+      decryptedText !== plain ? 'different' : 'same'
+    );
+    if (decryptedText != plain) {
       // throw new Error();
       return { encrypted: null, channelid: null };
     }
