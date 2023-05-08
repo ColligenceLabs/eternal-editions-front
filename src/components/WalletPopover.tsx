@@ -219,7 +219,7 @@ export default function WalletPopover({}) {
                 <MenuItem>ACCOUNT</MenuItem>
               </NextLink>
               <NextLink href={Routes.eternalEditions.my.tickets} passHref>
-                <MenuItem>MY TICKETS</MenuItem>
+                <MenuItem>MY ITEMS</MenuItem>
               </NextLink>
               <NextLink href={Routes.eternalEditions.my.transaction} passHref>
                 <MenuItem>TRANSACTION</MenuItem>

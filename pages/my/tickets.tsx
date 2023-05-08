@@ -27,7 +27,7 @@ export default function MyTicketPage({}: Props) {
     <Page title="Account">
       <RootStyle>
         <Container sx={{ mt: 3 }}>
-          <PageHeader title="My Tickets" />
+          <PageHeader title="My Items" />
 
           <Stack sx={{ mb: 3 }}>
             <MyTicketList loading={false} />
