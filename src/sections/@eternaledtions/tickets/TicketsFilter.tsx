@@ -170,7 +170,7 @@ export default function TicketsFilter({ tickets, categories }: Props) {
         </Masonry>
       )} */}
       {ticketInfoList.length ? (
-        <Grid container spacing={2}>
+        <Grid container spacing={3}>
           {ticketInfoList.map((ticket, index) => (
             <TicketPostItem key={index} ticket={ticket} />
           ))}

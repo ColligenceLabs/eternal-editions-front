@@ -42,7 +42,7 @@ export default function TicketPage({}: Props) {
     <Page title="DROPS">
       <RootStyle>
         <Container sx={{ mt: 3, mr: { sx: 0 } }}>
-          <PageHeader title="DROPS" />
+          <PageHeader title="DROPS" tooltipMessage="Guide text to describe DROPS." />
 
           {/*티켓 목록*/}
           <TicketsFilter tickets={tickets} categories={categories} />
@@ -55,7 +55,22 @@ export default function TicketPage({}: Props) {
 // ----------------------------------------------------------------------
 
 TicketPage.getLayout = function getLayout(page: ReactElement) {
-  return <Layout verticalAlign="top">{page}</Layout>;
+  return (
+    <Layout
+      verticalAlign="top"
+      background={{
+        backgroundImage: {
+          xs: `url(/assets/background/bg-main.jpg)`,
+          md: `url(/assets/background/bg-drops.jpg)`,
+        },
+        backgroundPosition: 'bottom center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      }}
+    >
+      {page}
+    </Layout>
+  );
 };
 
 // ----------------------------------------------------------------------
