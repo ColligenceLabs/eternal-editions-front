@@ -39,7 +39,7 @@ export default function TicketPage({}: Props) {
   const categories: string[] = TICKET.categories;
 
   return (
-    <Page title="Tickets">
+    <Page title="DROPS">
       <RootStyle>
         <Container sx={{ mt: 3, mr: { sx: 0 } }}>
           <PageHeader title="DROPS" />

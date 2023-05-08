@@ -25,7 +25,7 @@ type Props = {};
 
 export default function ItemsPage({}: Props) {
     return (
-        <Page title="Tickets">
+        <Page title="ITEMS">
             <RootStyle>
                 <Container sx={{ mt: 3, mr: { sx: 0 } }}>
                     <PageHeader title="ITEMS" />
