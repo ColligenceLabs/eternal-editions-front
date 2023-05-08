@@ -202,13 +202,15 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     console.log('!! Reset Password :', result);
     if (result?.status === 200) {
       alert('암호가 설정 되었습니다. 다시 로그인하세요.');
-      location.replace('/');
+      // location.replace('/');
+      router.push('/');
     }
   };
 
   const handleResetPassClose = () => {
     setResetPass(false);
-    location.replace('/');
+    // location.replace('/');
+    router.push('/');
   };
 
   const handleAbcTokenChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -237,7 +239,8 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       if (res.status === 200) {
         // 성공. 리다이렉트..
         alert('가입이 완료되었습니다.');
-        location.replace('/');
+        // location.replace('/');
+        router.push('/');
       }
     }
   };
@@ -583,7 +586,8 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
           if (result?.code === 602 || result?.code === 619) loginFail = true;
           if (result?.code === 999) {
             alert('보안 채널 생성 지연. 잠시 후 다시 로그인...!');
-            location.replace('/');
+            // location.replace('/');
+            router.push('/');
           }
         }
 
@@ -680,8 +684,9 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         } else {
           // 성공. 리다이렉트..
           console.log('이미 가입되어 있습니다. 로그인 처리합니다.');
-          await sleep(1000);
-          location.replace('/');
+          // await sleep(1000);
+          // location.replace('/');
+          router.push('/');
         }
       } else {
         // New SNS User
@@ -695,8 +700,9 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
           if (user.twoFactorEnabled) {
             // 성공. 리다이렉트..
             console.log('이미 가입되어 있습니다. 로그인 처리합니다.');
-            await sleep(1000);
-            location.replace('/');
+            // await sleep(1000);
+            // location.replace('/');
+            router.push('/');
           } else {
             throw new Error('user.twoFactorEnabled is false');
           }
