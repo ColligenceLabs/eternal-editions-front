@@ -54,6 +54,12 @@ import { useRouter } from 'next/router';
 import { ClipboardCopy } from 'src/utils/wallet';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 
+function sleep(ms) {
+  console.log('Wait for 1 second...');
+
+  return new Promise((r) => setTimeout(r, ms));
+}
+
 const RootStyle = styled('div')(({ theme }) => ({
   paddingBottom: HEADER_MOBILE_HEIGHT,
   paddingTop: HEADER_MOBILE_HEIGHT,
@@ -674,6 +680,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         } else {
           // 성공. 리다이렉트..
           console.log('이미 가입되어 있습니다. 로그인 처리합니다.');
+          await sleep(1000);
           location.replace('/');
         }
       } else {
@@ -688,6 +695,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
           if (user.twoFactorEnabled) {
             // 성공. 리다이렉트..
             console.log('이미 가입되어 있습니다. 로그인 처리합니다.');
+            await sleep(1000);
             location.replace('/');
           } else {
             throw new Error('user.twoFactorEnabled is false');
