@@ -657,15 +657,17 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
 
       // 기 가입자 지갑 복구
+      const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
+      console.log('!! getWalletsAndUserByAbcUid =', user, wallets);
+
       // 가잊은 되어 있으나 지갑이 없는 사용자의 경우 에러 발생...
       // TypeError: Cannot read properties of null (reading 'accounts')
-      // const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
-      // console.log('!! getWalletsAndUserByAbcUid =', user, wallets);
-      //
-      // await accountController.recoverShare(
-      //   { password: '!owdin001', user, wallets, keepDB: false },
-      //   dispatch
-      // );
+      if (user.twoFactorEnabled) {
+        await accountController.recoverShare(
+          { password: '!owdin001', user, wallets, keepDB: false },
+          dispatch
+        );
+      }
 
       if (flag) {
         // OLD User
@@ -680,15 +682,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         } else {
           // 성공. 리다이렉트..
           console.log('이미 가입되어 있습니다. 로그인 처리합니다.');
-          console.log('#################################################');
-          // 기 가입자 지갑 복구
-          const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
-          console.log('!! getWalletsAndUserByAbcUid =', user, wallets);
 
-          await accountController.recoverShare(
-            { password: '!owdin001', user, wallets, keepDB: false },
-            dispatch
-          );
           // await sleep(1000);
           // location.replace('/');
           router.push('/');
@@ -706,14 +700,6 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
             // 성공. 리다이렉트..
             console.log('이미 가입되어 있습니다. 로그인 처리합니다.');
 
-            // 기 가입자 지갑 복구
-            const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
-            console.log('!! getWalletsAndUserByAbcUid =', user, wallets);
-
-            await accountController.recoverShare(
-              { password: '!owdin001', user, wallets, keepDB: false },
-              dispatch
-            );
             // await sleep(1000);
             // location.replace('/');
             router.push('/');
