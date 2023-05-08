@@ -98,10 +98,12 @@ export default function Header({ transparent, sx }: Props) {
       const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
       setUser(user);
 
-      await accountController.recoverShare(
-        { password: '!owdin001', user, wallets, keepDB: false },
-        dispatch
-      );
+      if (user.twoFactorEnabled) {
+        await accountController.recoverShare(
+          { password: '!owdin001', user, wallets, keepDB: false },
+          dispatch
+        );
+      }
     }
   };
 
