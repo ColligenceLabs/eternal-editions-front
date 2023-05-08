@@ -6,8 +6,8 @@
  *
  ******************************************************************************/
 
-import {AbcLanguage} from '../schema/abc';
-import {CurrLang} from '../schema/model';
+import { AbcLanguage } from '../schema/abc';
+import { CurrLang } from '../schema/model';
 
 const CryptoJS = require('crypto-js');
 var EC = require('elliptic').ec;
@@ -42,7 +42,12 @@ const createSecretKey = (publicKey: string, mykey) => {
 
   const sharedSecret = serverKey.getPublic().mul(mykey.getPrivate()).getX();
   const secretKey = sharedSecret.toString(16);
-  return secretKey;
+
+  // make sure secretKey length is 64
+  if (secretKey.length !== 64) {
+    return secretKey.padStart(64, '0');
+  } else return secretKey;
+  // return secretKey;
 };
 
 const convertLanguage = (lang?: string | CurrLang) => {
