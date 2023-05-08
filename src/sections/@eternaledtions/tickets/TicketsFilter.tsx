@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 // @mui
-import { Box, Grid, Button, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Box, Grid, Button, Stack, Tab, Tabs, Typography, tabClasses } from '@mui/material';
 // @types
 import { CaseStudyProps } from 'src/@types/marketing';
 //
@@ -95,7 +95,7 @@ export default function TicketsFilter({ tickets, categories }: Props) {
       >
         <Box
           sx={{
-            pb: { xs: 1, md: 3 },
+            pb: { xs: 2, md: 5 },
             flexGrow: 1,
             // width: isMobile ? 330 : '100%',
             /* 2023.04.18 320px 화면에서 깨지는 현상 수정 */
@@ -104,9 +104,8 @@ export default function TicketsFilter({ tickets, categories }: Props) {
         >
           <Tabs
             value={selected}
-            scrollButtons="auto"
             variant="scrollable"
-            allowScrollButtonsMobile
+            TabIndicatorProps={{ sx: { display: 'none' } }}
             onChange={handleChangeCategory}
           >
             {categories.map((category) => (
@@ -114,10 +113,47 @@ export default function TicketsFilter({ tickets, categories }: Props) {
                 key={category}
                 value={category}
                 label={
-                  <Typography variant="body2" sx={{ fontSize: '14px' }}>
+                  <Typography
+                    variant="body2"
+                    sx={{
+                      fontSize: '14px',
+                      fontWeight: theme.typography.fontWeightBold,
+                      textTransform: 'uppercase',
+                      padding: {
+                        xs: '10px 12px',
+                        md: '10px 16px',
+                      },
+                    }}
+                  >
                     {category}
                   </Typography>
                 }
+                sx={{
+                  [`&.${tabClasses.root}`]: {
+                    opacity: 0.6,
+                    color: 'white',
+                    [theme.breakpoints.down('md')]: {
+                      background: 'rgba(0, 0, 0, 0.24)',
+                      backdropFilter: 'blur(50px)',
+                      borderRadius: '60px',
+                    },
+                  },
+                  [`&.${tabClasses.selected}`]: {
+                    opacity: 1,
+                  },
+                  [`&.${tabClasses.root}:first-of-type`]: {
+                    ml: {
+                      xs: 2.5,
+                      md: 0,
+                    },
+                  },
+                  [`&.${tabClasses.root}:not(:last-of-type)`]: {
+                    mr: {
+                      xs: 0.25,
+                      md: 0.5,
+                    },
+                  },
+                }}
               />
             ))}
           </Tabs>
