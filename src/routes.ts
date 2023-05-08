@@ -6,6 +6,8 @@ const Routes = {
     about: '/about-us',
     tickets: '/tickets',
     ticket: (slug: string) => `/tickets/${slug}`,
+    items:'/items',
+    item: (slug: string) => `/items/${slug}`,
     help: '/support',
     privacy: '/privacy',
     terms: '/terms',

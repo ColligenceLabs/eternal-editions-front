@@ -42,7 +42,7 @@ export default function TicketPage({}: Props) {
     <Page title="Tickets">
       <RootStyle>
         <Container sx={{ mt: 3, mr: { sx: 0 } }}>
-          <PageHeader title="TICKET" />
+          <PageHeader title="DROPS" />
 
           {/*티켓 목록*/}
           <TicketsFilter tickets={tickets} categories={categories} />
