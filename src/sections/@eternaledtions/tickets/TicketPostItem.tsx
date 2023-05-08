@@ -35,7 +35,7 @@ export default function TicketPostItem({ ticket }: Props) {
   };
 
   return (
-    <Grid item xs={12} sm={6}>
+    <Grid item xs={12} sm={4}>
       <NextLink
         passHref
         // as={Routes.eternalEditions.ticket(id.toString())}
@@ -56,7 +56,7 @@ export default function TicketPostItem({ ticket }: Props) {
             transition={varTranHover()}
             sx={{ position: 'relative' }}
           >
-            <Image src={packageImage} alt={title.en} ratio="6/4" sx={{ minHeight: 280 }} />
+            <Image src={packageImage} alt={title.en} ratio="4/6" sx={{ minHeight: 280 }} />
             <Box
               sx={{
                 position: 'absolute',
