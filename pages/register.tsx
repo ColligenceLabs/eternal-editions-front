@@ -54,11 +54,11 @@ import { useRouter } from 'next/router';
 import { ClipboardCopy } from 'src/utils/wallet';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 
-function sleep(ms) {
-  console.log('Wait for 1 second...');
-
-  return new Promise((r) => setTimeout(r, ms));
-}
+// function sleep(ms) {
+//   console.log('Wait for 1 second...');
+//
+//   return new Promise((r) => setTimeout(r, ms));
+// }
 
 const RootStyle = styled('div')(({ theme }) => ({
   paddingBottom: HEADER_MOBILE_HEIGHT,
