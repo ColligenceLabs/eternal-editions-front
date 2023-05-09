@@ -1,5 +1,14 @@
-import { Tab, tabClasses, Tabs, tabsClasses, useTheme } from '@mui/material';
-import React from 'react';
+import {
+  Chip,
+  chipClasses,
+  Stack,
+  Tab,
+  tabClasses,
+  Tabs,
+  tabsClasses,
+  useTheme,
+} from '@mui/material';
+import React, { ReactNode } from 'react';
 import Routes from 'src/routes';
 import { useRouter } from 'next/router';
 import { useResponsive } from 'src/hooks';
@@ -10,7 +19,28 @@ const LINKS = [
     route: Routes.eternalEditions.my.account,
   },
   {
-    title: 'MY ITEMS',
+    title: ({ chipLabel }: { chipLabel?: number | string }) => (
+      <Stack flexDirection="row" alignItems="center" gap={0.5} sx={{ color: 'inherit' }}>
+        <span>MY ITEMS</span>
+        {chipLabel ? (
+          <Chip
+            label={chipLabel}
+            color="primary"
+            sx={{
+              fontWeight: 'bold',
+              fontSize: 12,
+              lineHeight: 13 / 12,
+              color: 'black !important',
+              height: 'unset',
+              verticalAlign: 'center',
+              [`& .${chipClasses.label}`]: {
+                padding: '0px 6px',
+              },
+            }}
+          />
+        ) : null}
+      </Stack>
+    ),
     route: Routes.eternalEditions.my.tickets,
   },
   {
@@ -32,7 +62,7 @@ const LINKS = [
 ];
 
 interface LinkTabProps {
-  label: string;
+  label: string | ReactNode;
   value: string;
   href?: string;
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
@@ -48,6 +78,7 @@ function LinkTab(props: LinkTabProps) {
         event.preventDefault();
       }}
       sx={{
+        color: 'white',
         fontWeight: 'bold',
         fontSize: 14,
         lineHeight: 12 / 14,
@@ -62,7 +93,11 @@ function LinkTab(props: LinkTabProps) {
   );
 }
 
-export default function SideMenu() {
+interface Props {
+  chipLabel?: number | string;
+}
+
+export default function SideMenu({ chipLabel }: Props) {
   const router = useRouter();
   const isMobile = useResponsive('down', 'md');
 
@@ -78,9 +113,18 @@ export default function SideMenu() {
         },
       }}
     >
-      {LINKS.map((link) => (
-        <LinkTab key={link.title} label={link.title} value={link.route} href={link.route} />
-      ))}
+      {LINKS.map((link) => {
+        const LinkTitle = link.title;
+
+        return (
+          <LinkTab
+            key={link.route}
+            label={typeof LinkTitle === 'string' ? LinkTitle : <LinkTitle chipLabel={chipLabel} />}
+            value={link.route}
+            href={link.route}
+          />
+        );
+      })}
     </Tabs>
   );
 }

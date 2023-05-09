@@ -30,7 +30,7 @@ export default function MyTicketPage({}: Props) {
         <Container sx={{ mt: 3 }}>
           <Grid container zeroMinWidth>
             <Grid item md={2}>
-              <SideMenu />
+              <SideMenu chipLabel={1} />
             </Grid>
 
             <Grid item md={10}>
