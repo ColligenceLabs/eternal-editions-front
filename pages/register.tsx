@@ -695,15 +695,15 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         }
       } else {
         // New SNS User
-        // ABC 기가입자로 DB에 사용자 정보가 없어서 신규로 생성
         try {
-          console.log('!! ABC Address =', user.accounts[0].ethAddress);
-          const res = await userRegister({ abc_address: user.accounts[0].ethAddress });
-          console.log(':::: 여기', res);
-
           if (user.twoFactorEnabled) {
             // 성공. 리다이렉트..
             console.log('이미 가입되어 있습니다. 로그인 처리합니다.');
+
+            // ABC 기가입자로 DB에 사용자 정보가 없어서 신규로 생성 케이스 대응
+            console.log('!! ABC Address =', user.accounts[0].ethAddress);
+            const res = await userRegister({ abc_address: user.accounts[0].ethAddress });
+            console.log(':::: 여기', res);
 
             // await sleep(1000);
             // location.replace('/');
