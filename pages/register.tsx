@@ -695,10 +695,9 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         }
       } else {
         // New SNS User
-        console.log('!! ABC Address =', user.accounts[0].ethAddress);
-
         // ABC 기가입자로 DB에 사용자 정보가 없어서 신규로 생성
         try {
+          console.log('!! ABC Address =', user.accounts[0].ethAddress);
           const res = await userRegister({ abc_address: user.accounts[0].ethAddress });
           console.log(':::: 여기', res);
 
