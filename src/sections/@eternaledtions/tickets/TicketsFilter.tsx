@@ -122,11 +122,12 @@ export default function TicketsFilter({ tickets, categories }: Props) {
                 key={category}
                 value={category}
                 label={
-                  <Typography
-                    variant="body2"
+                  <Stack
+                    flexDirection="row"
+                    useFlexGap
+                    gap="10px"
                     sx={{
                       fontSize: '14px',
-                      fontWeight: theme.typography.fontWeightBold,
                       textTransform: 'uppercase',
                       padding: {
                         xs: '10px 12px',
@@ -134,8 +135,13 @@ export default function TicketsFilter({ tickets, categories }: Props) {
                       },
                     }}
                   >
-                    {category}
-                  </Typography>
+                    <Typography variant="body2" fontWeight="bold">
+                      {category}
+                    </Typography>
+                    <Typography variant="body2" fontWeight="bold" sx={{ color: 'red' }}>
+                      1
+                    </Typography>
+                  </Stack>
                 }
                 sx={{
                   [`&.${tabClasses.root}`]: {

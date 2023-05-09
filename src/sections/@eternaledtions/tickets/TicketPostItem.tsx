@@ -10,7 +10,6 @@ import Routes from 'src/routes';
 // components
 import { Image, TextMaxLine } from 'src/components';
 import { varHover, varTranHover } from 'src/components/animate';
-import { TicketProps } from 'src/@types/ticket/ticket';
 import EEAvatar from 'src/components/EEAvatar';
 import { useRouter } from 'next/router';
 import { fDate } from 'src/utils/formatTime';
@@ -72,17 +71,17 @@ export default function TicketPostItem({ ticket }: Props) {
           </Box>
 
           <Stack
-            justifyContent="space-between"
+            justifyContent="flex-end"
             sx={{
-              p: isMobile ? 1 : 3,
+              p: isMobile ? 2 : 3,
               height: 1,
               zIndex: 9,
               position: 'absolute',
               color: 'common.white',
             }}
           >
-            <Stack spacing={1}>
-              <Stack
+            <Stack spacing={0.25}>
+              {/* <Stack
                 direction="row"
                 spacing={1}
                 alignItems="center"
@@ -96,25 +95,88 @@ export default function TicketPostItem({ ticket }: Props) {
                 />
 
                 <Typography>{featured?.company.name.en}</Typography>
+              </Stack> */}
+
+              <Stack
+                direction="row"
+                spacing={1}
+                alignItems="center"
+                sx={{ opacity: 0.72, typography: 'caption' }}
+              >
+                <Typography
+                  sx={{
+                    fontSize: {
+                      xs: 12,
+                      md: 14,
+                    },
+                    lineHeight: 20 / 14,
+                    color: 'red',
+                  }}
+                >
+                  @iloveseoul
+                </Typography>
               </Stack>
 
-              <TextMaxLine variant="h3">{title.en}</TextMaxLine>
+              <TextMaxLine
+                sx={{
+                  fontSize: { xs: 24, md: 40 },
+                  lineHeight: {
+                    xs: 28 / 24,
+                    md: 44 / 40,
+                  },
+                  fontWeight: theme.typography.fontWeightBold,
+                }}
+              >
+                {title.en}
+              </TextMaxLine>
               <Typography
-                variant="body1"
                 sx={{
                   mb: 1,
                   mt: { xs: 1, sm: 0.5 },
+                  fontSize: 12,
+                  lineHeight: 16 / 12,
                   color: 'common.white',
                 }}
               >
-                {createdAt && fDate(createdAt)}
+                {createdAt && fDate(createdAt, 'EEEE (MMMM dd, yyyy)')}
+              </Typography>
+              <Typography
+                sx={{
+                  mb: 1,
+                  mt: { xs: 1, sm: 0.5 },
+                  fontSize: 12,
+                  lineHeight: 16 / 12,
+                  color: 'red',
+                }}
+              >
+                HQ Beercade Nashville Nashville, TN
               </Typography>
             </Stack>
           </Stack>
 
           <Stack
             sx={{
-              p: isMobile ? 1 : 3,
+              p: isMobile ? 2 : 3,
+              height: 1,
+              zIndex: 9,
+              left: 0,
+              position: 'absolute',
+            }}
+          >
+            <Chip
+              label={'WHITELIST MINTING'}
+              variant="outlined"
+              color="primary"
+              sx={{
+                fontWeight: theme.typography.fontWeightBold,
+                color: 'red',
+              }}
+            />
+          </Stack>
+
+          <Stack
+            sx={{
+              p: isMobile ? 2 : 3,
               height: 1,
               zIndex: 9,
               right: 0,
@@ -125,31 +187,17 @@ export default function TicketPostItem({ ticket }: Props) {
             }}
           >
             {categoriesStr && categoriesStr.split(',').length > 0
-              ? categoriesStr
-                  .split(',')
-                  .map((category: string, index) => (
-                    <Chip key={index} label={category.toUpperCase()} variant="outlined" />
-                  ))
+              ? categoriesStr.split(',').map((category: string, index) => (
+                  <Chip
+                    key={index}
+                    label={category.toUpperCase()}
+                    variant="outlined"
+                    sx={{
+                      fontWeight: theme.typography.fontWeightBold,
+                    }}
+                  />
+                ))
               : null}
-          </Stack>
-
-          <Stack
-            direction="row"
-            justifyContent="center"
-            alignItems="flex-end"
-            sx={{
-              p: 3,
-              height: 1,
-              zIndex: 9,
-              position: 'absolute',
-              bottom: 0,
-              left: 0,
-              right: 0,
-            }}
-          >
-            <Button size="large" variant="contained" fullWidth={true}>
-              View Details
-            </Button>
           </Stack>
         </Stack>
       </NextLink>
