@@ -15,7 +15,7 @@ import { SelectChangeEvent } from '@mui/material/Select';
 import { CategoryProps, TicketProps } from 'src/@types/ticket/ticket';
 import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
-import { getTicketsService } from 'src/services/services';
+import {getTicketCountByCategory, getTicketsService} from 'src/services/services';
 import { SUCCESS } from 'src/config';
 import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 // import { isMobile } from 'react-device-detect';
@@ -56,6 +56,7 @@ export default function TicketsFilter({ tickets, categories }: Props) {
   };
 
   const getTickets = async () => {
+    console.log(selected)
     const res = await getTicketsService(1, perPage, selected);
     console.log(res);
     if (res.status === 200) {
@@ -66,17 +67,25 @@ export default function TicketsFilter({ tickets, categories }: Props) {
 
   const getMoreTickets = async () => {
     const res = await getTicketsService(curPage, perPage, selected);
+    console.log(res)
     if (res.status === 200) {
       setTicketInfoList((cur) => [...cur, ...res.data.list]);
     }
   };
 
+  const getCountByCategory = async () => {
+    const res = await getTicketCountByCategory()
+    console.log(res)
+  }
+
   useEffect(() => {
     setCurPage(1);
     getTickets();
+    getCountByCategory()
   }, [selected]);
 
   useEffect(() => {
+    console.log(`curPage:${curPage}`)
     if (curPage !== 1) getMoreTickets();
   }, [curPage]);
 
