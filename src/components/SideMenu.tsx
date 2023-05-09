@@ -74,9 +74,6 @@ function LinkTab(props: LinkTabProps) {
   return (
     <Tab
       component="a"
-      onClick={(event: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
-        event.preventDefault();
-      }}
       sx={{
         color: 'white',
         fontWeight: 'bold',
@@ -86,6 +83,18 @@ function LinkTab(props: LinkTabProps) {
         alignItems: 'flex-start',
         [`&.${tabClasses.selected}`]: {
           color: theme.palette.primary.main,
+        },
+        [`&.${tabClasses.root}`]: {
+          mr: 0,
+          minWidth: 'unset',
+        },
+        [theme.breakpoints.down('md')]: {
+          ['&:first-of-type']: {
+            marginLeft: '20px',
+          },
+          ['&:last-of-type']: {
+            paddingRight: '20px',
+          },
         },
       }}
       {...props}

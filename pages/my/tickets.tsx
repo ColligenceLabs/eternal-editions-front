@@ -2,7 +2,7 @@ import { ReactElement } from 'react';
 import Layout from 'src/layouts';
 import { Page } from 'src/components';
 import { Container, Grid, Stack } from '@mui/material';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
 import MyTicketList from 'src/sections/@my/MyTicketList';
 import PageHeader from 'src/components/common/PageHeader';
@@ -23,13 +23,24 @@ type Props = {};
 
 export default function MyTicketPage({}: Props) {
   // const [tickets, setTickets] = useState([]);
+  const theme = useTheme();
 
   return (
     <Page title="Account">
       <RootStyle>
         <Container sx={{ mt: 3 }}>
           <Grid container zeroMinWidth>
-            <Grid item md={2}>
+            <Grid
+              item
+              md={2}
+              sx={{
+                [theme.breakpoints.down('md')]: {
+                  marginRight: '-20px',
+                  marginLeft: '-20px',
+                  maxWidth: 'calc(100% + 40px)',
+                },
+              }}
+            >
               <SideMenu chipLabel={1} />
             </Grid>
 
