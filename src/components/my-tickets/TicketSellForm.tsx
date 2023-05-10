@@ -15,13 +15,13 @@ import {
   MenuProps,
   Row,
   Section,
-  StyledButton,
   StyledInput,
   StyledMenuItem,
   StyledSelect,
   TotalValue,
   Value,
 } from 'src/components/my-tickets/StyledComponents';
+import RoundedButton from '../common/RoundedButton';
 import TicketSalesInfo from './TicketSalesInfo';
 
 const TYPES_OF_SALE = [
@@ -211,12 +211,7 @@ export default function TicketSellForm() {
         <TotalValue>-- {priceUnit.toUpperCase()}</TotalValue>
       </Row>
 
-      <StyledButton
-        sx={{ color: theme.palette.common.black, backgroundColor: theme.palette.primary.light }}
-        onClick={onSubmit}
-      >
-        COMPLETE LISTING
-      </StyledButton>
+      <RoundedButton onClick={onSubmit}>COMPLETE LISTING</RoundedButton>
     </>
   );
 }

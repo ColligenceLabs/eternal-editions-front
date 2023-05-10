@@ -1,6 +1,8 @@
 import { Stack, useTheme } from '@mui/material';
 import React from 'react';
-import { Hr, Label, Row, StyledButton, TotalValue, Value } from './StyledComponents';
+import RoundedButton from '../common/RoundedButton';
+// import Button from '../common/Button';
+import { Hr, Label, Row, TotalValue, Value } from './StyledComponents';
 
 interface Props {
   typeOfSale: string;
@@ -8,7 +10,6 @@ interface Props {
 }
 
 export default function TicketSalesInfo({ typeOfSale, creatorEarnings }: Props) {
-  const theme = useTheme();
   const isAuction = typeOfSale === 'auction';
 
   return (
@@ -72,19 +73,7 @@ export default function TicketSalesInfo({ typeOfSale, creatorEarnings }: Props) 
         </Row>
       </Stack>
 
-      {isAuction ? (
-        <StyledButton
-          sx={{
-            color: theme.palette.common.white,
-            backgroundColor: 'rgba(0, 0, 0, 0.24)',
-            [`&:hover`]: {
-              background: 'rgba(0, 0, 0)',
-            },
-          }}
-        >
-          CONFIRM
-        </StyledButton>
-      ) : null}
+      {isAuction ? <RoundedButton variant="withImage">CONFIRM</RoundedButton> : null}
     </Stack>
   );
 }

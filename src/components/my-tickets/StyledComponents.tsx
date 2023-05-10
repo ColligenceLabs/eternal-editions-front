@@ -55,21 +55,6 @@ export const Section = styled(Stack)({
   gap: '12px',
 });
 
-export const StyledButton = styled(Button)(({ theme }) => ({
-  fontWeight: theme.typography.fontWeightBold,
-  fontSize: 12,
-  lineHeight: 13 / 12,
-  [theme.breakpoints.up('md')]: {
-    fontSize: 14,
-    lineHeight: 12 / 14,
-  },
-  letterSpacing: '0.08em',
-  textTransform: 'uppercase',
-  bordrerRadius: '50px',
-  paddingTop: '22px',
-  paddingBottom: '22px',
-}));
-
 export const StyledSelect = styled(Select)(({ theme }) => ({
   textTransform: 'uppercase',
   textAlign: 'center',
