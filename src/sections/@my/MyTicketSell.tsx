@@ -153,8 +153,7 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   },
   [`&.${menuItemClasses.selected}`]: {
     background: '#00E904',
-    borderBottomLeftRadius: 0,
-    borderBottomRightRadius: 0,
+    borderRadius: 0,
   },
 }));
 
