@@ -106,6 +106,8 @@ const StyledSelect = styled(Select)(({ theme }) => ({
   minHeight: 'unset',
   [`& .${selectClasses.icon}`]: {
     right: '16px',
+    top: '50%',
+    transform: 'translateY(-50%)',
     color: theme.palette.common.white,
   },
   [`& .${outlinedInputClasses.notchedOutline}`]: {
@@ -116,6 +118,8 @@ const StyledSelect = styled(Select)(({ theme }) => ({
     fontWeight: 'bold',
     color: theme.palette.common.white,
     borderRadius: 'inherit',
+    height: 'unset',
+    minHeight: 'unset',
   },
   [`&:hover, &.Mui-focused`]: {
     [`.${outlinedInputClasses.notchedOutline}`]: {
@@ -134,9 +138,9 @@ const StyledSelect = styled(Select)(({ theme }) => ({
   [`& .${inputBaseClasses.inputSizeSmall}`]: {
     padding: '10px 12px',
     fontSize: 12,
+    lineHeight: 13 / 12,
   },
   [`&.MuiInputBase-sizeSmall .${selectClasses.icon}`]: {
-    top: 'calc(50% - 10px)',
     right: '12px',
   },
 }));
