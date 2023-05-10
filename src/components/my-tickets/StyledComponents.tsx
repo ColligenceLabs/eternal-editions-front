@@ -75,7 +75,6 @@ export const StyledSelect = styled(Select)(({ theme }) => ({
   textTransform: 'uppercase',
   textAlign: 'center',
   borderRadius: '60px',
-  minHeight: 'unset',
   letterSpacing: '0.08em',
   fontSize: 12,
   lineHeight: 13 / 12,
@@ -99,7 +98,7 @@ export const StyledSelect = styled(Select)(({ theme }) => ({
     color: theme.palette.common.white,
     borderRadius: 'inherit',
     height: 'unset',
-    minHeight: 'unset',
+    minHeight: 'unset !important',
     whiteSpace: 'pre-wrap',
     [theme.breakpoints.up('md')]: {
       padding: '22px 40px',

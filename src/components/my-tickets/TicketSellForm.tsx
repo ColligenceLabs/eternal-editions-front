@@ -48,7 +48,13 @@ const DURATIONS = [
   },
 ];
 
-export default function TicketSellForm() {
+// ----------------------------------------------------------------------
+
+interface Props {
+  setIsSubmitting: (isSubmitting: boolean) => void;
+}
+
+export default function TicketSellForm({ setIsSubmitting }: Props) {
   const theme = useTheme();
 
   const [typeOfSale, setTypeOfSale] = useState(TYPES_OF_SALE[0].value);
@@ -65,6 +71,10 @@ export default function TicketSellForm() {
 
   const onChangeDuration = (event: SelectChangeEvent<unknown>) => {
     setDuration(event.target.value as number);
+  };
+
+  const onSubmit = () => {
+    setIsSubmitting(true);
   };
 
   return (
@@ -185,7 +195,7 @@ export default function TicketSellForm() {
         <TotalValue>-- EDCP</TotalValue>
       </Row>
 
-      <StyledButton>COMPLETE LISTING</StyledButton>
+      <StyledButton onClick={onSubmit}>COMPLETE LISTING</StyledButton>
     </>
   );
 }

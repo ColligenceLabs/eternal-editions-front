@@ -1,10 +1,12 @@
 import { Box, Stack, Typography, useTheme } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import { EEAvatar } from 'src/components';
+import TicketSalesInfo from 'src/components/my-tickets/TicketSalesInfo';
 import TicketSellForm from 'src/components/my-tickets/TicketSellForm';
 
 export default function MyTicketSell() {
   const theme = useTheme();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   return (
     <Box
@@ -72,7 +74,7 @@ export default function MyTicketSell() {
           DCENTRAL Miami 2023 VIP
         </Typography>
 
-        <TicketSellForm />
+        {isSubmitting ? <TicketSalesInfo /> : <TicketSellForm setIsSubmitting={setIsSubmitting} />}
       </Stack>
     </Box>
   );
