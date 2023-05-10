@@ -1,7 +1,6 @@
-import { Stack, useTheme } from '@mui/material';
+import { Stack } from '@mui/material';
 import React from 'react';
 import RoundedButton from '../common/RoundedButton';
-// import Button from '../common/Button';
 import { Hr, Label, Row, TotalValue, Value } from './StyledComponents';
 
 interface Props {
@@ -13,7 +12,7 @@ export default function TicketSalesInfo({ typeOfSale, creatorEarnings }: Props) 
   const isAuction = typeOfSale === 'auction';
 
   return (
-    <Stack justifyContent="space-between" sx={{ height: '100%' }}>
+    <Stack gap="24px" justifyContent="space-between" sx={{ height: '100%' }}>
       <Stack gap="12px">
         <Stack gap={{ xs: 2, md: '7px' }}>
           <Row>
