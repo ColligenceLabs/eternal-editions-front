@@ -12,16 +12,14 @@ import {
   FootText,
   Hr,
   Label,
-  MenuProps,
   Row,
   Section,
   StyledInput,
-  StyledMenuItem,
-  StyledSelect,
   TotalValue,
   Value,
 } from 'src/components/my-tickets/StyledComponents';
 import RoundedButton from '../common/RoundedButton';
+import { RoundedSelect, RoundedSelectOption } from '../common/RoundedSelect';
 import TicketSalesInfo from './TicketSalesInfo';
 
 const TYPES_OF_SALE = [
@@ -45,7 +43,7 @@ const PRICE_UNITS = [
 const DURATIONS = [
   {
     label: '1 MONTH (2022.11.16 ~ 2022.11.16)',
-    value: 1,
+    value: '1',
   },
 ];
 
@@ -58,10 +56,6 @@ export default function TicketSellForm() {
   const [duration, setDuration] = useState(DURATIONS[0].value);
   const [creatorEarnings, setCreatorEarnings] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  const onChangeTypeOfSale = (event: SelectChangeEvent<unknown>) => {
-    setTypeOfSale(event.target.value as string);
-  };
 
   const onSubmit = () => {
     setIsSubmitting(true);
@@ -86,19 +80,16 @@ export default function TicketSellForm() {
 
       <Section>
         <Label>CHOOSE A TYPE OF SALE</Label>
-        <StyledSelect
-          fullWidth
-          variant="outlined"
+        <RoundedSelect
           value={typeOfSale}
-          onChange={onChangeTypeOfSale}
-          MenuProps={MenuProps}
+          onChange={(event: SelectChangeEvent<any>) => setTypeOfSale(event.target.value)}
         >
           {TYPES_OF_SALE.map((option) => (
-            <StyledMenuItem key={option.value} value={option.value} disableGutters>
+            <RoundedSelectOption key={option.value} value={option.value}>
               {option.label}
-            </StyledMenuItem>
+            </RoundedSelectOption>
           ))}
-        </StyledSelect>
+        </RoundedSelect>
       </Section>
 
       <Hr sx={{ [theme.breakpoints.up('md')]: { display: 'none' } }} />
@@ -110,18 +101,16 @@ export default function TicketSellForm() {
             placeholder="Amount"
             endAdornment={
               <InputAdornment position="end">
-                <StyledSelect
-                  size="small"
+                <RoundedSelect
                   value={priceUnit}
-                  onChange={({ target }) => setPriceUnit(target.value as string)}
-                  MenuProps={MenuProps}
+                  onChange={(event) => setPriceUnit(event.target.value as string)}
                 >
                   {PRICE_UNITS.map((unit) => (
-                    <StyledMenuItem key={unit.value} value={unit.value}>
+                    <RoundedSelectOption key={unit.value} value={unit.value}>
                       {unit.label}
-                    </StyledMenuItem>
+                    </RoundedSelectOption>
                   ))}
-                </StyledSelect>
+                </RoundedSelect>
               </InputAdornment>
             }
           />
@@ -130,19 +119,16 @@ export default function TicketSellForm() {
 
       <Section>
         <Label>DURATION</Label>
-        <StyledSelect
-          fullWidth
-          variant="outlined"
+        <RoundedSelect
           value={duration}
-          onChange={({ target }) => setDuration(target.value as number)}
-          MenuProps={MenuProps}
+          onChange={(event) => setDuration(event.target.value as string)}
         >
           {DURATIONS.map((option) => (
-            <StyledMenuItem key={option.value} value={option.value} disableGutters>
+            <RoundedSelectOption key={option.value} value={option.value}>
               {option.label}
-            </StyledMenuItem>
+            </RoundedSelectOption>
           ))}
-        </StyledSelect>
+        </RoundedSelect>
       </Section>
 
       {typeOfSale === 'auction' ? (
