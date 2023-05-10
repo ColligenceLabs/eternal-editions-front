@@ -1,10 +1,12 @@
 import {
   Box,
+  Button,
   FormControl,
   Input,
   InputAdornment,
   inputBaseClasses,
   inputClasses,
+  listClasses,
   MenuItem,
   menuItemClasses,
   outlinedInputClasses,
@@ -36,6 +38,14 @@ const PRICE_UNITS = [
     value: 'edcp',
   },
 ];
+
+const DURATIONS = [
+  {
+    label: '1 MONTH (2022.11.16 ~ 2022.11.16)',
+    value: 1,
+  },
+];
+
 // ----------------------------------------------------------------------
 
 const Label = styled(Typography)({
@@ -51,11 +61,41 @@ const Value = styled(Typography)({
   color: 'white',
 });
 
+const TotalValue = styled(Typography)({
+  fontSize: 16,
+  fontWeight: 'bold',
+  lineHeight: 24 / 16,
+  color: 'white',
+});
+
+const FootText = styled(Typography)({
+  fontSize: 12,
+  lineHeight: 16 / 12,
+  color: 'rgba(255, 255, 255, 0.6)',
+});
+
 const Row = styled(Stack)({
   flexDirection: 'row',
   alignItems: 'center',
   justifyContent: 'space-between',
 });
+
+const Section = styled(Stack)({
+  gap: '12px',
+});
+
+const StyledButton = styled(Button)(({ theme }) => ({
+  fontWeight: theme.typography.fontWeightBold,
+  fontSize: 14,
+  lineHeight: 12 / 14,
+  letterSpacing: '0.08em',
+  textTransform: 'uppercase',
+  color: theme.palette.common.black,
+  backgroundColor: theme.palette.primary.light,
+  bordrerRadius: '50px',
+  paddingTop: '22px',
+  paddingBottom: '22px',
+}));
 
 const StyledSelect = styled(Select)(({ theme }) => ({
   fontSize: '14px',
@@ -64,27 +104,32 @@ const StyledSelect = styled(Select)(({ theme }) => ({
   textAlign: 'center',
   borderRadius: '60px',
   minHeight: 'unset',
-  [`&:hover`]: {
-    backgroundColor: theme.palette.common.white,
-    color: theme.palette.common.black,
-  },
-  [`& .${outlinedInputClasses.notchedOutline}`]: {
-    borderColor: theme.palette.common.white,
-  },
   [`& .${selectClasses.icon}`]: {
     right: '16px',
     color: theme.palette.common.white,
   },
-  [`&:hover .${selectClasses.icon}`]: {
-    color: theme.palette.common.black,
+  [`& .${outlinedInputClasses.notchedOutline}`]: {
+    borderColor: theme.palette.common.white,
   },
   [`& .${selectClasses.select}`]: {
     padding: '22px 40px',
     fontWeight: 'bold',
-  },
-  [`&:hover .${selectClasses.select}`]: {
-    backgroundColor: theme.palette.common.white,
+    color: theme.palette.common.white,
     borderRadius: 'inherit',
+  },
+  [`&:hover, &.Mui-focused`]: {
+    [`.${outlinedInputClasses.notchedOutline}`]: {
+      borderColor: theme.palette.common.white,
+      color: theme.palette.common.black,
+    },
+    [`& .${selectClasses.select}`]: {
+      backgroundColor: theme.palette.common.white,
+      color: theme.palette.common.black,
+      borderRadius: 'inherit',
+    },
+    [`.${selectClasses.icon}`]: {
+      color: theme.palette.common.black,
+    },
   },
   [`& .${inputBaseClasses.inputSizeSmall}`]: {
     padding: '10px 12px',
@@ -106,11 +151,10 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
     justifyContent: 'center',
     padding: '22px 40px',
   },
-  [`&:hover`]: {
-    borderColor: theme.palette.common.white,
-  },
   [`&.${menuItemClasses.selected}`]: {
-    background: theme.palette.primary.main,
+    background: '#00E904',
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
   },
 }));
 
@@ -118,6 +162,9 @@ const StyledInput = styled(Input)({
   height: '53px',
   fontSize: 14,
   lineHeight: 20 / 14,
+  [`&::before`]: {
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+  },
   [`& .${inputClasses.input}`]: {
     alignSelf: 'flex-end',
     marginBottom: '12px',
@@ -135,8 +182,19 @@ const MenuProps = {
       borderRadius: '28px',
       color: 'black',
     },
+    sx: {
+      [`.${listClasses.padding}`]: {
+        padding: '0',
+      },
+    },
   },
 };
+
+const Hr = styled('hr')({
+  width: '100%',
+  borderWidth: '1px',
+  borderColor: 'rgba(255, 255, 255, 0.4)',
+});
 
 // ----------------------------------------------------------------------
 
@@ -145,6 +203,7 @@ export default function MyTicketSell() {
   const ticketInfo = data?.data;
   const [typeOfSale, setTypeOfSale] = useState(TYPES_OF_SALE[0].value);
   const [priceUnit, setPriceUnit] = useState(PRICE_UNITS[0].value);
+  const [duration, setDuration] = useState(DURATIONS[0].value);
 
   if (!ticketInfo) {
     return null;
@@ -156,6 +215,10 @@ export default function MyTicketSell() {
 
   const onChangeUnit = (event: SelectChangeEvent<unknown>) => {
     setPriceUnit(event.target.value as string);
+  };
+
+  const onChangeDuration = (event: SelectChangeEvent<unknown>) => {
+    setDuration(event.target.value as number);
   };
 
   return (
@@ -215,8 +278,8 @@ export default function MyTicketSell() {
         </Row>
       </Box>
 
-      <Box>
-        <Label mb="12px">CHOOSE A TYPE OF SALE</Label>
+      <Section>
+        <Label>CHOOSE A TYPE OF SALE</Label>
         <StyledSelect
           fullWidth
           variant="outlined"
@@ -225,12 +288,12 @@ export default function MyTicketSell() {
           MenuProps={MenuProps}
         >
           {TYPES_OF_SALE.map((option) => (
-            <StyledMenuItem key={option.value} value={option.value} color="black" disableGutters>
+            <StyledMenuItem key={option.value} value={option.value} disableGutters>
               {option.label}
             </StyledMenuItem>
           ))}
         </StyledSelect>
-      </Box>
+      </Section>
 
       <Box>
         <Label>SET A PRICE</Label>
@@ -239,7 +302,12 @@ export default function MyTicketSell() {
             placeholder="Amount"
             endAdornment={
               <InputAdornment position="end">
-                <StyledSelect size="small" value={priceUnit} onChange={onChangeUnit}>
+                <StyledSelect
+                  size="small"
+                  value={priceUnit}
+                  onChange={onChangeUnit}
+                  MenuProps={MenuProps}
+                >
                   {PRICE_UNITS.map((unit) => (
                     <StyledMenuItem key={unit.value} value={unit.value}>
                       {unit.label}
@@ -251,6 +319,70 @@ export default function MyTicketSell() {
           />
         </FormControl>
       </Box>
+
+      <Section>
+        <Label>DURATION</Label>
+        <StyledSelect
+          fullWidth
+          variant="outlined"
+          value={duration}
+          onChange={onChangeDuration}
+          MenuProps={MenuProps}
+        >
+          {DURATIONS.map((option) => (
+            <StyledMenuItem key={option.value} value={option.value} disableGutters>
+              {option.label}
+            </StyledMenuItem>
+          ))}
+        </StyledSelect>
+      </Section>
+
+      <Box>
+        <Label>SET A PRICE</Label>
+        <FormControl variant="standard" fullWidth>
+          <StyledInput
+            placeholder="Amount"
+            endAdornment={
+              <InputAdornment position="end">
+                <Typography color="white" fontWeight="bold" fontSize={14} lineHeight={12 / 14}>
+                  %
+                </Typography>
+              </InputAdornment>
+            }
+          />
+        </FormControl>
+        <FootText mt="12px">
+          Creator earning are optional for this collection. You can give them up to 7.50% of your
+          sale.
+        </FootText>
+      </Box>
+
+      <Section>
+        <Label>Summary</Label>
+        <Stack gap="7px">
+          <Row>
+            <Label>Listing Price</Label>
+            <Value>-- EDCP</Value>
+          </Row>
+          <Row>
+            <Label>Service fee</Label>
+            <Value>2.5%</Value>
+          </Row>{' '}
+          <Row>
+            <Label>Creator earnings</Label>
+            <Value>7.5%</Value>
+          </Row>
+        </Stack>
+      </Section>
+
+      <Hr sx={{ my: '-12px' }} />
+
+      <Row>
+        <Label>Potential earning</Label>
+        <TotalValue>-- EDCP</TotalValue>
+      </Row>
+
+      <StyledButton>COMPLETE LISTING</StyledButton>
     </Stack>
   );
 }
