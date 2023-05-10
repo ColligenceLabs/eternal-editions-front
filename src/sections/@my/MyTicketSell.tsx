@@ -152,7 +152,7 @@ const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
     padding: '22px 40px',
   },
   [`&.${menuItemClasses.selected}`]: {
-    background: '#00E904',
+    background: '#00E904 !important',
     borderRadius: 0,
   },
 }));
@@ -179,6 +179,7 @@ const MenuProps = {
     style: {
       background: 'white',
       borderRadius: '28px',
+      border: 'none',
       color: 'black',
     },
     sx: {
