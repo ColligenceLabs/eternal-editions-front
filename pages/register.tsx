@@ -736,7 +736,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       let loginEmail: string;
       let flag: boolean;
 
-      if (res.data?.providerAuthInfo) {
+      if (!password && res.data?.providerAuthInfo) {
         console.log('!! Session Info =', res.data?.providerAuthInfo);
         id_token = res.data?.providerAuthInfo?.provider_token;
         service = res.data?.providerAuthInfo?.provider;
