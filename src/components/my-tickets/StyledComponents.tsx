@@ -43,6 +43,7 @@ export const FootText = styled(Typography)({
 export const Row = styled(Stack)(({ theme }) => ({
   flexDirection: 'column',
   gap: 8,
+  minHeight: '20px',
   [theme.breakpoints.up('md')]: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -64,8 +65,6 @@ export const StyledButton = styled(Button)(({ theme }) => ({
   },
   letterSpacing: '0.08em',
   textTransform: 'uppercase',
-  color: theme.palette.common.black,
-  backgroundColor: theme.palette.primary.light,
   bordrerRadius: '50px',
   paddingTop: '22px',
   paddingBottom: '22px',
@@ -145,11 +144,14 @@ export const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
 }));
 
 export const StyledInput = styled(Input)({
-  height: '53px',
+  height: '44px',
   fontSize: 14,
   lineHeight: 20 / 14,
   [`&::before`]: {
     borderColor: 'rgba(255, 255, 255, 0.4)',
+  },
+  [`&.${inputBaseClasses.adornedEnd}`]: {
+    height: '53px',
   },
   [`& .${inputClasses.input}`]: {
     alignSelf: 'flex-end',

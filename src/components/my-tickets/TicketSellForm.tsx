@@ -22,6 +22,7 @@ import {
   TotalValue,
   Value,
 } from 'src/components/my-tickets/StyledComponents';
+import TicketSalesInfo from './TicketSalesInfo';
 
 const TYPES_OF_SALE = [
   {
@@ -50,32 +51,25 @@ const DURATIONS = [
 
 // ----------------------------------------------------------------------
 
-interface Props {
-  setIsSubmitting: (isSubmitting: boolean) => void;
-}
-
-export default function TicketSellForm({ setIsSubmitting }: Props) {
+export default function TicketSellForm() {
   const theme = useTheme();
-
   const [typeOfSale, setTypeOfSale] = useState(TYPES_OF_SALE[0].value);
   const [priceUnit, setPriceUnit] = useState(PRICE_UNITS[0].value);
   const [duration, setDuration] = useState(DURATIONS[0].value);
+  const [creatorEarnings, setCreatorEarnings] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const onChangeTypeOfSale = (event: SelectChangeEvent<unknown>) => {
     setTypeOfSale(event.target.value as string);
   };
 
-  const onChangeUnit = (event: SelectChangeEvent<unknown>) => {
-    setPriceUnit(event.target.value as string);
-  };
-
-  const onChangeDuration = (event: SelectChangeEvent<unknown>) => {
-    setDuration(event.target.value as number);
-  };
-
   const onSubmit = () => {
     setIsSubmitting(true);
   };
+
+  if (isSubmitting) {
+    return <TicketSalesInfo typeOfSale={typeOfSale} creatorEarnings={creatorEarnings} />;
+  }
 
   return (
     <>
@@ -119,7 +113,7 @@ export default function TicketSellForm({ setIsSubmitting }: Props) {
                 <StyledSelect
                   size="small"
                   value={priceUnit}
-                  onChange={onChangeUnit}
+                  onChange={({ target }) => setPriceUnit(target.value as string)}
                   MenuProps={MenuProps}
                 >
                   {PRICE_UNITS.map((unit) => (
@@ -140,7 +134,7 @@ export default function TicketSellForm({ setIsSubmitting }: Props) {
           fullWidth
           variant="outlined"
           value={duration}
-          onChange={onChangeDuration}
+          onChange={({ target }) => setDuration(target.value as number)}
           MenuProps={MenuProps}
         >
           {DURATIONS.map((option) => (
@@ -151,10 +145,30 @@ export default function TicketSellForm({ setIsSubmitting }: Props) {
         </StyledSelect>
       </Section>
 
+      {typeOfSale === 'auction' ? (
+        <>
+          <Stack>
+            <Label>MAXIMUM BID QUANTITIES</Label>
+            <FormControl variant="standard" fullWidth>
+              <StyledInput placeholder="Amount" />
+            </FormControl>
+          </Stack>
+
+          <Stack>
+            <Label>MINIMUM BID INCREMENTS</Label>
+            <FormControl variant="standard" fullWidth>
+              <StyledInput placeholder="Amount" />
+            </FormControl>
+          </Stack>
+        </>
+      ) : null}
+
       <Box>
-        <Label>SET A PRICE</Label>
+        <Label>CREATOR EARNINGS</Label>
         <FormControl variant="standard" fullWidth>
           <StyledInput
+            value={creatorEarnings}
+            onChange={({ target }) => setCreatorEarnings(target.value)}
             endAdornment={
               <InputAdornment position="end">
                 <Typography color="white" fontWeight="bold" fontSize={14} lineHeight={12 / 14}>
@@ -175,16 +189,18 @@ export default function TicketSellForm({ setIsSubmitting }: Props) {
         <Stack gap="7px">
           <Row>
             <Label>Listing Price</Label>
-            <Value>-- EDCP</Value>
+            <Value>-- {priceUnit.toUpperCase()}</Value>
           </Row>
           <Row>
             <Label>Service fee</Label>
             <Value>2.5%</Value>
           </Row>{' '}
-          <Row>
-            <Label>Creator earnings</Label>
-            <Value>7.5%</Value>
-          </Row>
+          {creatorEarnings ? (
+            <Row>
+              <Label>Creator earnings</Label>
+              <Value>{creatorEarnings}%</Value>
+            </Row>
+          ) : null}
         </Stack>
       </Section>
 
@@ -192,10 +208,15 @@ export default function TicketSellForm({ setIsSubmitting }: Props) {
 
       <Row>
         <Label>Potential earning</Label>
-        <TotalValue>-- EDCP</TotalValue>
+        <TotalValue>-- {priceUnit.toUpperCase()}</TotalValue>
       </Row>
 
-      <StyledButton onClick={onSubmit}>COMPLETE LISTING</StyledButton>
+      <StyledButton
+        sx={{ color: theme.palette.common.black, backgroundColor: theme.palette.primary.light }}
+        onClick={onSubmit}
+      >
+        COMPLETE LISTING
+      </StyledButton>
     </>
   );
 }
