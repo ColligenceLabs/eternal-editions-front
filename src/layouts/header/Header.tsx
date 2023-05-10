@@ -108,10 +108,10 @@ export default function Header({ transparent, sx }: Props) {
   };
 
   useEffect(() => {
-    const loginType = localStorage.getItem('loginType');
-    console.log('!! login type = ', loginType);
+    const loginBy = localStorage.getItem('loginBy');
+    console.log('!! login type = ', loginBy);
     if (
-      loginType !== 'password' &&
+      loginBy !== 'password' &&
       webUser?.user?.session?.providerAuthInfo?.provider_token !== '' &&
       temp
     ) {
