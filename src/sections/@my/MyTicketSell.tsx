@@ -134,10 +134,10 @@ const StyledSelect = styled(Select)(({ theme }) => ({
   [`& .${inputBaseClasses.inputSizeSmall}`]: {
     padding: '10px 12px',
     fontSize: 12,
-    [`& .${selectClasses.icon}`]: {
-      top: 'calc(50% - 10px)',
-      right: '12px',
-    },
+  },
+  [`&.MuiInputBase-sizeSmall .${selectClasses.icon}`]: {
+    top: 'calc(50% - 10px)',
+    right: '12px',
   },
 }));
 
