@@ -15,7 +15,7 @@ import { SelectChangeEvent } from '@mui/material/Select';
 import { CategoryProps, TicketProps } from 'src/@types/ticket/ticket';
 import { useTheme } from '@mui/material/styles';
 import axios from 'axios';
-import { getTicketsService } from 'src/services/services';
+import {getTicketCountByCategory, getTicketsService} from 'src/services/services';
 import { SUCCESS } from 'src/config';
 import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 // import { isMobile } from 'react-device-detect';
@@ -56,6 +56,7 @@ export default function TicketsFilter({ tickets, categories }: Props) {
   };
 
   const getTickets = async () => {
+    console.log(selected)
     const res = await getTicketsService(1, perPage, selected);
     console.log(res);
     if (res.status === 200) {
@@ -66,17 +67,25 @@ export default function TicketsFilter({ tickets, categories }: Props) {
 
   const getMoreTickets = async () => {
     const res = await getTicketsService(curPage, perPage, selected);
+    console.log(res)
     if (res.status === 200) {
       setTicketInfoList((cur) => [...cur, ...res.data.list]);
     }
   };
 
+  const getCountByCategory = async () => {
+    const res = await getTicketCountByCategory()
+    console.log(res)
+  }
+
   useEffect(() => {
     setCurPage(1);
     getTickets();
+    getCountByCategory()
   }, [selected]);
 
   useEffect(() => {
+    console.log(`curPage:${curPage}`)
     if (curPage !== 1) getMoreTickets();
   }, [curPage]);
 
@@ -113,11 +122,12 @@ export default function TicketsFilter({ tickets, categories }: Props) {
                 key={category}
                 value={category}
                 label={
-                  <Typography
-                    variant="body2"
+                  <Stack
+                    flexDirection="row"
+                    useFlexGap
+                    gap="10px"
                     sx={{
                       fontSize: '14px',
-                      fontWeight: theme.typography.fontWeightBold,
                       textTransform: 'uppercase',
                       padding: {
                         xs: '10px 12px',
@@ -125,8 +135,13 @@ export default function TicketsFilter({ tickets, categories }: Props) {
                       },
                     }}
                   >
-                    {category}
-                  </Typography>
+                    <Typography variant="body2" fontWeight="bold">
+                      {category}
+                    </Typography>
+                    <Typography variant="body2" fontWeight="bold" sx={{ color: 'red' }}>
+                      1
+                    </Typography>
+                  </Stack>
                 }
                 sx={{
                   [`&.${tabClasses.root}`]: {
