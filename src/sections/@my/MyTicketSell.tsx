@@ -1,4 +1,4 @@
-import { Box, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Chip, Stack, Typography, useTheme } from '@mui/material';
 import React, { useState } from 'react';
 import { EEAvatar } from 'src/components';
 import TicketSalesInfo from 'src/components/my-tickets/TicketSalesInfo';
@@ -38,28 +38,42 @@ export default function MyTicketSell() {
           },
         }}
       >
-        <Stack
-          direction="row"
-          spacing={0.5}
-          alignItems="center"
-          sx={{
-            opacity: 0.72,
-            typography: 'caption',
-            [theme.breakpoints.down('md')]: {
-              marginBottom: -1,
-            },
-          }}
-        >
-          <EEAvatar
-            account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
-            image={'url(/assets/static/avatars/1.jpg)'}
-            nickname={'by @iloveseoul'}
-            sx={{ mr: 0, width: 24, height: 24 }}
+        <Stack flexDirection="row" justifyContent="space-between">
+          <Stack
+            direction="row"
+            spacing={0.5}
+            alignItems="center"
+            sx={{
+              opacity: 0.72,
+              typography: 'caption',
+              [theme.breakpoints.down('md')]: {
+                marginBottom: -1,
+              },
+            }}
+          >
+            <EEAvatar
+              account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
+              image={'url(/assets/static/avatars/1.jpg)'}
+              nickname={'by @iloveseoul'}
+              sx={{ mr: 0, width: 24, height: 24 }}
+            />
+            <Typography fontSize={14} lineHeight={20 / 14}>
+              by @iloveseoul
+            </Typography>
+          </Stack>
+
+          <Chip
+            label={'For sale'}
+            variant="outlined"
+            color="primary"
+            sx={{
+              fontWeight: theme.typography.fontWeightBold,
+              color: theme.palette.primary.main,
+              textTransform: 'uppercase',
+            }}
           />
-          <Typography fontSize={14} lineHeight={20 / 14}>
-            by @iloveseoul
-          </Typography>
         </Stack>
+
         <Typography
           sx={{
             fontWeight: 'bold',
