@@ -193,7 +193,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
     console.log(res);
     if (res.data.status === SUCCESS) {
       console.log('로그인 성공');
-      window.localStorage.setItem('loginType', 'password');
+      window.localStorage.setItem('loginBy', 'password');
       Router.push({
         pathname: '/register',
         query: { eternal: Base64.encode(userPWD) },
@@ -418,7 +418,13 @@ export default function SignUp({ onClose, hideSns, ...other }) {
               rel="noreferrer"
               >
             </a> */}
-            <Button fullWidth size="large" variant="vivid" href="https://eedao.notion.site/Eternal-Editions-168957fedc5a4ffe8ea7fcbc2ae1d05f" target="_blank">
+            <Button
+              fullWidth
+              size="large"
+              variant="vivid"
+              href="https://eedao.notion.site/Eternal-Editions-168957fedc5a4ffe8ea7fcbc2ae1d05f"
+              target="_blank"
+            >
               <Typography variant={'caption'}>회원가입 가이드</Typography>
             </Button>
           </Stack>
