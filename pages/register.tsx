@@ -668,7 +668,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
 
       // 가잊은 되어 있으나 지갑이 없는 사용자의 경우 에러 발생...
       // TypeError: Cannot read properties of null (reading 'accounts')
-      if (user.twoFactorEnabled) {
+      if (user && user?.twoFactorEnabled) {
         await accountController.recoverShare(
           { password: '!owdin001', user, wallets, keepDB: false },
           dispatch
@@ -677,7 +677,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
 
       if (flag) {
         // OLD User
-        if (!user.twoFactorEnabled) {
+        if (user === null && !user?.twoFactorEnabled) {
           setMemberCheck(false);
           // TODO : OTP 미등록 상태 처리
           const { qrcode, secret } = await accountController.generateTwoFactor({ reset: false });
@@ -696,7 +696,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       } else {
         // New SNS User
         try {
-          if (user.twoFactorEnabled) {
+          if (user && user?.twoFactorEnabled) {
             // 성공. 리다이렉트..
             console.log('이미 가입되어 있습니다. 로그인 처리합니다.');
 
