@@ -31,7 +31,7 @@ export default function Accordion({ title, content, isExpanded, onChange }: Prop
             xs: '16px',
             md: '24px',
           },
-          [`.${accordionSummaryClasses.content}`]: {
+          [`.${accordionSummaryClasses.content}, .${accordionSummaryClasses.expanded}`]: {
             margin: 0,
           },
         }}
