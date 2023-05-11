@@ -8,6 +8,7 @@ import { getTicketCountByCategory, getTicketsService } from 'src/services/servic
 import { SUCCESS } from 'src/config';
 import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 import { useResponsive } from 'src/hooks';
+import CategoryTabs from 'src/components/CategoryTabs';
 
 // ----------------------------------------------------------------------
 
@@ -100,70 +101,11 @@ export default function TicketsFilter({ categories: originCategories }: Props) {
             width: '100%',
           }}
         >
-          <Tabs
-            value={selected.toLowerCase()}
-            variant="scrollable"
-            TabIndicatorProps={{ sx: { display: 'none' } }}
+          <CategoryTabs
+            categories={categories}
+            value={selected.toLocaleLowerCase()}
             onChange={handleChangeCategory}
-          >
-            {categories.map((category: CategoryTypes) => {
-              if (category.category !== '')
-                return (
-                  <Tab
-                    key={category.category}
-                    value={category.category}
-                    label={
-                      <Stack
-                        flexDirection="row"
-                        useFlexGap
-                        gap="10px"
-                        sx={{
-                          fontSize: '14px',
-                          textTransform: 'uppercase',
-                          padding: {
-                            xs: '10px 12px',
-                            md: '10px 16px',
-                          },
-                        }}
-                      >
-                        <Typography variant="body2" fontWeight="bold">
-                          {category.category}
-                        </Typography>
-                        <Typography variant="body2" fontWeight="bold" sx={{ color: 'red' }}>
-                          {category.count}
-                        </Typography>
-                      </Stack>
-                    }
-                    sx={{
-                      [`&.${tabClasses.root}`]: {
-                        opacity: 0.6,
-                        color: 'white',
-                        [theme.breakpoints.down('md')]: {
-                          background: 'rgba(0, 0, 0, 0.24)',
-                          backdropFilter: 'blur(50px)',
-                          borderRadius: '60px',
-                        },
-                      },
-                      [`&.${tabClasses.selected}`]: {
-                        opacity: 1,
-                      },
-                      [`&.${tabClasses.root}:first-of-type`]: {
-                        ml: {
-                          xs: 2.5,
-                          md: 0,
-                        },
-                      },
-                      [`&.${tabClasses.root}:not(:last-of-type)`]: {
-                        mr: {
-                          xs: 0.25,
-                          md: 0.5,
-                        },
-                      },
-                    }}
-                  />
-                );
-            })}
-          </Tabs>
+          />
         </Box>
 
         {/*<TicketSortByFilter filterSortBy={filters.filterSortBy} onChangeSortBy={handleChangeSortBy}/>*/}
