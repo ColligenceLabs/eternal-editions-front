@@ -38,6 +38,9 @@ import { NavDesktop, NavMobile, navConfig } from '../nav';
 import { ToolbarShadowStyle, ToolbarStyle } from './HeaderToolbarStyle';
 import onLogin, { setOnLogin } from 'src/store/slices/onLogin';
 
+// TODO : dkeys WASM Go Initialize...
+import 'src/abc/sandbox/index';
+
 const modalStyle = {
   position: 'absolute',
   top: '30%',

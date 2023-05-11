@@ -43,7 +43,8 @@ import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
 import secureLocalStorage from 'react-secure-storage';
 
 // TODO : dkeys WASM Go Initialize...
-import 'src/abc/sandbox/index';
+// import 'src/abc/sandbox/index';
+
 import { controllers, accountRestApi, services } from 'src/abc/background/init';
 import { AbcAddUserDto, AbcLoginResult, AbcSnsAddUserDto } from 'src/abc/main/abc/interface';
 import { setAbcAuth } from 'src/store/slices/abcAuth';
