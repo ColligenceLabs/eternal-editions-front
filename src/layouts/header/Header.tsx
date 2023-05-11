@@ -71,6 +71,7 @@ export default function Header({ transparent, sx }: Props) {
   const [user, setUser] = React.useState([]);
   const [temp, setTemp] = React.useState(false);
   const [intervalTime, setIntervalTime] = React.useState(1000);
+  const [onLogin, setOnLogin] = React.useState(false);
 
   const abcUser = useSelector((state: any) => state.user);
 
@@ -116,7 +117,9 @@ export default function Header({ transparent, sx }: Props) {
       temp
     ) {
       if (_.isEmpty(abcUser) || abcUser.uid === '') {
+        setOnLogin(true);
         abcSnsLogin();
+        setOnLogin(false);
       }
     }
   }, [webUser, temp, abcUser]);
