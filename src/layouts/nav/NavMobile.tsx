@@ -1,15 +1,12 @@
 import React, { useState, useEffect } from 'react';
-// icons
 import { ToolbarStyle } from 'src/layouts/header/HeaderToolbarStyle';
 import MenuIcon from 'src/assets/icons/menu';
 import DiscordIcon from 'src/assets/icons/discord';
 import CloseIcon from 'src/assets/icons/close';
 import chevronRight from '@iconify/icons-carbon/chevron-right';
 import chevronDown from '@iconify/icons-carbon/chevron-down';
-// next
 import NextLink from 'next/link';
 import { useRouter } from 'next/router';
-// @mui
 import { alpha, styled } from '@mui/material/styles';
 import {
   AppBar,
@@ -17,7 +14,6 @@ import {
   Box,
   List,
   Link,
-  Stack,
   Typography,
   Button,
   Drawer,
@@ -29,13 +25,8 @@ import {
   Fade,
   Modal,
 } from '@mui/material';
-// routes
-import Routes from 'src/routes';
-// config
 import { DRAWER_WIDTH } from 'src/config';
-// @types
 import { NavProps, NavItemMobileProps } from 'src/@types/layout';
-// components
 import { Logo, Scrollbar, Iconify, NavSection } from 'src/components';
 import { IconButtonAnimate } from 'src/components/animate';
 import SignUp from 'src/components/user/SignUp';
@@ -90,7 +81,7 @@ export default function NavMobile({ navConfig, sx }: NavProps) {
   const [joinOpen, setJoinOpen] = React.useState(false);
   const dispatch = useDispatch();
   const { account } = useAccount();
-  const { deactivate, chainId, library } = useWeb3React();
+  const { deactivate } = useWeb3React();
 
   const handleDrawerOpen = () => {
     setDrawerOpen(true);
@@ -190,6 +181,7 @@ export default function NavMobile({ navConfig, sx }: NavProps) {
             borderRadius: 3,
             overflow: 'hidden',
             width: DRAWER_WIDTH,
+            position: 'relative',
           },
         }}
       >
@@ -280,15 +272,26 @@ export default function NavMobile({ navConfig, sx }: NavProps) {
             </List>
           </Scrollbar>
         </Box>
-        {!account ? (
-          <Button onClick={() => handleJoinOpen()} variant="vivid" size="large" fullWidth>
-            LOG IN / SIGN UP
-          </Button>
-        ) : (
-          <Button onClick={() => handleDisconnect()} variant="vivid" size="large" fullWidth>
-            Disconnect
-          </Button>
-        )}
+        <Box
+          sx={{
+            px: '15px',
+            position: 'absolute',
+            bottom: 15,
+            width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+          }}
+        >
+          {!account ? (
+            <Button onClick={() => handleJoinOpen()} variant="vivid" size="large" fullWidth>
+              LOG IN / SIGN UP
+            </Button>
+          ) : (
+            <Button onClick={() => handleDisconnect()} variant="vivid" size="large" fullWidth>
+              Disconnect
+            </Button>
+          )}
+        </Box>
         <Modal
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"
