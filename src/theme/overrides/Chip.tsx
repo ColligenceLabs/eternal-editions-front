@@ -19,7 +19,7 @@ export default function Chip(theme: Theme) {
           // borderRadius: theme.shape.borderRadius,
           borderRadius: 60,
           height: 24,
-          borderColor: isLight ? 'black' : 'white'
+          borderColor: isLight ? 'black' : 'white',
         },
         colorDefault: {
           color: theme.palette.text.secondary,
@@ -29,7 +29,6 @@ export default function Chip(theme: Theme) {
         },
         outlined: {
           borderColor: isLight ? 'black' : 'white',
-          color: isLight ? 'black' : 'white',
           '&.MuiChip-colorPrimary': {
             borderColor: theme.palette.primary.main,
           },

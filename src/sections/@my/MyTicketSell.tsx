@@ -69,7 +69,6 @@ export default function MyTicketSell() {
               color="primary"
               sx={{
                 fontWeight: theme.typography.fontWeightBold,
-                color: theme.palette.primary.main,
                 textTransform: 'uppercase',
               }}
             />

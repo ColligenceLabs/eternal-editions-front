@@ -208,6 +208,7 @@ export default function TicketPostItem({ ticket }: Props) {
                     variant="outlined"
                     sx={{
                       fontWeight: theme.typography.fontWeightBold,
+                      color: theme.palette.common.white,
                     }}
                   />
                 ))
