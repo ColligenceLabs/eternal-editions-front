@@ -1,16 +1,9 @@
 import { m } from 'framer-motion';
-// next
-// @mui
-import { styled, useTheme } from '@mui/material/styles';
-import { Button, Box, Grid, Chip, Stack, Typography } from '@mui/material';
-// routes
+import { useTheme } from '@mui/material/styles';
+import { Box, Grid, Chip, Stack, Typography } from '@mui/material';
 import Routes from 'src/routes';
-// utils
-// @types
-// components
 import { Image, TextMaxLine } from 'src/components';
 import { varHover, varTranHover } from 'src/components/animate';
-import EEAvatar from 'src/components/EEAvatar';
 import { useRouter } from 'next/router';
 import { fDate } from 'src/utils/formatTime';
 import NextLink from 'next/link';
@@ -24,7 +17,17 @@ type Props = {
 };
 
 export default function TicketPostItem({ ticket }: Props) {
-  const { id, title, packageImage, categoriesStr, featured, createdAt } = ticket;
+  console.log(ticket);
+  const {
+    id,
+    title,
+    packageImage,
+    categoriesStr,
+    featured,
+    createdAt,
+    whitelistNftId,
+    mysteryboxItems,
+  } = ticket;
   const isMobile = useResponsive('down', 'md');
 
   const { push } = useRouter();
@@ -110,10 +113,9 @@ export default function TicketPostItem({ ticket }: Props) {
                       md: 14,
                     },
                     lineHeight: 20 / 14,
-                    color: 'red',
                   }}
                 >
-                  @iloveseoul
+                  {`@${featured?.company.name.en}`}
                 </Typography>
               </Stack>
 
@@ -146,10 +148,12 @@ export default function TicketPostItem({ ticket }: Props) {
                   mt: { xs: 1, sm: 0.5 },
                   fontSize: 12,
                   lineHeight: 16 / 12,
-                  color: 'red',
                 }}
               >
-                HQ Beercade Nashville Nashville, TN
+                {mysteryboxItems &&
+                  mysteryboxItems[0].properties &&
+                  mysteryboxItems[0].properties[0].type.toLowerCase() === 'location' &&
+                  mysteryboxItems[0].properties[0].name}
               </Typography>
             </Stack>
           </Stack>
@@ -163,15 +167,25 @@ export default function TicketPostItem({ ticket }: Props) {
               position: 'absolute',
             }}
           >
-            <Chip
-              label={'WHITELIST MINTING'}
-              variant="outlined"
-              color="primary"
-              sx={{
-                fontWeight: theme.typography.fontWeightBold,
-                color: 'red',
-              }}
-            />
+            {whitelistNftId ? (
+              <Chip
+                label={'WHITELIST MINTING'}
+                variant="outlined"
+                color="primary"
+                sx={{
+                  fontWeight: theme.typography.fontWeightBold,
+                }}
+              />
+            ) : (
+              <Chip
+                label={'PUBLIC SALE'}
+                variant="outlined"
+                color="primary"
+                sx={{
+                  fontWeight: theme.typography.fontWeightBold,
+                }}
+              />
+            )}
           </Stack>
 
           <Stack
