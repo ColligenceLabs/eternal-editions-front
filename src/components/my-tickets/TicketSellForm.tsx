@@ -19,7 +19,7 @@ import {
   Value,
 } from 'src/components/my-tickets/StyledComponents';
 import RoundedButton from '../common/RoundedButton';
-import { RoundedSelect, RoundedSelectOption } from '../common/RoundedSelect';
+import { RoundedSelect, RoundedSelectOption } from '../common/Select';
 import TicketSalesInfo from './TicketSalesInfo';
 
 const TYPES_OF_SALE = [

@@ -1,3 +1,4 @@
+import { ArrowDropDown, Check } from '@mui/icons-material';
 import {
   inputBaseClasses,
   listClasses,
@@ -12,10 +13,10 @@ import {
 } from '@mui/material';
 import { PropsWithChildren } from 'react';
 
-export const StyledSelect = styled(Select)(({ theme }) => ({
+const StyledSelect = styled(Select)(({ theme }) => ({
+  width: 'max-content',
   textTransform: 'uppercase',
-  textAlign: 'center',
-  borderRadius: '60px',
+  textAlign: 'left',
   letterSpacing: '0.08em',
   fontSize: 12,
   lineHeight: 13 / 12,
@@ -24,72 +25,64 @@ export const StyledSelect = styled(Select)(({ theme }) => ({
     lineHeight: 12 / 14,
   },
   [`& .${selectClasses.icon}`]: {
-    right: '16px',
+    right: 0,
     top: '50%',
     transform: 'translateY(-50%)',
     color: theme.palette.common.white,
-  },
-  [`& .${outlinedInputClasses.notchedOutline}`]: {
-    borderColor: theme.palette.common.white,
   },
   [`& .${selectClasses.select}`]: {
     paddingTop: '11px',
     paddingBottom: '11px',
     fontWeight: 'bold',
     color: theme.palette.common.white,
-    borderRadius: 'inherit',
     height: 'unset',
     minHeight: 'unset !important',
-    whiteSpace: 'pre-wrap !important',
-    [theme.breakpoints.up('md')]: {
-      padding: '22px 40px',
-    },
   },
-  [`&:hover, &.Mui-focused`]: {
-    [`.${outlinedInputClasses.notchedOutline}`]: {
-      borderColor: theme.palette.common.white,
-      color: theme.palette.common.black,
-    },
-    [`& .${selectClasses.select}`]: {
-      backgroundColor: theme.palette.common.white,
-      color: theme.palette.common.black,
-      borderRadius: 'inherit',
-    },
-    [`.${selectClasses.icon}`]: {
-      color: theme.palette.common.black,
-    },
+  [`.${outlinedInputClasses.notchedOutline}`]: {
+    border: 'none',
   },
-  [`& .${inputBaseClasses.inputSizeSmall}`]: {
-    padding: '10px 12px',
+  [`& .${inputBaseClasses.input}`]: {
+    padding: '12px',
+    paddingRight: '24px !important',
     fontSize: 12,
     lineHeight: 13 / 12,
   },
-  [`&.MuiInputBase-sizeSmall .${selectClasses.icon}`]: {
-    right: '12px',
+  [`&:hover, &.Mui-focused`]: {
+    [`.${outlinedInputClasses.notchedOutline}`]: {
+      color: theme.palette.common.black,
+    },
+    [`& .${selectClasses.select}`]: {
+      backgroundColor: 'transparent',
+    },
+    [`.${selectClasses.icon}`]: {
+      color: theme.palette.common.white,
+    },
   },
 }));
 
-export const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
   [`&.${menuItemClasses.root}`]: {
     textTransform: 'uppercase',
     fontWeight: theme.typography.fontWeightBold,
-    fontSize: 14,
-    lineHeight: 12 / 14,
+    fontSize: 12,
+    lineHeight: 13 / 12,
     letterSpacing: '0.08em',
-    justifyContent: 'center',
-    padding: '22px 40px',
+    padding: '12px 12px 12px 32px',
+    [`&[hidden]`]: {
+      display: 'none',
+    },
   },
   [`&.${menuItemClasses.selected}`]: {
-    background: '#00E904 !important',
+    background: `${theme.palette.common.white} !important`,
     borderRadius: 0,
   },
 }));
 
-export const MenuProps = {
+const MenuProps = {
   PaperProps: {
     style: {
       background: 'white',
-      borderRadius: '28px',
+      borderRadius: '12px',
       border: 'none',
       color: 'black',
     },
@@ -103,22 +96,26 @@ export const MenuProps = {
 
 interface Props extends PropsWithChildren, SelectProps {
   value: unknown;
-  onChange: SelectProps['onChange'];
+  onChange?: SelectProps['onChange'];
 }
 
-export const RoundedSelectOption = ({ children, ...props }: PropsWithChildren<MenuItemProps>) => (
+export const TextSelectOption = ({ children, ...props }: PropsWithChildren<MenuItemProps>) => (
   <StyledMenuItem disableGutters {...props}>
+    {props.selected ? (
+      <Check sx={{ position: 'absolute', left: '12px', fontSize: '12px' }} />
+    ) : null}
     {children}
   </StyledMenuItem>
 );
 
-export const RoundedSelect = ({ value, onChange, children, ...props }: Props) => (
+export const TextSelect = ({ value, onChange, children, ...props }: Props) => (
   <StyledSelect
     fullWidth
     variant="outlined"
     value={value}
     onChange={onChange}
     MenuProps={MenuProps}
+    IconComponent={ArrowDropDown}
     {...props}
   >
     {children}

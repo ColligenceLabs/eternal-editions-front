@@ -5,7 +5,6 @@ import { Container, Grid, Stack } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
 import MyTicketList from 'src/sections/@my/MyTicketList';
-import PageHeader from 'src/components/common/PageHeader';
 import MyOldTicketList from 'src/sections/@my/MyOldTicketList';
 import SideMenu from 'src/components/SideMenu';
 
@@ -22,7 +21,6 @@ const RootStyle = styled('div')(({ theme }) => ({
 type Props = {};
 
 export default function MyTicketPage({}: Props) {
-  // const [tickets, setTickets] = useState([]);
   const theme = useTheme();
 
   return (

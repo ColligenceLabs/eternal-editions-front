@@ -37,7 +37,7 @@ export default function TicketPostItem({ ticket }: Props) {
   };
 
   return (
-    <Grid item xs={12} sm={4}>
+    <Grid item xs={12} md={4}>
       <NextLink
         passHref
         // as={Routes.eternalEditions.ticket(id.toString())}

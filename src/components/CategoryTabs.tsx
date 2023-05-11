@@ -1,4 +1,13 @@
-import { Stack, styled, Tab, tabClasses, Tabs, TabsProps, Typography } from '@mui/material';
+import {
+  Stack,
+  styled,
+  Tab,
+  tabClasses,
+  Tabs,
+  tabsClasses,
+  TabsProps,
+  Typography,
+} from '@mui/material';
 import React from 'react';
 
 type CategoryType = {
@@ -44,7 +53,13 @@ export default function CategoryTabs({ categories, value, onChange }: Props) {
     <Tabs
       value={value}
       variant="scrollable"
+      scrollButtons={false}
       TabIndicatorProps={{ sx: { display: 'none' } }}
+      sx={{
+        [`&.${tabsClasses.root}, & .${tabsClasses.scroller}`]: {
+          minHeight: 'unset',
+        },
+      }}
       onChange={onChange}
     >
       {categories.map((category: CategoryType) => {
