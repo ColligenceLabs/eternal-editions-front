@@ -7,7 +7,9 @@ export default function Accordion(theme: Theme) {
     MuiAccordion: {
       styleOverrides: {
         root: {
-          borderRadius: '0 !important',
+          '&.MuiAccordion-rounded': {
+            borderRadius: '24px',
+          },
           backgroundColor: 'transparent',
           '&:last-of-type': {
             borderBottom: `solid 1px ${theme.palette.divider}`,
