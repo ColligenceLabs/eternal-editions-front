@@ -10,6 +10,7 @@ import CheckboxFillIcon from 'src/assets/icons/checkboxFill';
 import CheckboxIndeterminateFillIcon from 'src/assets/icons/checkboxIndeterminateFill';
 import {
   abcAddUser,
+  abcJoin,
   abcLogin,
   getSession,
   resetPassword,
@@ -43,7 +44,8 @@ import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
 import secureLocalStorage from 'react-secure-storage';
 
 // TODO : dkeys WASM Go Initialize...
-import 'src/abc/sandbox/index';
+// import 'src/abc/sandbox/index';
+
 import { controllers, accountRestApi, services } from 'src/abc/background/init';
 import { AbcAddUserDto, AbcLoginResult, AbcSnsAddUserDto } from 'src/abc/main/abc/interface';
 import { setAbcAuth } from 'src/store/slices/abcAuth';
@@ -334,7 +336,15 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     if (flCreate) {
       // 신규 가입자 생성
       const sixCode = JSON.parse(result.data.msg).sixcode;
-      console.log('!! sixcode =', sixCode);
+      console.log('!! sixcode =', sixCode, email);
+      console.log(
+        '!! Agreement =',
+        Number(getValues('abcAge')),
+        Number(getValues('abcTerms')),
+        Number(getValues('abcPrivate')),
+        Number(getValues('abcTirdParty')),
+        Number(getValues('abcMarketing'))
+      );
       const dto: AbcSnsAddUserDto = {
         username: email,
         code: sixCode,
@@ -345,8 +355,13 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         thirdparty: Number(getValues('abcTirdParty')),
         advertise: Number(getValues('abcMarketing')),
       };
-      const newAccount = await abcController.snsAddUser(dto);
-      console.log('!! created account =', newAccount);
+      try {
+        // const newAccount = await abcController.snsAddUser(dto);
+        const newAccount = await abcJoin(dto);
+        console.log('!! created account =', newAccount);
+      } catch (e) {
+        console.log('!! snsAddUser Error =', e);
+      }
 
       // 신규 가입 후 ABC 로그인
       console.log('!! start to abc sns login !!');
@@ -618,10 +633,10 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       }
     } else {
       const isExist = await abcController.getUser({
-        email: email,
+        email: loginEmail,
         successIfUserExist: true,
       });
-      console.log('!! getUser =', isExist);
+      console.log('!! getUser =', isExist, loginEmail);
 
       result = await abcLogin({
         token: token,
@@ -659,14 +674,14 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       // 기 가입자 지갑 복구
       const { user: userCheck, wallets: walletsCheck } =
         await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
-      console.log('!! getWalletsAndUserByAbcUid =', userCheck, walletsCheck, email);
+      console.log('!! getWalletsAndUserByAbcUid #1 =', userCheck, walletsCheck, loginEmail);
 
       if (!userCheck) {
         await accountController.createMpcBaseAccount(
           {
-            accountName: flag ? loginEmail! : email,
+            accountName: loginEmail!,
             password: '!owdin001',
-            email: flag ? loginEmail! : email,
+            email: loginEmail!,
           },
           dispatch
         );
@@ -674,11 +689,11 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       }
 
       const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
-      console.log('!! getWalletsAndUserByAbcUid =', user, wallets);
+      console.log('!! getWalletsAndUserByAbcUid #2 =', user, wallets);
 
       // 가잊은 되어 있으나 지갑이 없는 사용자의 경우 에러 발생...
       // TypeError: Cannot read properties of null (reading 'accounts')
-      if (user && user?.twoFactorEnabled) {
+      if (user) {
         await accountController.recoverShare(
           { password: '!owdin001', user, wallets, keepDB: false },
           dispatch
@@ -751,6 +766,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         id_token = res.data?.providerAuthInfo?.provider_token;
         service = res.data?.providerAuthInfo?.provider;
         const data = JSON.parse(res.data?.providerAuthInfo?.provider_data);
+        loginEmail = data.email;
         console.log(service, id_token, data.email);
         setIdToken(id_token);
         setService(service);
