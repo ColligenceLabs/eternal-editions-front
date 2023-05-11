@@ -2,7 +2,6 @@
 // @mui
 
 // ----------------------------------------------------------------------
-import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
@@ -12,7 +11,13 @@ import { Pagination, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { getEdcTransactionByUID } from '../../services/services';
-import { BodyTableCell, BodyTableRow, HeaderTableCell } from 'src/components/StyledTable';
+import {
+  BodyTable,
+  BodyTableCell,
+  BodyTableRow,
+  HeaderTableCell,
+  Table,
+} from 'src/components/StyledTable';
 
 type TransactionsType = {
   user_id: string;
@@ -49,8 +54,8 @@ export default function NFTTransactionPoint() {
     <>
       <Stack spacing={3}>
         <Stack>
-          <TableContainer component={Paper} sx={{ background: 'transparent' }}>
-            <Table sx={{ minWidth: 650, background: 'transparent' }} aria-label="simple table">
+          <TableContainer component={Paper} sx={{ minWidth: '100%', background: 'transparent' }}>
+            <Table aria-label="simple table">
               <TableHead sx={{ background: 'transparent' }}>
                 <TableRow sx={{ background: 'transparent', boxShadow: 'none' }}>
                   <HeaderTableCell>Date</HeaderTableCell>
@@ -62,7 +67,7 @@ export default function NFTTransactionPoint() {
                   {/*<HeaderTableCell align="right">-</HeaderTableCell>*/}
                 </TableRow>
               </TableHead>
-              <TableBody>
+              <BodyTable>
                 {transactions &&
                   transactions.map((row: TransactionsType, index) => (
                     <BodyTableRow key={index}>
@@ -74,7 +79,7 @@ export default function NFTTransactionPoint() {
                       {/*<BodyTableCell align="right">-</BodyTableCell>*/}
                     </BodyTableRow>
                   ))}
-              </TableBody>
+              </BodyTable>
             </Table>
           </TableContainer>
         </Stack>

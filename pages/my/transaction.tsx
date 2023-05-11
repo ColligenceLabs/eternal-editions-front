@@ -9,6 +9,7 @@ import Box from '@mui/material/Box';
 import NFTTransactionNFT from 'src/sections/@my/NFTTransactionNFT';
 import NFTTransactionPoint from 'src/sections/@my/NFTTransactionPoint';
 import MyAccountWrapper from 'src/components/AccountWrapper';
+import { Stack } from '@mui/material';
 // import PointTransactionGrid from "src/sections/@my/PointTransactionGrid";
 
 // ----------------------------------------------------------------------
@@ -37,9 +38,10 @@ function TabPanel(props: TabPanelProps) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
+      style={{ width: '100%' }}
       {...other}
     >
-      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+      {value === index && <Box sx={{ width: '100%' }}>{children}</Box>}
     </div>
   );
 }
@@ -62,18 +64,20 @@ export default function TransactionPage({}) {
     <Page title="Account">
       <RootStyle>
         <MyAccountWrapper>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }} component={'div'}>
-            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-              <Tab label="Ticket (NFT)" {...a11yProps(0)} />
-              <Tab label="EDC Point" {...a11yProps(1)} />
-            </Tabs>
-          </Box>
-          <TabPanel value={value} index={0}>
-            <NFTTransactionNFT />
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <NFTTransactionPoint />
-          </TabPanel>
+          <Stack>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }} component={'div'}>
+              <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                <Tab label="Ticket (NFT)" {...a11yProps(0)} />
+                <Tab label="EDC Point" {...a11yProps(1)} />
+              </Tabs>
+            </Box>
+            <TabPanel value={value} index={0}>
+              <NFTTransactionNFT />
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              <NFTTransactionPoint />
+            </TabPanel>
+          </Stack>
         </MyAccountWrapper>
       </RootStyle>
     </Page>

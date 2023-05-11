@@ -22,7 +22,15 @@ export default function MyAccountWrapper({ children }: PropsWithChildren) {
         >
           <SideMenu />
         </Grid>
-        <Grid item md={10}>
+        <Grid
+          item
+          md={10}
+          sx={{
+            [theme.breakpoints.down('md')]: {
+              width: '100%',
+            },
+          }}
+        >
           {children}
         </Grid>
       </Grid>
