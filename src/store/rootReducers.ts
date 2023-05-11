@@ -4,6 +4,7 @@ import user from './slices/user';
 import webUser from './slices/webUser';
 import wallet from './slices/wallet';
 import twoFa from './slices/twoFa';
+import onLogin from 'src/store/slices/onLogin';
 
 import { persistReducer } from 'redux-persist';
 // import storage from 'redux-persist/lib/storage';

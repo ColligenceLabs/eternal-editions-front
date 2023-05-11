@@ -181,9 +181,7 @@ export default function Header({ transparent, sx }: Props) {
     setJoinOpen(true);
   };
 
-  const handleJoinClose = () => {
-    setJoinOpen(false);
-  };
+  const handleJoinClose = () => setJoinOpen(false);
   const triedEager = useEagerConnect();
   useInactiveListener(!triedEager);
   const isLight = theme.palette.mode === 'light';
