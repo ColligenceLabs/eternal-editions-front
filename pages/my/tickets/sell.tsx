@@ -1,25 +1,25 @@
 import { ReactElement } from 'react';
 import Layout from 'src/layouts';
 import { Page } from 'src/components';
-import { Container } from '@mui/material';
+import { Container, useTheme } from '@mui/material';
 import MyTicketSell from 'src/sections/@my/MyTicketSell';
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
 
 // ----------------------------------------------------------------------
 
 export default function MyTicketSellPage() {
+  const theme = useTheme();
+
   return (
     <Page title="Sell">
       <Container
         sx={{
-          height: '100vh',
-          paddingTop: {
-            xs: `${HEADER_MOBILE_HEIGHT}px`,
-            md: `${HEADER_DESKTOP_HEIGHT}px`,
-          },
-          paddingBottom: {
-            xs: '32px',
-            md: '45px',
+          paddingTop: `${HEADER_MOBILE_HEIGHT}px`,
+          paddingBottom: '32px',
+          [theme.breakpoints.up('md')]: {
+            paddingTop: `${HEADER_DESKTOP_HEIGHT}px`,
+            paddingBottom: '45px',
+            height: '100vh',
           },
         }}
       >
@@ -40,6 +40,7 @@ MyTicketSellPage.getLayout = function getLayout(page: ReactElement) {
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
+        backgroundAttachment: 'fixed',
       }}
       disabledFooter
     >

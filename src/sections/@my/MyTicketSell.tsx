@@ -7,87 +7,89 @@ export default function MyTicketSell() {
   const theme = useTheme();
 
   return (
-    <Box
-      sx={{
-        background: 'rgba(0, 0, 0, 0.24)',
-        backdropFilter: 'blur(50px)',
-        borderRadius: '40px',
-        width: 'min(100%, 400px)',
-        height: '100%',
-        paddingTop: 3,
-        paddingBottom: 3,
-        marginLeft: 'auto',
-      }}
-    >
-      <Stack
-        gap={3}
+    <Box sx={{ height: '100%', [theme.breakpoints.down('md')]: { pt: '480px', height: 'auto' } }}>
+      <Box
         sx={{
+          background: 'rgba(0, 0, 0, 0.24)',
+          backdropFilter: 'blur(50px)',
+          borderRadius: '40px',
+          width: '100%',
           height: '100%',
-          paddingLeft: 3,
-          paddingRight: 3,
-          overflowY: 'auto',
-          [`&::-webkit-scrollbar`]: {
-            width: '7px',
-            borderRadius: '40px',
-          },
-          [`&:hover::-webkit-scrollbar-thumb`]: {
-            background: 'rgba(0, 0, 0, 0.12)',
-            borderRadius: '40px',
+          paddingTop: 3,
+          paddingBottom: 3,
+          [theme.breakpoints.up('md')]: {
+            width: 'min(100%, 400px)',
+            marginLeft: 'auto',
           },
         }}
       >
-        <Stack flexDirection="row" justifyContent="space-between">
-          <Stack
-            direction="row"
-            spacing={0.5}
-            alignItems="center"
-            sx={{
-              opacity: 0.72,
-              typography: 'caption',
-              [theme.breakpoints.down('md')]: {
-                marginBottom: -1,
-              },
-            }}
-          >
-            <EEAvatar
-              account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
-              image={'url(/assets/static/avatars/1.jpg)'}
-              nickname={'by @iloveseoul'}
-              sx={{ mr: 0, width: 24, height: 24 }}
-            />
-            <Typography fontSize={14} lineHeight={20 / 14}>
-              by @iloveseoul
-            </Typography>
-          </Stack>
-
-          <Chip
-            label={'For sale'}
-            variant="outlined"
-            color="primary"
-            sx={{
-              fontWeight: theme.typography.fontWeightBold,
-              color: theme.palette.primary.main,
-              textTransform: 'uppercase',
-            }}
-          />
-        </Stack>
-
-        <Typography
+        <Stack
+          gap={3}
           sx={{
-            fontWeight: 'bold',
-            fontSize: 24,
-            lineHeight: 28 / 24,
-            [theme.breakpoints.up('md')]: {
-              fontSize: 40,
-              lineHeight: 44 / 40,
+            height: '100%',
+            paddingLeft: 3,
+            paddingRight: 3,
+            overflowY: 'auto',
+            [`&::-webkit-scrollbar`]: {
+              width: '7px',
+              borderRadius: '40px',
+            },
+            [`&:hover::-webkit-scrollbar-thumb`]: {
+              background: 'rgba(0, 0, 0, 0.12)',
+              borderRadius: '40px',
             },
           }}
         >
-          DCENTRAL Miami 2023 VIP
-        </Typography>
-
-        <TicketSellForm />
-      </Stack>
+          <Stack flexDirection="row" justifyContent="space-between">
+            <Stack
+              direction="row"
+              spacing={0.5}
+              alignItems="center"
+              sx={{
+                opacity: 0.72,
+                typography: 'caption',
+                [theme.breakpoints.down('md')]: {
+                  marginBottom: -1,
+                },
+              }}
+            >
+              <EEAvatar
+                account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
+                image={'url(/assets/static/avatars/1.jpg)'}
+                nickname={'by @iloveseoul'}
+                sx={{ mr: 0, width: 24, height: 24 }}
+              />
+              <Typography fontSize={14} lineHeight={20 / 14}>
+                by @iloveseoul
+              </Typography>
+            </Stack>
+            <Chip
+              label={'For sale'}
+              variant="outlined"
+              color="primary"
+              sx={{
+                fontWeight: theme.typography.fontWeightBold,
+                color: theme.palette.primary.main,
+                textTransform: 'uppercase',
+              }}
+            />
+          </Stack>
+          <Typography
+            sx={{
+              fontWeight: 'bold',
+              fontSize: 24,
+              lineHeight: 28 / 24,
+              [theme.breakpoints.up('md')]: {
+                fontSize: 40,
+                lineHeight: 44 / 40,
+              },
+            }}
+          >
+            DCENTRAL Miami 2023 VIP
+          </Typography>
+          <TicketSellForm />
+        </Stack>
+      </Box>
     </Box>
   );
 }

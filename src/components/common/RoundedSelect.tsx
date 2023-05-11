@@ -40,7 +40,7 @@ export const StyledSelect = styled(Select)(({ theme }) => ({
     borderRadius: 'inherit',
     height: 'unset',
     minHeight: 'unset !important',
-    whiteSpace: 'pre-wrap',
+    whiteSpace: 'pre-wrap !important',
     [theme.breakpoints.up('md')]: {
       padding: '22px 40px',
     },
@@ -101,7 +101,7 @@ export const MenuProps = {
   },
 };
 
-interface Props extends PropsWithChildren {
+interface Props extends PropsWithChildren, SelectProps {
   value: unknown;
   onChange: SelectProps['onChange'];
 }
@@ -112,13 +112,14 @@ export const RoundedSelectOption = ({ children, ...props }: PropsWithChildren<Me
   </StyledMenuItem>
 );
 
-export const RoundedSelect = ({ value, onChange, children }: Props) => (
+export const RoundedSelect = ({ value, onChange, children, ...props }: Props) => (
   <StyledSelect
     fullWidth
     variant="outlined"
     value={value}
     onChange={onChange}
     MenuProps={MenuProps}
+    {...props}
   >
     {children}
   </StyledSelect>

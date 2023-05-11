@@ -102,6 +102,7 @@ export default function TicketSellForm() {
             endAdornment={
               <InputAdornment position="end">
                 <RoundedSelect
+                  size="small"
                   value={priceUnit}
                   onChange={(event) => setPriceUnit(event.target.value as string)}
                 >
@@ -197,7 +198,9 @@ export default function TicketSellForm() {
         <TotalValue>-- {priceUnit.toUpperCase()}</TotalValue>
       </Row>
 
-      <RoundedButton onClick={onSubmit}>COMPLETE LISTING</RoundedButton>
+      <RoundedButton sx={{ mt: 3 }} onClick={onSubmit}>
+        COMPLETE LISTING
+      </RoundedButton>
     </>
   );
 }
