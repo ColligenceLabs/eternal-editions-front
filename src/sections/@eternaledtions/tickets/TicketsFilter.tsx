@@ -1,62 +1,43 @@
 import { useEffect, useState } from 'react';
-// @mui
 import { Box, Grid, Button, Stack, Tab, Tabs, Typography, tabClasses } from '@mui/material';
-// @types
-import { CaseStudyProps } from 'src/@types/marketing';
-//
-import Masonry from '@mui/lab/Masonry';
 import TicketPostItem from './TicketPostItem';
-import { BlogPostProps } from 'src/@types/blog';
 import { Iconify } from 'src/components';
 import arrowDown from '@iconify/icons-carbon/arrow-down';
-import { TicketsFiltersProps } from 'src/@types/eternaleditions/tickets';
-import TicketSortByFilter from './TicketSortByFilter';
-import { SelectChangeEvent } from '@mui/material/Select';
-import { CategoryProps, TicketProps } from 'src/@types/ticket/ticket';
 import { useTheme } from '@mui/material/styles';
-import axios from 'axios';
-import {getTicketCountByCategory, getTicketsService} from 'src/services/services';
+import { getTicketCountByCategory, getTicketsService } from 'src/services/services';
 import { SUCCESS } from 'src/config';
 import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
-// import { isMobile } from 'react-device-detect';
 import { useResponsive } from 'src/hooks';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  tickets: TicketProps[];
   categories: string[];
 };
 
-const defaultValues = {
-  filterSortBy: '',
+type CategoryTypes = {
+  category: string;
+  count: string;
 };
 
-export default function TicketsFilter({ tickets, categories }: Props) {
+export default function TicketsFilter({ categories: originCategories }: Props) {
   const isMobile = useResponsive('down', 'sm');
   const theme = useTheme();
   const [curPage, setCurPage] = useState(1);
-  const [perPage, setPerPage] = useState(6);
   const [lastPage, setLastPage] = useState(0);
   const [selected, setSelected] = useState('All');
   const [ticketInfoList, setTicketInfoList] = useState<TicketInfoTypes[]>([]);
-  categories = ['All', ...Array.from(new Set(categories))];
+  const [categories, setCategories] = useState<CategoryTypes[]>([]);
 
-  const [filters, setFilters] = useState<TicketsFiltersProps>(defaultValues);
+  originCategories = ['All', ...Array.from(new Set(originCategories))];
+  const perPage = 6;
 
   const handleChangeCategory = (event: React.SyntheticEvent, newValue: string) => {
     setSelected(newValue);
   };
 
-  const handleChangeSortBy = (keyword: string | null) => {
-    setFilters({
-      ...filters,
-      filterSortBy: keyword,
-    });
-  };
-
   const getTickets = async () => {
-    console.log(selected)
+    console.log(selected);
     const res = await getTicketsService(1, perPage, selected);
     console.log(res);
     if (res.status === 200) {
@@ -67,25 +48,33 @@ export default function TicketsFilter({ tickets, categories }: Props) {
 
   const getMoreTickets = async () => {
     const res = await getTicketsService(curPage, perPage, selected);
-    console.log(res)
+    console.log(res);
     if (res.status === 200) {
       setTicketInfoList((cur) => [...cur, ...res.data.list]);
     }
   };
 
   const getCountByCategory = async () => {
-    const res = await getTicketCountByCategory()
-    console.log(res)
-  }
+    const res = await getTicketCountByCategory();
+
+    if (res.data.status === SUCCESS) setCategories(res.data.data);
+    else {
+      console.log('[error] item count by category fetch failed. ');
+      const temp: CategoryTypes[] = originCategories.map((item) => ({
+        category: item.toLowerCase(),
+        count: '',
+      }));
+      setCategories([...temp]);
+    }
+  };
 
   useEffect(() => {
     setCurPage(1);
     getTickets();
-    getCountByCategory()
+    getCountByCategory();
   }, [selected]);
 
   useEffect(() => {
-    console.log(`curPage:${curPage}`)
     if (curPage !== 1) getMoreTickets();
   }, [curPage]);
 
@@ -112,65 +101,68 @@ export default function TicketsFilter({ tickets, categories }: Props) {
           }}
         >
           <Tabs
-            value={selected}
+            value={selected.toLowerCase()}
             variant="scrollable"
             TabIndicatorProps={{ sx: { display: 'none' } }}
             onChange={handleChangeCategory}
           >
-            {categories.map((category) => (
-              <Tab
-                key={category}
-                value={category}
-                label={
-                  <Stack
-                    flexDirection="row"
-                    useFlexGap
-                    gap="10px"
+            {categories.map((category: CategoryTypes) => {
+              if (category.category !== '')
+                return (
+                  <Tab
+                    key={category.category}
+                    value={category.category}
+                    label={
+                      <Stack
+                        flexDirection="row"
+                        useFlexGap
+                        gap="10px"
+                        sx={{
+                          fontSize: '14px',
+                          textTransform: 'uppercase',
+                          padding: {
+                            xs: '10px 12px',
+                            md: '10px 16px',
+                          },
+                        }}
+                      >
+                        <Typography variant="body2" fontWeight="bold">
+                          {category.category}
+                        </Typography>
+                        <Typography variant="body2" fontWeight="bold" sx={{ color: 'red' }}>
+                          {category.count}
+                        </Typography>
+                      </Stack>
+                    }
                     sx={{
-                      fontSize: '14px',
-                      textTransform: 'uppercase',
-                      padding: {
-                        xs: '10px 12px',
-                        md: '10px 16px',
+                      [`&.${tabClasses.root}`]: {
+                        opacity: 0.6,
+                        color: 'white',
+                        [theme.breakpoints.down('md')]: {
+                          background: 'rgba(0, 0, 0, 0.24)',
+                          backdropFilter: 'blur(50px)',
+                          borderRadius: '60px',
+                        },
+                      },
+                      [`&.${tabClasses.selected}`]: {
+                        opacity: 1,
+                      },
+                      [`&.${tabClasses.root}:first-of-type`]: {
+                        ml: {
+                          xs: 2.5,
+                          md: 0,
+                        },
+                      },
+                      [`&.${tabClasses.root}:not(:last-of-type)`]: {
+                        mr: {
+                          xs: 0.25,
+                          md: 0.5,
+                        },
                       },
                     }}
-                  >
-                    <Typography variant="body2" fontWeight="bold">
-                      {category}
-                    </Typography>
-                    <Typography variant="body2" fontWeight="bold" sx={{ color: 'red' }}>
-                      1
-                    </Typography>
-                  </Stack>
-                }
-                sx={{
-                  [`&.${tabClasses.root}`]: {
-                    opacity: 0.6,
-                    color: 'white',
-                    [theme.breakpoints.down('md')]: {
-                      background: 'rgba(0, 0, 0, 0.24)',
-                      backdropFilter: 'blur(50px)',
-                      borderRadius: '60px',
-                    },
-                  },
-                  [`&.${tabClasses.selected}`]: {
-                    opacity: 1,
-                  },
-                  [`&.${tabClasses.root}:first-of-type`]: {
-                    ml: {
-                      xs: 2.5,
-                      md: 0,
-                    },
-                  },
-                  [`&.${tabClasses.root}:not(:last-of-type)`]: {
-                    mr: {
-                      xs: 0.25,
-                      md: 0.5,
-                    },
-                  },
-                }}
-              />
-            ))}
+                  />
+                );
+            })}
           </Tabs>
         </Box>
 
