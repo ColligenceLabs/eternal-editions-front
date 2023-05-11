@@ -684,12 +684,12 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
 
       // 가잊은 되어 있으나 지갑이 없는 사용자의 경우 에러 발생...
       // TypeError: Cannot read properties of null (reading 'accounts')
-      // if (user && user?.twoFactorEnabled) {
-      await accountController.recoverShare(
-        { password: '!owdin001', user, wallets, keepDB: false },
-        dispatch
-      );
-      // }
+      if (user) {
+        await accountController.recoverShare(
+          { password: '!owdin001', user, wallets, keepDB: false },
+          dispatch
+        );
+      }
 
       if (flag) {
         // OLD User
