@@ -764,7 +764,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         if (!error) return;
         alert(error);
         await router.push('/');
-        setMemberCheck(false);
+        // setMemberCheck(false);
       }
     };
     fetchSession();
