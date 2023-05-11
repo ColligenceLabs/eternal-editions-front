@@ -693,7 +693,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
 
       if (flag) {
         // OLD User
-        if (!user?.twoFactorEnabled) {
+        if (!user.twoFactorEnabled) {
           // TODO : OTP 미등록 상태 처리
           const { qrcode, secret } = await accountController.generateTwoFactor({ reset: false });
           console.log('!! OTP =', qrcode, secret);
