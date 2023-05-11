@@ -9,7 +9,6 @@ import onLogin from 'src/store/slices/onLogin';
 import { persistReducer } from 'redux-persist';
 // import storage from 'redux-persist/lib/storage';
 import storageSession from 'redux-persist/lib/storage/session';
-import onLogin from 'src/store/slices/onLogin';
 
 const persistConfig = {
   key: 'root',
