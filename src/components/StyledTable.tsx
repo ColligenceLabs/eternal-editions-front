@@ -13,7 +13,7 @@ export const Table = styled(MUITable)(({ theme }) => ({
   background: 'transparent',
   borderCollapse: 'separate',
   borderSpacing: '0 2px',
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     display: 'block',
   },
 }));
@@ -34,7 +34,7 @@ export const HeaderTableCell = styled((props: TableCellProps) => <TableCell {...
     '&:last-child': {
       boxShadow: 'none',
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       display: 'none',
     },
   })
@@ -45,7 +45,7 @@ export const CellLabel = styled(Typography)(({ theme }) => ({
   lineHeight: 17 / 12,
   textTransform: 'uppercase',
   color: '#999999',
-  [theme.breakpoints.up('sm')]: {
+  [theme.breakpoints.up('md')]: {
     display: 'none',
   },
 }));
@@ -62,10 +62,10 @@ export const BodyTableRow = styled((props: TableRowProps) => <TableRow {...props
     lineHeight: 20 / 14,
     color: theme.palette.common.black,
     width: '100%',
-    [theme.breakpoints.up('sm')]: {
+    [theme.breakpoints.up('md')]: {
       backgroundColor: theme.palette.common.white,
     },
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       display: 'flex !important',
       flexDirection: 'column',
       gap: '11px',
@@ -77,7 +77,7 @@ export const BodyTableRow = styled((props: TableRowProps) => <TableRow {...props
 );
 
 export const BodyTable = styled(TableBody)(({ theme }) => ({
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     display: 'flex',
     flexDirection: 'column',
     gap: '2px',
@@ -103,7 +103,7 @@ export const BodyTableCell = styled((props: TableCellProps) => <TableCell {...pr
       borderBottomRightRadius: 24,
     },
 
-    [theme.breakpoints.down('sm')]: {
+    [theme.breakpoints.down('md')]: {
       display: 'flex',
       justifyContent: 'space-between',
       alignItems: 'center',
@@ -125,7 +125,7 @@ export const LinkColumn = styled('a')(({ theme }) => ({
 export const DateValue = styled(Typography)(({ theme }) => ({
   fontSize: 'inherit',
   lineHeight: 'inherit',
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     fontWeight: 700,
     fontSize: '16px',
     lineHeight: '24px',
@@ -136,7 +136,7 @@ export const DateValue = styled(Typography)(({ theme }) => ({
 export const MysteryBoxValue = styled(Typography)(({ theme }) => ({
   fontSize: 'inherit',
   lineHeight: 'inherit',
-  [theme.breakpoints.down('sm')]: {
+  [theme.breakpoints.down('md')]: {
     color: 'rgba(0, 0, 0, 0.24)',
   },
 }));

@@ -98,10 +98,10 @@ export default function NFTTransactionNFT() {
                   transactions.map((row: TransactionsType, index) => (
                     <BodyTableRow key={index}>
                       <BodyTableCell
-                        sx={{ [theme.breakpoints.down('sm')]: { marginBottom: '16px' } }}
+                        sx={{ [theme.breakpoints.down('md')]: { marginBottom: '16px' } }}
                       >
                         <DateValue>{new Date(row.createdAt).toLocaleString()}</DateValue>
-                        <LinkColumn sx={{ [theme.breakpoints.up('sm')]: { display: 'none' } }}>
+                        <LinkColumn sx={{ [theme.breakpoints.up('md')]: { display: 'none' } }}>
                           <IconButton
                             href={getExternalUrl(row.txHash)}
                             target="_blank"
@@ -139,7 +139,7 @@ export default function NFTTransactionNFT() {
                           >{`${row.txHash.substring(0, 20)}...`}</LinkColumn>
                         </CellValue>
                       </BodyTableCell>
-                      <BodyTableCell sx={{ [theme.breakpoints.down('sm')]: { display: 'none' } }}>
+                      <BodyTableCell sx={{ [theme.breakpoints.down('md')]: { display: 'none' } }}>
                         <LinkColumn>
                           <IconButton
                             href={getExternalUrl(row.txHash)}
