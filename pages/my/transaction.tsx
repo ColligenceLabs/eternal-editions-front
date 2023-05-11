@@ -87,5 +87,20 @@ export default function TransactionPage({}) {
 // ----------------------------------------------------------------------
 
 TransactionPage.getLayout = function getLayout(page: ReactElement) {
-  return <Layout verticalAlign="top">{page}</Layout>;
+  return (
+    <Layout
+      background={{
+        backgroundImage: {
+          xs: `url(/assets/background/bg-main.jpg)`,
+          md: `url(/assets/background/bg-account.jpg)`,
+        },
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      }}
+      verticalAlign="top"
+    >
+      {page}
+    </Layout>
+  );
 };
