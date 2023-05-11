@@ -672,7 +672,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
           {
             accountName: flag ? loginEmail! : email,
             password: '!owdin001',
-            email: email,
+            email: flag ? loginEmail! : email,
           },
           dispatch
         );
