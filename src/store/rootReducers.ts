@@ -4,6 +4,7 @@ import user from './slices/user';
 import webUser from './slices/webUser';
 import wallet from './slices/wallet';
 import twoFa from './slices/twoFa';
+import onLogin from 'src/store/slices/onLogin';
 
 import { persistReducer } from 'redux-persist';
 // import storage from 'redux-persist/lib/storage';
@@ -15,7 +16,7 @@ const persistConfig = {
   // storage,
   storage: storageSession,
   // auth, board, studio 3개의 reducer 중에 auth reducer만 localstorage에 저장합니다.
-  whitelist: ['user', 'abcAuth', 'wallet', 'webUser', 'twoFa'],
+  whitelist: ['user', 'abcAuth', 'wallet', 'webUser', 'twoFa', 'onLogin'],
   // blacklist -> 그것만 제외합니다
 };
 
@@ -25,6 +26,7 @@ export const rootReducers = combineReducers({
   webUser,
   wallet,
   twoFa,
+  onLogin,
 });
 
 export const persistedReducer = persistReducer(persistConfig, rootReducers);
