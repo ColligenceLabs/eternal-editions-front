@@ -1,22 +1,18 @@
 // icons
 // @mui
-import useWallets from '../../hooks/useWallets';
 
 // ----------------------------------------------------------------------
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
-import { CardActionArea, Pagination, Stack } from '@mui/material';
-import { TableCellProps } from '@mui/material/TableCell/TableCell';
-import { TableRowProps } from '@mui/material/TableRow/TableRow';
+import { Pagination, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { getEdcTransactionByUID, getTransactionsByUID } from '../../services/services';
+import { getEdcTransactionByUID } from '../../services/services';
+import { BodyTableCell, BodyTableRow, HeaderTableCell } from 'src/components/StyledTable';
 
 type TransactionsType = {
   user_id: string;
@@ -25,36 +21,6 @@ type TransactionsType = {
   type: string;
   createdAt: Date;
 };
-
-const HeaderTableCell = styled((props: TableCellProps) => <TableCell {...props} />)(
-  ({ theme }) => ({
-    background: 'transparent',
-    '&:first-of-type': {
-      boxShadow: 'none',
-    },
-    '&:last-child': {
-      boxShadow: 'none',
-    },
-  })
-);
-
-const BodyTableRow = styled((props: TableRowProps) => <TableRow {...props} />)(({ theme }) => ({
-  backgroundColor: '#151515',
-  borderRadius: 20,
-  margin: '5px',
-  // display: 'block',
-  width: '100%',
-}));
-
-const BodyTableCell = styled((props: TableCellProps) => <TableCell {...props} />)(({ theme }) => ({
-  background: 'transparent',
-  '&:first-of-type': {
-    boxShadow: 'none',
-  },
-  '&:last-child': {
-    boxShadow: 'none',
-  },
-}));
 
 export default function NFTTransactionPoint() {
   const { user } = useSelector((state: any) => state.webUser);
