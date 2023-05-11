@@ -1,17 +1,12 @@
 import { ReactElement } from 'react';
 import * as React from 'react';
 import Layout from 'src/layouts';
-// components
 import { Page } from 'src/components';
-import { Container, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
-import PageHeader from 'src/components/common/PageHeader';
-import Accordion from '@mui/material/Accordion';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-// sections
+import MyAccountWrapper from 'src/components/AccountWrapper';
+import Accordion from 'src/components/Accordion';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
@@ -59,7 +54,7 @@ const FAQs = [
     id: 7,
     q: 'ABC 월렛이란 무엇인가요?',
     a: 'ABC 월렛은 대한민국의 주요 사이버 보안 기업인 안랩에서 개발한 Web 3.0 월렛입니다. 사용자의 자산을 안전하고 신뢰성있게 보호하도록 설계되어 있으며, 다양한 암호화폐 및 NFT를 안전하게 보관 및 이전할 수 있도록 지원합니다.',
-  }
+  },
 ];
 
 export default function FAQPage({}: Props) {
@@ -72,58 +67,35 @@ export default function FAQPage({}: Props) {
   return (
     <Page title="FAQ">
       <RootStyle>
-        <Container sx={{ mt: 3 }}>
-          <PageHeader title="FAQ" />
-
-          <Stack sx={{ mb: 3, gap: '1rem' }}>
-            {FAQs.map((faq) => (
-              <Accordion
-                key={faq.id}
-                expanded={expanded === `panel${faq.id}`}
-                onChange={handleChange(`panel${faq.id}`)}
-              >
-                <AccordionSummary
-                  sx={{
-                    background: '#000000',
-                    borderTopLeftRadius: '24px',
-                    borderTopRightRadius: '24px',
-                    borderBottomLeftRadius: expanded === `panel${faq.id}` ? '0px' : '24px',
-                    borderBottomRightRadius: expanded === `panel${faq.id}` ? '0px' : '24px',
-                    paddingLeft: '24px',
-                    paddingRight: '24px',
-                  }}
-                  expandIcon={<ExpandMoreIcon />}
-                  aria-controls="panel1bh-content"
-                  id="panel1bh-header"
-                >
-                  <Typography
-                    sx={{
-                      width: '100%',
-                      background: 'common.black',
-                      color:
-                        expanded === `panel${faq.id}` ? theme.palette.primary.main : 'common.white',
-                    }}
-                  >
-                    {faq.q}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails
-                  sx={{
-                    background: '#000000',
-                    borderTopLeftRadius: expanded === `panel${faq.id}` ? '0px' : '24px',
-                    borderTopRightRadius: expanded === `panel${faq.id}` ? '0px' : '24px',
-                    borderBottomLeftRadius: '24px',
-                    borderBottomRightRadius: '24px',
-                    paddingLeft: '24px',
-                    paddingRight: '24px',
-                  }}
-                >
-                  <Typography>{faq.a}</Typography>
-                </AccordionDetails>
-              </Accordion>
-            ))}
+        <MyAccountWrapper>
+          <Typography
+            sx={{
+              opacity: 0.6,
+              textAlign: 'right',
+              textTransform: 'uppercase',
+              fontSize: '12px',
+              lineHeight: 17 / 12,
+              mb: 1,
+              [theme.breakpoints.down('sm')]: { display: 'none' },
+            }}
+          >
+            Last Update: 9 March, 2023
+          </Typography>
+          <Stack sx={{ mb: 3, gap: '2px' }}>
+            {FAQs.map((faq) => {
+              const isExpanded = expanded === `panel${faq.id}`;
+              return (
+                <Accordion
+                  key={faq.id}
+                  isExpanded={isExpanded}
+                  onChange={handleChange(`panel${faq.id}`)}
+                  title={`Q. ${faq.q}`}
+                  content={faq.a}
+                />
+              );
+            })}
           </Stack>
-        </Container>
+        </MyAccountWrapper>
       </RootStyle>
     </Page>
   );
@@ -135,7 +107,7 @@ FAQPage.getLayout = function getLayout(page: ReactElement) {
   return (
     <Layout
       background={{
-        backgroundImage: `url(/assets/background/bg-main.jpg)`,
+        backgroundImage: `url(/assets/background/bg-account.jpg)`,
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',

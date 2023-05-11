@@ -1,22 +1,23 @@
 // icons
 // @mui
-import useWallets from '../../hooks/useWallets';
 
 // ----------------------------------------------------------------------
-import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
-import { CardActionArea, Pagination, Stack } from '@mui/material';
-import { TableCellProps } from '@mui/material/TableCell/TableCell';
-import { TableRowProps } from '@mui/material/TableRow/TableRow';
+import { Pagination, Stack } from '@mui/material';
 import { useSelector } from 'react-redux';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { getEdcTransactionByUID, getTransactionsByUID } from '../../services/services';
+import { getEdcTransactionByUID } from '../../services/services';
+import {
+  BodyTable,
+  BodyTableCell,
+  BodyTableRow,
+  HeaderTableCell,
+  Table,
+} from 'src/components/StyledTable';
 
 type TransactionsType = {
   user_id: string;
@@ -25,36 +26,6 @@ type TransactionsType = {
   type: string;
   createdAt: Date;
 };
-
-const HeaderTableCell = styled((props: TableCellProps) => <TableCell {...props} />)(
-  ({ theme }) => ({
-    background: 'transparent',
-    '&:first-of-type': {
-      boxShadow: 'none',
-    },
-    '&:last-child': {
-      boxShadow: 'none',
-    },
-  })
-);
-
-const BodyTableRow = styled((props: TableRowProps) => <TableRow {...props} />)(({ theme }) => ({
-  backgroundColor: '#151515',
-  borderRadius: 20,
-  margin: '5px',
-  // display: 'block',
-  width: '100%',
-}));
-
-const BodyTableCell = styled((props: TableCellProps) => <TableCell {...props} />)(({ theme }) => ({
-  background: 'transparent',
-  '&:first-of-type': {
-    boxShadow: 'none',
-  },
-  '&:last-child': {
-    boxShadow: 'none',
-  },
-}));
 
 export default function NFTTransactionPoint() {
   const { user } = useSelector((state: any) => state.webUser);
@@ -83,8 +54,8 @@ export default function NFTTransactionPoint() {
     <>
       <Stack spacing={3}>
         <Stack>
-          <TableContainer component={Paper} sx={{ background: 'transparent' }}>
-            <Table sx={{ minWidth: 650, background: 'transparent' }} aria-label="simple table">
+          <TableContainer component={Paper} sx={{ minWidth: '100%', background: 'transparent' }}>
+            <Table aria-label="simple table">
               <TableHead sx={{ background: 'transparent' }}>
                 <TableRow sx={{ background: 'transparent', boxShadow: 'none' }}>
                   <HeaderTableCell>Date</HeaderTableCell>
@@ -96,7 +67,7 @@ export default function NFTTransactionPoint() {
                   {/*<HeaderTableCell align="right">-</HeaderTableCell>*/}
                 </TableRow>
               </TableHead>
-              <TableBody>
+              <BodyTable>
                 {transactions &&
                   transactions.map((row: TransactionsType, index) => (
                     <BodyTableRow key={index}>
@@ -108,7 +79,7 @@ export default function NFTTransactionPoint() {
                       {/*<BodyTableCell align="right">-</BodyTableCell>*/}
                     </BodyTableRow>
                   ))}
-              </TableBody>
+              </BodyTable>
             </Table>
           </TableContainer>
         </Stack>

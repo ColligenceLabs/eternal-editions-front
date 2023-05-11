@@ -123,7 +123,7 @@ export default function HomeEvent() {
                   @iloveseoul
                 </Link>
               </TagBox>
-              <Chip label="ART" variant="outlined" />
+              <Chip label="ART" variant="outlined" sx={{ color: 'white' }} />
             </LinkLine>
 
             <Box

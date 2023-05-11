@@ -7,16 +7,18 @@ import { Page } from 'src/components';
 import { Container } from '@mui/material';
 import { getAllCaseStudies } from 'src/utils/get-mardown/marketing/case-studies';
 import PageHeader from 'src/components/common/PageHeader';
+import TicketItems from 'src/sections/@eternaledtions/items/TicketItems';
+import TICKET from 'src/sample/ticket';
 
 // ----------------------------------------------------------------------
 
 const RootStyle = styled('div')(({ theme }) => ({
-    paddingBottom: HEADER_MOBILE_HEIGHT,
-    paddingTop: HEADER_MOBILE_HEIGHT,
-    [theme.breakpoints.up('md')]: {
-        paddingTop: HEADER_DESKTOP_HEIGHT,
-        paddingBottom: HEADER_DESKTOP_HEIGHT,
-    },
+  paddingBottom: HEADER_MOBILE_HEIGHT,
+  paddingTop: HEADER_MOBILE_HEIGHT,
+  [theme.breakpoints.up('md')]: {
+    paddingTop: HEADER_DESKTOP_HEIGHT,
+    paddingBottom: HEADER_DESKTOP_HEIGHT,
+  },
 }));
 
 // ----------------------------------------------------------------------
@@ -24,33 +26,50 @@ const RootStyle = styled('div')(({ theme }) => ({
 type Props = {};
 
 export default function ItemsPage({}: Props) {
-    return (
-        <Page title="ITEMS">
-            <RootStyle>
-                <Container sx={{ mt: 3, mr: { sx: 0 } }}>
-                    <PageHeader title="ITEMS" />
+  const categories: string[] = TICKET.categories;
 
-                    {/*ITEMS 목록*/}
-                    Items List
-                </Container>
-            </RootStyle>
-        </Page>
-    );
+  return (
+    <Page title="ITEMS">
+      <RootStyle>
+        <Container sx={{ mt: 3, mr: { sx: 0 } }}>
+          <PageHeader title="ITEMS" tooltipMessage="Guide text to describe Items." />
+
+          {/*ITEMS 목록*/}
+          <TicketItems categories={categories} />
+        </Container>
+      </RootStyle>
+    </Page>
+  );
 }
 
 // ----------------------------------------------------------------------
 
 ItemsPage.getLayout = function getLayout(page: ReactElement) {
-    return <Layout verticalAlign="top">{page}</Layout>;
+  return (
+    <Layout
+      verticalAlign="top"
+      background={{
+        backgroundImage: {
+          xs: `url(/assets/background/bg-main.jpg)`,
+          md: `url(/assets/background/bg-items.jpg)`,
+        },
+        backgroundPosition: 'bottom center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      }}
+    >
+      {page}
+    </Layout>
+  );
 };
 
 // ----------------------------------------------------------------------
 
 export async function getStaticProps() {
-    return {
-        props: {
-            posts: getAllPosts(),
-            categories: getAllCaseStudies(),
-        },
-    };
+  return {
+    props: {
+      posts: getAllPosts(),
+      categories: getAllCaseStudies(),
+    },
+  };
 }

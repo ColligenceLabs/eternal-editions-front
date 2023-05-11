@@ -1,19 +1,28 @@
 // ----------------------------------------------------------------------
-import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { styled } from '@mui/material/styles';
-import { Pagination, Stack } from '@mui/material';
-import { TableCellProps } from '@mui/material/TableCell/TableCell';
-import { TableRowProps } from '@mui/material/TableRow/TableRow';
+import { Pagination, Stack, Typography, useTheme } from '@mui/material';
+import LaunchIcon from '@mui/icons-material/Launch';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { getTransactionsByUID } from '../../services/services';
 import { useSelector } from 'react-redux';
 import env from '../../env';
+import { IconButton } from '@mui/material';
+import {
+  BodyTable,
+  BodyTableCell,
+  BodyTableRow,
+  HeaderTableCell,
+  CellLabel,
+  LinkColumn,
+  Table,
+  CellValue,
+  DateValue,
+  MysteryBoxValue,
+} from 'src/components/StyledTable';
 
 type TransactionsType = {
   buyer: string;
@@ -32,47 +41,14 @@ type TransactionsType = {
   txHash: string;
 };
 
-const HeaderTableCell = styled((props: TableCellProps) => <TableCell {...props} />)(
-  ({ theme }) => ({
-    background: 'transparent',
-    '&:first-of-type': {
-      boxShadow: 'none',
-    },
-    '&:last-child': {
-      boxShadow: 'none',
-    },
-  })
-);
-
-const BodyTableRow = styled((props: TableRowProps) => <TableRow {...props} />)(({ theme }) => ({
-  backgroundColor: '#151515',
-  borderRadius: 20,
-  margin: '5px',
-  // display: 'block',
-  width: '100%',
-}));
-
-const BodyTableCell = styled((props: TableCellProps) => <TableCell {...props} />)(({ theme }) => ({
-  background: 'transparent',
-  '&:first-of-type': {
-    boxShadow: 'none',
-  },
-  '&:last-child': {
-    boxShadow: 'none',
-  },
-}));
-
-const LinkColumn = styled('a')`
-  text-decoration: none;
-  color: #fff;
-`;
-
 export default function NFTTransactionNFT() {
+  const theme = useTheme();
   const { user } = useSelector((state: any) => state.webUser);
   console.log(user);
   const [transactions, setTransactions] = useState<TransactionsType[] | null>(null);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
+
   const fetchTransaction = async () => {
     // const res = await getTransactionsByUID('435eTNke', page);
     const res = await getTransactionsByUID(user.uid, page);
@@ -95,6 +71,7 @@ export default function NFTTransactionNFT() {
     }
     return url;
   };
+
   useEffect(() => {
     fetchTransaction();
   }, [page]);
@@ -103,38 +80,81 @@ export default function NFTTransactionNFT() {
     <>
       <Stack spacing={3}>
         <Stack>
-          <TableContainer component={Paper} sx={{ background: 'transparent' }}>
-            <Table sx={{ minWidth: 650, background: 'transparent' }} aria-label="simple table">
+          <TableContainer component={Paper} sx={{ minWidth: '100%', background: 'transparent' }}>
+            <Table aria-label="simple table">
               <TableHead sx={{ background: 'transparent' }}>
-                <TableRow sx={{ background: 'transparent', boxShadow: 'none' }}>
+                <TableRow>
                   <HeaderTableCell>Date</HeaderTableCell>
-                  <HeaderTableCell align="right">Type</HeaderTableCell>
-                  <HeaderTableCell align="right">NFT</HeaderTableCell>
-                  <HeaderTableCell align="right">Price</HeaderTableCell>
-                  <HeaderTableCell align="right">Chain</HeaderTableCell>
-                  <HeaderTableCell align="right">Confirmation</HeaderTableCell>
-                  {/*<HeaderTableCell align="right">-</HeaderTableCell>*/}
+                  <HeaderTableCell>Type</HeaderTableCell>
+                  <HeaderTableCell>NFT</HeaderTableCell>
+                  <HeaderTableCell>Price</HeaderTableCell>
+                  <HeaderTableCell>Chain</HeaderTableCell>
+                  <HeaderTableCell>Confirmation</HeaderTableCell>
+                  {/*<HeaderTableCell >-</HeaderTableCell>*/}
                 </TableRow>
               </TableHead>
-              <TableBody>
+              <BodyTable>
                 {transactions &&
                   transactions.map((row: TransactionsType, index) => (
                     <BodyTableRow key={index}>
-                      <BodyTableCell>{new Date(row.createdAt).toLocaleString()}</BodyTableCell>
-                      <BodyTableCell align="right">NFT</BodyTableCell>
-                      <BodyTableCell align="right">{`${row.mysteryboxInfo.title.en} - ${row.mysteryboxItem.name}`}</BodyTableCell>
-                      <BodyTableCell align="right">{row.price}</BodyTableCell>
-                      <BodyTableCell align="right">Polygon</BodyTableCell>
-                      <BodyTableCell align="right">
-                        <LinkColumn
-                          href={getExternalUrl(row.txHash)}
-                          target="_blank"
-                        >{`${row.txHash.substring(0, 20)}...`}</LinkColumn>{' '}
+                      <BodyTableCell
+                        sx={{ [theme.breakpoints.down('md')]: { marginBottom: '16px' } }}
+                      >
+                        <DateValue>{new Date(row.createdAt).toLocaleString()}</DateValue>
+                        <LinkColumn sx={{ [theme.breakpoints.up('md')]: { display: 'none' } }}>
+                          <IconButton
+                            href={getExternalUrl(row.txHash)}
+                            target="_blank"
+                            sx={{ backgroundColor: '#F5F5F5', borderRadius: '100%' }}
+                            aria-label="hyperlink"
+                          >
+                            <LaunchIcon sx={{ fontSize: '16px' }} />
+                          </IconButton>
+                        </LinkColumn>
                       </BodyTableCell>
-                      {/*<BodyTableCell align="right">-</BodyTableCell>*/}
+                      <BodyTableCell>
+                        <CellLabel>Type</CellLabel>
+                        <CellValue>NFT</CellValue>
+                      </BodyTableCell>
+                      <BodyTableCell>
+                        <CellLabel>NFT</CellLabel>
+                        <CellValue>
+                          <MysteryBoxValue>{`${row.mysteryboxInfo.title.en} - ${row.mysteryboxItem?.name}`}</MysteryBoxValue>
+                        </CellValue>
+                      </BodyTableCell>
+                      <BodyTableCell>
+                        <CellLabel>Price</CellLabel>
+                        <CellValue>{row.price}</CellValue>
+                      </BodyTableCell>
+                      <BodyTableCell>
+                        <CellLabel>Blockchain</CellLabel>
+                        <CellValue>Polygon</CellValue>
+                      </BodyTableCell>
+                      <BodyTableCell>
+                        <CellLabel>Confirmation</CellLabel>
+                        <CellValue>
+                          <LinkColumn
+                            href={getExternalUrl(row.txHash)}
+                            target="_blank"
+                          >{`${row.txHash.substring(0, 20)}...`}</LinkColumn>
+                        </CellValue>
+                      </BodyTableCell>
+                      <BodyTableCell sx={{ [theme.breakpoints.down('md')]: { display: 'none' } }}>
+                        <LinkColumn>
+                          <IconButton
+                            href={getExternalUrl(row.txHash)}
+                            target="_blank"
+                            sx={{ backgroundColor: '#F5F5F5', borderRadius: '100%' }}
+                            aria-label="hyperlink"
+                          >
+                            <LaunchIcon sx={{ fontSize: '16px' }} />
+                          </IconButton>
+                        </LinkColumn>
+                      </BodyTableCell>
+                      {/*<BodyTableCell >-</BodyTableCell>*/}
                     </BodyTableRow>
                   ))}
-              </TableBody>
+              </BodyTable>
             </Table>
           </TableContainer>
         </Stack>

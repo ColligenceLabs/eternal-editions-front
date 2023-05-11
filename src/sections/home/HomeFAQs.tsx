@@ -70,6 +70,7 @@ export default function HomeFAQs() {
                     <Accordion
                       expanded={expanded === faq.question}
                       onChange={handleChangeExpanded(faq.question)}
+                      square
                     >
                       <AccordionSummary>
                         <Typography variant="h5" sx={{ flexGrow: 1 }}>

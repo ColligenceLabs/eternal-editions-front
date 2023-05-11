@@ -44,6 +44,7 @@ export default function SupportContent({ contents }: SupportContentProps) {
             key={id}
             expanded={expanded === question}
             onChange={handleChangeExpanded(question)}
+            square
           >
             <AccordionSummary
               sx={{

@@ -1,22 +1,15 @@
 import React, { ReactElement } from 'react';
-// utils
-// @types
-// _data
-// layouts
 import Layout from 'src/layouts';
-// components
 import { Page } from 'src/components';
-import { Container } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
-// sections
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import PageHeader from 'src/components/common/PageHeader';
 import NFTTransactionNFT from 'src/sections/@my/NFTTransactionNFT';
 import NFTTransactionPoint from 'src/sections/@my/NFTTransactionPoint';
+import MyAccountWrapper from 'src/components/AccountWrapper';
+import { Stack } from '@mui/material';
 // import PointTransactionGrid from "src/sections/@my/PointTransactionGrid";
 
 // ----------------------------------------------------------------------
@@ -45,14 +38,10 @@ function TabPanel(props: TabPanelProps) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
+      style={{ width: '100%' }}
       {...other}
     >
-      {value === index && (
-        <Box sx={{ p: 3 }}>
-          {/*<Typography>{children}</Typography>*/}
-          {children}
-        </Box>
-      )}
+      {value === index && <Box sx={{ width: '100%' }}>{children}</Box>}
     </div>
   );
 }
@@ -74,22 +63,22 @@ export default function TransactionPage({}) {
   return (
     <Page title="Account">
       <RootStyle>
-        <Container sx={{ mt: 3 }}>
-          <PageHeader title="Transaction" />
-
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }} component={'div'}>
-            <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-              <Tab label="Ticket (NFT)" {...a11yProps(0)} />
-              <Tab label="EDC Point" {...a11yProps(1)} />
-            </Tabs>
-          </Box>
-          <TabPanel value={value} index={0}>
-            <NFTTransactionNFT />
-          </TabPanel>
-          <TabPanel value={value} index={1}>
-            <NFTTransactionPoint />
-          </TabPanel>
-        </Container>
+        <MyAccountWrapper>
+          <Stack>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }} component={'div'}>
+              <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
+                <Tab label="Ticket (NFT)" {...a11yProps(0)} />
+                <Tab label="EDC Point" {...a11yProps(1)} />
+              </Tabs>
+            </Box>
+            <TabPanel value={value} index={0}>
+              <NFTTransactionNFT />
+            </TabPanel>
+            <TabPanel value={value} index={1}>
+              <NFTTransactionPoint />
+            </TabPanel>
+          </Stack>
+        </MyAccountWrapper>
       </RootStyle>
     </Page>
   );
@@ -98,5 +87,20 @@ export default function TransactionPage({}) {
 // ----------------------------------------------------------------------
 
 TransactionPage.getLayout = function getLayout(page: ReactElement) {
-  return <Layout verticalAlign="top">{page}</Layout>;
+  return (
+    <Layout
+      background={{
+        backgroundImage: {
+          xs: `url(/assets/background/bg-main.jpg)`,
+          md: `url(/assets/background/bg-account.jpg)`,
+        },
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      }}
+      verticalAlign="top"
+    >
+      {page}
+    </Layout>
+  );
 };

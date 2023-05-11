@@ -1,14 +1,25 @@
 import { useEffect, useState } from 'react';
-import { Box, Grid, Button, Stack, Tab, Tabs, Typography, tabClasses } from '@mui/material';
-import TicketPostItem from './TicketPostItem';
+import { Box, Grid, Button, Stack, Typography } from '@mui/material';
+import TicketItem from './TicketItem';
 import { Iconify } from 'src/components';
 import arrowDown from '@iconify/icons-carbon/arrow-down';
-import { useTheme } from '@mui/material/styles';
 import { getTicketCountByCategory, getTicketsService } from 'src/services/services';
 import { SUCCESS } from 'src/config';
 import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 import { useResponsive } from 'src/hooks';
 import CategoryTabs from 'src/components/CategoryTabs';
+import { TextSelect, TextSelectOption } from 'src/components/common/Select';
+
+const COLLECTIONS = [
+  {
+    label: 'Team Yellow',
+    value: 'yellow',
+  },
+  {
+    label: 'Team Purple',
+    value: 'purple',
+  },
+];
 
 // ----------------------------------------------------------------------
 
@@ -21,14 +32,14 @@ type CategoryTypes = {
   count: string;
 };
 
-export default function TicketsFilter({ categories: originCategories }: Props) {
-  const isMobile = useResponsive('down', 'sm');
-  const theme = useTheme();
+export default function TicketItems({ categories: originCategories }: Props) {
   const [curPage, setCurPage] = useState(1);
   const [lastPage, setLastPage] = useState(0);
   const [selected, setSelected] = useState('All');
   const [ticketInfoList, setTicketInfoList] = useState<TicketInfoTypes[]>([]);
   const [categories, setCategories] = useState<CategoryTypes[]>([]);
+  const [collection, setCollection] = useState('default');
+  const [salesType, setSalesType] = useState('default');
 
   originCategories = ['All', ...Array.from(new Set(originCategories))];
   const perPage = 6;
@@ -83,45 +94,63 @@ export default function TicketsFilter({ categories: originCategories }: Props) {
     <>
       <Stack
         direction="row"
+        justifyContent="space-between"
+        alignItems="center"
+        flexWrap="wrap"
+        gap={1}
         sx={{
-          display: 'flex',
-          alignItems: 'center',
           mx: {
             xs: -2.5,
             md: 0,
           },
+          pb: { xs: 2, md: 5 },
         }}
       >
-        <Box
+        <CategoryTabs
+          categories={categories}
+          value={selected.toLocaleLowerCase()}
+          onChange={handleChangeCategory}
+        />
+
+        <Stack
+          flexDirection="row"
+          gap="27px"
           sx={{
-            pb: { xs: 2, md: 5 },
-            flexGrow: 1,
-            // width: isMobile ? 330 : '100%',
-            /* 2023.04.18 320px 화면에서 깨지는 현상 수정 */
-            width: '100%',
+            ml: {
+              xs: '20px',
+              md: 0,
+            },
           }}
         >
-          <CategoryTabs
-            categories={categories}
-            value={selected.toLocaleLowerCase()}
-            onChange={handleChangeCategory}
-          />
-        </Box>
+          <TextSelect
+            value={collection}
+            onChange={(event) => setCollection(event.target.value as string)}
+          >
+            <TextSelectOption hidden value="default">
+              SELECT COLLECTION
+            </TextSelectOption>
+            {COLLECTIONS.map((collection) => (
+              <TextSelectOption key={collection.value} value={collection.value}>
+                {collection.label}
+              </TextSelectOption>
+            ))}
+          </TextSelect>
 
-        {/*<TicketSortByFilter filterSortBy={filters.filterSortBy} onChangeSortBy={handleChangeSortBy}/>*/}
+          <TextSelect
+            value={salesType}
+            onChange={(event) => setSalesType(event.target.value as string)}
+          >
+            <TextSelectOption hidden value="default">
+              SELECT SALES TYPE
+            </TextSelectOption>
+          </TextSelect>
+        </Stack>
       </Stack>
 
-      {/* {ticketInfoList && (
-        <Masonry columns={{ xs: 1, md: 2 }} spacing={2} sx={{ width: 'auto' }}>
-          {ticketInfoList.map((ticket, index) => (
-            <TicketPostItem key={index} ticket={ticket} />
-          ))}
-        </Masonry>
-      )} */}
       {ticketInfoList.length ? (
         <Grid container spacing={3}>
           {ticketInfoList.map((ticket, index) => (
-            <TicketPostItem key={index} ticket={ticket} />
+            <TicketItem key={index} ticket={ticket} />
           ))}
         </Grid>
       ) : (
@@ -129,14 +158,6 @@ export default function TicketsFilter({ categories: originCategories }: Props) {
           No items hav been registered.
         </Typography>
       )}
-
-      {/*{ticketInfoList && (*/}
-      {/*  <Masonry columns={{ xs: 1, md: 2 }} spacing={2}>*/}
-      {/*    {ticketInfoList.map((ticket, index) => (*/}
-      {/*      <TicketPostItem key={index} ticketInfo={ticket} />*/}
-      {/*    ))}*/}
-      {/*  </Masonry>*/}
-      {/*)}*/}
 
       {curPage < lastPage && (
         <Stack
