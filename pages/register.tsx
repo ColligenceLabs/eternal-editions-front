@@ -663,6 +663,22 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
 
       // 기 가입자 지갑 복구
+      const { user: userCheck, wallets: walletsCheck } =
+        await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
+      console.log('!! getWalletsAndUserByAbcUid =', user, wallets);
+
+      if (!userCheck) {
+        await accountController.createMpcBaseAccount(
+          {
+            accountName: email,
+            password: '!owdin001',
+            email: email,
+          },
+          dispatch
+        );
+        console.log('===== createMpcBaseAccount ... done =====');
+      }
+
       const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
       console.log('!! getWalletsAndUserByAbcUid =', user, wallets);
 
