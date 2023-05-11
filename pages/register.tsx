@@ -670,7 +670,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       if (!userCheck) {
         await accountController.createMpcBaseAccount(
           {
-            accountName: email,
+            accountName: flag ? loginEmail! : email,
             password: '!owdin001',
             email: email,
           },
