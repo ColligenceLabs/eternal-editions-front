@@ -624,10 +624,10 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       }
     } else {
       const isExist = await abcController.getUser({
-        email: email,
+        email: loginEmail,
         successIfUserExist: true,
       });
-      console.log('!! getUser =', isExist);
+      console.log('!! getUser =', isExist, loginEmail);
 
       result = await abcLogin({
         token: token,
@@ -665,19 +665,14 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       // 기 가입자 지갑 복구
       const { user: userCheck, wallets: walletsCheck } =
         await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
-      console.log(
-        '!! getWalletsAndUserByAbcUid =',
-        userCheck,
-        walletsCheck,
-        flag ? loginEmail! : email
-      );
+      console.log('!! getWalletsAndUserByAbcUid #1 =', userCheck, walletsCheck, loginEmail);
 
       if (!userCheck) {
         await accountController.createMpcBaseAccount(
           {
-            accountName: flag ? loginEmail! : email,
+            accountName: loginEmail!,
             password: '!owdin001',
-            email: flag ? loginEmail! : email,
+            email: loginEmail!,
           },
           dispatch
         );
@@ -685,7 +680,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       }
 
       const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
-      console.log('!! getWalletsAndUserByAbcUid =', user, wallets);
+      console.log('!! getWalletsAndUserByAbcUid #2 =', user, wallets);
 
       // 가잊은 되어 있으나 지갑이 없는 사용자의 경우 에러 발생...
       // TypeError: Cannot read properties of null (reading 'accounts')
@@ -762,6 +757,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         id_token = res.data?.providerAuthInfo?.provider_token;
         service = res.data?.providerAuthInfo?.provider;
         const data = JSON.parse(res.data?.providerAuthInfo?.provider_data);
+        loginEmail = data.email;
         console.log(service, id_token, data.email);
         setIdToken(id_token);
         setService(service);
