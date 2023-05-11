@@ -1,4 +1,15 @@
-import { AppBar, Backdrop, Box, Button, Container, Fade, Input, Modal, Stack } from '@mui/material';
+import {
+  AppBar,
+  Backdrop,
+  Box,
+  Button,
+  CircularProgress,
+  Container,
+  Fade,
+  Input,
+  Modal,
+  Stack,
+} from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { ethers } from 'ethers';
 import _ from 'lodash';
@@ -25,6 +36,7 @@ import { setAbcAuth } from '../../store/slices/abcAuth';
 import { abcSendTx } from '../../utils/abcTransactions';
 import { NavDesktop, NavMobile, navConfig } from '../nav';
 import { ToolbarShadowStyle, ToolbarStyle } from './HeaderToolbarStyle';
+import onLogin, { setOnLogin } from 'src/store/slices/onLogin';
 
 const modalStyle = {
   position: 'absolute',
@@ -53,6 +65,7 @@ export default function Header({ transparent, sx }: Props) {
   const { library, deactivate } = useActiveWeb3React();
   const dispatch = useDispatch();
   const webUser = useSelector((state: any) => state.webUser);
+  const { onLogin } = useSelector((state: any) => state.onLogin);
   const theme = useTheme();
 
   const isDesktop = useResponsive('up', 'md');
@@ -77,6 +90,7 @@ export default function Header({ transparent, sx }: Props) {
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const abcSnsLogin = async () => {
+    await dispatch(setOnLogin(true));
     console.log('!! start sns login !!');
     const res = await abcLogin({
       token: webUser?.user?.session?.providerAuthInfo?.provider_token,
@@ -105,6 +119,7 @@ export default function Header({ transparent, sx }: Props) {
         );
       }
     }
+    await dispatch(setOnLogin(false));
   };
 
   useEffect(() => {
@@ -209,6 +224,8 @@ export default function Header({ transparent, sx }: Props) {
                 <>
                   <WalletPopover />
                 </>
+              ) : onLogin ? (
+                <CircularProgress size={25} color="secondary" />
               ) : (
                 <>
                   {isDesktop && (

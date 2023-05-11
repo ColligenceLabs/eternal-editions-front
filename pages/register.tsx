@@ -657,12 +657,28 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
 
       // 기 가입자 지갑 복구
+      const { user: userCheck, wallets: walletsCheck } =
+        await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
+      console.log('!! getWalletsAndUserByAbcUid =', userCheck, walletsCheck, email);
+
+      if (!userCheck) {
+        await accountController.createMpcBaseAccount(
+          {
+            accountName: flag ? loginEmail! : email,
+            password: '!owdin001',
+            email: flag ? loginEmail! : email,
+          },
+          dispatch
+        );
+        console.log('===== createMpcBaseAccount ... done =====');
+      }
+
       const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
       console.log('!! getWalletsAndUserByAbcUid =', user, wallets);
 
       // 가잊은 되어 있으나 지갑이 없는 사용자의 경우 에러 발생...
       // TypeError: Cannot read properties of null (reading 'accounts')
-      if (user.twoFactorEnabled) {
+      if (user && user?.twoFactorEnabled) {
         await accountController.recoverShare(
           { password: '!owdin001', user, wallets, keepDB: false },
           dispatch
@@ -672,10 +688,10 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       if (flag) {
         // OLD User
         if (!user.twoFactorEnabled) {
-          setMemberCheck(false);
           // TODO : OTP 미등록 상태 처리
           const { qrcode, secret } = await accountController.generateTwoFactor({ reset: false });
           console.log('!! OTP =', qrcode, secret);
+          setMemberCheck(false);
           setQrCode(qrcode);
           setQrSecret(secret);
           setQrOnly(true);
@@ -690,7 +706,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       } else {
         // New SNS User
         try {
-          if (user.twoFactorEnabled) {
+          if (user && user?.twoFactorEnabled) {
             // 성공. 리다이렉트..
             console.log('이미 가입되어 있습니다. 로그인 처리합니다.');
 
@@ -755,9 +771,10 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         // @ts-ignore
         await tryRecoverABC(id_token, service, loginEmail, flag);
       } catch (error: any) {
-        setMemberCheck(false);
         if (!error) return;
         alert(error);
+        await router.push('/');
+        // setMemberCheck(false);
       }
     };
     fetchSession();
