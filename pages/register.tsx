@@ -10,6 +10,7 @@ import CheckboxFillIcon from 'src/assets/icons/checkboxFill';
 import CheckboxIndeterminateFillIcon from 'src/assets/icons/checkboxIndeterminateFill';
 import {
   abcAddUser,
+  abcJoin,
   abcLogin,
   getSession,
   resetPassword,
@@ -341,7 +342,15 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
     if (flCreate) {
       // 신규 가입자 생성
       const sixCode = JSON.parse(result.data.msg).sixcode;
-      console.log('!! sixcode =', sixCode);
+      console.log('!! sixcode =', sixCode, email);
+      console.log(
+        '!! Agreement =',
+        Number(getValues('abcAge')),
+        Number(getValues('abcTerms')),
+        Number(getValues('abcPrivate')),
+        Number(getValues('abcTirdParty')),
+        Number(getValues('abcMarketing'))
+      );
       const dto: AbcSnsAddUserDto = {
         username: email,
         code: sixCode,
@@ -352,8 +361,13 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         thirdparty: Number(getValues('abcTirdParty')),
         advertise: Number(getValues('abcMarketing')),
       };
-      const newAccount = await abcController.snsAddUser(dto);
-      console.log('!! created account =', newAccount);
+      try {
+        // const newAccount = await abcController.snsAddUser(dto);
+        const newAccount = await abcJoin(dto);
+        console.log('!! created account =', newAccount);
+      } catch (e) {
+        console.log('!! snsAddUser Error =', e);
+      }
 
       // 신규 가입 후 ABC 로그인
       console.log('!! start to abc sns login !!');
