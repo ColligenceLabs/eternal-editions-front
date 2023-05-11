@@ -657,6 +657,22 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
 
       // 기 가입자 지갑 복구
+      const { user: userCheck, wallets: walletsCheck } =
+        await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
+      console.log('!! getWalletsAndUserByAbcUid =', userCheck, walletsCheck, email);
+
+      if (!userCheck) {
+        await accountController.createMpcBaseAccount(
+          {
+            accountName: flag ? loginEmail! : email,
+            password: '!owdin001',
+            email: flag ? loginEmail! : email,
+          },
+          dispatch
+        );
+        console.log('===== createMpcBaseAccount ... done =====');
+      }
+
       const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
       console.log('!! getWalletsAndUserByAbcUid =', user, wallets);
 
@@ -671,7 +687,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
 
       if (flag) {
         // OLD User
-        if (user === null && !user?.twoFactorEnabled) {
+        if (!user.twoFactorEnabled) {
           // TODO : OTP 미등록 상태 처리
           const { qrcode, secret } = await accountController.generateTwoFactor({ reset: false });
           console.log('!! OTP =', qrcode, secret);
