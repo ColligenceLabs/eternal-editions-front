@@ -763,7 +763,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       } catch (error: any) {
         if (!error) return;
         alert(error);
-        router.push('/');
+        await router.push('/');
         setMemberCheck(false);
       }
     };
