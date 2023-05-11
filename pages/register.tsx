@@ -665,7 +665,12 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       // 기 가입자 지갑 복구
       const { user: userCheck, wallets: walletsCheck } =
         await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
-      console.log('!! getWalletsAndUserByAbcUid =', userCheck, walletsCheck, email);
+      console.log(
+        '!! getWalletsAndUserByAbcUid =',
+        userCheck,
+        walletsCheck,
+        flag ? loginEmail! : email
+      );
 
       if (!userCheck) {
         await accountController.createMpcBaseAccount(
