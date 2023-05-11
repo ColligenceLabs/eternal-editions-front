@@ -672,10 +672,10 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
       if (flag) {
         // OLD User
         if (user === null && !user?.twoFactorEnabled) {
-          setMemberCheck(false);
           // TODO : OTP 미등록 상태 처리
           const { qrcode, secret } = await accountController.generateTwoFactor({ reset: false });
           console.log('!! OTP =', qrcode, secret);
+          setMemberCheck(false);
           setQrCode(qrcode);
           setQrSecret(secret);
           setQrOnly(true);
@@ -758,7 +758,7 @@ export default function Register(effect: React.EffectCallback, deps?: React.Depe
         if (!error) return;
         alert(error);
         await router.push('/');
-        setMemberCheck(false);
+        // setMemberCheck(false);
       }
     };
     fetchSession();
