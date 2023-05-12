@@ -23,6 +23,7 @@ import {
   DateValue,
   MysteryBoxValue,
 } from 'src/components/StyledTable';
+import HyperlinkButton from 'src/components/ticket/HyperlinkButton';
 
 type TransactionsType = {
   buyer: string;
@@ -141,14 +142,10 @@ export default function NFTTransactionNFT() {
                       </BodyTableCell>
                       <BodyTableCell sx={{ [theme.breakpoints.down('md')]: { display: 'none' } }}>
                         <LinkColumn>
-                          <IconButton
+                          <HyperlinkButton
                             href={getExternalUrl(row.txHash)}
-                            target="_blank"
-                            sx={{ backgroundColor: '#F5F5F5', borderRadius: '100%' }}
-                            aria-label="hyperlink"
-                          >
-                            <LaunchIcon sx={{ fontSize: '16px' }} />
-                          </IconButton>
+                            styles={{ backgroundColor: '#F5F5F5' }}
+                          />
                         </LinkColumn>
                       </BodyTableCell>
                       {/*<BodyTableCell >-</BodyTableCell>*/}

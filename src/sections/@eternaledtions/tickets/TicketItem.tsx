@@ -6,6 +6,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useResponsive } from 'src/hooks';
 import RoundedButton from 'src/components/common/RoundedButton';
+import HyperlinkButton from 'src/components/ticket/HyperlinkButton';
 
 export default function TicketItem({ ticket }: any) {
   const isXs = useResponsive('down', 'sm');
@@ -141,15 +142,19 @@ export default function TicketItem({ ticket }: any) {
 
             position: 'relative',
             px: isMobile ? 1 : 3,
-            py: isMobile ? 2 : 4,
             zIndex: 1000,
             right: 0,
           }}
         >
           <Stack sx={{ height: 1 }}>
-            <LineItem label="Reserve Price" value={`Friday (November 11, 2022)`} />
-            <LineItem label="Team" value={`Team Yellow`} />
-            <LineItem label="QTY" value={1} />
+            <Stack flexDirection="row" justifyContent="space-between">
+              <Stack gap="12px">
+                <LineItem label="Day" value={`Friday (November 11, 2022)`} />
+                <LineItem label="Team" value={`Team Yellow`} />
+                <LineItem label="QTY" value={1} />
+              </Stack>
+              <HyperlinkButton href={''} styles={{ backgroundColor: '#222222' }} />
+            </Stack>
 
             <Box sx={{ flexGrow: 1 }} />
 
@@ -188,6 +193,7 @@ function LineItem({ label, value }: LineItemProps) {
           fontSize: isMobile ? '12px' : '14px',
           marginRight: isMobile ? '10px' : '0px',
           color: 'rgba(255, 255, 255, 0.6)',
+          textTransform: 'uppercase',
         }}
       >
         {label}

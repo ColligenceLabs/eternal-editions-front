@@ -4,6 +4,7 @@ export const CardWrapper = styled(Box)(({ theme }) => ({
   background: 'rgba(0, 0, 0, 0.24)',
   backdropFilter: 'blur(50px)',
   borderRadius: '40px',
+  color: theme.palette.common.white,
   width: '100%',
   height: '100%',
   paddingTop: '24px',
