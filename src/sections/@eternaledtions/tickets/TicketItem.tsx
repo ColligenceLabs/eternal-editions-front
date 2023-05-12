@@ -1,10 +1,11 @@
 // @mui
-import { Box, Button, Stack, Grid, Typography } from '@mui/material';
+import { Box, Stack, Grid, Typography } from '@mui/material';
 import { m } from 'framer-motion';
 import { Image, TextMaxLine, varHover, varTranHover } from 'src/components';
 import React, { ReactElement, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useResponsive } from 'src/hooks';
+import RoundedButton from 'src/components/common/RoundedButton';
 
 export default function TicketItem({ ticket }: any) {
   const isXs = useResponsive('down', 'sm');
@@ -153,12 +154,17 @@ export default function TicketItem({ ticket }: any) {
             <Box sx={{ flexGrow: 1 }} />
 
             <Stack sx={{ mt: isMobile ? 2 : 4 }} direction="row" spacing={2}>
-              <Button size={isMobile ? 'small' : 'large'} fullWidth={true}>
+              <RoundedButton variant="withImage" size={isMobile ? 'small' : 'large'} fullWidth>
                 TO ENTER
-              </Button>
-              <Button size={isMobile ? 'small' : 'large'} fullWidth={true} disabled>
+              </RoundedButton>
+              <RoundedButton
+                variant="withImage"
+                size={isMobile ? 'small' : 'large'}
+                fullWidth
+                disabled
+              >
                 SELL
-              </Button>
+              </RoundedButton>
             </Stack>
           </Stack>
         </Stack>
