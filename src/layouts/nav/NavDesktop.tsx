@@ -9,7 +9,7 @@ import { useRouter } from 'next/router';
 import { styled } from '@mui/material/styles';
 import { Link, Stack, LinkProps } from '@mui/material';
 // @types
-import { NavProps, NavItemDesktopProps } from '../../@types/layout';
+import { NavProps, NavItemDesktopProps } from 'src/@types/layout';
 // components
 import { Iconify } from 'src/components';
 //
@@ -109,12 +109,12 @@ export default function NavDesktop({ isScrolling, isTransparent, navConfig }: Na
 
 function NavItemDesktop({ item, isScrolling, isTransparent }: NavItemDesktopProps) {
   const { title, path, children } = item;
-
-  const { pathname, asPath } = useRouter();
-
+  const { pathname } = useRouter();
+  // const {asPath} = useRouter()
   const [open, setOpen] = useState(false);
 
-  const isActiveRoot = path === pathname || (path !== '/' && asPath.includes(path));
+  const isActiveRoot = path === pathname;
+  // const isActiveRoot = path === pathname || (path !== '/' && asPath.includes(path));
 
   useEffect(() => {
     if (open) {
