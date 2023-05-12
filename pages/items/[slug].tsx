@@ -563,16 +563,26 @@ export default function TicketDetailPage() {
       <RootStyle>
         <Container>
           <Grid container spacing={8} direction="row">
-            <Grid item xs={12} md={5} lg={6}>
-              {/*<Image*/}
-              {/*    alt="photo"*/}
-              {/*    src={'https://dummyimage.com/900x900/000/fff'}*/}
-              {/*    ratio="1/1"*/}
-              {/*    sx={{ borderRadius: 2, cursor: 'pointer' }}*/}
-              {/*/>*/}
-            </Grid>
+            {/* <Grid item xs={12} md={5} lg={6}> */}
+            {/*<Image*/}
+            {/*    alt="photo"*/}
+            {/*    src={'https://dummyimage.com/900x900/000/fff'}*/}
+            {/*    ratio="1/1"*/}
+            {/*    sx={{ borderRadius: 2, cursor: 'pointer' }}*/}
+            {/*/>*/}
+            {/* </Grid> */}
 
-            <Grid item xs={12} md={7} lg={6}>
+            <Grid
+              item
+              xs={12}
+              md={7}
+              lg={6}
+              sx={{
+                ml: {
+                  md: 'auto',
+                },
+              }}
+            >
               <CardWrapper>
                 <CardInner>
                   <Stack flexDirection="row" justifyContent="space-between">
@@ -601,7 +611,7 @@ export default function TicketDetailPage() {
 
                   <TicketName>{ticketInfo?.title.en}</TicketName>
 
-                  <Stack gap="7px">
+                  <Stack gap={{ xs: '16px', md: '7px' }}>
                     <Row>
                       <Label>Day</Label>
                       <Value>{ticketInfo?.createdAt && fDate(ticketInfo?.createdAt)}</Value>
@@ -618,7 +628,7 @@ export default function TicketDetailPage() {
 
                   <Divider />
 
-                  <Section>
+                  <Stack gap={{ xs: '24px', md: '12px' }}>
                     {isOnAuction ? (
                       <Row>
                         <Label>Starting Price</Label>
@@ -638,9 +648,9 @@ export default function TicketDetailPage() {
                         <TotalValue sx={{ opacity: 0.6 }}>{`(~$${ticketInfo?.price})`}</TotalValue>
                       </Stack>
                     </Row>
-                  </Section>
+                  </Stack>
 
-                  <Stack gap={0.25} mt="142px">
+                  <Stack gap={0.25} mt={{ xs: 0, md: '142px' }}>
                     {isOnAuction ? (
                       <>
                         <TextField
