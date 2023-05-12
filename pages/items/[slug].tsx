@@ -562,7 +562,12 @@ export default function TicketDetailPage() {
       />
       <RootStyle>
         <Container>
-          <Grid container spacing={8} direction="row">
+          <Grid
+            container
+            spacing={8}
+            direction="row"
+            sx={{ [theme.breakpoints.down('md')]: { pt: '480px' } }}
+          >
             {/* <Grid item xs={12} md={5} lg={6}> */}
             {/*<Image*/}
             {/*    alt="photo"*/}
