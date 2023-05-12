@@ -14,25 +14,66 @@ import { SUCCESS } from '../../config';
 
 type Props = { loading?: boolean };
 
-const defaultValues = {
-  mysteryboxItem: {
-    properties: [],
-    name: 'Admission',
-
-    itemImage:
-      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHujD2_xbJS9yXZMM0niQLsOFbjjxAxaV_14a0kWNgOqiNrPEM1x3dV-8KDNlPh67sPaQ&usqp=CAU',
+const MOCK_DATA = [
+  {
+    status: 'selling',
+    no: '#123',
+    duration: 'November 11 - 13, 2022',
+    mysteryboxItem: {
+      properties: [],
+      name: 'Admission',
+      itemImage:
+        'https://taalswap.s3.ap-northeast-2.amazonaws.com/package/efd4f55eca99cf36c9c1b402c964630b_gogh_03.jpeg',
+    },
+    mysteryboxInfo: {
+      price: 23,
+      boxContractAddress: 'HQ Beercade Nashville Nashville, TN',
+    },
+    createAt: 'Friday (November 11, 2022)',
+    team: 'Team Yellow',
+    qty: 1,
   },
-  mysteryboxInfo: {
-    price: 23,
-
-    boxContractAddress: 'HQ Beercade Nashville Nashville, TN',
+  {
+    status: 'for-sale',
+    no: '#123',
+    duration: 'November 11 - 13, 2022',
+    mysteryboxItem: {
+      properties: [],
+      name: 'Admission',
+      itemImage:
+        'https://taalswap.s3.ap-northeast-2.amazonaws.com/package/efd4f55eca99cf36c9c1b402c964630b_gogh_03.jpeg',
+    },
+    mysteryboxInfo: {
+      price: 23,
+      boxContractAddress: 'HQ Beercade Nashville Nashville, TN',
+    },
+    createAt: 'Friday (November 11, 2022)',
+    team: 'Team Yellow',
+    qty: 1,
   },
-  createAt: 'fdfsf',
-};
+  {
+    status: 'done',
+    no: '#123',
+    duration: 'November 11 - 13, 2022',
+    mysteryboxItem: {
+      properties: [],
+      name: 'Admission',
+      itemImage:
+        'https://taalswap.s3.ap-northeast-2.amazonaws.com/package/efd4f55eca99cf36c9c1b402c964630b_gogh_03.jpeg',
+    },
+    mysteryboxInfo: {
+      price: 23,
+      boxContractAddress: 'HQ Beercade Nashville Nashville, TN',
+    },
+    createAt: 'Friday (November 11, 2022)',
+    team: 'Team Yellow',
+    qty: 1,
+  },
+];
 
 export default function MyTicketList({ loading }: Props) {
   const { user } = useSelector((state: any) => state.webUser);
-  const [myTicketList, setMyTicketList] = useState([defaultValues]);
+  const [myTicketList, setMyTicketList] = useState(MOCK_DATA);
   const getMyTicketList = async () => {
     const res = await getMyTickets(user.uid);
     if (res.data.status === SUCCESS) {

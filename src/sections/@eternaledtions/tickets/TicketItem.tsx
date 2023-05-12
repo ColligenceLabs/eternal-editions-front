@@ -7,16 +7,16 @@ import axios from 'axios';
 import { useResponsive } from 'src/hooks';
 import RoundedButton from 'src/components/common/RoundedButton';
 import HyperlinkButton from 'src/components/ticket/HyperlinkButton';
+import Badge from 'src/components/ticket/Badge';
 
 export default function TicketItem({ ticket }: any) {
   const isXs = useResponsive('down', 'sm');
   const isMobile = useResponsive('down', 'md');
   const [maticPrice, setMaticPrice] = useState(0);
   const [klayPrice, setKlayPrice] = useState(0);
-  const [ticketInfo, setTicketInfo] = useState({
+  const [ticketInfo, setTicketInfo] = useState<any>({
     // company: '',
     // companyImage: null,
-    createdAt: null,
     itemTitle: '',
     itemImage: '',
     price: 0,
@@ -54,11 +54,10 @@ export default function TicketItem({ ticket }: any) {
         ticket.mysteryboxItem.properties.find((item: any) =>
           item.type.toLowerCase() === 'location' ? item : ''
         );
-      console.log('first', ticket);
       setTicketInfo({
         // company: ticket.companyname.en,
         // companyImage: ticket.companyimage,
-        createdAt: ticket.createdAt,
+        ...ticket,
         itemTitle: ticket.mysteryboxItem.name,
         itemImage: ticket.mysteryboxItem.itemImage,
         price: ticket.mysteryboxItem.price,
@@ -88,90 +87,90 @@ export default function TicketItem({ ticket }: any) {
           position: 'relative',
           height: 1,
           padding: '1.5rem',
+          bgcolor: 'rgba(0,0,0,.3)',
         }}
         alignContent="center"
         justifyContent={'space-between'}
         // 반응형
         direction={isMobile ? 'column' : 'row'}
       >
-        <Box sx={{ width: { md: 'calc(50% + 3rem)' }, mr: { xs: 0, md: '3rem' } }}>
-          <Image
-            src={ticketInfo.itemImage}
-            alt={ticketInfo.itemTitle}
-            ratio={isXs ? '16/9' : isMobile ? '21/9' : '16/9'}
-            sx={{ borderRadius: 2 }}
-          />
-        </Box>
+        <Box sx={{ position: 'relative', flex: 1 }}>
+          <Box sx={{ width: { md: 'calc(100%)' }, mr: { xs: 0, md: '3rem' } }}>
+            <Image
+              src={ticketInfo.itemImage}
+              alt={ticketInfo.itemTitle}
+              ratio={isXs ? '3/4' : '16/9'}
+              sx={{ borderRadius: 2, height: '100%' }}
+            />
+          </Box>
 
-        <Stack
-          spacing={1}
-          sx={{
-            position: 'absolute',
-            left: 0,
-            right: 0,
-            top: 0,
-            bottom: '1rem',
-            bgcolor: 'rgba(0,0,0,.3)',
-            px: isMobile ? 1 : 3,
-            py: isMobile ? 2 : 2,
-            borderRadius: '40px',
-          }}
-        >
           <Stack
             spacing={1}
             direction="column"
             justifyContent="flex-end"
             alignItems="flex-start"
-            sx={{ typography: 'caption', m: 3, height: '100%' }}
+            sx={{
+              typography: 'caption',
+              // m: 3,
+              height: '100%',
+              position: 'absolute',
+              left: 0,
+              right: 0,
+              top: 0,
+              // bottom: 0,
+              // backgroundColor: 'green',
+              px: isMobile ? 2 : 3,
+              py: isMobile ? 2 : 3,
+            }}
           >
-            <TextMaxLine variant="body2">{'#123'}</TextMaxLine>
+            <TextMaxLine variant="body2">{ticketInfo.no}</TextMaxLine>
 
             <TextMaxLine variant="h3">{ticketInfo.itemTitle}</TextMaxLine>
-            <TextMaxLine variant="body2">{'November 11 - 13, 2022'}</TextMaxLine>
+            <TextMaxLine variant="body2">{ticketInfo.duration}</TextMaxLine>
             <TextMaxLine variant="body2">{ticketInfo.boxContractAddress}</TextMaxLine>
           </Stack>
-        </Stack>
-        <Stack
-          justifyContent="space-between"
-          sx={{
-            overflow: 'hidden',
-            mt: isMobile ? -2 : 0,
-            borderTopLeftRadius: '16px',
-            borderTopRightRadius: '16px',
-            flexGrow: 1,
+          {/* </Stack> */}
+        </Box>
 
-            position: 'relative',
-            px: isMobile ? 1 : 3,
+        <Stack
+          sx={{
+            flex: 1,
+            // overflow: 'hidden',
+            mt: isMobile ? 2 : 0,
+            px: isMobile ? 1 : 2,
             zIndex: 1000,
-            right: 0,
           }}
         >
-          <Stack sx={{ height: 1 }}>
-            <Stack flexDirection="row" justifyContent="space-between">
-              <Stack gap="12px">
-                <LineItem label="Day" value={`Friday (November 11, 2022)`} />
-                <LineItem label="Team" value={`Team Yellow`} />
-                <LineItem label="QTY" value={1} />
-              </Stack>
-              <HyperlinkButton href={''} styles={{ backgroundColor: '#222222' }} />
+          <Stack flexDirection="row" justifyContent="space-between">
+            <Stack gap="5px">
+              <LineItem label="Day" value={ticketInfo.createAt} />
+              <LineItem label="Team" value={ticketInfo.team} />
+              <LineItem label="QTY" value={ticketInfo.qty} />
+              {ticketInfo.status === 'for-sale' && <LineItem label="QTY" value={ticketInfo.qty} />}
             </Stack>
-
-            <Box sx={{ flexGrow: 1 }} />
-
-            <Stack sx={{ mt: isMobile ? 2 : 4 }} direction="row" spacing={2}>
+            {ticketInfo.status === 'selling' && (
+              <HyperlinkButton href={''} styles={{ backgroundColor: '#222222' }} />
+            )}
+            {ticketInfo.status === 'for-sale' && <Badge label="For sale" />}
+          </Stack>
+          <Box sx={{ flexGrow: 1 }} />
+          {ticketInfo.status === 'selling' && (
+            <Stack sx={{ mt: 1 }} direction={isMobile ? 'column' : 'row'} spacing={2}>
               <RoundedButton variant="withImage" size={isMobile ? 'small' : 'large'} fullWidth>
                 TO ENTER
               </RoundedButton>
-              <RoundedButton
-                variant="withImage"
-                size={isMobile ? 'small' : 'large'}
-                fullWidth
-                disabled
-              >
+              <RoundedButton variant="default" size={isMobile ? 'small' : 'large'} fullWidth>
                 SELL
               </RoundedButton>
             </Stack>
-          </Stack>
+          )}
+          {ticketInfo.status === 'for-sale' && (
+            <Stack sx={{ mt: 1 }} direction="row" spacing={2} justifyContent={'flex-end'}>
+              <RoundedButton variant="withImage" size={isMobile ? 'small' : 'large'} fullWidth>
+                SALE INFO
+              </RoundedButton>
+            </Stack>
+          )}
         </Stack>
       </Stack>
     </Grid>
@@ -190,7 +189,7 @@ function LineItem({ label, value }: LineItemProps) {
     <Stack direction={'column'}>
       <Typography
         sx={{
-          fontSize: isMobile ? '12px' : '14px',
+          fontSize: isMobile ? '12px' : '12px',
           marginRight: isMobile ? '10px' : '0px',
           color: 'rgba(255, 255, 255, 0.6)',
           textTransform: 'uppercase',
@@ -202,7 +201,7 @@ function LineItem({ label, value }: LineItemProps) {
         variant="subtitle2"
         sx={{
           color: 'common.white',
-          fontSize: isMobile ? '12px' : '16px',
+          fontSize: isMobile ? '12px' : '14px',
           fontWeight: 'bold',
         }}
       >
