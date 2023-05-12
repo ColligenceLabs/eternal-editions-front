@@ -186,7 +186,12 @@ export default function TicketItem({ ticket }: any) {
           )}
           {ticketInfo.status === 'for-sale' && (
             <Stack sx={{ mt: 1 }} direction="row" spacing={2} justifyContent={'flex-end'}>
-              <RoundedButton variant="withImage" size={isMobile ? 'small' : 'large'} fullWidth>
+              <RoundedButton
+                sx={{ flexBasis: '50%' }}
+                variant="withImage"
+                size={isMobile ? 'small' : 'large'}
+                fullWidth
+              >
                 SALE INFO
               </RoundedButton>
             </Stack>
