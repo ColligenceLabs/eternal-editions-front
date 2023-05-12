@@ -12,6 +12,7 @@ import React, { ReactNode } from 'react';
 import Routes from 'src/routes';
 import { useRouter } from 'next/router';
 import { useResponsive } from 'src/hooks';
+import NextLink from 'next/link';
 
 const LINKS = [
   {
@@ -68,37 +69,39 @@ interface LinkTabProps {
   onClick?: React.MouseEventHandler<HTMLAnchorElement>;
 }
 
-function LinkTab(props: LinkTabProps) {
+function LinkTab({ href, ...props }: LinkTabProps) {
   const theme = useTheme();
 
   return (
-    <Tab
-      component="a"
-      sx={{
-        color: 'white',
-        fontWeight: 'bold',
-        fontSize: 14,
-        lineHeight: 12 / 14,
-        minHeight: 'unset',
-        alignItems: 'flex-start',
-        [`&.${tabClasses.selected}`]: {
-          color: theme.palette.primary.main,
-        },
-        [`&.${tabClasses.root}`]: {
-          mr: 0,
-          minWidth: 'unset',
-        },
-        [theme.breakpoints.down('md')]: {
-          ['&:first-of-type']: {
-            marginLeft: '20px',
+    <NextLink href={href as string}>
+      <Tab
+        component="a"
+        sx={{
+          color: 'white',
+          fontWeight: 'bold',
+          fontSize: 14,
+          lineHeight: 12 / 14,
+          minHeight: 'unset',
+          alignItems: 'flex-start',
+          [`&.${tabClasses.selected}`]: {
+            color: theme.palette.primary.main,
           },
-          ['&:last-of-type']: {
-            paddingRight: '20px',
+          [`&.${tabClasses.root}`]: {
+            mr: 0,
+            minWidth: 'unset',
           },
-        },
-      }}
-      {...props}
-    />
+          [theme.breakpoints.down('md')]: {
+            ['&:first-of-type']: {
+              marginLeft: '20px',
+            },
+            ['&:last-of-type']: {
+              paddingRight: '20px',
+            },
+          },
+        }}
+        {...props}
+      />
+    </NextLink>
   );
 }
 
