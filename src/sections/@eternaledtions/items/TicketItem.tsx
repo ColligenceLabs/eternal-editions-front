@@ -9,6 +9,7 @@ import NextLink from 'next/link';
 import { useResponsive } from 'src/hooks';
 import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 import BuyNowButton from './BuyNowButton';
+import { useRouter } from 'next/router';
 
 // ----------------------------------------------------------------------
 
