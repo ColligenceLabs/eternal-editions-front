@@ -144,14 +144,15 @@ export default function TicketItem({ ticket }: any) {
             mt: isMobile ? 2 : 0,
             px: isMobile ? 1 : 2,
             zIndex: 1000,
+            justifyContent: 'space-between',
+            height: '100%',
           }}
         >
           <Stack flexDirection="row" justifyContent="space-between">
             <Stack gap="12px">
               <LineItem label="Day" value={ticketInfo.createAt} />
               <LineItem label="Team" value={ticketInfo.team} />
-              <LineItem label="QTY" value={ticketInfo.qty} />
-              {ticketInfo.status === 'for-sale' && <LineItem label="QTY" value={ticketInfo.qty} />}
+              {ticketInfo.status !== 'for-sale' && <LineItem label="QTY" value={ticketInfo.qty} />}
             </Stack>
             {ticketInfo.status === 'selling' && (
               <HyperlinkButton
