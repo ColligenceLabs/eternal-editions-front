@@ -8,6 +8,9 @@ import { useResponsive } from 'src/hooks';
 import RoundedButton from 'src/components/common/RoundedButton';
 import HyperlinkButton from 'src/components/ticket/HyperlinkButton';
 import Badge from 'src/components/ticket/Badge';
+import ModalCustom from 'src/components/common/ModalCustom';
+import Link from 'next/link';
+import SaveTicketContent from './SaveTicketContent';
 
 export default function TicketItem({ ticket }: any) {
   const theme = useTheme();
@@ -15,6 +18,7 @@ export default function TicketItem({ ticket }: any) {
   const isMobile = useResponsive('down', 'md');
   const [maticPrice, setMaticPrice] = useState(0);
   const [klayPrice, setKlayPrice] = useState(0);
+  const [open, setOpen] = useState<boolean>(false);
   const [ticketInfo, setTicketInfo] = useState<any>({
     // company: '',
     // companyImage: null,
@@ -171,17 +175,19 @@ export default function TicketItem({ ticket }: any) {
               direction={isMobile ? 'column' : 'row'}
               spacing={isMobile ? '2px' : '10px'}
             >
-              <RoundedButton variant="withImage" size={isMobile ? 'small' : 'large'} fullWidth>
-                TO ENTER
-              </RoundedButton>
               <RoundedButton
                 variant="withImage"
-                // sx={{ background: theme.palette.primary.main }}
                 size={isMobile ? 'small' : 'large'}
                 fullWidth
+                onClick={() => setOpen(true)}
               >
-                SELL
+                TO ENTER
               </RoundedButton>
+              <Link href={`/my/tickets/sell/`} passHref>
+                <RoundedButton variant="default" size={isMobile ? 'small' : 'large'} fullWidth>
+                  SELL
+                </RoundedButton>
+              </Link>
             </Stack>
           )}
           {ticketInfo.status === 'for-sale' && (
@@ -198,6 +204,9 @@ export default function TicketItem({ ticket }: any) {
           )}
         </Stack>
       </Stack>
+      <ModalCustom open={open} onClose={() => setOpen(false)}>
+        <SaveTicketContent ticketInfo={ticketInfo} />
+      </ModalCustom>
     </Grid>
   );
 }
