@@ -3,9 +3,10 @@ import React from 'react';
 
 type Props = {
   label: string;
+  style?: React.CSSProperties;
 };
 
-export default function Badge({ label }: Props) {
+export default function Badge({ label, style }: Props) {
   const theme = useTheme();
 
   return (
@@ -16,6 +17,7 @@ export default function Badge({ label }: Props) {
       sx={{
         fontWeight: theme.typography.fontWeightBold,
         textTransform: 'uppercase',
+        ...style,
       }}
     />
   );

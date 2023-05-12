@@ -27,10 +27,10 @@ type Props = {
 };
 
 export default function TicketItem({ ticket }: Props) {
-  console.log(ticket);
+  const router = useRouter();
   const isMobile = useResponsive('down', 'md');
   const { id, title, packageImage, categoriesStr, releaseDatetime, createdAt } = ticket;
-  const isSale = true;
+  const isOnAuction = router.query.status; // TODO: Update value
   const theme = useTheme();
 
   return (
@@ -139,7 +139,7 @@ export default function TicketItem({ ticket }: Props) {
               }}
             >
               <Chip
-                label={isSale ? 'For Sale' : 'On Auction'}
+                label={isOnAuction ? 'On Auction' : 'For Sale'}
                 variant="outlined"
                 color="primary"
                 sx={{
