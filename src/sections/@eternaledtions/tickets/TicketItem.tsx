@@ -1,5 +1,5 @@
 // @mui
-import { Box, Stack, Grid, Typography } from '@mui/material';
+import { Box, Stack, Grid, Typography, useTheme } from '@mui/material';
 import { m } from 'framer-motion';
 import { Image, TextMaxLine, varHover, varTranHover } from 'src/components';
 import React, { ReactElement, useEffect, useState } from 'react';
@@ -10,6 +10,7 @@ import HyperlinkButton from 'src/components/ticket/HyperlinkButton';
 import Badge from 'src/components/ticket/Badge';
 
 export default function TicketItem({ ticket }: any) {
+  const theme = useTheme();
   const isXs = useResponsive('down', 'sm');
   const isMobile = useResponsive('down', 'md');
   const [maticPrice, setMaticPrice] = useState(0);
@@ -142,24 +143,43 @@ export default function TicketItem({ ticket }: any) {
           }}
         >
           <Stack flexDirection="row" justifyContent="space-between">
-            <Stack gap="5px">
+            <Stack gap="12px">
               <LineItem label="Day" value={ticketInfo.createAt} />
               <LineItem label="Team" value={ticketInfo.team} />
               <LineItem label="QTY" value={ticketInfo.qty} />
               {ticketInfo.status === 'for-sale' && <LineItem label="QTY" value={ticketInfo.qty} />}
             </Stack>
             {ticketInfo.status === 'selling' && (
-              <HyperlinkButton href={''} styles={{ backgroundColor: '#222222' }} />
+              <HyperlinkButton
+                href={''}
+                styles={{
+                  backgroundColor: '#222222',
+                  [theme.breakpoints.down('md')]: {
+                    position: 'absolute',
+                    top: '36px',
+                    right: '36px',
+                  },
+                }}
+              />
             )}
             {ticketInfo.status === 'for-sale' && <Badge label="For sale" />}
           </Stack>
           <Box sx={{ flexGrow: 1 }} />
           {ticketInfo.status === 'selling' && (
-            <Stack sx={{ mt: 1 }} direction={isMobile ? 'column' : 'row'} spacing={2}>
+            <Stack
+              sx={{ mt: isMobile ? '24px' : 0 }}
+              direction={isMobile ? 'column' : 'row'}
+              spacing={isMobile ? '2px' : '10px'}
+            >
               <RoundedButton variant="withImage" size={isMobile ? 'small' : 'large'} fullWidth>
                 TO ENTER
               </RoundedButton>
-              <RoundedButton variant="default" size={isMobile ? 'small' : 'large'} fullWidth>
+              <RoundedButton
+                variant="withImage"
+                // sx={{ background: theme.palette.primary.main }}
+                size={isMobile ? 'small' : 'large'}
+                fullWidth
+              >
                 SELL
               </RoundedButton>
             </Stack>
@@ -186,10 +206,10 @@ type LineItemProps = {
 function LineItem({ label, value }: LineItemProps) {
   const isMobile = useResponsive('down', 'md');
   return (
-    <Stack direction={'column'}>
+    <Stack direction={'column'} gap="2px">
       <Typography
         sx={{
-          fontSize: isMobile ? '12px' : '12px',
+          fontSize: '12px',
           marginRight: isMobile ? '10px' : '0px',
           color: 'rgba(255, 255, 255, 0.6)',
           textTransform: 'uppercase',
@@ -198,11 +218,10 @@ function LineItem({ label, value }: LineItemProps) {
         {label}
       </Typography>
       <Typography
-        variant="subtitle2"
         sx={{
           color: 'common.white',
           fontSize: isMobile ? '12px' : '14px',
-          fontWeight: 'bold',
+          lineHeight: 20 / 14,
         }}
       >
         {value}
