@@ -19,6 +19,9 @@ import {
   accordionSummaryClasses,
   AccordionDetails,
   useTheme,
+  Input,
+  outlinedInputClasses,
+  inputBaseClasses,
 } from '@mui/material';
 // config
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT, SUCCESS } from 'src/config';
@@ -640,6 +643,30 @@ export default function TicketDetailPage() {
                   <Stack gap={0.25} mt="142px">
                     {isOnAuction ? (
                       <>
+                        <TextField
+                          variant="outlined"
+                          placeholder="Please enter your offer"
+                          sx={{
+                            [`.${outlinedInputClasses.notchedOutline}`]: {
+                              borderRadius: '60px',
+                            },
+                            [`.${outlinedInputClasses.root}:not(.Mui-focused) .${outlinedInputClasses.notchedOutline}`]:
+                              {
+                                border: '1px solid #F5F5F5',
+                              },
+                            [`.${outlinedInputClasses.input}`]: {
+                              textAlign: 'center',
+                              fontSize: '14px',
+                              lineHeight: 12 / 14,
+                              letterSpacing: '0.08em',
+                              fontWeight: 'bold',
+                            },
+                            [`.${outlinedInputClasses.input}::placeholder`]: {
+                              color: 'rgba(255, 255, 255, 0.4)',
+                              textTransform: 'uppercase',
+                            },
+                          }}
+                        />
                         <RoundedButton
                           onClick={handleOpen}
                           fullWidth
