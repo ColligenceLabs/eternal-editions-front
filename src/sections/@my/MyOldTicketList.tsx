@@ -28,7 +28,7 @@ export default function MyOldTicketList({ loading }: Props) {
     if (user?.uid) result = await getOldMyTicket2(user?.uid);
     else result = await getOldMyTicket();
     console.log(result);
-    if (result.data && result.data.data.length > 0) {
+    if (result.data && result.data.data?.length > 0) {
       const temp = result.data.data.map((ticket: any) => {
         const time = new Date().setMinutes(new Date().getMinutes() + 5);
         return {

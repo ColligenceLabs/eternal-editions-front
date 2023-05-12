@@ -1,28 +1,17 @@
-import { Box, Chip, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Stack, useTheme } from '@mui/material';
 import React from 'react';
-import { EEAvatar } from 'src/components';
 import TicketSellForm from 'src/components/my-tickets/TicketSellForm';
+import Badge from 'src/components/ticket/Badge';
+import { CardWrapper } from 'src/components/ticket/CardWrapper';
+import CompanyInfo from 'src/components/ticket/CompanyInfo';
+import { TicketName } from 'src/components/ticket/TicketName';
 
 export default function MyTicketSell() {
   const theme = useTheme();
 
   return (
     <Box sx={{ height: '100%', [theme.breakpoints.down('md')]: { pt: '480px', height: 'auto' } }}>
-      <Box
-        sx={{
-          background: 'rgba(0, 0, 0, 0.24)',
-          backdropFilter: 'blur(50px)',
-          borderRadius: '40px',
-          width: '100%',
-          height: '100%',
-          paddingTop: 3,
-          paddingBottom: 3,
-          [theme.breakpoints.up('md')]: {
-            width: 'min(100%, 400px)',
-            marginLeft: 'auto',
-          },
-        }}
-      >
+      <CardWrapper>
         <Stack
           gap={3}
           sx={{
@@ -41,54 +30,18 @@ export default function MyTicketSell() {
           }}
         >
           <Stack flexDirection="row" justifyContent="space-between">
-            <Stack
-              direction="row"
-              spacing={0.5}
-              alignItems="center"
-              sx={{
-                opacity: 0.72,
-                typography: 'caption',
-                [theme.breakpoints.down('md')]: {
-                  marginBottom: -1,
-                },
-              }}
-            >
-              <EEAvatar
-                account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
-                image={'url(/assets/static/avatars/1.jpg)'}
-                nickname={'by @iloveseoul'}
-                sx={{ mr: 0, width: 24, height: 24 }}
-              />
-              <Typography fontSize={14} lineHeight={20 / 14}>
-                by @iloveseoul
-              </Typography>
-            </Stack>
-            <Chip
-              label={'For sale'}
-              variant="outlined"
-              color="primary"
-              sx={{
-                fontWeight: theme.typography.fontWeightBold,
-                textTransform: 'uppercase',
-              }}
+            <CompanyInfo
+              account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
+              image={'url(/assets/static/avatars/1.jpg)'}
+              name={'by @iloveseoul'}
             />
+
+            <Badge label={'For sale'} />
           </Stack>
-          <Typography
-            sx={{
-              fontWeight: 'bold',
-              fontSize: 24,
-              lineHeight: 28 / 24,
-              [theme.breakpoints.up('md')]: {
-                fontSize: 40,
-                lineHeight: 44 / 40,
-              },
-            }}
-          >
-            DCENTRAL Miami 2023 VIP
-          </Typography>
+          <TicketName>DCENTRAL Miami 2023 VIP</TicketName>
           <TicketSellForm />
         </Stack>
-      </Box>
+      </CardWrapper>
     </Box>
   );
 }
