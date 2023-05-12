@@ -4,9 +4,10 @@ const Routes = {
   // EternalEditions
   eternalEditions: {
     about: '/about-us',
+    contact: '/contact-us',
     tickets: '/tickets',
     ticket: (slug: string) => `/tickets/${slug}`,
-    items:'/items',
+    items: '/items',
     item: (slug: string) => `/items/${slug}`,
     help: '/support',
     privacy: '/privacy',
@@ -18,6 +19,7 @@ const Routes = {
     my: {
       account: '/my/account',
       tickets: '/my/tickets',
+      sell: '/my/tickets/sell',
       transaction: '/my/transaction',
       walletRegister: '/my/wallet-register',
     },

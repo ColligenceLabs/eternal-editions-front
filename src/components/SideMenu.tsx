@@ -58,7 +58,7 @@ const LINKS = [
   },
   {
     title: 'CONTACT US',
-    route: '',
+    route: Routes.eternalEditions.contact,
   },
 ];
 
