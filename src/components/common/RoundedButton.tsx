@@ -36,6 +36,10 @@ export default function RoundedButton({ variant = 'default', children, ...props 
     paddingBottom: '22px',
     color: TEXT_COLOR[variant],
     backgroundColor: BACKGROUND_COLOR[variant],
+    ['&:disabled']: {
+      backgroundColor: '#F5F5F5',
+      color: palette.dark.black.darker,
+    },
     [`&:hover`]: {
       color: theme.palette.common.black,
       backgroundColor: theme.palette.primary.main,

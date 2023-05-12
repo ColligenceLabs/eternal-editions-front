@@ -1,14 +1,22 @@
-import { ReactElement } from 'react';
-import * as React from 'react';
+import { ReactElement, useState } from 'react';
 import Layout from 'src/layouts';
 import { Page } from 'src/components';
-import { Stack, Typography } from '@mui/material';
+import {
+  filledInputClasses,
+  FormControl,
+  Input,
+  inputClasses,
+  Stack,
+  TextField,
+  Typography,
+} from '@mui/material';
 import { styled, useTheme } from '@mui/material/styles';
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
 import MyAccountWrapper from 'src/components/AccountWrapper';
 import Accordion from 'src/components/Accordion';
 import RoundedButton from 'src/components/common/RoundedButton';
 import palette from 'src/theme/palette';
+import ModalCustom from 'src/components/common/ModalCustom';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
@@ -82,17 +90,27 @@ const InquiryTitle = ({ inquiry }: { inquiry: InquiryItem }) => (
 
 export default function ContactPage() {
   const theme = useTheme();
-  const [expanded, setExpanded] = React.useState<string | false>(false);
+  const [expanded, setExpanded] = useState<string | false>(false);
+  const [openInquiry, setOpenInquiry] = useState(false);
+  const [title, setTitle] = useState('');
+  const [question, setQuestion] = useState('');
 
   const handleChange = (panel: string) => (event: React.SyntheticEvent, isExpanded: boolean) => {
     setExpanded(isExpanded ? panel : false);
   };
+
+  const onSubmit = () => {
+    setOpenInquiry(false);
+  };
+
   return (
     <Page title="FAQ">
       <RootStyle>
         <MyAccountWrapper>
           <Stack direction="row" justifyContent="space-between" alignItems="center" mb={1}>
-            <RoundedButton sx={{ padding: '10px 16px' }}>Inquery</RoundedButton>
+            <RoundedButton onClick={() => setOpenInquiry(true)} sx={{ padding: '10px 16px' }}>
+              Inquiry
+            </RoundedButton>
             <Typography
               sx={{
                 opacity: 0.6,
@@ -125,6 +143,61 @@ export default function ContactPage() {
           </Stack>
         </MyAccountWrapper>
       </RootStyle>
+
+      <ModalCustom
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={openInquiry}
+        onClose={() => setOpenInquiry(false)}
+      >
+        <form>
+          <FormControl fullWidth>
+            <Stack gap={3}>
+              <Typography variant="h3">Inquiry</Typography>
+              <Input
+                placeholder="Please enter a title."
+                inputProps={{
+                  style: {
+                    color: 'black',
+                  },
+                }}
+                sx={{
+                  fontSize: 14,
+                  lineHeight: 20 / 14,
+                  [`.${inputClasses.input}::placeholder`]: {
+                    color: '#BBBBBB',
+                  },
+                }}
+                onChange={(e) => setTitle(e.target.value)}
+              />
+              <TextField
+                variant="filled"
+                multiline
+                rows={8}
+                placeholder="Please enter your question."
+                inputProps={{
+                  style: {
+                    fontSize: '14px',
+                    lineHeight: 20 / 14,
+                    color: 'black',
+                  },
+                }}
+                InputProps={{ style: { padding: '16px' } }}
+                sx={{
+                  [`.${filledInputClasses.input}::placeholder`]: {
+                    color: '#BBBBBB',
+                  },
+                }}
+                onChange={(e) => setQuestion(e.target.value)}
+              />
+
+              <RoundedButton onClick={onSubmit} disabled={!question && !title}>
+                Confirm
+              </RoundedButton>
+            </Stack>
+          </FormControl>
+        </form>
+      </ModalCustom>
     </Page>
   );
 }

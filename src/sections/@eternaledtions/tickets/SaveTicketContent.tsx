@@ -21,7 +21,14 @@ export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
   const transfer = () => onClose();
 
   return (
-    <Box>
+    <Box
+      sx={{
+        pt: {
+          xs: '48px',
+          md: '24px',
+        },
+      }}
+    >
       <Box sx={{ textAlign: 'center' }}>
         <QRCode
           style={{}}

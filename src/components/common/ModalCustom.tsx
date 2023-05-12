@@ -20,10 +20,10 @@ const Container = styled(Box)(({ theme }) => ({
   color: theme.palette.common.black,
   border: 'none',
   borderRadius: '24px',
-  paddingTop: '64px',
+  paddingTop: '16px',
   paddingBottom: '16px',
   [theme.breakpoints.up('md')]: {
-    paddingTop: '48px',
+    paddingTop: '24px',
     paddingBottom: '24px',
   },
 }));
