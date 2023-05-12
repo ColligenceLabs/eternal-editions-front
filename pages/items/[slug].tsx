@@ -19,9 +19,7 @@ import {
   accordionSummaryClasses,
   AccordionDetails,
   useTheme,
-  Input,
   outlinedInputClasses,
-  inputBaseClasses,
 } from '@mui/material';
 // config
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT, SUCCESS } from 'src/config';
@@ -62,7 +60,7 @@ import Badge from 'src/components/ticket/Badge';
 import { TicketName } from 'src/components/ticket/TicketName';
 import { CardWrapper } from 'src/components/ticket/CardWrapper';
 import { CardInner } from 'src/components/ticket/CardInner';
-import { Label, Row, Section, TotalValue, Value } from 'src/components/my-tickets/StyledComponents';
+import { Label, Row, TotalValue, Value } from 'src/components/my-tickets/StyledComponents';
 import Timer from 'src/components/Timer';
 import { RoundedSelect, RoundedSelectOption } from 'src/components/common/Select';
 import RoundedButton from 'src/components/common/RoundedButton';

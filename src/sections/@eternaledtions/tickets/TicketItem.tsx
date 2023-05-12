@@ -206,7 +206,7 @@ export default function TicketItem({ ticket }: any) {
         </Stack>
       </Stack>
       <ModalCustom open={open} onClose={() => setOpen(false)}>
-        <SaveTicketContent ticketInfo={ticketInfo} />
+        <SaveTicketContent ticketInfo={ticketInfo} onClose={() => setOpen(false)} />
       </ModalCustom>
     </Grid>
   );

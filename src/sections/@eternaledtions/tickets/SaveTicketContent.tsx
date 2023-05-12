@@ -1,18 +1,25 @@
-import { Box, FormControl, Input, InputLabel, TextField, Typography } from '@mui/material';
+import { Box, Divider, FormControl, Input, inputClasses, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import { log } from 'console';
 import React, { useState } from 'react';
 import QRCode from 'react-qr-code';
+import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 import RoundedButton from 'src/components/common/RoundedButton';
+import { Label, Section, Value } from 'src/components/my-tickets/StyledComponents';
 import { useResponsive } from 'src/hooks';
 // theme
 import palette from 'src/theme/palette';
 
-export default function SaveTicketContent({ ticketInfo }: any) {
+interface Props {
+  ticketInfo: TicketInfoTypes;
+  onClose: () => void;
+}
+
+export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
   const isMobile = useResponsive('down', 'md');
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const saveTicket = () => setIsSaved(true);
-  const transfer = () => console.log('transfer');
+  const transfer = () => onClose();
+
   return (
     <Box>
       <Box sx={{ textAlign: 'center' }}>
@@ -22,46 +29,65 @@ export default function SaveTicketContent({ ticketInfo }: any) {
           size={160}
         />
       </Box>
-      <Typography variant="h3"> Kansas City, KS Silver Editio</Typography>
-      <Typography variant="body2"> {ticketInfo.duration}</Typography>
-      <Typography variant="body2"> {ticketInfo.boxContractAddress}</Typography>
-      <Box
-        sx={{
-          borderTop: `1px solid rgba(0, 0, 0, 0.04)`,
-          borderBottom: `1px solid rgba(0, 0, 0, 0.04)`,
-          paddingY: 1,
-          marginY: 1,
-        }}
-      >
-        <Stack direction={'row'} justifyContent={'space-between'}>
-          <Typography variant="body1" sx={{ color: palette.dark.black.lighter }}>
-            DAY
+
+      <Stack gap="12px" mt="48px" mb="24px">
+        <Stack gap={0.5}>
+          <Typography
+            sx={{
+              fontSize: 24,
+              lineHeight: 28 / 24,
+            }}
+          >
+            Kansas City, KS Silver Editio
           </Typography>
-          <Typography variant="body1"> Saturday </Typography>
+
+          <Stack>
+            <Typography variant="body2"> {ticketInfo.duration}</Typography>
+            <Typography variant="body2"> {ticketInfo.boxContractAddress}</Typography>
+          </Stack>
         </Stack>
-        <Stack direction={'row'} justifyContent={'space-between'}>
-          <Typography variant="body1" sx={{ color: palette.dark.black.lighter }}>
-            TEAM
-          </Typography>
-          <Typography variant="body1"> Team Yellow </Typography>
-        </Stack>
-        <Stack direction={'row'} justifyContent={'space-between'}>
-          <Typography variant="body1" sx={{ color: palette.dark.black.lighter }}>
-            QTY
-          </Typography>
-          <Typography variant="body1"> 1 </Typography>
-        </Stack>
-      </Box>
-      <Typography variant="caption" sx={{ color: palette.dark.black.lighter }}>
-        Please show the QR image to the ticket entrance manager.
-      </Typography>
+        <Divider />
+        <Section>
+          <Stack direction="row" justifyContent="space-between">
+            <Label sx={{ color: palette.dark.black.darker }}>DAY</Label>
+            <Value sx={{ color: palette.dark.black.main }}> Saturday </Value>
+          </Stack>
+          <Stack direction="row" justifyContent="space-between">
+            <Label sx={{ color: palette.dark.black.darker }}>TEAM</Label>
+            <Label sx={{ color: palette.dark.black.main }}> Team Yellow </Label>
+          </Stack>
+          <Stack direction="row" justifyContent="space-between">
+            <Label sx={{ color: palette.dark.black.darker }}>QTY</Label>
+            <Value sx={{ color: palette.dark.black.main }}> 1 </Value>
+          </Stack>
+        </Section>
+        <Divider />
+        <Typography variant="caption" sx={{ color: palette.dark.black.lighter }}>
+          Please show the QR image to the ticket entrance manager.
+        </Typography>
+      </Stack>
+
       {isSaved && (
         <>
           <FormControl variant="standard" fullWidth>
-            <InputLabel>PAYMENT AMOUNT</InputLabel>
-            <Input readOnly inputProps={{ style: { color: 'black' } }} />
+            <Label sx={{ color: palette.dark.black.darker, mb: '12px' }}>PAYMENT AMOUNT</Label>
+            <Input
+              placeholder="e.g. 1234..."
+              inputProps={{
+                style: {
+                  color: 'black',
+                },
+              }}
+              sx={{
+                fontSize: 14,
+                lineHeight: 20 / 14,
+                [`.${inputClasses.input}::placeholder`]: {
+                  color: '#BBBBBB',
+                },
+              }}
+            />
           </FormControl>
-          <Typography variant="body2" sx={{ textAlign: 'center', paddingY: 2 }}>
+          <Typography variant="body2" sx={{ textAlign: 'center', paddingY: 3 }}>
             Kansas City, KS Silver Editio will be transferred to...
           </Typography>
         </>

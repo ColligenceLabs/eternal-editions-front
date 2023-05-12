@@ -9,23 +9,38 @@ export interface Props extends ModalProps {
   onClose?: VoidFunction;
 }
 
-const modalStyle = {
+const Container = styled(Box)(({ theme }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  maxWidth: 400,
+  maxWidth: '400px',
   width: 'calc(100% - 2rem)',
-  bgcolor: 'common.white',
-  color: 'common.black',
+  backgroundColor: theme.palette.common.white,
+  color: theme.palette.common.black,
   border: 'none',
   borderRadius: '24px',
-  boxShadow: 24,
-  pt: 2,
-  pb: 2,
-  pl: 3,
-  pr: 3,
-};
+  paddingTop: '64px',
+  paddingBottom: '16px',
+  [theme.breakpoints.up('md')]: {
+    paddingTop: '48px',
+    paddingBottom: '24px',
+  },
+}));
+
+const Content = styled(Box)(({ theme }) => ({
+  maxHeight: 'calc(100vh - 6rem)',
+  position: 'relative',
+  img: { width: 1 },
+  overflowY: 'auto',
+  marginTop: 1,
+  paddingLeft: '16px',
+  paddingRight: '16px',
+  [theme.breakpoints.up('md')]: {
+    paddingLeft: '24px',
+    paddinRight: '24px',
+  },
+}));
 
 export default function ModalCustom({ open, children, onClose, ...props }: Props) {
   return (
@@ -41,7 +56,7 @@ export default function ModalCustom({ open, children, onClose, ...props }: Props
       }}
       {...props}
     >
-      <Box sx={modalStyle}>
+      <Container>
         <Box
           sx={{
             position: 'absolute',
@@ -55,17 +70,8 @@ export default function ModalCustom({ open, children, onClose, ...props }: Props
           </IconButtonAnimate>
         </Box>
 
-        <Box
-          sx={{
-            maxHeight: 'calc(100vh - 6rem)',
-            position: 'relative',
-            img: { width: 1 },
-            marginTop: 1,
-          }}
-        >
-          {children}
-        </Box>
-      </Box>
+        <Content>{children}</Content>
+      </Container>
     </Modal>
   );
 }
