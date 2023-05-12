@@ -15,21 +15,33 @@ import { SUCCESS } from '../../config';
 type Props = { loading?: boolean };
 
 const defaultValues = {
-  filterSortBy: '',
+  mysteryboxItem: {
+    properties: [],
+    name: 'Admission',
+
+    itemImage:
+      'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSHujD2_xbJS9yXZMM0niQLsOFbjjxAxaV_14a0kWNgOqiNrPEM1x3dV-8KDNlPh67sPaQ&usqp=CAU',
+  },
+  mysteryboxInfo: {
+    price: 23,
+
+    boxContractAddress: 'HQ Beercade Nashville Nashville, TN',
+  },
+  createAt: 'fdfsf',
 };
 
 export default function MyTicketList({ loading }: Props) {
   const { user } = useSelector((state: any) => state.webUser);
-  const [myTicketList, setMyTicketList] = useState([]);
+  const [myTicketList, setMyTicketList] = useState([defaultValues]);
   const getMyTicketList = async () => {
     const res = await getMyTickets(user.uid);
     if (res.data.status === SUCCESS) {
       setMyTicketList(res.data.data);
     }
   };
-  useEffect(() => {
-    if (user.uid) getMyTicketList();
-  }, [user]);
+  // useEffect(() => {
+  //   if (user.uid) getMyTicketList();
+  // }, [user]);
 
   // const [selected, setSelected] = useState('All');
   // const [filters, setFilters] = useState<TicketsFiltersProps>(defaultValues);
