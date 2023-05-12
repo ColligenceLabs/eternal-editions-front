@@ -2,7 +2,7 @@ import { Button, ButtonProps, styled } from '@mui/material';
 import React from 'react';
 import palette from 'src/theme/palette';
 
-type ButtonVariant = 'default' | 'withImage';
+type ButtonVariant = 'default' | 'withImage' | 'inactive';
 
 interface Props extends Omit<ButtonProps, 'variant'> {
   variant?: ButtonVariant;
@@ -11,11 +11,13 @@ interface Props extends Omit<ButtonProps, 'variant'> {
 const TEXT_COLOR = {
   default: palette.dark.common.black,
   withImage: palette.dark.common.white,
+  inactive: palette.dark.black.darker,
 };
 
 const BACKGROUND_COLOR = {
   default: '#77FB79',
   withImage: 'rgba(0, 0, 0, 0.24)',
+  inactive: '#F5F5F5',
 };
 
 export default function RoundedButton({ variant = 'default', children, ...props }: Props) {
