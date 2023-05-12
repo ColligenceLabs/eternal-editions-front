@@ -90,7 +90,7 @@ export default function TicketItem({ ticket }: any) {
           padding: '1.5rem',
           bgcolor: 'rgba(0,0,0,.3)',
         }}
-        alignContent="center"
+        alignItems={isMobile ? 'initial' : 'flex-start'}
         justifyContent={'space-between'}
         // 반응형
         direction={isMobile ? 'column' : 'row'}
