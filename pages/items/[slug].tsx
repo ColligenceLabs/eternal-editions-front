@@ -120,6 +120,7 @@ export default function TicketDetailPage() {
   const { account } = useAccount();
   const dispatch = useDispatch();
   const { slug } = router.query;
+  const isMobile = useResponsive('down', 'md');
 
   const [ticketInfo, setTicketInfo] = useState<TicketInfoTypes | null>(null);
   const [selectedTicketItem, setSelectedTicketItem] = useState<TicketItemTypes | null>(null);
@@ -675,6 +676,10 @@ export default function TicketDetailPage() {
                               lineHeight: 12 / 14,
                               letterSpacing: '0.08em',
                               fontWeight: 'bold',
+                              [theme.breakpoints.down('md')]: {
+                                fontSize: 12,
+                                lineHeight: 13 / 12,
+                              },
                             },
                             [`.${outlinedInputClasses.input}::placeholder`]: {
                               color: 'rgba(255, 255, 255, 0.4)',
@@ -685,6 +690,7 @@ export default function TicketDetailPage() {
                         <RoundedButton
                           onClick={handleOpen}
                           fullWidth
+                          variant={isMobile ? 'inactive' : 'default'}
                           disabled={
                             selectedTicketItem?.whlBool && selectedTicketItem?.whlBalance === 0
                           }
