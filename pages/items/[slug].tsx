@@ -589,7 +589,6 @@ export default function TicketDetailPage() {
                           backgroundClip: 'text',
                           textFillColor: 'transparent',
                           border: '1px solid',
-                          borderImageSource: 'linear-gradient(180deg, #08FF0C 0%, #4ADEFF 76.56%)',
                         }}
                       />
                     ) : (
