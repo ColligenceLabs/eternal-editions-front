@@ -90,7 +90,7 @@ export default function FAQPage({}: Props) {
                   isExpanded={isExpanded}
                   onChange={handleChange(`panel${faq.id}`)}
                   title={`Q. ${faq.q}`}
-                  content={faq.a}
+                  children={faq.a}
                 />
               );
             })}

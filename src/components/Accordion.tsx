@@ -7,16 +7,20 @@ import {
   accordionSummaryClasses,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import React from 'react';
+import React, { PropsWithChildren, ReactElement } from 'react';
 
 interface Props {
-  title: string;
-  content: string;
+  title: string | ReactElement;
   isExpanded: boolean;
   onChange: AccordionProps['onChange'];
 }
 
-export default function Accordion({ title, content, isExpanded, onChange }: Props) {
+export default function Accordion({
+  title,
+  children,
+  isExpanded,
+  onChange,
+}: PropsWithChildren<Props>) {
   return (
     <MUIAccordion
       expanded={isExpanded}
@@ -27,6 +31,9 @@ export default function Accordion({ title, content, isExpanded, onChange }: Prop
     >
       <AccordionSummary
         sx={{
+          width: '100%',
+          color: 'common.black',
+          fontWeight: 700,
           padding: {
             xs: '16px',
             md: '24px',
@@ -42,15 +49,7 @@ export default function Accordion({ title, content, isExpanded, onChange }: Prop
         aria-controls="panel1bh-content"
         id="panel1bh-header"
       >
-        <Typography
-          sx={{
-            width: '100%',
-            color: 'common.black',
-            fontWeight: 700,
-          }}
-        >
-          {title}
-        </Typography>
+        {title}
       </AccordionSummary>
       <AccordionDetails
         sx={{
@@ -64,7 +63,14 @@ export default function Accordion({ title, content, isExpanded, onChange }: Prop
           },
         }}
       >
-        <Typography sx={{ fontSize: '14px', color: 'common.black' }}>{content}</Typography>
+        {typeof children === 'string' ? (
+          <Typography
+            sx={{ fontSize: '14px', color: 'common.black' }}
+            dangerouslySetInnerHTML={{ __html: children }}
+          />
+        ) : (
+          children
+        )}
       </AccordionDetails>
     </MUIAccordion>
   );

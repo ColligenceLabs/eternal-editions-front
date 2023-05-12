@@ -39,7 +39,7 @@ export default function NoticePage({}: Props) {
             isExpanded={expanded === 'panel1'}
             onChange={handleChange('panel1')}
             title={`Q. ${NoticeContent.q}`}
-            content={NoticeContent.a}
+            children={NoticeContent.a}
           />
         </MyAccountWrapper>
       </RootStyle>
