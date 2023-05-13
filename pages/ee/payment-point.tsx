@@ -24,10 +24,10 @@ export default function PaymentPointPage({}: Props) {
       <RootStyle>
         <Container maxWidth={'sm'}>
           <Stack spacing={2} sx={{ mb: 10 }}>
-            <Typography variant="h3" sx={{ textAlign: 'center' }}>
+            {/* <Typography variant="h3" sx={{ textAlign: 'center' }}>
               Buy with Debit <br />
               or Credit Card
-            </Typography>
+            </Typography> */}
 
             <PaymentPoint />
           </Stack>
@@ -40,5 +40,18 @@ export default function PaymentPointPage({}: Props) {
 // ----------------------------------------------------------------------
 
 PaymentPointPage.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>;
+  return (
+    <Layout
+      background={{
+        backgroundImage: `url(/assets/background/bg-account.jpg)`,
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      }}
+      verticalAlign="top"
+    >
+      {page}
+    </Layout>
+  );
 };
+

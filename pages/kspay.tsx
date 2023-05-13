@@ -7,7 +7,16 @@ import React, { ChangeEvent } from 'react';
 import { useState, useEffect, ReactElement } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
-import { Box, Button, Container, Input, TextField, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Container,
+  Divider,
+  Input,
+  TextField,
+  Stack,
+  Typography,
+} from '@mui/material';
 // config
 import { HEADER_MOBILE_HEIGHT, HEADER_DESKTOP_HEIGHT } from 'src/config';
 // layouts
@@ -21,6 +30,8 @@ import { useSelector } from 'react-redux';
 import env from 'src/env';
 import { format } from 'date-fns';
 import { isMobile } from 'react-device-detect';
+import useAccount from 'src/hooks/useAccount';
+import { useTheme } from '@mui/material/styles';
 
 // ----------------------------------------------------------------------
 
@@ -82,6 +93,7 @@ type FormValuesProps = {
   sndStoreAddress: string;
   sndEscrow: string;
   sndCashReceipt: string;
+  sndDateTime: string;
   reCommConId: string;
   reCommType: string;
   reHash: string;
@@ -89,7 +101,11 @@ type FormValuesProps = {
 
 export default function KSPay() {
   const { user } = useSelector((state: any) => state.webUser);
+  const { account } = useAccount();
   const router = useRouter();
+  const quantity = router.query['amount'] ? `${router.query['amount']} EDCP` : 'EDCP';
+  const price = router.query['price'] ? router.query['price'] : '0';
+  const theme = useTheme();
 
   const getLocalUrl = (str: string): string =>
     location.href.substring(0, location.href.lastIndexOf('/')).replaceAll('/kspay', '') + '/' + str;
@@ -106,11 +122,12 @@ export default function KSPay() {
     defaultValues: {
       sndPaymethod: '1000000000',
       sndStoreid: env.KSPAY_STORE_ID,
-      sndOrdernumber: `EE${format(new Date(), 'yyyyMMddHHmmss')}-${
+      sndOrdernumber: `EE${format(new Date(), 'yyyy/MMddHHmmss')}-${
         Math.floor(Math.random() * 89999) + 10000
       }`,
-      sndGoodname: router.query['amount'] ? `${router.query['amount']} EDCP` : 'EDCP',
-      sndAmount: router.query['price'] ? router.query['price'] : '0',
+      sndDateTime: `${format(new Date(), 'MM/dd/yyyy hh:mm:ss')}`,
+      sndGoodname: quantity,
+      sndAmount: price,
       sndOrdername: user.name.replaceAll('"', ''),
       sndEmail: user.email,
       sndMobile: '',
@@ -192,86 +209,43 @@ export default function KSPay() {
     <Page title="Support">
       <RootStyle>
         <Container maxWidth={'xs'} sx={{ my: '25px' }}>
-          <EECard>
-            <Box sx={{ pb: 3 }}>
-              <Typography variant="h6" sx={{ fontSize: '14px' }}>
-                결제 정보 확인
+          <EECard width="400px" marginTop="50px">
+            <Box sx={{ mb: '1rem' }}>
+              <Typography sx={{ color: '#999999', fontSize: '12px' }}>WALLET ADDRESS</Typography>
+              <Typography sx={{ wordBreak: 'break-all', fontSize: '14px' }}>{account}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography sx={{ color: '#999999', fontSize: '12px' }}>PRUCHASE QUANTITY</Typography>
+              <Typography sx={{ color: 'black', fontSize: '14px' }}>{quantity}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography sx={{ color: '#999999', fontSize: '12px' }}>PAYMENT AMOUNT</Typography>
+              <Typography sx={{ color: 'black', fontSize: '14px' }}>
+                <span style={{ color: 'red' }}>$60</span> (= ₩{price})
+              </Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography sx={{ color: '#999999', fontSize: '12px' }}>DATE/TIME</Typography>
+              <Typography sx={{ color: 'black', fontSize: '14px' }}>{`${format(
+                new Date(),
+                'MM/dd/yyyy hh:mm:ss'
+              )}`}</Typography>
+            </Box>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+              <Typography sx={{ color: '#999999', fontSize: '12px' }}>CARD TYPE</Typography>
+              <Typography sx={{ color: 'black', fontSize: '14px' }}>CREDIT CARD</Typography>
+            </Box>
+            <Divider />
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: '12px', mb: 2 }}>
+              <Typography sx={{ color: '#999999', fontSize: '12px', fontWeight: 'bold' }}>
+                TOTAL PAYMENT{' '}
+              </Typography>
+              <Typography sx={{ color: 'black', fontSize: '14px', fontWeight: 'bold' }}>
+                <span style={{ color: 'red' }}>$60</span> (= ₩{price})
               </Typography>
             </Box>
             <form name="KSPayWeb" method="POST" onSubmit={handleSubmit(onSubmit)}>
               <Stack spacing={2}>
-                <Controller
-                  name="sndGoodname"
-                  control={control}
-                  render={({ field, fieldState: { error } }) => (
-                    <TextField
-                      {...field}
-                      InputProps={{ readOnly: true, style: { color: '#333' } }}
-                      label="상품명"
-                      variant="standard"
-                      error={Boolean(error)}
-                      helperText={error?.message}
-                    />
-                  )}
-                />
-                <Controller
-                  name="sndAmount"
-                  control={control}
-                  render={({ field, fieldState: { error } }) => (
-                    <TextField
-                      {...field}
-                      InputProps={{ readOnly: true, style: { color: '#333' } }}
-                      label="금액"
-                      variant="standard"
-                      error={Boolean(error)}
-                      helperText={error?.message}
-                    />
-                  )}
-                />
-                <Controller
-                  name="sndOrdername"
-                  control={control}
-                  render={({ field, fieldState: { error } }) => (
-                    <TextField
-                      {...field}
-                      InputProps={{ readOnly: true, style: { color: '#333' } }}
-                      label="주문자명"
-                      variant="standard"
-                      error={Boolean(error)}
-                      helperText={error?.message}
-                    />
-                  )}
-                />
-                <Controller
-                  name="sndEmail"
-                  control={control}
-                  render={({ field, fieldState: { error } }) => (
-                    <TextField
-                      {...field}
-                      InputProps={{ readOnly: true, style: { color: '#333' } }}
-                      label="전자우편"
-                      variant="standard"
-                      error={Boolean(error)}
-                      helperText={error?.message}
-                    />
-                  )}
-                />
-                <Controller
-                  name="sndMobile"
-                  control={control}
-                  render={({ field, fieldState: { error } }) => (
-                    <TextField
-                      {...field}
-                      label="휴대폰번호"
-                      variant="standard"
-                      placholder="휴대폰번호를 입력해주세요."
-                      error={Boolean(error)}
-                      helperText={error?.message}
-                      inputProps={{ style: { color: '#000000' } }}
-                    />
-                  )}
-                />
-
                 <LoadingButton
                   fullWidth
                   size="large"
@@ -279,13 +253,18 @@ export default function KSPay() {
                   variant="vivid"
                   loading={isSubmitting}
                 >
-                  Payment
+                  BUY ITEM
                 </LoadingButton>
                 {/* 공통 환경설정 */}
 
-                <Box sx={{ display: 'none' }}>
+                <Box style={{ display: 'none' }}>
                   {[
+                    'sndGoodname',
+                    'sndAmount',
                     'sndReply',
+                    'sndOrdername',
+                    'sndEmail',
+                    'sndMobile',
                     'sndCharSet',
                     'sndGoodType',
                     'sndShowcard',
@@ -301,7 +280,6 @@ export default function KSPay() {
                     'reCommConId',
                     'reCommType',
                     'reHash',
-
                     'sndStoreid',
                     'sndPaymethod',
                     'sndOrdernumber',
@@ -318,6 +296,14 @@ export default function KSPay() {
                 </Box>
               </Stack>
             </form>
+            <LoadingButton
+              fullWidth
+              size="large"
+              variant="vivid"
+              sx={{ mt: 0.5, bgcolor: '#F5F5F5' }}
+            >
+              Main
+            </LoadingButton>
           </EECard>
         </Container>
       </RootStyle>
@@ -328,5 +314,17 @@ export default function KSPay() {
 // ----------------------------------------------------------------------
 
 KSPay.getLayout = function getLayout(page: ReactElement) {
-  return <Layout>{page}</Layout>;
+  return (
+    <Layout
+      background={{
+        backgroundImage: `url(/assets/background/bg-account.jpg)`,
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      }}
+      verticalAlign="top"
+    >
+      {page}
+    </Layout>
+  );
 };

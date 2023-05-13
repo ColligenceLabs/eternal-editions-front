@@ -11,10 +11,12 @@ interface EECardProps extends CardProps {
   bgColor?: string;
   color?: string;
   children?: ReactNode;
+  width?: string;
+  marginTop?: string;
 }
 
 // ----------------------------------------------------------------------
-export default function EECard({ bgColor, color, children, ...other }: EECardProps) {
+export default function EECard({ bgColor, color, children, width = '600px', marginTop = '0px', ...other }: EECardProps) {
   const theme = useTheme();
   const isLight = theme.palette.mode === 'light';
 
@@ -27,6 +29,8 @@ export default function EECard({ bgColor, color, children, ...other }: EECardPro
         p: 3,
         backdropFilter: 'blur(50px)',
         WebkitBackdropFilter: 'blur(50px)',
+        width: width,
+        m: `${marginTop} auto 0px`,
       }}
       {...other}
       className={'TESTTEST'}

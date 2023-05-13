@@ -189,14 +189,14 @@ export default function PaymentPoint() {
 
   const [open, setOpen] = useState<HTMLElement | null>(null);
   return (
-    <EECard>
+    <EECard width="400px" marginTop="50px">
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={1}>
           <Box>
-            <Typography sx={{ fontColor: '#999999', fontSize: '12px' }}>WALLET ADDRESS</Typography>
-            <Typography sx={{ wordBreak: 'break-all' }}>{account}</Typography>
+            <Typography sx={{ color: '#999999', fontSize: '12px' }}>WALLET ADDRESS</Typography>
+            <Typography sx={{ wordBreak: 'break-all', fontSize: '14px' }}>{account}</Typography>
           </Box>
-          <Stack spacing={2}>
+          <Stack spacing={2} sx={{ my: '20px !important' }}>
             <Controller
               name="amount"
               control={control}
@@ -242,7 +242,18 @@ export default function PaymentPoint() {
                       onChange: handleChangeAmount,
                       error: Boolean(error),
                       inputProps: { style: { color: 'black' }, max: 60 },
-                      endAdornment: <InputAdornment position="end">EDCP</InputAdornment>,
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          <Typography
+                            color={theme.palette.common.black}
+                            fontWeight="bold"
+                            fontSize={14}
+                            lineHeight={12 / 14}
+                          >
+                            EDCP
+                          </Typography>
+                        </InputAdornment>
+                      ),
                     }}
                     // eslint-disable-next-line react/jsx-no-duplicate-props
                   />
@@ -255,14 +266,21 @@ export default function PaymentPoint() {
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <FormControl variant="standard" fullWidth>
-                  <InputLabel>PURCHASE AMOUNT</InputLabel>
+                  <InputLabel>PAYMENT AMOUNT</InputLabel>
                   <Input
                     {...field}
                     readOnly
                     inputProps={{ style: { color: 'black' } }}
                     endAdornment={
                       <InputAdornment position="end">
-                        {method === 'credit' ? '₩' : '$'}
+                        <Typography
+                          color={theme.palette.common.black}
+                          fontWeight="bold"
+                          fontSize={14}
+                          lineHeight={12 / 14}
+                        >
+                          {method === 'credit' ? '₩' : '$'}
+                        </Typography>
                       </InputAdornment>
                     }
                   />
@@ -271,7 +289,7 @@ export default function PaymentPoint() {
             />
           </Stack>
           {/* <Stack direction="row" alignItems={'center'}>
-              <Typography sx={{ fontColor: '#999999', fontSize: '12px' }}>
+              <Typography sx={{ color: '#999999', fontSize: '12px' }}>
                 PURCHASE QUANTITY
               </Typography>
             </Stack>
@@ -292,7 +310,7 @@ export default function PaymentPoint() {
               />
             </FormControl> */}
           {/* <Box>
-            <Typography sx={{ fontColor: '#999999', fontSize: '12px' }}>PAYMENT AMOUNT</Typography>
+            <Typography sx={{ color: '#999999', fontSize: '12px' }}>PAYMENT AMOUNT</Typography>
             <FormControl fullWidth variant="standard">
               <Input
                 id="standard-adornment-amount"
@@ -306,10 +324,9 @@ export default function PaymentPoint() {
             </FormControl>
           </Box> */}
           <Box>
-            <Typography sx={{ fontColor: '#999999', fontSize: '12px' }}>PAYMENT METHOD</Typography>
+            <Typography sx={{ color: '#999999', fontSize: '12px' }}>PAYMENT METHOD</Typography>
             <FormControl>
               <RadioGroup
-                row
                 aria-labelledby="demo-row-radio-buttons-group-label"
                 name="row-radio-buttons-group"
               >
@@ -319,6 +336,7 @@ export default function PaymentPoint() {
                   value="credit"
                   control={<Radio />}
                   label="CREDIT CARD"
+                  style={{ color: 'black' }}
                 />
                 <FormControlLabel
                   checked={method === 'paypal'}
@@ -326,6 +344,7 @@ export default function PaymentPoint() {
                   value="paypal"
                   control={<Radio />}
                   label="PAYPAL"
+                  style={{ color: 'black' }}
                 />
               </RadioGroup>
             </FormControl>
@@ -340,7 +359,7 @@ export default function PaymentPoint() {
             />
           )}
           {method === 'credit' && (
-            <Box sx={{ pb: 2 }}>
+            <Box>
               <Link
                 href={{
                   pathname: '/kspay',
@@ -355,12 +374,13 @@ export default function PaymentPoint() {
                   loading={isSubmitting}
                   disabled={!watch('amount')}
                 >
-                  결제하기
+                  CONTINUE
                 </LoadingButton>
               </Link>
             </Box>
           )}
-          <Divider />
+
+          {/* <Divider />
           <Box sx={{ pt: 2 }}>
             <LoadingButton
               onClick={() => {
@@ -374,7 +394,7 @@ export default function PaymentPoint() {
             >
               환불요청
             </LoadingButton>
-          </Box>
+          </Box> */}
         </Stack>
 
         {/*  <Divider sx={{ md: 3, pt: 3 }} />*/}
