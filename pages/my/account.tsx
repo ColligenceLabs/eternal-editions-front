@@ -69,7 +69,7 @@ const ProfileTextAction = styled(Button)(({ theme }) => ({
   letterSpacing: '0.08em',
   textTransform: 'uppercase',
   color: palette.dark.black.lighter,
-  padding: '6px 0',
+  padding: '6px',
 }));
 
 const SectionHeader = styled(Typography)(({ theme }) => ({

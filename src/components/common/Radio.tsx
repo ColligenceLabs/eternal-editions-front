@@ -17,13 +17,11 @@ const Label = styled('label')`
   user-select: none;
   margin-right: 12px;
 
-  /* When the radio button is checked, add a blue background */
   input:checked ~ .checkmark {
     background-color: #00ba03;
     border: 2px solid #00ba03;
   }
 
-  /* Create the indicator (the dot/circle - hidden when not checked) */
   .checkmark:after {
     content: '';
     position: absolute;
@@ -37,7 +35,6 @@ const Label = styled('label')`
     display: none;
   }
 
-  /* Show the indicator (dot/circle) when checked */
   input:checked ~ .checkmark:after {
     display: block;
   }
