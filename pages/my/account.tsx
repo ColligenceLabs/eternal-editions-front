@@ -6,7 +6,17 @@ import { ReactElement, useEffect, useState } from 'react';
 import Layout from 'src/layouts';
 // components
 import { Page } from 'src/components';
-import { Box, Button, Divider, Grid, Stack, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Checkbox,
+  Divider,
+  Grid,
+  Stack,
+  Typography,
+  formControlLabelClasses,
+  svgIconClasses,
+} from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
   ChainId,
@@ -34,9 +44,13 @@ import useResponsive from 'src/hooks/useResponsive';
 import MyAccountWrapper from 'src/components/AccountWrapper';
 import palette from 'src/theme/palette';
 import { User } from 'src/@types/user';
-// import { Radio } from '@mui/material';
 import Radio from 'src/components/common/Radio';
-// sections
+import { delUser } from 'src/store/slices/user';
+import { useRouter } from 'next/router';
+import ModalCustom from 'src/components/common/ModalCustom';
+import { PriorityHigh } from '@mui/icons-material';
+import { FormControlLabel } from '@mui/material';
+import RoundedButton from 'src/components/common/RoundedButton';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
@@ -97,6 +111,7 @@ const Icon = styled(Box)(({ theme }) => ({
 type Props = {};
 
 export default function MyAccountPage({}: Props) {
+  const router = useRouter();
   const isDesktop = useResponsive('up', 'md');
   const { account } = useAccount();
   const { user }: { user: User } = useSelector((state: any) => state.webUser);
@@ -110,7 +125,29 @@ export default function MyAccountPage({}: Props) {
   const [selectedAccount, setSelectedAccount] = useState(
     user.abc_address || user.eth_address || ''
   );
-  console.log('🚀 ~ file: account.tsx:124 ~ MyAccountPage ~ selectedAccount:', selectedAccount);
+  const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
+  const [isConfirmDeactivate, setIsConfirmDeactivate] = useState(false);
+
+  const onCloseDeactivateModal = () => {
+    deactivate();
+    setOpenDeactivateModal(false);
+    setIsConfirmDeactivate(false);
+  };
+
+  const logout = async () => {
+    try {
+      // await deactivate();
+      window.localStorage.setItem('walletStatus', 'disconnected');
+      window.localStorage.removeItem('jwtToken');
+      window.localStorage.removeItem('loginBy');
+      window.localStorage.removeItem('loginType');
+      router.push(`${env.REACT_APP_API_URL}/auth/logout`);
+      dispatch(delUser());
+    } catch (e) {
+      console.log(e);
+      alert(e);
+    }
+  };
 
   const handleSignUpClose = () => {
     setOpenSignUp(false);
@@ -372,7 +409,7 @@ Type: Address verification`;
                     >
                       <ProfileTextAction>Edit Profile</ProfileTextAction>
                       <ProfileTextAction>Change Password</ProfileTextAction>
-                      <ProfileTextAction>Logout</ProfileTextAction>
+                      <ProfileTextAction onClick={logout}>Logout</ProfileTextAction>
                     </Stack>
                   </Box>
 
@@ -387,7 +424,9 @@ Type: Address verification`;
                   >
                     <Divider />
                     <Box padding={{ xs: '16px 0 0', md: '32px' }} textAlign="center">
-                      <ProfileTextAction>Deactivate Account</ProfileTextAction>
+                      <ProfileTextAction onClick={() => setOpenDeactivateModal(true)}>
+                        Deactivate Account
+                      </ProfileTextAction>
                     </Box>
                   </Stack>
                 </Stack>
@@ -575,6 +614,76 @@ Type: Address verification`;
             </Grid>
           </Box>
         </MyAccountWrapper>
+
+        <ModalCustom
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          open={openDeactivateModal}
+          onClose={onCloseDeactivateModal}
+        >
+          <Stack gap={3}>
+            <PriorityHigh sx={{ fontSize: '36px' }} />
+            <Stack gap={1}>
+              <SectionText>
+                If you withdraw from the membership, all information and records accumulated while
+                signing up/using the service with the account will be deleted and cannot be
+                recovered.
+              </SectionText>
+
+              <SectionText>
+                If you have points accumulated with the account, they will disappear permanently
+                with the withdrawal of membership, so please check in advance and exhaust them
+                before withdrawing.
+              </SectionText>
+            </Stack>
+            <Stack>
+              <Divider />
+              <FormControlLabel
+                value={isConfirmDeactivate}
+                control={
+                  <Checkbox
+                    sx={{
+                      padding: '8px',
+
+                      '&:hover': {
+                        background: 'transparent',
+                      },
+                      [`.${svgIconClasses.root}`]: {
+                        width: '16px',
+                        height: '16px',
+                      },
+                    }}
+                  />
+                }
+                onChange={() => setIsConfirmDeactivate(!isConfirmDeactivate)}
+                label={
+                  'I have checked all of the above and agree that all information cannot be recovered upon withdrawal.'
+                }
+                sx={{
+                  alignItems: 'flex-start',
+                  color: palette.dark.black.lighter,
+                  marginLeft: '-8px',
+                  [`.${formControlLabelClasses.label}`]: {
+                    marginTop: '8px',
+                    fontSize: 12,
+                    lineHeight: 16 / 12,
+                  },
+                }}
+              />
+            </Stack>
+
+            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px' }}>
+              <RoundedButton onClick={onCloseDeactivateModal}>Cancel</RoundedButton>
+              <RoundedButton
+                disabled={!isConfirmDeactivate}
+                variant="inactive"
+                sx={{ color: palette.dark.common.black }}
+              >
+                Deactivate
+              </RoundedButton>
+            </Box>
+          </Stack>
+        </ModalCustom>
       </RootStyle>
     </Page>
   );
