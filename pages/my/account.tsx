@@ -1,13 +1,12 @@
 import { ReactElement, useEffect, useState } from 'react';
-import PageHeader from 'src/components/common/PageHeader';
 // utils
 // @types
 // _data
 // layouts
 import Layout from 'src/layouts';
 // components
-import { Iconify, Page } from 'src/components';
-import { Box, Button, Container, Grid, Typography } from '@mui/material';
+import { Page } from 'src/components';
+import { Box, Button, Divider, Grid, Stack, Typography } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
   ChainId,
@@ -16,10 +15,7 @@ import {
   WALLET_METAMASK,
   WALLET_WALLECTCONNECT,
 } from 'src/config';
-import { RegisterForm } from 'src/sections/auth';
-import AccountForm from 'src/sections/@my/AccountForm';
-import * as React from 'react';
-import { ClipboardCopy, getShotAddress } from 'src/utils/wallet';
+import { ClipboardCopy } from 'src/utils/wallet';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
 import useAccount from 'src/hooks/useAccount';
@@ -35,6 +31,11 @@ import { setupNetwork } from 'src/utils/network';
 import { injected, walletconnect } from 'src/hooks/connectors';
 import getBalances from 'src/utils/getBalances';
 import useResponsive from 'src/hooks/useResponsive';
+import MyAccountWrapper from 'src/components/AccountWrapper';
+import palette from 'src/theme/palette';
+import { User } from 'src/@types/user';
+// import { Radio } from '@mui/material';
+import Radio from 'src/components/common/Radio';
 // sections
 
 // ----------------------------------------------------------------------
@@ -50,15 +51,47 @@ const RootStyle = styled('div')(({ theme }) => ({
 const CButton = styled('div')(({ theme }) => ({
   backgroundColor: '#F5F5F5',
   color: '#999999',
-  width: '100px',
-  height: '40px',
+  padding: '10px 16px',
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
-  borderRadius: '12px',
+  borderRadius: '60px',
   cursor: 'pointer',
-  fontSize: '13px',
+  fontSize: '12px',
+  lineHeight: 13 / 12,
   fontWeight: 700,
+}));
+
+const ProfileTextAction = styled(Button)(({ theme }) => ({
+  fontWeight: 700,
+  fontSize: 12,
+  lineHeight: 13 / 12,
+  letterSpacing: '0.08em',
+  textTransform: 'uppercase',
+  color: palette.dark.black.lighter,
+  padding: '6px 0',
+}));
+
+const SectionHeader = styled(Typography)(({ theme }) => ({
+  color: palette.dark.black.lighter,
+  fontSize: '12px',
+  fontWeight: 400,
+  textTransform: 'uppercase',
+}));
+
+const SectionText = styled(Typography)(({ theme }) => ({
+  fontSize: '14px',
+  lineHeight: 20 / 14,
+}));
+
+const Icon = styled(Box)(({ theme }) => ({
+  width: '32px',
+  height: '32px',
+  backgroundColor: '#F5F5F5',
+  borderRadius: '50px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
 }));
 
 type Props = {};
@@ -66,7 +99,7 @@ type Props = {};
 export default function MyAccountPage({}: Props) {
   const isDesktop = useResponsive('up', 'md');
   const { account } = useAccount();
-  const { user } = useSelector((state: any) => state.webUser);
+  const { user }: { user: User } = useSelector((state: any) => state.webUser);
   const context = useWeb3React();
   const { activate, chainId, deactivate, library } = context;
   const dispatch = useDispatch();
@@ -74,6 +107,10 @@ export default function MyAccountPage({}: Props) {
   const [isLoading, setIsLoading] = useState(false);
   const [openSignUp, setOpenSignUp] = useState(false);
   const balance = getBalances(account, library);
+  const [selectedAccount, setSelectedAccount] = useState(
+    user.abc_address || user.eth_address || ''
+  );
+  console.log('🚀 ~ file: account.tsx:124 ~ MyAccountPage ~ selectedAccount:', selectedAccount);
 
   const handleSignUpClose = () => {
     setOpenSignUp(false);
@@ -170,235 +207,333 @@ Type: Address verification`;
   return (
     <Page title="Account">
       <RootStyle>
-        <Container sx={{ my: 5 }}>
-          {/* <Box sx={{ display: 'flex' }}>
-            <Box sx={{ border: '1px solid yellow', width: '200px' }}>
-              <Box>PROFILE</Box>
-              <Box>MY ITEMS</Box>
-              <Box>TRANSACTION</Box>
-              <Box>FAQ</Box>
-              <Box>NOTICE</Box>
-              <Box>CONTACT US</Box>
-            </Box>
-            <Box sx={{ border: '1px solid yellow', flex: 1 }}>contents area</Box>
-          </Box> */}
-          <PageHeader title="Account" />
+        <MyAccountWrapper>
           <Box
             sx={{
               bgcolor: '#fff',
               color: '#000',
-              borderRadius: 2,
-              // padding: '28px 24px',
+              borderRadius: 3,
             }}
           >
             <Grid container>
-              <Grid item xs={12} md={4} lg={3}>
-                <Box
-                  sx={{
-                    borderBottom: '1px solid #0000000A',
-                    padding: '28px 24px',
-                  }}
-                >
-                  <Box sx={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: '50%',
-                        backgroundColor: '#F5F5F5',
-                        width: '32px',
-                        height: '32px',
-                        cursor: 'pointer',
-                      }}
-                      onClick={() => ClipboardCopy(account ?? '', '지갑주소가 복사되었습니다.')}
-                    >
-                      <ContentCopyOutlinedIcon sx={{ color: '#999999', fontSize: '14px' }} />
-                    </Box>
-
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                        borderRadius: '50%',
-                        backgroundColor: '#F5F5F5',
-                        width: '32px',
-                        height: '32px',
-                        cursor: 'pointer',
-                      }}
-                    >
-                      <OpenInNewOutlinedIcon sx={{ color: '#999999', fontSize: '14px' }} />
-                    </Box>
-                  </Box>
+              <Grid item xs={12} md={4} lg={3} borderRight="1px solid rgba(0, 0, 0, 0.04)">
+                <Stack>
                   <Box
                     sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      mt: '16px',
+                      borderBottom: '1px solid #0000000A',
+                      padding: {
+                        xs: '19px 16px 24px',
+                        md: '32px 24px',
+                      },
                     }}
                   >
-                    <Image
-                      src={
-                        user.profile_image ? user.profile_image : '/assets/icons/profile-logo.png'
-                      }
-                      sx={{ width: 96 }}
-                    />
-                    <Typography sx={{ fontSize: '16px', fontWeight: '700', mt: '16px' }}>
-                      {user.name}
-                    </Typography>
-                  </Box>
-                </Box>
-                <Box sx={{ padding: '28px 24px' }}>
-                  <Typography
-                    sx={{ fontSize: '12px', fontWeight: 400, color: '#999999', mb: '20px' }}
-                  >
-                    NAME
-                  </Typography>
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '0.7rem',
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        <Box sx={{ width: '20px' }}>
-                          <Image src="/assets/img/ee-logo.svg" sx={{ width: '100%' }} />
-                        </Box>
-                        <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
-                          {user.point ? user.point : 0} EDCP
-                        </Typography>
+                    <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'flex-end' }}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          borderRadius: '50%',
+                          backgroundColor: '#F5F5F5',
+                          width: '32px',
+                          height: '32px',
+                          cursor: 'pointer',
+                        }}
+                        onClick={() => ClipboardCopy(account ?? '', '지갑주소가 복사되었습니다.')}
+                      >
+                        <ContentCopyOutlinedIcon sx={{ color: '#999999', fontSize: '14px' }} />
                       </Box>
                       <Box
                         sx={{
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                          borderRadius: '50%',
                           backgroundColor: '#F5F5F5',
-                          textAlign: 'center',
-                          borderRadius: '40px',
+                          width: '32px',
+                          height: '32px',
                           cursor: 'pointer',
-                          padding: '5px 15px',
                         }}
                       >
-                        <NextLink href={Routes.eternalEditions.payment.point} passHref>
-                          <Typography
-                            sx={{ fontSize: '13px', fontWeight: '700', color: '#999999' }}
+                        <OpenInNewOutlinedIcon sx={{ color: '#999999', fontSize: '14px' }} />
+                      </Box>
+                    </Box>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        mt: {
+                          xs: '8px',
+                          md: '16px',
+                        },
+                      }}
+                    >
+                      <Image
+                        alt="avatar"
+                        src={
+                          user.profile_image ? user.profile_image : '/assets/icons/profile-logo.png'
+                        }
+                        sx={{ width: 96 }}
+                      />
+                      <Typography sx={{ fontSize: '16px', fontWeight: '700', mt: '16px' }}>
+                        {user.name}
+                      </Typography>
+                    </Box>
+                  </Box>
+                  <Box
+                    sx={{
+                      padding: {
+                        xs: '24px 16px',
+                        md: '32px 24px',
+                      },
+                    }}
+                  >
+                    <SectionHeader>Title</SectionHeader>
+                    <Box
+                      sx={{
+                        display: 'flex',
+                        flexDirection: 'column',
+                        gap: '0.7rem',
+                      }}
+                    >
+                      <Stack gap="12px">
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <Box sx={{ width: '20px' }}>
+                              <Image
+                                alt="edcp-logo"
+                                src="/assets/img/ee-logo.svg"
+                                sx={{ width: '100%' }}
+                              />
+                            </Box>
+                            <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
+                              {user.point ? user.point : 0} EDCP
+                            </Typography>
+                          </Box>
+                          <Box
+                            sx={{
+                              backgroundColor: '#F5F5F5',
+                              textAlign: 'center',
+                              borderRadius: '40px',
+                              cursor: 'pointer',
+                              padding: '5px 15px',
+                            }}
                           >
-                            BUY
-                          </Typography>
-                        </NextLink>
-                      </Box>
-                    </Box>
-                    <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
-                        <Box sx={{ width: '20px' }}>
-                          <Image src="/assets/img/matic-token-icon.png" sx={{ width: '100%' }} />
+                            <NextLink href={Routes.eternalEditions.payment.point} passHref>
+                              <Typography
+                                sx={{ fontSize: '13px', fontWeight: '700', color: '#999999' }}
+                              >
+                                BUY
+                              </Typography>
+                            </NextLink>
+                          </Box>
                         </Box>
-                        <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
-                          {balance.toFixed(5)} MATIC
-                        </Typography>
-                      </Box>
-                      {/* <Box
-                        sx={{
-                          backgroundColor: '#F5F5F5',
-                          textAlign: 'center',
-                          borderRadius: '40px',
-                          cursor: 'pointer',
-                          padding: '5px 15px',
-                        }}
-                      >
-                        <Typography sx={{ fontSize: '13px', fontWeight: '700', color: '#999999' }}>
-                          BUY
-                        </Typography>
-                      </Box> */}
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <Box sx={{ width: '20px' }}>
+                              <Image
+                                alt="matic-token-icon"
+                                src="/assets/img/matic-token-icon.png"
+                                sx={{ width: '100%' }}
+                              />
+                            </Box>
+                            <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
+                              {balance.toFixed(5)} MATIC
+                            </Typography>
+                          </Box>
+                          <Box
+                            sx={{
+                              backgroundColor: '#F5F5F5',
+                              textAlign: 'center',
+                              borderRadius: '40px',
+                              cursor: 'pointer',
+                              padding: '5px 15px',
+                            }}
+                          >
+                            <Typography
+                              sx={{ fontSize: '13px', fontWeight: '700', color: '#999999' }}
+                            >
+                              BUY
+                            </Typography>
+                          </Box>
+                        </Box>
+                      </Stack>
                     </Box>
-                  </Box>
-                </Box>
-              </Grid>
-              <Grid item xs={12} md={8} lg={9}>
-                <Box
-                  sx={{
-                    padding: '28px 24px',
-                    borderBottom: '1px solid #0000000A',
-                  }}
-                >
-                  <Typography sx={{ color: '#BBBBBB', fontSize: '12px', fontWeight: 400 }}>
-                    SIGNED-IN SOCIAL ACCOUNT
-                  </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.7rem', mt: '14px' }}>
-                    <Box
+                    <Stack
+                      mt={{ md: '205px' }}
                       sx={{
-                        width: '32px',
-                        height: '32px',
-                        backgroundColor: '#F5F5F5',
-                        borderRadius: '50px',
-                        display: 'flex',
-                        justifyContent: 'center',
-                        alignItems: 'center',
+                        display: {
+                          xs: 'none',
+                          md: 'flex',
+                        },
                       }}
                     >
-                      <Image src="/assets/icons/google-icon.png" sx={{ width: '18px' }} />
-                    </Box>
-                    <Typography>{user.email}</Typography>
+                      <ProfileTextAction>Edit Profile</ProfileTextAction>
+                      <ProfileTextAction>Change Password</ProfileTextAction>
+                      <ProfileTextAction>Logout</ProfileTextAction>
+                    </Stack>
                   </Box>
-                </Box>
-                <Box
-                  sx={{
-                    padding: '28px 24px',
-                    borderBottom: '1px solid #0000000A',
-                  }}
-                >
-                  <Typography sx={{ color: '#BBBBBB', fontSize: '12px', fontWeight: 400 }}>
-                    NAME
-                  </Typography>
-                  <Box sx={{ display: 'flex', alignItems: 'center', gap: '0.7rem', mt: '14px' }}>
-                    <Typography>{user.name}</Typography>
-                  </Box>
-                </Box>
-                <Box
-                  sx={{
-                    padding: '28px 24px',
-                    borderBottom: '1px solid #0000000A',
-                  }}
-                >
-                  <Typography sx={{ color: '#BBBBBB', fontSize: '12px', fontWeight: 400 }}>
-                    WALLET ADDRESS
-                  </Typography>
-                  <Box
+
+                  <Stack
+                    gap="16px"
                     sx={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                      // alignItems: 'center',
-                      mt: '7px',
+                      display: {
+                        xs: 'none',
+                        md: 'flex',
+                      },
                     }}
                   >
-                    {user.abc_address && (
+                    <Divider />
+                    <Box padding={{ xs: '16px 0 0', md: '32px' }} textAlign="center">
+                      <ProfileTextAction>Deactivate Account</ProfileTextAction>
+                    </Box>
+                  </Stack>
+                </Stack>
+              </Grid>
+              <Grid
+                item
+                xs={12}
+                md={8}
+                lg={9}
+                padding={{
+                  xs: '0 16px 13px',
+                  md: '32px 24px',
+                }}
+              >
+                <Stack gap="16px">
+                  <Stack gap="12px">
+                    <SectionHeader>SIGNED-IN SOCIAL ACCOUNT</SectionHeader>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <Icon>
+                        <Image
+                          alt="google-icon"
+                          src="/assets/icons/google-icon.png"
+                          sx={{ width: '18px' }}
+                        />
+                      </Icon>
+                      <SectionText>{user.email}</SectionText>
+                    </Box>
+                  </Stack>
+
+                  <Divider />
+
+                  <Stack gap="12px">
+                    <SectionHeader>Linking another social account</SectionHeader>
+                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
                       <Box
-                        sx={{ display: 'flex', alignItems: 'center', gap: '0.7rem', mt: '14px' }}
+                        sx={{
+                          width: '32px',
+                          height: '32px',
+                          backgroundColor: '#F5F5F5',
+                          borderRadius: '50px',
+                          display: 'flex',
+                          justifyContent: 'center',
+                          alignItems: 'center',
+                        }}
                       >
-                        <Image src="/assets/icons/abc-logo.png" sx={{ width: '24px' }} />
-                        <Typography>
-                          {isDesktop ? user.abc_address : getShotAddress(user.abc_address)}
-                        </Typography>
+                        <Image
+                          alt="google-icon"
+                          src="/assets/icons/google-icon.png"
+                          sx={{ width: '18px' }}
+                        />
                       </Box>
-                    )}
-                    {user.eth_address && (
-                      <Box
-                        sx={{ display: 'flex', alignItems: 'center', gap: '0.7rem', mt: '14px' }}
-                      >
-                        <Image src="/assets/icons/metamask-logo.png" sx={{ width: '24px' }} />
-                        <Typography>
-                          {isDesktop ? user.eth_address : getShotAddress(user.eth_address)}
-                        </Typography>
-                      </Box>
-                    )}
+                    </Box>
+                  </Stack>
+
+                  <Divider />
+
+                  <Stack gap="12px">
+                    <SectionHeader>NAME</SectionHeader>
+                    <SectionText>{user.name}</SectionText>
+                  </Stack>
+
+                  <Divider />
+                  <Stack gap="12px">
+                    <SectionHeader>Birth Date</SectionHeader>
+                    <SectionText color="red">12/25/1984</SectionText>
+                  </Stack>
+
+                  <Divider />
+
+                  <Stack gap="12px">
+                    <SectionHeader>Gender</SectionHeader>
+                    <SectionText color="red">Male</SectionText>
+                  </Stack>
+
+                  <Divider />
+
+                  <Stack gap="12px">
+                    <SectionHeader>Phone Number</SectionHeader>
+                    <SectionText color="red">+82 10-1234-5678</SectionText>
+                  </Stack>
+
+                  <Divider />
+
+                  <Box>
+                    <SectionHeader>WALLET ADDRESS</SectionHeader>
+
+                    <form>
+                      <Stack gap="12px" sx={{ mt: '12px' }}>
+                        {user.abc_address && (
+                          <Radio
+                            checked={selectedAccount === user.abc_address}
+                            value={user.abc_address}
+                            name="wallet-address"
+                            label={
+                              <Stack direction="row" alignItems="center" gap="4px">
+                                <Image
+                                  alt="abc-logo"
+                                  src="/assets/icons/abc-logo.png"
+                                  sx={{ width: '24px' }}
+                                />
+                                <SectionText flex={1} sx={{ wordBreak: 'break-word' }}>
+                                  {user.abc_address}
+                                </SectionText>
+                              </Stack>
+                            }
+                            onClick={() => setSelectedAccount(user.abc_address)}
+                          />
+                        )}
+
+                        {user.eth_address && (
+                          <Radio
+                            checked={selectedAccount === user.eth_address}
+                            value={user.eth_address}
+                            name="wallet-address"
+                            label={
+                              <Box
+                                sx={{
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  gap: '4px',
+                                  mt: '14px',
+                                }}
+                              >
+                                <Image
+                                  alt="metamask-logo"
+                                  src="/assets/icons/metamask-logo.png"
+                                  sx={{ width: '24px' }}
+                                />
+                                <SectionText>{user.eth_address}</SectionText>
+                              </Box>
+                            }
+                            onClick={() => setSelectedAccount(user.eth_address || '')}
+                          />
+                        )}
+                      </Stack>
+                    </form>
                   </Box>
-                  <Box sx={{ display: 'flex', flexDirection: 'column', mt: '14px' }}>
-                    {user.eth_address ? (
-                      <CButton onClick={handleDeleteAddressClick}>DELETE</CButton>
-                    ) : (
+
+                  <Stack gap="16px">
+                    <Box
+                      sx={{
+                        display: isDesktop ? 'flex' : 'grid',
+                        gridTemplateColumns: isDesktop ? 'unset' : 'repeat(2, 1fr)',
+                        gap: 0.25,
+                      }}
+                    >
                       <CButton
                         onClick={() => {
                           setDoAddWallet(true);
@@ -407,10 +542,14 @@ Type: Address verification`;
                       >
                         ADD
                       </CButton>
-                    )}
+
+                      {/* {user.eth_address ? ( */}
+                      <CButton onClick={handleDeleteAddressClick}>DELETE</CButton>
+                      {/* ) : null} */}
+                    </Box>
 
                     {openSignUp && (
-                      <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
+                      <Box sx={{ display: 'flex', gap: 2 }}>
                         <CButton
                           onClick={async () => {
                             await connectWallet(WALLET_METAMASK);
@@ -418,6 +557,7 @@ Type: Address verification`;
                         >
                           Metamask
                         </CButton>
+
                         <CButton
                           onClick={async () => {
                             await connectWallet(WALLET_WALLECTCONNECT);
@@ -427,12 +567,14 @@ Type: Address verification`;
                         </CButton>
                       </Box>
                     )}
-                  </Box>
-                </Box>
+                  </Stack>
+
+                  <Divider sx={{ display: { xs: 'none', md: 'block' } }} />
+                </Stack>
               </Grid>
             </Grid>
           </Box>
-        </Container>
+        </MyAccountWrapper>
       </RootStyle>
     </Page>
   );
@@ -441,5 +583,17 @@ Type: Address verification`;
 // ----------------------------------------------------------------------
 
 MyAccountPage.getLayout = function getLayout(page: ReactElement) {
-  return <Layout verticalAlign="top">{page}</Layout>;
+  return (
+    <Layout
+      background={{
+        backgroundImage: `url(/assets/background/bg-account.jpg)`,
+        backgroundPosition: 'center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      }}
+      verticalAlign="top"
+    >
+      {page}
+    </Layout>
+  );
 };
