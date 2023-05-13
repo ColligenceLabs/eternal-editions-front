@@ -32,6 +32,7 @@ import { format } from 'date-fns';
 import { isMobile } from 'react-device-detect';
 import useAccount from 'src/hooks/useAccount';
 import { useTheme } from '@mui/material/styles';
+import Routes from 'src/routes';
 
 // ----------------------------------------------------------------------
 
@@ -209,42 +210,74 @@ export default function KSPay() {
     <Page title="Support">
       <RootStyle>
         <Container maxWidth={'xs'} sx={{ my: '25px' }}>
-          <EECard width="400px" marginTop="50px">
-            <Box sx={{ mb: '1rem' }}>
+          <EECard width="min(100%, 400px)" marginTop="50px">
+            <Stack gap={1} mb={3}>
               <Typography sx={{ color: '#999999', fontSize: '12px' }}>WALLET ADDRESS</Typography>
               <Typography sx={{ wordBreak: 'break-all', fontSize: '14px' }}>{account}</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography sx={{ color: '#999999', fontSize: '12px' }}>PRUCHASE QUANTITY</Typography>
-              <Typography sx={{ color: 'black', fontSize: '14px' }}>{quantity}</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography sx={{ color: '#999999', fontSize: '12px' }}>PAYMENT AMOUNT</Typography>
-              <Typography sx={{ color: 'black', fontSize: '14px' }}>
-                <span style={{ color: 'red' }}>$60</span> (= ₩{price})
-              </Typography>
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography sx={{ color: '#999999', fontSize: '12px' }}>DATE/TIME</Typography>
-              <Typography sx={{ color: 'black', fontSize: '14px' }}>{`${format(
-                new Date(),
-                'MM/dd/yyyy hh:mm:ss'
-              )}`}</Typography>
-            </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-              <Typography sx={{ color: '#999999', fontSize: '12px' }}>CARD TYPE</Typography>
-              <Typography sx={{ color: 'black', fontSize: '14px' }}>CREDIT CARD</Typography>
-            </Box>
-            <Divider />
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: '12px', mb: 2 }}>
-              <Typography sx={{ color: '#999999', fontSize: '12px', fontWeight: 'bold' }}>
+            </Stack>
+
+            <Stack gap={0.5}>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography sx={{ color: '#999999', fontSize: '12px', lineHeight: 17 / 12 }}>
+                  PRUCHASE QUANTITY
+                </Typography>
+                <Typography sx={{ color: 'black', fontSize: '14px', lineHeight: 20 / 14 }}>
+                  {quantity}
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography sx={{ color: '#999999', fontSize: '12px', lineHeight: 17 / 12 }}>
+                  PAYMENT AMOUNT
+                </Typography>
+                <Typography sx={{ color: 'black', fontSize: '14px', lineHeight: 20 / 14 }}>
+                  <span style={{ color: 'red' }}>$60</span> (= ₩{price})
+                </Typography>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography sx={{ color: '#999999', fontSize: '12px', lineHeight: 17 / 12 }}>
+                  DATE/TIME
+                </Typography>
+                <Typography
+                  sx={{ color: 'black', fontSize: '14px', lineHeight: 20 / 14 }}
+                >{`${format(new Date(), 'MM/dd/yyyy hh:mm:ss')}`}</Typography>
+              </Box>
+              <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Typography sx={{ color: '#999999', fontSize: '12px', lineHeight: 17 / 12 }}>
+                  CARD TYPE
+                </Typography>
+                <Typography sx={{ color: 'black', fontSize: '14px', lineHeight: 20 / 14 }}>
+                  CREDIT CARD
+                </Typography>
+              </Box>
+            </Stack>
+
+            <Divider sx={{ marginY: '12px' }} />
+
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                mb: 3,
+              }}
+            >
+              <Typography
+                sx={{
+                  color: '#999999',
+                  fontSize: '12px',
+                  lineHeight: 17 / 12,
+                  textTransform: 'uppercase',
+                }}
+              >
                 TOTAL PAYMENT{' '}
               </Typography>
-              <Typography sx={{ color: 'black', fontSize: '14px', fontWeight: 'bold' }}>
+              <Typography
+                sx={{ color: 'black', fontSize: '16px', lineHeight: 24 / 16, fontWeight: 'bold' }}
+              >
                 <span style={{ color: 'red' }}>$60</span> (= ₩{price})
               </Typography>
             </Box>
-            <form name="KSPayWeb" method="POST" onSubmit={handleSubmit(onSubmit)}>
+
+            <form name="KSPayWeb" method="POST" onSubmit={() => handleSubmit(onSubmit)}>
               <Stack spacing={2}>
                 <LoadingButton
                   fullWidth
@@ -252,6 +285,18 @@ export default function KSPay() {
                   type="submit"
                   variant="vivid"
                   loading={isSubmitting}
+                  sx={{
+                    fontSize: {
+                      xs: '12px',
+                      md: '14px',
+                    },
+                    lineHeight: {
+                      xs: 13 / 12,
+                      md: 12 / 14,
+                    },
+                    letterSpacing: '0.08em',
+                    fontWeight: 700,
+                  }}
                 >
                   BUY ITEM
                 </LoadingButton>
@@ -296,11 +341,27 @@ export default function KSPay() {
                 </Box>
               </Stack>
             </form>
+
             <LoadingButton
               fullWidth
               size="large"
               variant="vivid"
-              sx={{ mt: 0.5, bgcolor: '#F5F5F5' }}
+              sx={{
+                mt: 0.5,
+                bgcolor: '#F5F5F5',
+                textTransform: 'uppercase',
+                fontWeight: 700,
+                fontSize: {
+                  xs: '12px',
+                  md: '14px',
+                },
+                lineHeight: {
+                  xs: 13 / 12,
+                  md: 12 / 14,
+                },
+                letterSpacing: '0.08em',
+              }}
+              onClick={() => router.push(Routes.eternalEditions.my.account)}
             >
               Main
             </LoadingButton>
