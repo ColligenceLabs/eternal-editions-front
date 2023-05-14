@@ -24,7 +24,8 @@ const COLLECTIONS = [
 // ----------------------------------------------------------------------
 
 type Props = {
-  categories: string[];
+  categories?: string[];
+  shouldHideCategories?: boolean;
 };
 
 type CategoryTypes = {
@@ -32,7 +33,7 @@ type CategoryTypes = {
   count: string;
 };
 
-export default function TicketItems({ categories: originCategories }: Props) {
+export default function TicketItems({ categories: originCategories, shouldHideCategories }: Props) {
   const [curPage, setCurPage] = useState(1);
   const [lastPage, setLastPage] = useState(0);
   const [selected, setSelected] = useState('All');
@@ -94,7 +95,7 @@ export default function TicketItems({ categories: originCategories }: Props) {
     <>
       <Stack
         direction="row"
-        justifyContent="space-between"
+        justifyContent={shouldHideCategories ? 'flex-end' : 'space-between'}
         alignItems="center"
         flexWrap="wrap"
         gap={1}
@@ -106,11 +107,13 @@ export default function TicketItems({ categories: originCategories }: Props) {
           pb: { xs: 2, md: 5 },
         }}
       >
-        <CategoryTabs
-          categories={categories}
-          value={selected.toLocaleLowerCase()}
-          onChange={handleChangeCategory}
-        />
+        {!shouldHideCategories ? (
+          <CategoryTabs
+            categories={categories}
+            value={selected.toLocaleLowerCase()}
+            onChange={handleChangeCategory}
+          />
+        ) : null}
 
         <Stack
           flexDirection="row"
