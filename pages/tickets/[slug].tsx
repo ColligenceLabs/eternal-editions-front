@@ -1,14 +1,12 @@
 import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
 // @mui
-import { styled } from '@mui/material/styles';
 import {
+  styled,
+  useTheme,
   Backdrop,
   Box,
-  Link,
-  Button,
   CircularProgress,
   Container,
-  Divider,
   Fade,
   Grid,
   TextField,
@@ -16,9 +14,6 @@ import {
   SelectChangeEvent,
   Stack,
   Typography,
-  Select,
-  FormControl,
-  MenuItem,
 } from '@mui/material';
 import CloseIcon from 'src/assets/icons/close';
 import { IconButtonAnimate } from 'src/components/animate';
@@ -29,20 +24,16 @@ import { BigNumber, ethers } from 'ethers';
 // layouts
 import Layout from 'src/layouts';
 // components
-import { Iconify, Page, Scrollbar, TextIconLabel, TextMaxLine } from 'src/components';
+import { Page, Scrollbar, TextIconLabel } from 'src/components';
 // sections
 import { useRouter } from 'next/router';
-import EECard from 'src/components/EECard';
-import EEAvatar from 'src/components/EEAvatar';
 import { fDate } from 'src/utils/formatTime';
-import searchIcon from '@iconify/icons-carbon/search';
 import {
   getBuyersService,
   getSession,
   getTicketInfoService,
   getUser,
   registerBuy,
-  savePoint,
 } from 'src/services/services';
 import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import axios from 'axios';
@@ -58,10 +49,11 @@ import { BuyerTypes } from 'src/@types/buyer/buyer';
 import { abcSendTx } from 'src/utils/abcTransactions';
 import { useDispatch, useSelector } from 'react-redux';
 import { collectionAbi } from 'src/config/abi/Collection';
-import tokenAbi from 'src/config/abi/ERC20Token.json';
 import { LoadingButton } from '@mui/lab';
 import { setWebUser } from 'src/store/slices/webUser';
-import { GifBoxOutlined } from '@mui/icons-material';
+import TicketPostItemContent from 'src/sections/@eternaledtions/tickets/TicketPostItemContent';
+import { Label, Section, Value } from 'src/components/my-tickets/StyledComponents';
+import CompanyInfo from 'src/components/ticket/CompanyInfo';
 
 // ----------------------------------------------------------------------
 
@@ -97,6 +89,7 @@ const modalStyle = {
 
 export default function TicketDetailPage() {
   const router = useRouter();
+  const theme = useTheme();
   const { user } = useSelector((state: any) => state.webUser);
   const { library, chainId } = useActiveWeb3React();
   const { account } = useAccount();
@@ -125,6 +118,20 @@ export default function TicketDetailPage() {
   const [abcOpen, setAbcOpen] = useState(false);
   const [reload, setReload] = useState(false);
   const [otpLoading, setOtpLoading] = useState(false);
+
+  const {
+    id,
+    title,
+    packageImage,
+    categoriesStr,
+    featured,
+    createdAt,
+    whitelistNftId,
+    mysteryboxItems,
+    price,
+    boxContractAddress,
+    quote,
+  } = ticketInfo || {};
 
   const handleAbcClose = () => {
     setAbcToken('');
@@ -168,8 +175,7 @@ export default function TicketDetailPage() {
       setIsBuyingWithMatic(true);
 
       // Collection
-      const contract = ticketInfo?.boxContractAddress;
-      const quote = ticketInfo?.quote;
+      const contract = boxContractAddress;
       const index = selectedTicketItem.no - 1 ?? 0;
       const amount = 1;
 
@@ -177,7 +183,7 @@ export default function TicketDetailPage() {
       let payment: BigNumber;
       if (quote === 'matic' || quote === 'wmatic') {
         quoteToken = quote === 'matic' ? contracts.matic[chainId] : contracts.wmatic[chainId];
-        payment = parseEther(ticketInfo?.price.toString() ?? '0').mul(amount);
+        payment = parseEther(price?.toString() ?? '0').mul(amount);
       }
       try {
         const method = 'buyItemEth';
@@ -209,12 +215,12 @@ export default function TicketDetailPage() {
           // );
 
           const data = {
-            mysterybox_id: ticketInfo?.id,
+            mysterybox_id: id,
             buyer: user.uid,
             buyer_address: abcUser.accounts[0].ethAddress,
             isSent: true,
             txHash: result?.transactionHash,
-            price: ticketInfo?.price,
+            price: price,
             itemId: selectedTicketItem?.id,
             tokenId: tokenId,
           };
@@ -271,7 +277,7 @@ export default function TicketDetailPage() {
     console.log('handleItemChange', event.target.value);
     setSelectedItem(event.target.value);
 
-    const result = ticketInfo?.mysteryboxItems.find(
+    const result = mysteryboxItems?.find(
       (item: TicketItemTypes) => item.id.toString() === event.target.value.toString()
     );
 
@@ -290,13 +296,13 @@ export default function TicketDetailPage() {
         const loginBy = window.localStorage.getItem('loginBy') ?? 'sns';
         setIsBuyingWithPoint(true);
         const data = {
-          mysterybox_id: ticketInfo?.id,
+          mysterybox_id: id,
           buyer: session.data.dropsUser.uid,
           buyer_address: loginBy === 'sns' ? abcUser.accounts[0].ethAddress : account,
           isSent: false,
           txHash: '',
           // price: ticketInfo?.price,
-          price: (((ticketInfo?.price ?? 0) * maticPrice) / 10).toFixed(4),
+          price: (((price ?? 0) * maticPrice) / 10).toFixed(4),
           itemId: selectedTicketItem?.id,
           usePoint: true,
         };
@@ -354,8 +360,7 @@ export default function TicketDetailPage() {
         return;
       }
       // Collection
-      const contract = ticketInfo?.boxContractAddress;
-      const quote = ticketInfo?.quote;
+      const contract = boxContractAddress;
       const index = selectedTicketItem.no - 1 ?? 0;
       const amount = 1;
 
@@ -363,7 +368,7 @@ export default function TicketDetailPage() {
       let payment: BigNumber;
       if (quote === 'matic' || quote === 'wmatic') {
         quoteToken = quote === 'matic' ? contracts.matic[chainId] : contracts.wmatic[chainId];
-        payment = parseEther(ticketInfo?.price.toString() ?? '0').mul(amount);
+        payment = parseEther(price?.toString() ?? '0').mul(amount);
       }
 
       try {
@@ -388,12 +393,12 @@ export default function TicketDetailPage() {
           // );
 
           const data = {
-            mysterybox_id: ticketInfo?.id,
+            mysterybox_id: id,
             buyer: user.uid,
             buyer_address: account,
             isSent: true,
             txHash: result?.txHash,
-            price: ticketInfo?.price,
+            price: price,
             itemId: selectedTicketItem?.id,
             tokenId: result.tokenId,
           };
@@ -519,192 +524,80 @@ export default function TicketDetailPage() {
   }, [slug, reload, account]);
 
   useEffect(() => {
-    setDollarPrice((ticketInfo?.price ?? 0) * maticPrice);
+    setDollarPrice((price ?? 0) * maticPrice);
   }, [ticketInfo, maticPrice]);
 
   return (
     <Page title={`${slug} - Ticket`}>
-      {/* background */}
-      <Box
-        sx={{
-          backgroundImage: `url(${ticketInfo?.packageImage})`,
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          position: 'fixed',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          top: 0,
-          zIndex: -1,
-        }}
-      />
       <RootStyle>
         <Container>
-          <Grid container spacing={8} direction="row">
+          <Grid container spacing={5} direction="row">
             <Grid item xs={12} md={5} lg={6}>
-              {/*<Image*/}
-              {/*    alt="photo"*/}
-              {/*    src={'https://dummyimage.com/900x900/000/fff'}*/}
-              {/*    ratio="1/1"*/}
-              {/*    sx={{ borderRadius: 2, cursor: 'pointer' }}*/}
-              {/*/>*/}
+              <TicketPostItemContent ticket={ticketInfo} shouldHideDetail />
             </Grid>
 
-            <Grid item xs={12} md={7} lg={6}>
-              <EECard>
-                <Stack spacing={3}>
-                  <Stack
-                    justifyContent="space-between"
-                    sx={{
-                      height: 1,
-                      zIndex: 9,
-                      color: 'common.black',
-                    }}
-                  >
-                    <Stack spacing={1}>
-                      <Stack
-                        direction="row"
-                        spacing={1}
-                        alignItems="center"
-                        sx={{ opacity: 0.72, typography: 'caption' }}
-                      >
-                        <EEAvatar
-                          // account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
-                          image={ticketInfo?.featured?.company.image}
-                          nickname={ticketInfo?.featured?.company.name.en}
-                          sx={{ mr: 0, width: 24, height: 24 }}
-                        />
+            <Grid
+              item
+              xs={12}
+              md={7}
+              lg={6}
+              sx={{ display: 'flex', flexDirection: 'column', gap: 4 }}
+            >
+              <Typography
+                variant={'h1'}
+                sx={{
+                  color: theme.palette.primary.main,
+                  whiteSpace: 'pre-line',
+                  textTransform: 'uppercase',
+                }}
+              >
+                {title?.en}
+              </Typography>
 
-                        <Typography>{ticketInfo?.featured?.company.name.en}</Typography>
-                      </Stack>
-
-                      <TextMaxLine variant="h3">{ticketInfo?.title.en}</TextMaxLine>
-
-                      <Typography
-                        variant="subtitle2"
-                        sx={{
-                          mb: 1,
-                          mt: { xs: 1, sm: 0.5 },
-                          color: 'common.black',
-                          fontSize: '1em',
-                        }}
-                      >
-                        {ticketInfo?.createdAt && fDate(ticketInfo?.createdAt)}
-                      </Typography>
-                    </Stack>
-                  </Stack>
-
-                  <Divider />
-
-                  <Stack>
-                    <LineItem
-                      icon={<></>}
-                      label="Reserve Price"
-                      value={`EDCP ${(dollarPrice / 10).toFixed(4)} (Ξ ${ticketInfo?.price})`}
+              <Grid container>
+                <Grid item md={6}>
+                  <Section>
+                    <Label>Minted by</Label>
+                    <CompanyInfo
+                      account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
+                      image={featured?.company.image}
+                      label={`@${featured?.company.name.en || ''}`}
+                      sx={{ opacity: 1 }}
                     />
-                    {ticketInfo &&
-                      ticketInfo.mysteryboxItems[0].properties &&
-                      ticketInfo.mysteryboxItems[0].properties.map((item: any) => (
-                        <LineItem
-                          key={item.id}
-                          icon={<></>}
-                          label={item.type.replace(/\b[a-z]/g, (char: string) =>
-                            char.toUpperCase()
-                          )}
-                          value={item.name}
-                        />
-                      ))}
-                  </Stack>
+                  </Section>
+                </Grid>
 
-                  <Stack>
-                    <FormControl>
-                      <Select
-                        value={selectedItem}
-                        onChange={handleItemChange}
-                        displayEmpty
-                        fullWidth
-                        inputProps={{ 'aria-label': 'optione1' }}
-                        sx={{ color: 'common.black' }}
-                      >
-                        <MenuItem value="" disabled>
-                          <span style={{ color: '#9E9E9E' }}>Choose an option</span>
-                        </MenuItem>
-                        {ticketInfo?.mysteryboxItems.map((item: TicketItemTypes) => (
-                          <MenuItem key={item.id} value={item.id}>
-                            <Box
-                              sx={{
-                                width: '100%',
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                padding: '0px 10px',
-                              }}
-                            >
-                              <Typography>{item.name}</Typography>
-                              <Typography>{`(${item.remain} / ${item.issueAmount})`}</Typography>
-                            </Box>
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Stack>
+                <Grid item md={6}>
+                  <Section>
+                    <Label>Date</Label>
+                    <Stack>
+                      {createdAt && <Value>{fDate(createdAt, 'EEEE (MMMM dd, yyyy)')}</Value>}
+                      {mysteryboxItems && (
+                        <Value>
+                          {mysteryboxItems[0].properties &&
+                            mysteryboxItems[0].properties[0].type.toLowerCase() === 'location' &&
+                            mysteryboxItems[0].properties[0].name}
+                        </Value>
+                      )}
+                    </Stack>
+                  </Section>
+                </Grid>
+              </Grid>
 
-                  <Button
-                    onClick={handleOpen}
-                    size={'large'}
-                    fullWidth={true}
-                    variant="vivid"
-                    disabled={selectedTicketItem?.whlBool && selectedTicketItem?.whlBalance === 0}
-                    // sx={{ backgroundColor: selectedItem ? '#08FF0C' : null }}
-                  >
-                    Payment
-                  </Button>
+              <Section>
+                <Label>Description</Label>
+                <Value sx={{ color: 'red' }}>
+                  Welcome to Grumbies! The Grumbies Eternal Entry is dropping exclusively on
+                  OpenSea. After the mint a snapshot will be announced and holders of the Eternal
+                  Entry will bnesis Battle. In addition to the Grumbies Genesis Battle, the Grumbies
+                  Eternal Entry will give holders access to all future endeavors in the Grumbies
+                  universe. 
+                </Value>
+              </Section>
 
-                  <Divider />
-
-                  {/*<Stack>구매한 유저들</Stack>*/}
-                  {/*{buyers &&*/}
-                  {/*  buyers.map((buyer: BuyerTypes) => (*/}
-                  {/*    <Box key={buyer.id}>{buyer.buyerAddress}</Box>*/}
-                  {/*  ))}*/}
-                  {/*<Divider />*/}
-                  <Stack>
-                    <Typography variant={'subtitle2'} sx={{ mb: 1 }}>
-                      Description
-                    </Typography>
-                    {/* <TextMaxLine line={5}>{ticketInfo?.introduction.en}</TextMaxLine> */}
-                    <Button
-                      onClick={() => setDescriptionOpen(true)}
-                      size={'large'}
-                      fullWidth={true}
-                      variant="contained"
-                      disabled={selectedTicketItem?.whlBool && selectedTicketItem?.whlBalance === 0}
-                      // sx={{ backgroundColor: selectedItem ? '#08FF0C' : null }}
-                    >
-                      상품 설명 및 상품 고시
-                    </Button>
-                    {/* <Link variant="subtitle2" href="/">
-                      상품 설명 및 상품 고시 상세 보기
-                    </Link> */}
-                    {/* text로된 introduction에 html 포함된 경우 rendering 하도록 수정된 코드*/}
-                    {/*<TextMaxLine line={5}>*/}
-                    {/*  <div dangerouslySetInnerHTML={ {__html: ticketInfo?.introduction.en ?? ''} }/>*/}
-                    {/*</TextMaxLine>*/}
-                  </Stack>
-                  <Divider />
-                  {/*<Stack>*/}
-                  {/*  <Typography variant={'subtitle2'} sx={{ mb: 1 }}>*/}
-                  {/*    Title area 2*/}
-                  {/*  </Typography>*/}
-                  {/*  <TextMaxLine line={5}>*/}
-                  {/*    Unleash your inner warrior and get ready to battle with Ibutsu NFT! If you're*/}
-                  {/*    looking to be a part of an immersive dojo-style world, then you can't go wrong*/}
-                  {/*    by having your very own Ibutsu fighter. Join our community to make friends,*/}
-                  {/*    have fun and collect $APE!*/}
-                  {/*  </TextMaxLine>*/}
-                  {/*</Stack>*/}
-                </Stack>
-              </EECard>
+              <Section>
+                <Label>Mint Schedule</Label>
+              </Section>
             </Grid>
           </Grid>
         </Container>
@@ -724,7 +617,7 @@ export default function TicketDetailPage() {
                   Buy NFT Ticket
                 </Typography>
                 <Typography id="modal-modal-title" variant="h6">
-                  {`$ ${((ticketInfo?.price ?? 0) * maticPrice).toFixed(4)}`}
+                  {`$ ${((price ?? 0) * maticPrice).toFixed(4)}`}
                 </Typography>
               </Box>
               <Typography
@@ -792,8 +685,8 @@ export default function TicketDetailPage() {
                     <LineItemByModal
                       sx={{ whiteSpace: 'nowrap' }}
                       // icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
-                      label={`${ticketInfo?.price} ${ticketInfo?.quote.toUpperCase()}`}
-                      value={`PAY WITH ${ticketInfo?.quote.toUpperCase()}`}
+                      label={`${price} ${quote?.toUpperCase()}`}
+                      value={`PAY WITH ${quote?.toUpperCase()}`}
                       isBuying={isBuyingWithMatic}
                     />
                   )}
@@ -946,12 +839,24 @@ export default function TicketDetailPage() {
 
 TicketDetailPage.getLayout = function getLayout(page: ReactElement) {
   return (
-    <Layout transparentHeader={false} headerSx={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+    <Layout
+      verticalAlign="top"
+      // transparentHeader={false}
+      // headerSx={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}
+      background={{
+        backgroundImage: {
+          xs: `url(/assets/background/bg-main.jpg)`,
+          md: `url(/assets/background/bg-drops.jpg)`,
+        },
+        backgroundPosition: 'bottom center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+      }}
+    >
       {page}
     </Layout>
   );
 };
-
 // ----------------------------------------------------------------------
 
 type Params = {
@@ -966,36 +871,6 @@ type LineItemProps = {
   value: any;
   isBuying?: boolean;
 };
-
-function LineItem({ icon, label, value }: LineItemProps) {
-  const isMobile = useResponsive('down', 'md');
-  return (
-    <TextIconLabel
-      icon={icon!}
-      value={
-        <>
-          <Typography sx={{ fontSize: '14px', color: 'common.black' }}>{label}</Typography>
-          <Typography
-            variant="subtitle2"
-            sx={{
-              color: 'common.black',
-              flexGrow: 1,
-              textAlign: 'right',
-              fontSize: isMobile ? '14px' : '16px',
-              fontWeight: 'bold',
-            }}
-          >
-            {value}
-          </Typography>
-        </>
-      }
-      sx={{
-        color: 'text.primary',
-        '& svg': { mr: 1, width: 24, height: 24 },
-      }}
-    />
-  );
-}
 
 function LineItemByModal({ icon, label, value, isBuying }: LineItemProps) {
   const isXs = useResponsive('down', 'sm');

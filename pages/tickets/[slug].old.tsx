@@ -1,9 +1,11 @@
-import React, { ChangeEvent, PropsWithChildren, ReactElement, useEffect, useState } from 'react';
+import React, { ChangeEvent, ReactElement, useEffect, useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import {
   Backdrop,
   Box,
+  Link,
+  Button,
   CircularProgress,
   Container,
   Divider,
@@ -14,13 +16,12 @@ import {
   SelectChangeEvent,
   Stack,
   Typography,
-  Accordion,
-  AccordionSummary,
-  accordionSummaryClasses,
-  AccordionDetails,
-  useTheme,
-  outlinedInputClasses,
+  Select,
+  FormControl,
+  MenuItem,
 } from '@mui/material';
+import CloseIcon from 'src/assets/icons/close';
+import { IconButtonAnimate } from 'src/components/animate';
 // config
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT, SUCCESS } from 'src/config';
 // @types
@@ -28,16 +29,20 @@ import { BigNumber, ethers } from 'ethers';
 // layouts
 import Layout from 'src/layouts';
 // components
-import { Page, TextIconLabel } from 'src/components';
+import { Iconify, Page, Scrollbar, TextIconLabel, TextMaxLine } from 'src/components';
 // sections
 import { useRouter } from 'next/router';
+import EECard from 'src/components/EECard';
+import EEAvatar from 'src/components/EEAvatar';
 import { fDate } from 'src/utils/formatTime';
+import searchIcon from '@iconify/icons-carbon/search';
 import {
   getBuyersService,
   getSession,
   getTicketInfoService,
   getUser,
   registerBuy,
+  savePoint,
 } from 'src/services/services';
 import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import axios from 'axios';
@@ -53,29 +58,10 @@ import { BuyerTypes } from 'src/@types/buyer/buyer';
 import { abcSendTx } from 'src/utils/abcTransactions';
 import { useDispatch, useSelector } from 'react-redux';
 import { collectionAbi } from 'src/config/abi/Collection';
+import tokenAbi from 'src/config/abi/ERC20Token.json';
 import { LoadingButton } from '@mui/lab';
 import { setWebUser } from 'src/store/slices/webUser';
-import CompanyInfo from 'src/components/ticket/CompanyInfo';
-import Badge from 'src/components/ticket/Badge';
-import { TicketName } from 'src/components/ticket/TicketName';
-import { CardWrapper } from 'src/components/ticket/CardWrapper';
-import { CardInner } from 'src/components/ticket/CardInner';
-import { Label, Row, TotalValue, Value } from 'src/components/my-tickets/StyledComponents';
-import Timer from 'src/components/Timer';
-import { RoundedSelect, RoundedSelectOption } from 'src/components/common/Select';
-import RoundedButton from 'src/components/common/RoundedButton';
-import { ArrowDropDown } from '@mui/icons-material';
-
-const PAY_TYPE = [
-  {
-    label: 'PAY WITH EDCP',
-    value: 'edcp',
-  },
-  {
-    label: 'PAY WITH USDC',
-    value: 'usdc',
-  },
-];
+import { GifBoxOutlined } from '@mui/icons-material';
 
 // ----------------------------------------------------------------------
 
@@ -85,7 +71,6 @@ const RootStyle = styled('div')(({ theme }) => ({
   [theme.breakpoints.up('md')]: {
     paddingTop: HEADER_DESKTOP_HEIGHT,
     paddingBottom: HEADER_DESKTOP_HEIGHT,
-    minHeight: '100vh',
   },
   // background: 'red'
 }));
@@ -111,14 +96,12 @@ const modalStyle = {
 };
 
 export default function TicketDetailPage() {
-  const theme = useTheme();
   const router = useRouter();
   const { user } = useSelector((state: any) => state.webUser);
   const { library, chainId } = useActiveWeb3React();
   const { account } = useAccount();
   const dispatch = useDispatch();
   const { slug } = router.query;
-  const isMobile = useResponsive('down', 'md');
 
   const [ticketInfo, setTicketInfo] = useState<TicketInfoTypes | null>(null);
   const [selectedTicketItem, setSelectedTicketItem] = useState<TicketItemTypes | null>(null);
@@ -136,15 +119,12 @@ export default function TicketDetailPage() {
     type: '',
     message: '',
   });
-  const [payType, setPayType] = useState('default');
 
   const abcUser = useSelector((state: any) => state.user);
   const [abcToken, setAbcToken] = useState('');
   const [abcOpen, setAbcOpen] = useState(false);
   const [reload, setReload] = useState(false);
   const [otpLoading, setOtpLoading] = useState(false);
-
-  const isOnAuction = router.query.status === 'auction'; // TODO: Update value
 
   const handleAbcClose = () => {
     setAbcToken('');
@@ -561,203 +541,68 @@ export default function TicketDetailPage() {
       />
       <RootStyle>
         <Container>
-          <Grid
-            container
-            spacing={8}
-            direction="row"
-            sx={{ [theme.breakpoints.down('md')]: { pt: '480px' } }}
-          >
-            {/* <Grid item xs={12} md={5} lg={6}> */}
-            {/*<Image*/}
-            {/*    alt="photo"*/}
-            {/*    src={'https://dummyimage.com/900x900/000/fff'}*/}
-            {/*    ratio="1/1"*/}
-            {/*    sx={{ borderRadius: 2, cursor: 'pointer' }}*/}
-            {/*/>*/}
-            {/* </Grid> */}
+          <Grid container spacing={8} direction="row">
+            <Grid item xs={12} md={5} lg={6}>
+              {/*<Image*/}
+              {/*    alt="photo"*/}
+              {/*    src={'https://dummyimage.com/900x900/000/fff'}*/}
+              {/*    ratio="1/1"*/}
+              {/*    sx={{ borderRadius: 2, cursor: 'pointer' }}*/}
+              {/*/>*/}
+            </Grid>
 
-            <Grid
-              item
-              xs={12}
-              md={7}
-              lg={6}
-              sx={{
-                ml: {
-                  md: 'auto',
-                },
-              }}
-            >
-              <CardWrapper>
-                <CardInner>
-                  <Stack flexDirection="row" justifyContent="space-between">
-                    <CompanyInfo
-                      account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
-                      image={ticketInfo?.featured?.company.image}
-                      label={`by @${ticketInfo?.featured?.company.name.en || ''}`}
-                    />
+            <Grid item xs={12} md={7} lg={6}>
+              <EECard>
+                <Stack spacing={3}>
+                  <Stack
+                    justifyContent="space-between"
+                    sx={{
+                      height: 1,
+                      zIndex: 9,
+                      color: 'common.black',
+                    }}
+                  >
+                    <Stack spacing={1}>
+                      <Stack
+                        direction="row"
+                        spacing={1}
+                        alignItems="center"
+                        sx={{ opacity: 0.72, typography: 'caption' }}
+                      >
+                        <EEAvatar
+                          // account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
+                          image={ticketInfo?.featured?.company.image}
+                          nickname={ticketInfo?.featured?.company.name.en}
+                          sx={{ mr: 0, width: 24, height: 24 }}
+                        />
 
-                    {isOnAuction ? (
-                      <Badge
-                        label="On Auction"
-                        style={{
-                          background: 'linear-gradient(180deg, #08FF0C 0%, #4ADEFF 76.56%)',
-                          '-webkit-background-clip': 'text',
-                          '-webkit-text-fill-color': 'transparent',
-                          backgroundClip: 'text',
-                          textFillColor: 'transparent',
-                          border: '1px solid',
+                        <Typography>{ticketInfo?.featured?.company.name.en}</Typography>
+                      </Stack>
+
+                      <TextMaxLine variant="h3">{ticketInfo?.title.en}</TextMaxLine>
+
+                      <Typography
+                        variant="subtitle2"
+                        sx={{
+                          mb: 1,
+                          mt: { xs: 1, sm: 0.5 },
+                          color: 'common.black',
+                          fontSize: '1em',
                         }}
-                      />
-                    ) : (
-                      <Badge label="For Sale" />
-                    )}
-                  </Stack>
-
-                  <TicketName>{ticketInfo?.title.en}</TicketName>
-
-                  <Stack gap={{ xs: '16px', md: '7px' }}>
-                    <Row>
-                      <Label>Day</Label>
-                      <Value>{ticketInfo?.createdAt && fDate(ticketInfo?.createdAt)}</Value>
-                    </Row>
-                    <Row>
-                      <Label>Team</Label>
-                      <Value>Team Yellow</Value>
-                    </Row>
-                    <Row>
-                      <Label>Auction ends in</Label>
-                      <Timer as={Value} releasedDate={ticketInfo?.releaseDatetime} />
-                    </Row>
+                      >
+                        {ticketInfo?.createdAt && fDate(ticketInfo?.createdAt)}
+                      </Typography>
+                    </Stack>
                   </Stack>
 
                   <Divider />
 
-                  <Stack gap={{ xs: '24px', md: '12px' }}>
-                    {isOnAuction ? (
-                      <Row>
-                        <Label>Starting Price</Label>
-                        <Stack flexDirection="row" gap={0.5}>
-                          <TotalValue>{`${(dollarPrice / 10).toFixed(4)} EDCP`}</TotalValue>
-                          <TotalValue
-                            sx={{ opacity: 0.6 }}
-                          >{`(~$${ticketInfo?.price})`}</TotalValue>
-                        </Stack>
-                      </Row>
-                    ) : null}
-
-                    <Row>
-                      <Label>Current Price</Label>
-                      <Stack flexDirection="row" gap={0.5}>
-                        <TotalValue>{`${(dollarPrice / 10).toFixed(4)} EDCP`}</TotalValue>
-                        <TotalValue sx={{ opacity: 0.6 }}>{`(~$${ticketInfo?.price})`}</TotalValue>
-                      </Stack>
-                    </Row>
-                  </Stack>
-
-                  <Stack gap={0.25} mt={{ xs: 0, md: '142px' }}>
-                    {isOnAuction ? (
-                      <>
-                        <TextField
-                          variant="outlined"
-                          placeholder="Please enter your offer"
-                          sx={{
-                            [`.${outlinedInputClasses.notchedOutline}`]: {
-                              borderRadius: '60px',
-                            },
-                            [`.${outlinedInputClasses.root}:not(.Mui-focused) .${outlinedInputClasses.notchedOutline}`]:
-                              {
-                                border: '1px solid #F5F5F5',
-                              },
-                            [`.${outlinedInputClasses.input}`]: {
-                              textAlign: 'center',
-                              fontSize: '14px',
-                              lineHeight: 12 / 14,
-                              letterSpacing: '0.08em',
-                              fontWeight: 'bold',
-                              [theme.breakpoints.down('md')]: {
-                                fontSize: 12,
-                                lineHeight: 13 / 12,
-                              },
-                            },
-                            [`.${outlinedInputClasses.input}::placeholder`]: {
-                              color: 'rgba(255, 255, 255, 0.4)',
-                              textTransform: 'uppercase',
-                            },
-                          }}
-                        />
-                        <RoundedButton
-                          onClick={handleOpen}
-                          fullWidth
-                          variant={isMobile ? 'inactive' : 'default'}
-                          disabled={
-                            selectedTicketItem?.whlBool && selectedTicketItem?.whlBalance === 0
-                          }
-                        >
-                          PLACE BID
-                        </RoundedButton>
-                      </>
-                    ) : (
-                      <>
-                        <RoundedSelect
-                          value={payType}
-                          onChange={(event) => setPayType(event.target.value as string)}
-                        >
-                          <RoundedSelectOption value="default" hidden>
-                            Select pay type
-                          </RoundedSelectOption>
-                          {PAY_TYPE.map((option) => (
-                            <RoundedSelectOption key={option.value} value={option.value}>
-                              {option.label}
-                            </RoundedSelectOption>
-                          ))}
-                        </RoundedSelect>
-
-                        <RoundedButton
-                          onClick={handleOpen}
-                          fullWidth
-                          disabled={
-                            selectedTicketItem?.whlBool && selectedTicketItem?.whlBalance === 0
-                          }
-                          sx={{ backgroundColor: theme.palette.primary.main }}
-                        >
-                          Buy Now
-                        </RoundedButton>
-                      </>
-                    )}
-                  </Stack>
-
-                  <Stack gap={2}>
-                    <DetailAccordion title={'Description'}>
-                      As we enter a world of metaverses and remote work, we recognize a common
-                      problem - nobody touches grass anymore. The Healing Hippies are a collection
-                      of 8,888 generated Hippies with the power to heal. Each NFT comes with an aura
-                      that unlocks portions of the HippieVerse and features to The Heal App. Holders
-                      will benefit from YouTube content royalties and Prosper Points. Holders will
-                      also have token-gated access to The Heal App, where you can work with Coaches,
-                      Nutritionists, Therapists, and Specialists.
-                      {/* <Stack
-                        sx={{
-                          width: 1,
-                          overflow: 'scroll',
-                          // maxHeight: 'calc(100vh - 6rem)',
-                          position: 'relative',
-                          img: { width: 1 },
-                        }}
-                      >
-                        <Scrollbar sx={{ py: { xs: 3, md: 0 } }}>
-                          <img src="/assets/img/WATERBOMB_SEOUL_2023.jpeg" alt="description" />
-                        </Scrollbar>
-                      </Stack> */}
-                    </DetailAccordion>
-
-                    <DetailAccordion title={'About new Reality Now'}>
-                      Our mission is to cultivate and incentivize a space for collective wellness. A
-                      utopia where holders can access live coaches and specialists to grow the mind,
-                      body, and spirit all within a safe community.
-                    </DetailAccordion>
-                  </Stack>
-
-                  {/* <Stack>
+                  <Stack>
+                    <LineItem
+                      icon={<></>}
+                      label="Reserve Price"
+                      value={`EDCP ${(dollarPrice / 10).toFixed(4)} (Ξ ${ticketInfo?.price})`}
+                    />
                     {ticketInfo &&
                       ticketInfo.mysteryboxItems[0].properties &&
                       ticketInfo.mysteryboxItems[0].properties.map((item: any) => (
@@ -770,9 +615,9 @@ export default function TicketDetailPage() {
                           value={item.name}
                         />
                       ))}
-                  </Stack> */}
+                  </Stack>
 
-                  {/* <Stack>
+                  <Stack>
                     <FormControl>
                       <Select
                         value={selectedItem}
@@ -802,7 +647,20 @@ export default function TicketDetailPage() {
                         ))}
                       </Select>
                     </FormControl>
-                  </Stack> */}
+                  </Stack>
+
+                  <Button
+                    onClick={handleOpen}
+                    size={'large'}
+                    fullWidth={true}
+                    variant="vivid"
+                    disabled={selectedTicketItem?.whlBool && selectedTicketItem?.whlBalance === 0}
+                    // sx={{ backgroundColor: selectedItem ? '#08FF0C' : null }}
+                  >
+                    Payment
+                  </Button>
+
+                  <Divider />
 
                   {/*<Stack>구매한 유저들</Stack>*/}
                   {/*{buyers &&*/}
@@ -810,7 +668,30 @@ export default function TicketDetailPage() {
                   {/*    <Box key={buyer.id}>{buyer.buyerAddress}</Box>*/}
                   {/*  ))}*/}
                   {/*<Divider />*/}
-
+                  <Stack>
+                    <Typography variant={'subtitle2'} sx={{ mb: 1 }}>
+                      Description
+                    </Typography>
+                    {/* <TextMaxLine line={5}>{ticketInfo?.introduction.en}</TextMaxLine> */}
+                    <Button
+                      onClick={() => setDescriptionOpen(true)}
+                      size={'large'}
+                      fullWidth={true}
+                      variant="contained"
+                      disabled={selectedTicketItem?.whlBool && selectedTicketItem?.whlBalance === 0}
+                      // sx={{ backgroundColor: selectedItem ? '#08FF0C' : null }}
+                    >
+                      상품 설명 및 상품 고시
+                    </Button>
+                    {/* <Link variant="subtitle2" href="/">
+                      상품 설명 및 상품 고시 상세 보기
+                    </Link> */}
+                    {/* text로된 introduction에 html 포함된 경우 rendering 하도록 수정된 코드*/}
+                    {/*<TextMaxLine line={5}>*/}
+                    {/*  <div dangerouslySetInnerHTML={ {__html: ticketInfo?.introduction.en ?? ''} }/>*/}
+                    {/*</TextMaxLine>*/}
+                  </Stack>
+                  <Divider />
                   {/*<Stack>*/}
                   {/*  <Typography variant={'subtitle2'} sx={{ mb: 1 }}>*/}
                   {/*    Title area 2*/}
@@ -822,8 +703,8 @@ export default function TicketDetailPage() {
                   {/*    have fun and collect $APE!*/}
                   {/*  </TextMaxLine>*/}
                   {/*</Stack>*/}
-                </CardInner>
-              </CardWrapper>
+                </Stack>
+              </EECard>
             </Grid>
           </Grid>
         </Container>
@@ -991,6 +872,66 @@ export default function TicketDetailPage() {
         </Fade>
       </Modal>
 
+      <Modal
+        open={descriptionOpen}
+        onClose={() => setDescriptionOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            ...modalStyle,
+            maxWidth: 1200,
+          }}
+        >
+          <Box
+            sx={{
+              position: 'absolute',
+              right: '2rem',
+              top: '2rem',
+              zIndex: 1,
+            }}
+          >
+            <IconButtonAnimate
+              color="inherit"
+              onClick={() => setDescriptionOpen(false)}
+              sx={{
+                bgcolor: 'rgba(0,0,0,.3)',
+                transition: 'all .3s',
+                '&:hover': {
+                  bgcolor: '#454F5B',
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  width: 24,
+                  height: 24,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <CloseIcon />
+              </Box>
+            </IconButtonAnimate>
+          </Box>
+
+          <Box
+            sx={{
+              overflow: 'scroll',
+              maxHeight: 'calc(100vh - 6rem)',
+              position: 'relative',
+              img: { width: 1 },
+            }}
+          >
+            <Scrollbar sx={{ py: { xs: 3, md: 0 } }}>
+              <img src="/assets/img/WATERBOMB_SEOUL_2023.jpeg" alt="description" />
+            </Scrollbar>
+          </Box>
+        </Box>
+      </Modal>
+
       <CSnackbar
         open={openSnackbar.open}
         type={openSnackbar.type}
@@ -1004,7 +945,11 @@ export default function TicketDetailPage() {
 // ----------------------------------------------------------------------
 
 TicketDetailPage.getLayout = function getLayout(page: ReactElement) {
-  return <Layout verticalAlign="top">{page}</Layout>;
+  return (
+    <Layout transparentHeader={false} headerSx={{ backgroundColor: 'rgba(0, 0, 0, 0.5)' }}>
+      {page}
+    </Layout>
+  );
 };
 
 // ----------------------------------------------------------------------
@@ -1021,6 +966,36 @@ type LineItemProps = {
   value: any;
   isBuying?: boolean;
 };
+
+function LineItem({ icon, label, value }: LineItemProps) {
+  const isMobile = useResponsive('down', 'md');
+  return (
+    <TextIconLabel
+      icon={icon!}
+      value={
+        <>
+          <Typography sx={{ fontSize: '14px', color: 'common.black' }}>{label}</Typography>
+          <Typography
+            variant="subtitle2"
+            sx={{
+              color: 'common.black',
+              flexGrow: 1,
+              textAlign: 'right',
+              fontSize: isMobile ? '14px' : '16px',
+              fontWeight: 'bold',
+            }}
+          >
+            {value}
+          </Typography>
+        </>
+      }
+      sx={{
+        color: 'text.primary',
+        '& svg': { mr: 1, width: 24, height: 24 },
+      }}
+    />
+  );
+}
 
 function LineItemByModal({ icon, label, value, isBuying }: LineItemProps) {
   const isXs = useResponsive('down', 'sm');
@@ -1066,44 +1041,3 @@ function LineItemByModal({ icon, label, value, isBuying }: LineItemProps) {
     />
   );
 }
-
-const DetailAccordion = ({ title, children }: PropsWithChildren<{ title: string }>) => (
-  <Accordion
-    sx={{
-      '&:before': {
-        content: 'none',
-      },
-      '&:last-of-type': {
-        border: 'none',
-      },
-    }}
-  >
-    <AccordionSummary
-      sx={{
-        fontWeight: 'bold',
-        fontSize: 12,
-        lineHeight: 13 / 12,
-        letterSpacing: '0.08em',
-        textTransform: 'uppercase',
-        width: 'max-content',
-        [`&.${accordionSummaryClasses.root}`]: {
-          minHeight: 'unset',
-        },
-        [`.${accordionSummaryClasses.content}`]: {
-          margin: 0,
-        },
-        [`.${accordionSummaryClasses.content}.Mui-expanded`]: {
-          margin: 0,
-        },
-      }}
-      expandIcon={<ArrowDropDown sx={{ color: 'white', fontSize: 16 }} />}
-    >
-      {title}
-    </AccordionSummary>
-    <AccordionDetails
-      sx={{ fontSize: 14, lineHeight: 20 / 14, paddingTop: '8px', paddingBottom: 0 }}
-    >
-      {children}
-    </AccordionDetails>
-  </Accordion>
-);

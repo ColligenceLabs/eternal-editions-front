@@ -1,14 +1,15 @@
-import { Stack, Typography, useTheme } from '@mui/material';
+import { Stack, SxProps, Typography, useTheme } from '@mui/material';
 import React from 'react';
 import EEAvatar from '../EEAvatar';
 
 type Props = {
   account: string;
-  name: string;
+  label: string;
   image?: string;
+  sx?: SxProps;
 };
 
-export default function CompanyInfo({ account, name, image }: Props) {
+export default function CompanyInfo({ account, label, image, sx }: Props) {
   const theme = useTheme();
 
   return (
@@ -18,10 +19,10 @@ export default function CompanyInfo({ account, name, image }: Props) {
       alignItems="center"
       sx={{
         opacity: 0.72,
-        typography: 'caption',
         [theme.breakpoints.down('md')]: {
           marginBottom: -1,
         },
+        ...sx,
       }}
     >
       {image ? (
@@ -33,7 +34,7 @@ export default function CompanyInfo({ account, name, image }: Props) {
         />
       ) : null}
       <Typography fontSize={14} lineHeight={20 / 14}>
-        by @{name}
+        {label}
       </Typography>
     </Stack>
   );

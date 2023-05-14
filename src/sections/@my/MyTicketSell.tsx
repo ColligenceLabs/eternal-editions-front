@@ -18,7 +18,7 @@ export default function MyTicketSell() {
             <CompanyInfo
               account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
               image={'url(/assets/static/avatars/1.jpg)'}
-              name={'iloveseoul'}
+              label={`by @iloveseoul`}
             />
 
             <Badge label={'For sale'} />
