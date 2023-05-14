@@ -12,9 +12,9 @@ import {
   InputAdornment,
   Popover,
   FormHelperText,
-  InputLabel,
   Stack,
   Typography,
+  inputBaseClasses,
 } from '@mui/material';
 import { Iconify } from 'src/components';
 import EECard from 'src/components/EECard';
@@ -29,6 +29,8 @@ import { useDispatch } from 'react-redux';
 import Link from 'next/link';
 import useAccount from '../../hooks/useAccount';
 import Radio from 'src/components/common/Radio';
+import { Label } from 'src/components/my-tickets/StyledComponents';
+import palette from 'src/theme/palette';
 
 // ----------------------------------------------------------------------
 
@@ -188,7 +190,7 @@ export default function PaymentPoint() {
       <form onSubmit={handleSubmit(onSubmit)}>
         <Stack spacing={3}>
           <Box>
-            <Typography sx={{ color: '#999999', fontSize: '12px' }}>WALLET ADDRESS</Typography>
+            <Label sx={{ color: palette.dark.black.lighter }}>WALLET ADDRESS</Label>
             <Typography sx={{ wordBreak: 'break-all', fontSize: '14px' }}>{account}</Typography>
           </Box>
 
@@ -196,41 +198,49 @@ export default function PaymentPoint() {
             name="amount"
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <FormControl variant="standard" fullWidth>
-                <InputLabel>
-                  <Stack direction="row" alignItems="center">
+              <FormControl
+                variant="standard"
+                fullWidth
+                sx={{
+                  [`.${inputBaseClasses.root}`]: {
+                    mt: '12px',
+                  },
+                }}
+              >
+                <Stack direction="row" alignItems="center">
+                  <Label as="label" sx={{ color: palette.dark.black.lighter }}>
                     PURCHASE QUANTITY
-                    <Iconify
-                      icon="mdi:information-outline"
-                      fontSize={20}
-                      sx={{ mx: 0.5 }}
-                      onClick={(e: React.MouseEvent<HTMLElement>) => setOpen(e.currentTarget)}
-                    />
-                    <Popover
-                      open={Boolean(open)}
-                      onClose={() => setOpen(null)}
-                      anchorEl={open}
-                      transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                      PaperProps={{
-                        sx: {
-                          px: 2,
-                          py: 1,
-                          mt: 1,
-                          backgroundColor: 'white',
-                          color: theme.palette.common.black,
-                          borderRadius: 0,
-                          border: `1px solid ${theme.palette.common.black}`,
-                          boxShadow: 'none',
-                        },
-                      }}
-                    >
-                      <Typography variant="body3">
-                        The maximum rechargeable amount is 60 EDCP.
-                      </Typography>
-                    </Popover>
-                  </Stack>
-                </InputLabel>
+                  </Label>
+                  <Iconify
+                    icon="mdi:information-outline"
+                    fontSize={14}
+                    sx={{ mx: 0.5 }}
+                    onClick={(e: React.MouseEvent<HTMLElement>) => setOpen(e.currentTarget)}
+                  />
+                  <Popover
+                    open={Boolean(open)}
+                    onClose={() => setOpen(null)}
+                    anchorEl={open}
+                    transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                    PaperProps={{
+                      sx: {
+                        px: 2,
+                        py: 1,
+                        mt: 1,
+                        backgroundColor: 'white',
+                        color: theme.palette.common.black,
+                        borderRadius: 0,
+                        border: `1px solid ${theme.palette.common.black}`,
+                        boxShadow: 'none',
+                      },
+                    }}
+                  >
+                    <Typography variant="body3">
+                      The maximum rechargeable amount is 60 EDCP.
+                    </Typography>
+                  </Popover>
+                </Stack>
                 <Input
                   {...{
                     ...field,
@@ -263,8 +273,18 @@ export default function PaymentPoint() {
             name="price"
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <FormControl variant="standard" fullWidth>
-                <InputLabel>PAYMENT AMOUNT</InputLabel>
+              <FormControl
+                variant="standard"
+                fullWidth
+                sx={{
+                  [`.${inputBaseClasses.root}`]: {
+                    mt: '12px',
+                  },
+                }}
+              >
+                <Label as="label" sx={{ color: palette.dark.black.lighter }}>
+                  PAYMENT AMOUNT
+                </Label>
                 <Input
                   {...field}
                   readOnly
