@@ -7,17 +7,12 @@ import { useRouter } from 'next/router';
 import { LoadingButton } from '@mui/lab';
 import {
   Box,
-  Button,
-  Divider,
   FormControl,
-  FormControlLabel,
   Input,
   InputAdornment,
   Popover,
   FormHelperText,
   InputLabel,
-  Radio,
-  RadioGroup,
   Stack,
   Typography,
 } from '@mui/material';
@@ -33,7 +28,7 @@ import { setWebUser } from '../../store/slices/webUser';
 import { useDispatch } from 'react-redux';
 import Link from 'next/link';
 import useAccount from '../../hooks/useAccount';
-import { boolean } from 'zod';
+import Radio from 'src/components/common/Radio';
 
 // ----------------------------------------------------------------------
 
@@ -189,105 +184,106 @@ export default function PaymentPoint() {
 
   const [open, setOpen] = useState<HTMLElement | null>(null);
   return (
-    <EECard width="400px" marginTop="50px">
+    <EECard width="min(400px, 100%)" marginTop="50px">
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Stack spacing={1}>
+        <Stack spacing={3}>
           <Box>
             <Typography sx={{ color: '#999999', fontSize: '12px' }}>WALLET ADDRESS</Typography>
             <Typography sx={{ wordBreak: 'break-all', fontSize: '14px' }}>{account}</Typography>
           </Box>
-          <Stack spacing={2} sx={{ my: '20px !important' }}>
-            <Controller
-              name="amount"
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <FormControl variant="standard" fullWidth>
-                  <InputLabel>
-                    <Stack direction="row" alignItems="center">
-                      PURCHASE QUANTITY
-                      <Iconify
-                        icon="mdi:information-outline"
-                        fontSize={20}
-                        sx={{ mx: 0.5 }}
-                        onClick={(e: React.MouseEvent<HTMLElement>) => setOpen(e.currentTarget)}
-                      />
-                      <Popover
-                        open={Boolean(open)}
-                        onClose={() => setOpen(null)}
-                        anchorEl={open}
-                        transformOrigin={{ vertical: 'top', horizontal: 'left' }}
-                        anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
-                        PaperProps={{
-                          sx: {
-                            px: 2,
-                            py: 1,
-                            mt: 1,
-                            backgroundColor: 'white',
-                            color: theme.palette.common.black,
-                            borderRadius: 0,
-                            border: `1px solid ${theme.palette.common.black}`,
-                            boxShadow: 'none',
-                          },
-                        }}
-                      >
-                        <Typography variant="body3">
-                          The maximum rechargeable amount is 60 EDCP.
-                        </Typography>
-                      </Popover>
-                    </Stack>
-                  </InputLabel>
-                  <Input
-                    {...{
-                      ...field,
-                      onChange: handleChangeAmount,
-                      error: Boolean(error),
-                      inputProps: { style: { color: 'black' }, max: 60 },
-                      endAdornment: (
-                        <InputAdornment position="end">
-                          <Typography
-                            color={theme.palette.common.black}
-                            fontWeight="bold"
-                            fontSize={14}
-                            lineHeight={12 / 14}
-                          >
-                            EDCP
-                          </Typography>
-                        </InputAdornment>
-                      ),
-                    }}
-                    // eslint-disable-next-line react/jsx-no-duplicate-props
-                  />
-                  {error && <FormHelperText id="my-helper-text">{error?.message}</FormHelperText>}
-                </FormControl>
-              )}
-            />
-            <Controller
-              name="price"
-              control={control}
-              render={({ field, fieldState: { error } }) => (
-                <FormControl variant="standard" fullWidth>
-                  <InputLabel>PAYMENT AMOUNT</InputLabel>
-                  <Input
-                    {...field}
-                    readOnly
-                    inputProps={{ style: { color: 'black' } }}
-                    endAdornment={
+
+          <Controller
+            name="amount"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <FormControl variant="standard" fullWidth>
+                <InputLabel>
+                  <Stack direction="row" alignItems="center">
+                    PURCHASE QUANTITY
+                    <Iconify
+                      icon="mdi:information-outline"
+                      fontSize={20}
+                      sx={{ mx: 0.5 }}
+                      onClick={(e: React.MouseEvent<HTMLElement>) => setOpen(e.currentTarget)}
+                    />
+                    <Popover
+                      open={Boolean(open)}
+                      onClose={() => setOpen(null)}
+                      anchorEl={open}
+                      transformOrigin={{ vertical: 'top', horizontal: 'left' }}
+                      anchorOrigin={{ vertical: 'bottom', horizontal: 'left' }}
+                      PaperProps={{
+                        sx: {
+                          px: 2,
+                          py: 1,
+                          mt: 1,
+                          backgroundColor: 'white',
+                          color: theme.palette.common.black,
+                          borderRadius: 0,
+                          border: `1px solid ${theme.palette.common.black}`,
+                          boxShadow: 'none',
+                        },
+                      }}
+                    >
+                      <Typography variant="body3">
+                        The maximum rechargeable amount is 60 EDCP.
+                      </Typography>
+                    </Popover>
+                  </Stack>
+                </InputLabel>
+                <Input
+                  {...{
+                    ...field,
+                    onChange: handleChangeAmount,
+                    error: Boolean(error),
+                    inputProps: {
+                      style: { color: 'black', fontSize: 14, lineHeight: 20 / 14 },
+                      max: 60,
+                    },
+                    endAdornment: (
                       <InputAdornment position="end">
                         <Typography
                           color={theme.palette.common.black}
                           fontWeight="bold"
-                          fontSize={14}
-                          lineHeight={12 / 14}
+                          fontSize={16}
+                          lineHeight={18 / 16}
                         >
-                          {method === 'credit' ? '₩' : '$'}
+                          EDCP
                         </Typography>
                       </InputAdornment>
-                    }
-                  />
-                </FormControl>
-              )}
-            />
-          </Stack>
+                    ),
+                  }}
+                  // eslint-disable-next-line react/jsx-no-duplicate-props
+                />
+                {error && <FormHelperText id="my-helper-text">{error?.message}</FormHelperText>}
+              </FormControl>
+            )}
+          />
+          <Controller
+            name="price"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <FormControl variant="standard" fullWidth>
+                <InputLabel>PAYMENT AMOUNT</InputLabel>
+                <Input
+                  {...field}
+                  readOnly
+                  inputProps={{ style: { color: 'black', fontSize: 14, lineHeight: 20 / 14 } }}
+                  startAdornment={
+                    <InputAdornment position="start">
+                      <Typography
+                        color={theme.palette.common.black}
+                        sx={{ fontSize: 14, lineHeight: 20 / 14 }}
+                      >
+                        {method === 'credit' ? '₩' : '$'}
+                      </Typography>
+                    </InputAdornment>
+                  }
+                />
+              </FormControl>
+            )}
+          />
+
           {/* <Stack direction="row" alignItems={'center'}>
               <Typography sx={{ color: '#999999', fontSize: '12px' }}>
                 PURCHASE QUANTITY
@@ -323,32 +319,44 @@ export default function PaymentPoint() {
               />
             </FormControl>
           </Box> */}
-          <Box>
+          <Stack gap={3}>
             <Typography sx={{ color: '#999999', fontSize: '12px' }}>PAYMENT METHOD</Typography>
-            <FormControl>
-              <RadioGroup
-                aria-labelledby="demo-row-radio-buttons-group-label"
-                name="row-radio-buttons-group"
-              >
-                <FormControlLabel
-                  checked={method === 'credit'}
-                  onChange={() => setMethod('credit')}
-                  value="credit"
-                  control={<Radio />}
-                  label="CREDIT CARD"
-                  style={{ color: 'black' }}
-                />
-                <FormControlLabel
-                  checked={method === 'paypal'}
-                  onChange={() => setMethod('paypal')}
-                  value="paypal"
-                  control={<Radio />}
-                  label="PAYPAL"
-                  style={{ color: 'black' }}
-                />
-              </RadioGroup>
-            </FormControl>
-          </Box>
+            <Radio
+              checked={method === 'credit'}
+              value={'credit'}
+              name="payment-method"
+              label={
+                <Typography
+                  fontWeight={700}
+                  fontSize="14px"
+                  lineHeight={12 / 14}
+                  letterSpacing="0.08em"
+                  textTransform="uppercase"
+                >
+                  CREDIT CARD
+                </Typography>
+              }
+              onClick={() => setMethod('credit')}
+            />
+
+            <Radio
+              checked={method === 'paypal'}
+              value={'paypal'}
+              name="payment-method"
+              label={
+                <Typography
+                  fontWeight={700}
+                  fontSize="14px"
+                  lineHeight={12 / 14}
+                  letterSpacing="0.08em"
+                  textTransform="uppercase"
+                >
+                  PAYPAL
+                </Typography>
+              }
+              onClick={() => setMethod('paypal')}
+            />
+          </Stack>
           {method === 'paypal' && (
             <PayPalButtons
               fundingSource={'paypal'}
