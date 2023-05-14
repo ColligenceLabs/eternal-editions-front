@@ -114,6 +114,7 @@ export default function TicketItem({ ticket }: Props) {
                     sx={{
                       fontSize: 12,
                       lineHeight: 16 / 12,
+                      color: 'red',
                     }}
                   >
                     Team Purple
@@ -180,7 +181,13 @@ export default function TicketItem({ ticket }: Props) {
 
         <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
           <Typography
-            sx={{ fontWeight: 'bold', fontSize: '16px', lineHeight: 24 / 16, marginLeft: '16px' }}
+            sx={{
+              fontWeight: 'bold',
+              fontSize: '16px',
+              lineHeight: 24 / 16,
+              marginLeft: '16px',
+              color: 'red',
+            }}
           >
             1,000 EDCP
           </Typography>
