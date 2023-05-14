@@ -54,6 +54,7 @@ import { setWebUser } from 'src/store/slices/webUser';
 import TicketPostItemContent from 'src/sections/@eternaledtions/tickets/TicketPostItemContent';
 import { Label, Section, Value } from 'src/components/my-tickets/StyledComponents';
 import CompanyInfo from 'src/components/ticket/CompanyInfo';
+import ScheduleCard from 'src/components/ticket/ScheduleCard';
 
 // ----------------------------------------------------------------------
 
@@ -597,6 +598,10 @@ export default function TicketDetailPage() {
 
               <Section>
                 <Label>Mint Schedule</Label>
+
+                <Stack>
+                  <ScheduleCard />
+                </Stack>
               </Section>
             </Grid>
           </Grid>
