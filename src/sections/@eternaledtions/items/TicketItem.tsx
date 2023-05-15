@@ -10,6 +10,7 @@ import { useResponsive } from 'src/hooks';
 import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 import BuyNowButton from './BuyNowButton';
 import { useRouter } from 'next/router';
+import RoundedButton from 'src/components/common/RoundedButton';
 
 // ----------------------------------------------------------------------
 
@@ -25,9 +26,10 @@ const Wrapper = styled(Stack)(() => ({
 
 type Props = {
   ticket: TicketInfoTypes;
+  isInDrop?: boolean;
 };
 
-export default function TicketItem({ ticket }: Props) {
+export default function TicketItem({ ticket, isInDrop }: Props) {
   const router = useRouter();
   const isMobile = useResponsive('down', 'md');
   const { id, title, packageImage, categoriesStr, releaseDatetime, createdAt } = ticket;
@@ -131,51 +133,55 @@ export default function TicketItem({ ticket }: Props) {
                 </Stack>
               </Stack>
             </Stack>
-            <Stack
-              sx={{
-                p: 2,
-                height: 1,
-                zIndex: 9,
-                left: 0,
-                position: 'absolute',
-              }}
-            >
-              <Chip
-                label={isOnAuction ? 'On Auction' : 'For Sale'}
-                variant="outlined"
-                color="primary"
-                sx={{
-                  textTransform: 'uppercase',
-                  fontWeight: theme.typography.fontWeightBold,
-                }}
-              />
-            </Stack>
-            <Stack
-              sx={{
-                p: 2,
-                height: 1,
-                zIndex: 9,
-                right: 0,
-                position: 'absolute',
-                display: 'flex',
-                flexDirection: 'row',
-                gap: 1,
-              }}
-            >
-              {categoriesStr && categoriesStr.split(',').length > 0
-                ? categoriesStr.split(',').map((category: string, index) => (
-                    <Chip
-                      key={index}
-                      label={category.toUpperCase()}
-                      variant="outlined"
-                      sx={{
-                        fontWeight: theme.typography.fontWeightBold,
-                        color: theme.palette.common.white,
-                      }}
-                    />
-                  ))
-                : null}
-            </Stack>
+            {!isInDrop && (
+              <>
+                <Stack
+                  sx={{
+                    p: 2,
+                    height: 1,
+                    zIndex: 9,
+                    left: 0,
+                    position: 'absolute',
+                  }}
+                >
+                  <Chip
+                    label={isOnAuction ? 'On Auction' : 'For Sale'}
+                    variant="outlined"
+                    color="primary"
+                    sx={{
+                      textTransform: 'uppercase',
+                      fontWeight: theme.typography.fontWeightBold,
+                    }}
+                  />
+                </Stack>
+                <Stack
+                  sx={{
+                    p: 2,
+                    height: 1,
+                    zIndex: 9,
+                    right: 0,
+                    position: 'absolute',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: 1,
+                  }}
+                >
+                  {categoriesStr && categoriesStr.split(',').length > 0
+                    ? categoriesStr.split(',').map((category: string, index) => (
+                        <Chip
+                          key={index}
+                          label={category.toUpperCase()}
+                          variant="outlined"
+                          sx={{
+                            fontWeight: theme.typography.fontWeightBold,
+                            color: theme.palette.common.white,
+                          }}
+                        />
+                      ))
+                    : null}
+                </Stack>
+              </>
+            )}
           </Stack>
         </NextLink>
 
@@ -191,7 +197,17 @@ export default function TicketItem({ ticket }: Props) {
           >
             1,000 EDCP
           </Typography>
-          <BuyNowButton releasedDate={releaseDatetime} />
+          {isInDrop ? (
+            <RoundedButton
+              variant="withImage"
+              size={isMobile ? 'small' : 'large'}
+              sx={{ width: '50%' }}
+            >
+              MINT
+            </RoundedButton>
+          ) : (
+            <BuyNowButton releasedDate={releaseDatetime} />
+          )}
         </Stack>
       </Wrapper>
     </Grid>

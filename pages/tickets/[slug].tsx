@@ -56,6 +56,7 @@ import { Label, Section, Value } from 'src/components/my-tickets/StyledComponent
 import CompanyInfo from 'src/components/ticket/CompanyInfo';
 import ScheduleCard from 'src/components/ticket/ScheduleCard';
 import TicketItems from 'src/sections/@eternaledtions/items/TicketItems';
+import TicketItemsInDrop from 'src/sections/@eternaledtions/items/TicketItemsInDrop';
 
 // ----------------------------------------------------------------------
 
@@ -630,7 +631,7 @@ export default function TicketDetailPage() {
           </Stack>
 
           {/* TODO: Refactor TicketItems to reuse */}
-          <TicketItems shouldHideCategories />
+          <TicketItemsInDrop />
         </Container>
       </RootStyle>
 
