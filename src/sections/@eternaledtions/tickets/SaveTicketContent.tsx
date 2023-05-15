@@ -8,9 +8,10 @@ import { Label, Section, Value } from 'src/components/my-tickets/StyledComponent
 import { useResponsive } from 'src/hooks';
 // theme
 import palette from 'src/theme/palette';
+import { MyTicketTypes } from 'src/@types/my/myTicket';
 
 interface Props {
-  ticketInfo: TicketInfoTypes;
+  ticketInfo: MyTicketTypes;
   onClose: () => void;
 }
 
@@ -32,7 +33,7 @@ export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
       <Box sx={{ textAlign: 'center' }}>
         <QRCode
           style={{}}
-          value={`https://entrace2023.eternaleditions.io/entrace-confirm?contractAddress=${ticketInfo.boxContractAddress}&tokenId=${ticketInfo.tokenId}`}
+          value={`https://entrace2023.eternaleditions.io/entrace-confirm?contractAddress=${ticketInfo.mysteryboxInfo.boxContractAddress}&tokenId=${ticketInfo.tokenId}`}
           size={160}
         />
       </Box>
@@ -49,8 +50,8 @@ export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
           </Typography>
 
           <Stack>
-            <Typography variant="body2"> {ticketInfo.duration}</Typography>
-            <Typography variant="body2"> {ticketInfo.boxContractAddress}</Typography>
+            <Typography variant="body2">November 11 - 13, 2022</Typography>
+            <Typography variant="body2">{ticketInfo.mysteryboxInfo.boxContractAddress}</Typography>
           </Stack>
         </Stack>
         <Divider />

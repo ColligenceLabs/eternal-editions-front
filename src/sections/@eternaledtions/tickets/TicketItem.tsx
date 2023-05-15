@@ -12,6 +12,7 @@ import ModalCustom from 'src/components/common/ModalCustom';
 import Link from 'next/link';
 import SaveTicketContent from './SaveTicketContent';
 import { fDate } from 'src/utils/formatTime';
+import { MyTicketTypes } from 'src/@types/my/myTicket';
 
 export default function TicketItem({ ticket }: any) {
   const theme = useTheme();
@@ -20,7 +21,7 @@ export default function TicketItem({ ticket }: any) {
   const [maticPrice, setMaticPrice] = useState(0);
   const [klayPrice, setKlayPrice] = useState(0);
   const [open, setOpen] = useState<boolean>(false);
-  const [ticketInfo, setTicketInfo] = useState<any | null>(null);
+  const [ticketInfo, setTicketInfo] = useState<MyTicketTypes | null>(null);
   // const [ticketInfo, setTicketInfo] = useState<any>({
   //   // company: '',
   //   // companyImage: null,
@@ -56,7 +57,6 @@ export default function TicketItem({ ticket }: any) {
 
   useEffect(() => {
     if (ticket) {
-      console.log('a');
       const location =
         ticket.mysteryboxItem.properties &&
         ticket.mysteryboxItem.properties.find((item: any) =>
@@ -66,21 +66,18 @@ export default function TicketItem({ ticket }: any) {
         // company: ticket.companyname.en,
         // companyImage: ticket.companyimage,
         ...ticket,
-        itemTitle: ticket.mysteryboxItem.name,
-        itemImage: ticket.mysteryboxItem.itemImage,
-        price: ticket.mysteryboxItem.price,
+        // itemTitle: ticket.mysteryboxItem.name,
+        // itemImage: ticket.mysteryboxItem.itemImage,
+        // price: ticket.mysteryboxItem.price,
         location: location?.name ? location.name : '',
-        ticketNumber: '1',
-        boxContractAddress: ticket.mysteryboxInfo.boxContractAddress,
-        no: ticket.no,
-        tokenId: ticket.tokenId,
+        // ticketNumber: '1',
+        // boxContractAddress: ticket.mysteryboxInfo.boxContractAddress,
+        // no: ticket.no,
+        // tokenId: ticket.tokenId,
       });
     }
+    // setTicketInfo(ticket);
   }, [ticket]);
-
-  useEffect(() => {
-    console.log(ticketInfo);
-  }, [ticketInfo]);
 
   return (
     <>
@@ -111,8 +108,8 @@ export default function TicketItem({ ticket }: any) {
             <Box sx={{ position: 'relative', flex: 1 }}>
               <Box sx={{ width: { md: 'calc(100%)' }, mr: { xs: 0, md: '3rem' } }}>
                 <Image
-                  src={ticketInfo.itemImage}
-                  alt={ticketInfo.itemTitle}
+                  src={ticketInfo.mysteryboxItem.itemImage}
+                  alt={ticketInfo.mysteryboxItem.name}
                   ratio={isXs ? '3/4' : '16/9'}
                   sx={{ borderRadius: 2, height: '100%' }}
                 />
@@ -139,11 +136,11 @@ export default function TicketItem({ ticket }: any) {
               >
                 <TextMaxLine variant="body2">{`#${ticketInfo.mysteryboxItem.no}`}</TextMaxLine>
 
-                <TextMaxLine variant="h3">{ticketInfo.itemTitle}</TextMaxLine>
+                <TextMaxLine variant="h3">{ticketInfo.mysteryboxItem.name}</TextMaxLine>
                 <TextMaxLine variant="body2" sx={{ color: 'red' }}>
                   {'November 11 - 13, 2022'}
                 </TextMaxLine>
-                <TextMaxLine variant="body2">{ticketInfo.mysteryboxItem.description}</TextMaxLine>
+                <TextMaxLine variant="body2">{ticketInfo.location}</TextMaxLine>
               </Stack>
               {/* </Stack> */}
             </Box>
@@ -206,7 +203,17 @@ export default function TicketItem({ ticket }: any) {
                   >
                     TO ENTER
                   </RoundedButton>
-                  <Link href={`/my/tickets/1/`} passHref>
+                  <Link
+                    href={{
+                      pathname: `/my/tickets/${ticketInfo.id}/`,
+                      // query: {
+                      //   // ticketInfo: JSON.stringify(ticketInfo),
+                      //   event: ticketInfo.mysteryboxInfo.id,
+                      //   ticket: ticketInfo.mysteryboxItem.id,
+                      // },
+                    }}
+                    passHref
+                  >
                     <RoundedButton variant="default" size={isMobile ? 'small' : 'large'} fullWidth>
                       SELL
                     </RoundedButton>

@@ -1,0 +1,21 @@
+export type MyTicketTypes = {
+  buyer: string;
+  buyerAddress: string;
+  createdAt: Date;
+  fiatPrice: any | null;
+  iapOrderId: any | null;
+  id: number;
+  isRevealed: boolean;
+  isSent: boolean;
+  itemId: number;
+  mysteryBoxId: number;
+  mysteryboxInfo: any;
+  mysteryboxItem: any;
+  price: number;
+  status: string;
+  tokenId: number;
+  txHash: string;
+  updatedAt: Date;
+  usePoint: any | null;
+  location?: string;
+};

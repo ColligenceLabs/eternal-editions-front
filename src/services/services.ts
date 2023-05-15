@@ -12,7 +12,8 @@ export const getTicketsService = (page: number, perPage: number, category: strin
   );
 
 export const getTicketInfoService = (id: string) => customAxios.get(`api/service/mysterybox/${id}`);
-export const getTicketCountByCategory = () => customAxios.get(`/api/service/mysterybox/category/count`)
+export const getTicketCountByCategory = () =>
+  customAxios.get(`/api/service/mysterybox/category/count`);
 export const registerBuy = async (data: any) => await apiAuthAxios.post(`api/service/drops`, data);
 
 export const getBuyersService = async (id: any) =>
@@ -116,3 +117,5 @@ export const getOldMyTicket2 = async (uid: string) =>
 
 export const checkUserEmail = async (email: string) =>
   await apiAuthAxios.get(`/api/users/checkUser?email=${email}`);
+
+export const getSellItemInfo = async (id: string) => await customAxios(`/api/service/drops/${id}`);
