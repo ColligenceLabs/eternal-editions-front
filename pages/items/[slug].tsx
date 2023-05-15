@@ -65,6 +65,7 @@ import Timer from 'src/components/Timer';
 import { RoundedSelect, RoundedSelectOption } from 'src/components/common/Select';
 import RoundedButton from 'src/components/common/RoundedButton';
 import { ArrowDropDown } from '@mui/icons-material';
+import moment from 'moment';
 
 const PAY_TYPE = [
   {
@@ -624,10 +625,12 @@ export default function TicketDetailPage() {
                       <Label>Team</Label>
                       <Value>Team Yellow</Value>
                     </Row>
-                    <Row>
-                      <Label>Auction ends in</Label>
-                      <Timer as={Value} releasedDate={ticketInfo?.releaseDatetime} />
-                    </Row>
+                    {moment(ticketInfo?.releaseDatetime).diff(moment()) / 1000 >= 0 && (
+                      <Row>
+                        <Label>Auction ends in</Label>
+                        <Timer as={Value} releasedDate={ticketInfo?.releaseDatetime} />
+                      </Row>
+                    )}
                   </Stack>
 
                   <Divider />

@@ -27,21 +27,22 @@ const StyledTypography = styled((props: TypographyProps) => <Typography {...prop
 
 export default function Timer({ releasedDate, as = StyledTypography }: Props) {
   const theme = useTheme();
-  const { days, hours, minutes, seconds } = useCountdown(new Date(releasedDate));
-  const Component = as;
 
-  if (!(releasedDate instanceof Date) || isNaN(Number(days))) {
+  const { days, hours, minutes, seconds, diff } = useCountdown(new Date(releasedDate));
+  const Component = as;
+  if (!releasedDate || isNaN(Number(days))) {
     return null;
   }
-
   const getColor = () => {
-    if (Number(seconds) < 0 || Number(minutes) > 15) {
-      return theme.palette.common.white;
-    }
-
-    if (Number(seconds) <= 1) {
+    if (diff <= 1) {
       return '#EC1515';
     }
+    if (diff <= 15 * 60) {
+      return theme.palette.common.white;
+    }
+    // if (Number(seconds) < 0 || Number(minutes) > 15 ) {
+    //   return theme.palette.common.white;
+    // }
 
     return theme.palette.primary.main;
   };
