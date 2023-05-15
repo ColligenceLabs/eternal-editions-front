@@ -7,7 +7,6 @@ import { getTicketCountByCategory, getTicketsService } from 'src/services/servic
 import { SUCCESS } from 'src/config';
 import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 import { useResponsive } from 'src/hooks';
-import CategoryTabs from 'src/components/CategoryTabs';
 import { TextSelect, TextSelectOption } from 'src/components/common/Select';
 
 const COLLECTIONS = [
@@ -93,22 +92,15 @@ export default function TicketItemsInDrop({ categories: originCategories }: Prop
   }, [curPage]);
 
   return (
-    <>
+    <Box>
       <Stack
+        gap={{ xs: '28px' }}
         direction={isMobile ? 'column' : 'row'}
         justifyContent={isMobile ? 'flex-start' : 'space-between'}
-        alignItems="flex-end"
-        flexWrap="wrap"
-        gap={1}
-        sx={{
-          mx: {
-            xs: -2.5,
-            md: 0,
-          },
-          pb: { xs: 2, md: 5 },
-        }}
+        alignItems={isMobile ? 'flex-start' : 'flex-end'}
+        sx={{ mt: { xs: '120px', md: '161px' } }}
       >
-        {isMobile ? (
+        <Stack direction="row" gap={1}>
           <Typography
             variant={'h1'}
             sx={{
@@ -116,68 +108,55 @@ export default function TicketItemsInDrop({ categories: originCategories }: Prop
               lineHeight: 1,
               whiteSpace: 'pre-line',
               textTransform: 'uppercase',
-              marginLeft: 4,
-              mt: '120px',
             }}
           >
-            Drops
+            {isMobile ? 'Drops' : 'Items'}
           </Typography>
-        ) : (
-          <Stack direction="row" gap={1} mt="161px" mb="12px">
-            <Typography
-              variant={'h1'}
-              sx={{
-                color: 'primary.main',
-                lineHeight: 1,
-                whiteSpace: 'pre-line',
-                textTransform: 'uppercase',
-              }}
-            >
-              Items
-            </Typography>
+          {!isMobile ? (
             <Typography fontWeight={700} fontSize="16px" lineHeight={2.5} color={'primary.main'}>
               in this drop
             </Typography>
-          </Stack>
-        )}
-
+          ) : null}
+        </Stack>
         <Stack
-          flexDirection="row"
-          gap="27px"
+          flexWrap="wrap"
+          gap={1}
           sx={{
-            ml: {
-              xs: '20px',
+            mx: {
+              xs: '-6px',
               md: 0,
             },
+            pb: { xs: 2, md: 0 },
           }}
         >
-          <TextSelect
-            value={collection}
-            onChange={(event) => setCollection(event.target.value as string)}
-          >
-            <TextSelectOption hidden value="default">
-              SELECT TEAM
-            </TextSelectOption>
-            {COLLECTIONS.map((collection) => (
-              <TextSelectOption key={collection.value} value={collection.value}>
-                {collection.label}
+          <Stack flexDirection="row" gap="27px">
+            <TextSelect
+              value={collection}
+              onChange={(event) => setCollection(event.target.value as string)}
+            >
+              <TextSelectOption hidden value="default">
+                SELECT TEAM
               </TextSelectOption>
-            ))}
-          </TextSelect>
-
-          <TextSelect
-            value={salesType}
-            onChange={(event) => setSalesType(event.target.value as string)}
-          >
-            <TextSelectOption hidden value="default">
-              SELECT DAY
-            </TextSelectOption>
-          </TextSelect>
+              {COLLECTIONS.map((collection) => (
+                <TextSelectOption key={collection.value} value={collection.value}>
+                  {collection.label}
+                </TextSelectOption>
+              ))}
+            </TextSelect>
+            <TextSelect
+              value={salesType}
+              onChange={(event) => setSalesType(event.target.value as string)}
+            >
+              <TextSelectOption hidden value="default">
+                SELECT DAY
+              </TextSelectOption>
+            </TextSelect>
+          </Stack>
         </Stack>
       </Stack>
 
       {ticketInfoList.length ? (
-        <Grid container spacing={3}>
+        <Grid container spacing={{ xs: 1, md: 3 }}>
           {ticketInfoList.map((ticket, index) => (
             <TicketItem key={index} ticket={ticket} isInDrop={true} />
           ))}
@@ -187,7 +166,6 @@ export default function TicketItemsInDrop({ categories: originCategories }: Prop
           No items hav been registered.
         </Typography>
       )}
-
       {curPage < lastPage && (
         <Stack
           alignItems="center"
@@ -210,7 +188,7 @@ export default function TicketItemsInDrop({ categories: originCategories }: Prop
           </Button>
         </Stack>
       )}
-    </>
+    </Box>
   );
 }
 

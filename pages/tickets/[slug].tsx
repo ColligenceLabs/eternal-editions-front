@@ -601,14 +601,27 @@ export default function TicketDetailPage() {
               <Section>
                 <Label>Mint Schedule</Label>
 
-                <Stack>
-                  <ScheduleCard />
+                <Stack gap={0.25}>
+                  <ScheduleCard
+                    title="Whitelist Mint"
+                    status="ended"
+                    date={new Date('02,22,2023')}
+                  />
+                  <ScheduleCard
+                    title="Exclusive Access #1"
+                    status="minting"
+                    date={new Date('02,22,2023')}
+                  />
+                  <ScheduleCard
+                    title="Public Sale"
+                    status="upcoming"
+                    date={new Date('02,22,2023')}
+                  />
                 </Stack>
               </Section>
             </Grid>
           </Grid>
 
-          {/* TODO: Refactor TicketItems to reuse */}
           <TicketItemsInDrop />
         </Container>
       </RootStyle>
