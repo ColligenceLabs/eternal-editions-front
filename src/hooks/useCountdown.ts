@@ -8,17 +8,19 @@ export default function useCountdown(date: Date) {
     hours: '00',
     minutes: '00',
     seconds: '00',
+    diff: 0,
   });
 
   useEffect(() => {
-    const interval = setInterval(() => setNewTime(), 1000);
+    const interval = setInterval(() => setNewTime(), 1000 * 5);
     return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [date]);
 
   const setNewTime = () => {
     const startTime = date;
     const endTime = new Date();
+
     const distanceToNow = startTime.valueOf() - endTime.valueOf();
 
     const getDays = Math.floor(distanceToNow / (1000 * 60 * 60 * 24));
@@ -36,6 +38,7 @@ export default function useCountdown(date: Date) {
       hours: getHours || '00',
       minutes: getMinutes || '00',
       seconds: getSeconds || '00',
+      diff: distanceToNow / 1000,
     });
   };
 
