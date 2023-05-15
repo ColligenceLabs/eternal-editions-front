@@ -6,8 +6,12 @@ import { CardInner } from 'src/components/ticket/CardInner';
 import { CardWrapper } from 'src/components/ticket/CardWrapper';
 import CompanyInfo from 'src/components/ticket/CompanyInfo';
 import { TicketName } from 'src/components/ticket/TicketName';
+import { MyTicketTypes } from 'src/@types/my/myTicket';
 
-export default function MyTicketSell() {
+type MyTicketSellProps = {
+  sellTicketInfo: MyTicketTypes;
+};
+const MyTicketSell: React.FC<MyTicketSellProps> = ({ sellTicketInfo }) => {
   const theme = useTheme();
 
   return (
@@ -17,7 +21,7 @@ export default function MyTicketSell() {
           <Stack flexDirection="row" justifyContent="space-between">
             <CompanyInfo
               account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
-              image={'url(/assets/static/avatars/1.jpg)'}
+              image={`url(/assets/static/avatars/1.jpg)`}
               label={`by @iloveseoul`}
             />
 
@@ -29,4 +33,6 @@ export default function MyTicketSell() {
       </CardWrapper>
     </Box>
   );
-}
+};
+
+export default MyTicketSell;

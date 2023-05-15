@@ -1,20 +1,25 @@
-import { ReactElement, useEffect } from 'react';
+import { ReactElement, useEffect, useState } from 'react';
 import Layout from 'src/layouts';
 import { Page } from 'src/components';
 import { Container, useTheme } from '@mui/material';
 import MyTicketSell from 'src/sections/@my/MyTicketSell';
-import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
+import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT, SUCCESS } from 'src/config';
 import { useRouter } from 'next/router';
 import { getSellItemInfo } from 'src/services/services';
+import { MyTicketTypes } from 'src/@types/my/myTicket';
 
 // ----------------------------------------------------------------------
 
 export default function MyTicketSellPage() {
   const theme = useTheme();
   const router = useRouter();
+  const [sellTicketInfo, setSellTicketInfo] = useState<MyTicketTypes | null>(null);
 
   const fetchSellItemInfo = async (id: string) => {
     const res = await getSellItemInfo(id);
+    if (res.data.status === SUCCESS) {
+      setSellTicketInfo(res.data.data);
+    }
     console.log(res);
   };
   useEffect(() => {
@@ -37,7 +42,7 @@ export default function MyTicketSellPage() {
           },
         }}
       >
-        <MyTicketSell />
+        {sellTicketInfo && <MyTicketSell sellTicketInfo={sellTicketInfo} />}
       </Container>
     </Page>
   );
@@ -46,6 +51,7 @@ export default function MyTicketSellPage() {
 // ----------------------------------------------------------------------
 
 MyTicketSellPage.getLayout = function getLayout(page: ReactElement) {
+  console.log(page);
   return (
     <Layout
       verticalAlign="top"
