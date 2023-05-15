@@ -66,6 +66,7 @@ import { RoundedSelect, RoundedSelectOption } from 'src/components/common/Select
 import RoundedButton from 'src/components/common/RoundedButton';
 import { ArrowDropDown } from '@mui/icons-material';
 import moment from 'moment';
+import FixedBackground from 'src/components/common/FixedBackground';
 
 const PAY_TYPE = [
   {
@@ -546,20 +547,8 @@ export default function TicketDetailPage() {
   return (
     <Page title={`${slug} - Ticket`}>
       {/* background */}
-      <Box
-        sx={{
-          backgroundImage: `url(${ticketInfo?.packageImage})`,
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          position: 'fixed',
-          left: 0,
-          right: 0,
-          bottom: 0,
-          top: 0,
-          zIndex: -1,
-        }}
-      />
+      <FixedBackground url={`url(${ticketInfo?.packageImage})`} />
+
       <RootStyle>
         <Container>
           <Grid

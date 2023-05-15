@@ -457,30 +457,32 @@ export default function TicketDetailPage() {
     if (slug && typeof slug === 'string') {
       const ticketInfoRes = await getTicketInfoService(slug);
 
-      const contract = ticketInfoRes.data.data.boxContractAddress;
-      const whitelist = ticketInfoRes.data.data.whitelistNftId;
-      const whitelistAddress = ticketInfoRes.data.data.whitelistNftContractAddress ?? '';
-      const temp = await Promise.all(
-        ticketInfoRes.data.data.mysteryboxItems.map(async (item: TicketItemTypes) => {
-          // todo getRemain
-          const sold = await getItemSold(contract, item.no - 1, chainId);
-          let whlBalance = 0;
-          let whlBool = false;
-          if (whitelist !== null && whitelist > 0 && account !== null) {
-            whlBalance = await getWhlBalanceNoSigner(whitelistAddress, account, chainId);
-            console.log('!! get whitelist balance =', account, whlBalance);
-            whlBool = true;
-            if (whlBool && whlBalance === 0) {
-              setOpenSnackbar({
-                open: true,
-                type: 'error',
-                message: 'Not in the whitelist or a wallet is not connected !!',
-              });
+      const contract = ticketInfoRes.data.data?.boxContractAddress;
+      const whitelist = ticketInfoRes.data.data?.whitelistNftId;
+      const whitelistAddress = ticketInfoRes.data.data?.whitelistNftContractAddress ?? '';
+      const temp =
+        ticketInfoRes.data.data &&
+        (await Promise.all(
+          ticketInfoRes.data.data.mysteryboxItems?.map(async (item: TicketItemTypes) => {
+            // todo getRemain
+            const sold = await getItemSold(contract, item.no - 1, chainId);
+            let whlBalance = 0;
+            let whlBool = false;
+            if (whitelist !== null && whitelist > 0 && account !== null) {
+              whlBalance = await getWhlBalanceNoSigner(whitelistAddress, account, chainId);
+              console.log('!! get whitelist balance =', account, whlBalance);
+              whlBool = true;
+              if (whlBool && whlBalance === 0) {
+                setOpenSnackbar({
+                  open: true,
+                  type: 'error',
+                  message: 'Not in the whitelist or a wallet is not connected !!',
+                });
+              }
             }
-          }
-          return { ...item, remain: item.issueAmount - sold, whlBool, whlBalance };
-        })
-      );
+            return { ...item, remain: item.issueAmount - sold, whlBool, whlBalance };
+          })
+        ));
 
       if (ticketInfoRes.data.status === SUCCESS) {
         setTicketInfo({ ...ticketInfoRes.data.data, mysteryboxItems: temp });
