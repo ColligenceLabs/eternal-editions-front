@@ -398,19 +398,14 @@ Type: Address verification`;
                         </Box>
                       </Stack>
                     </Box>
-                    <Stack
-                      mt={{ md: '205px' }}
-                      sx={{
-                        display: {
-                          xs: 'none',
-                          md: 'flex',
-                        },
-                      }}
-                    >
-                      <ProfileTextAction>Edit Profile</ProfileTextAction>
-                      <ProfileTextAction>Change Password</ProfileTextAction>
-                      <ProfileTextAction onClick={logout}>Logout</ProfileTextAction>
-                    </Stack>
+
+                    {isDesktop ? (
+                      <Stack mt={{ md: '205px' }}>
+                        <ProfileTextAction>Edit Profile</ProfileTextAction>
+                        <ProfileTextAction>Change Password</ProfileTextAction>
+                        <ProfileTextAction onClick={logout}>Logout</ProfileTextAction>
+                      </Stack>
+                    ) : null}
                   </Box>
 
                   <Stack
@@ -609,6 +604,8 @@ Type: Address verification`;
                   </Stack>
 
                   <Divider sx={{ display: { xs: 'none', md: 'block' } }} />
+
+                  {!isDesktop ? <RoundedButton onClick={logout}>Disconnect</RoundedButton> : null}
                 </Stack>
               </Grid>
             </Grid>
