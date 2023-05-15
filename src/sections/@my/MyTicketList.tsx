@@ -73,16 +73,16 @@ const MOCK_DATA = [
 
 export default function MyTicketList({ loading }: Props) {
   const { user } = useSelector((state: any) => state.webUser);
-  const [myTicketList, setMyTicketList] = useState(MOCK_DATA);
+  const [myTicketList, setMyTicketList] = useState([]);
   const getMyTicketList = async () => {
     const res = await getMyTickets(user.uid);
     if (res.data.status === SUCCESS) {
       setMyTicketList(res.data.data);
     }
   };
-  // useEffect(() => {
-  //   if (user.uid) getMyTicketList();
-  // }, [user]);
+  useEffect(() => {
+    if (user.uid) getMyTicketList();
+  }, [user]);
 
   // const [selected, setSelected] = useState('All');
   // const [filters, setFilters] = useState<TicketsFiltersProps>(defaultValues);

@@ -19,6 +19,7 @@ const Routes = {
     my: {
       account: '/my/account',
       tickets: '/my/tickets',
+      ticket: (slug: string) => `/my/tickets/${slug}`,
       sell: '/my/tickets/sell',
       transaction: '/my/transaction',
       walletRegister: '/my/wallet-register',
