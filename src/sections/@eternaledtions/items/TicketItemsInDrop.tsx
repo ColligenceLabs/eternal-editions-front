@@ -95,8 +95,8 @@ export default function TicketItemsInDrop({ categories: originCategories }: Prop
     <>
       <Stack
         direction="row"
-        justifyContent={'flex-end'}
-        alignItems="center"
+        justifyContent={'space-between'}
+        alignItems="flex-end"
         flexWrap="wrap"
         gap={1}
         sx={{
@@ -107,6 +107,22 @@ export default function TicketItemsInDrop({ categories: originCategories }: Prop
           pb: { xs: 2, md: 5 },
         }}
       >
+        <Stack direction="row" gap={1} mt="161px" mb="12px">
+          <Typography
+            variant={'h1'}
+            sx={{
+              color: 'primary.main',
+              lineHeight: 1,
+              whiteSpace: 'pre-line',
+              textTransform: 'uppercase',
+            }}
+          >
+            Items
+          </Typography>
+          <Typography fontWeight={700} fontSize="16px" lineHeight={2.5} color={'primary.main'}>
+            in this drop
+          </Typography>
+        </Stack>
         <Stack
           flexDirection="row"
           gap="27px"

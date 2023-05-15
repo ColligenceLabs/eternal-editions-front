@@ -608,28 +608,6 @@ export default function TicketDetailPage() {
             </Grid>
           </Grid>
 
-          <Stack direction="row" gap={1} mt="161px">
-            <Typography
-              variant={'h1'}
-              sx={{
-                color: theme.palette.primary.main,
-                lineHeight: 1,
-                whiteSpace: 'pre-line',
-                textTransform: 'uppercase',
-              }}
-            >
-              Items
-            </Typography>
-            <Typography
-              fontWeight={700}
-              fontSize="16px"
-              lineHeight={2.5}
-              color={theme.palette.primary.main}
-            >
-              in this drop
-            </Typography>
-          </Stack>
-
           {/* TODO: Refactor TicketItems to reuse */}
           <TicketItemsInDrop />
         </Container>
