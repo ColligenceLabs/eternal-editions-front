@@ -624,7 +624,7 @@ export default function TicketDetailPage() {
             </Grid>
           </Grid>
 
-          <TicketItemsInDrop />
+          <TicketItemsInDrop items={mysteryboxItems} />
         </Container>
       </RootStyle>
 
