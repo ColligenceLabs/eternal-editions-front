@@ -25,7 +25,10 @@ const COLLECTIONS = [
 type Props = {
   categories?: string[];
   shouldHideCategories?: boolean;
-  items: TicketItemTypes[];
+  items: TicketItemTypes[] | undefined;
+  boxContractAddress: any;
+  quote: string | undefined;
+  mysterybox_id: number | undefined;
 };
 
 type CategoryTypes = {
@@ -33,7 +36,13 @@ type CategoryTypes = {
   count: string;
 };
 
-export default function TicketItemsInDrop({ categories: originCategories, items }: Props) {
+export default function TicketItemsInDrop({
+  categories: originCategories,
+  items,
+  boxContractAddress,
+  quote,
+  mysterybox_id,
+}: Props) {
   const isMobile = useResponsive('down', 'md');
   const [curPage, setCurPage] = useState(1);
   const [lastPage, setLastPage] = useState(0);
@@ -83,13 +92,16 @@ export default function TicketItemsInDrop({ categories: originCategories, items 
 
   useEffect(() => {
     setCurPage(1);
-    getTickets();
     getCountByCategory();
   }, [selected]);
 
   useEffect(() => {
     if (curPage !== 1) getMoreTickets();
   }, [curPage]);
+
+  if (!items) {
+    return null;
+  }
 
   return (
     <Box>
@@ -156,9 +168,22 @@ export default function TicketItemsInDrop({ categories: originCategories, items 
       </Stack>
 
       {items?.length ? (
-        <Grid container spacing={{ xs: 1, md: 3 }}>
+        <Grid
+          container
+          spacing={{ xs: 1, md: 3 }}
+          sx={{
+            mt: { md: 0 },
+          }}
+        >
           {items.map((ticket, index) => (
-            <TicketItem key={index} ticket={ticket} isInDrop={true} />
+            <TicketItem
+              key={index}
+              ticket={ticket}
+              isInDrop={true}
+              boxContractAddress={boxContractAddress}
+              quote={quote}
+              mysterybox_id={mysterybox_id}
+            />
           ))}
         </Grid>
       ) : (
@@ -166,7 +191,7 @@ export default function TicketItemsInDrop({ categories: originCategories, items 
           No items hav been registered.
         </Typography>
       )}
-      {curPage < lastPage && (
+      {/* {curPage < lastPage && (
         <Stack
           alignItems="center"
           sx={{
@@ -187,7 +212,7 @@ export default function TicketItemsInDrop({ categories: originCategories, items 
             LOAD MORE
           </Button>
         </Stack>
-      )}
+      )} */}
     </Box>
   );
 }

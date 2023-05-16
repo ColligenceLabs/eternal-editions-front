@@ -63,6 +63,7 @@ export type TicketItemTypes = {
   whlBalance: number;
   price: number;
   imageLink: string;
+  createdAt: string;
 };
 
 export type PropertyTypes = {

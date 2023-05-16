@@ -31,12 +31,21 @@ const Wrapper = styled(Stack)(() => ({
 type Props = {
   ticket: TicketItemTypes;
   isInDrop?: boolean;
+  boxContractAddress?: any;
+  quote?: string | undefined;
+  mysterybox_id: number | undefined;
 };
 
-export default function TicketItem({ ticket, isInDrop }: Props) {
+export default function TicketItem({
+  ticket,
+  isInDrop,
+  boxContractAddress,
+  quote,
+  mysterybox_id,
+}: Props) {
   const router = useRouter();
   const isMobile = useResponsive('down', 'md');
-  const { id, name, imageLink, categoriesStr, releaseDatetime, createdAt } = ticket;
+  const { id, name, imageLink, categoriesStr, releaseDatetime, createdAt, price } = ticket;
   const isOnAuction = router.query.status; // TODO: Update value
   const theme = useTheme();
   const [isTicketItemModalOpen, setIsTicketItemModalOpen] = useState(false);
@@ -67,8 +76,8 @@ export default function TicketItem({ ticket, isInDrop }: Props) {
   }, []);
 
   useEffect(() => {
-    setDollarPrice((ticket.price ?? 0) * maticPrice);
-  }, [ticket, maticPrice]);
+    setDollarPrice((price ?? 0) * maticPrice);
+  }, [price, maticPrice]);
 
   if (!ticket) {
     return null;
@@ -252,6 +261,9 @@ export default function TicketItem({ ticket, isInDrop }: Props) {
               >
                 <TicketItemModal
                   ticket={ticket}
+                  boxContractAddress={boxContractAddress}
+                  quote={quote}
+                  mysterybox_id={mysterybox_id}
                   setIsTicketItemModalOpen={setIsTicketItemModalOpen}
                 />
               </ModalCustom>
