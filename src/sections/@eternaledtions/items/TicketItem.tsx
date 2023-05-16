@@ -11,6 +11,9 @@ import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 import BuyNowButton from './BuyNowButton';
 import { useRouter } from 'next/router';
 import RoundedButton from 'src/components/common/RoundedButton';
+import ModalCustom from 'src/components/common/ModalCustom';
+import { useState } from 'react';
+import TicketItemModal from './TicketItemModal';
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +38,7 @@ export default function TicketItem({ ticket, isInDrop }: Props) {
   const { id, title, packageImage, categoriesStr, releaseDatetime, createdAt } = ticket;
   const isOnAuction = router.query.status; // TODO: Update value
   const theme = useTheme();
+  const [isTicketItemModalOpen, setIsTicketItemModalOpen] = useState(false);
 
   return (
     <Grid item xs={12} sm={6} md={4} lg={3}>
@@ -198,13 +202,28 @@ export default function TicketItem({ ticket, isInDrop }: Props) {
             1,000 EDCP
           </Typography>
           {isInDrop ? (
-            <RoundedButton
-              variant="withImage"
-              size={isMobile ? 'small' : 'large'}
-              sx={{ width: '50%' }}
-            >
-              MINT
-            </RoundedButton>
+            <>
+              <RoundedButton
+                variant="withImage"
+                size={isMobile ? 'small' : 'large'}
+                sx={{ width: '50%' }}
+                onClick={() => setIsTicketItemModalOpen(true)}
+              >
+                MINT
+              </RoundedButton>
+              <ModalCustom
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                open={isTicketItemModalOpen}
+                onClose={() => setIsTicketItemModalOpen(false)}
+                mobileWidth
+              >
+                <TicketItemModal
+                  ticket={ticket}
+                  setIsTicketItemModalOpen={setIsTicketItemModalOpen}
+                />
+              </ModalCustom>
+            </>
           ) : (
             <BuyNowButton releasedDate={releaseDatetime} />
           )}

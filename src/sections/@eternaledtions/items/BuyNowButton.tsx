@@ -59,5 +59,5 @@ export default function BuyNowButton({ releasedDate, onClick }: Props) {
     );
   }
 
-  return <StyledButton>Buy Now</StyledButton>;
+  return <StyledButton onClick={onClick}>Buy Now</StyledButton>;
 }

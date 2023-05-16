@@ -7,6 +7,7 @@ import Iconify from '../Iconify';
 
 export interface Props extends ModalProps {
   onClose?: VoidFunction;
+  mobileWidth?: string;
 }
 
 const Container = styled(Box)(({ theme }) => ({
@@ -14,7 +15,6 @@ const Container = styled(Box)(({ theme }) => ({
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  maxWidth: '400px',
   width: 'calc(100% - 2rem)',
   backgroundColor: theme.palette.common.white,
   color: theme.palette.common.black,
@@ -42,7 +42,7 @@ const Content = styled(Box)(({ theme }) => ({
   },
 }));
 
-export default function ModalCustom({ open, children, onClose, ...props }: Props) {
+export default function ModalCustom({ open, children, onClose, mobileWidth, ...props }: Props) {
   return (
     <Modal
       open={open}
@@ -56,7 +56,9 @@ export default function ModalCustom({ open, children, onClose, ...props }: Props
       }}
       {...props}
     >
-      <Container>
+      <Container
+        sx={mobileWidth ? { maxWidth: { xs: '288px', md: '400px' } } : { maxWidth: '400px' }}
+      >
         <Box
           sx={{
             position: 'absolute',
