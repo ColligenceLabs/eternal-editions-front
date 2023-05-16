@@ -216,7 +216,6 @@ export default function TicketItem({ ticket, isInDrop }: Props) {
                 aria-describedby="transition-modal-description"
                 open={isTicketItemModalOpen}
                 onClose={() => setIsTicketItemModalOpen(false)}
-                mobileWidth
               >
                 <TicketItemModal
                   ticket={ticket}
