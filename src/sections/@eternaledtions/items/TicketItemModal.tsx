@@ -121,8 +121,8 @@ const TicketItemModal = ({ ticket, setIsTicketItemModalOpen }: Props) => {
               {fDate(createdAt, 'MMMM dd')} -{' '}
               <span
                 style={{
-                  fontSize: { xs: '12px', md: '16px' },
-                  lineHeight: { xs: '16px', md: '20px' },
+                  fontSize: '16px',
+                  lineHeight: '20px',
                   color: 'red',
                 }}
               >
