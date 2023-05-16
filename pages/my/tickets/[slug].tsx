@@ -7,6 +7,7 @@ import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT, SUCCESS } from 'src/config
 import { useRouter } from 'next/router';
 import { getSellItemInfo } from 'src/services/services';
 import { MyTicketTypes } from 'src/@types/my/myTicket';
+import FixedBackground from 'src/components/common/FixedBackground';
 
 // ----------------------------------------------------------------------
 
@@ -31,19 +32,25 @@ export default function MyTicketSellPage() {
 
   return (
     <Page title="Sell">
-      <Container
-        sx={{
-          paddingTop: `${HEADER_MOBILE_HEIGHT}px`,
-          paddingBottom: '32px',
-          [theme.breakpoints.up('md')]: {
-            paddingTop: `${HEADER_DESKTOP_HEIGHT}px`,
-            paddingBottom: '45px',
-            height: '100vh',
-          },
-        }}
-      >
-        {sellTicketInfo && <MyTicketSell sellTicketInfo={sellTicketInfo} />}
-      </Container>
+      {sellTicketInfo && (
+        <>
+          {/*<FixedBackground url={`url(/assets/background/bg-my-items-sell.jpg)`} />*/}
+          <FixedBackground url={`url(${sellTicketInfo.mysteryboxItem.itemImage})`} />
+          <Container
+            sx={{
+              paddingTop: `${HEADER_MOBILE_HEIGHT}px`,
+              paddingBottom: '32px',
+              [theme.breakpoints.up('md')]: {
+                paddingTop: `${HEADER_DESKTOP_HEIGHT}px`,
+                paddingBottom: '45px',
+                height: '100vh',
+              },
+            }}
+          >
+            <MyTicketSell sellTicketInfo={sellTicketInfo} />
+          </Container>
+        </>
+      )}
     </Page>
   );
 }
@@ -53,17 +60,7 @@ export default function MyTicketSellPage() {
 MyTicketSellPage.getLayout = function getLayout(page: ReactElement) {
   console.log(page);
   return (
-    <Layout
-      verticalAlign="top"
-      background={{
-        backgroundImage: `url(/assets/background/bg-my-items-sell.jpg)`,
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-        backgroundSize: 'cover',
-        backgroundAttachment: 'fixed',
-      }}
-      disabledFooter
-    >
+    <Layout verticalAlign="top" disabledFooter>
       {page}
     </Layout>
   );
