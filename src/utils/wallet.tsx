@@ -5,6 +5,10 @@ import {
   WALLET_KLIP,
   WALLET_METAMASK,
   WALLET_WALLECTCONNECT,
+  FACEBOOK_ICON,
+  GOOGLE_ICON,
+  APPLE_ICON,
+  MAIL_ICON,
 } from '../config';
 // @ts-ignore
 import Promise from 'lodash/_Promise';
@@ -21,7 +25,7 @@ export function getShotAddress(address: string) {
 export function getIconByType(type: string) {
   switch (type) {
     case WALLET_WALLECTCONNECT:
-      return '/assets/icons/wallet/walletconnect-alternative.webp';
+      return '/assets/icons/walletlink-icon.png';
     case WALLET_COINBASE:
       return '/assets/icons/wallet/walletlink-alternative.webp';
     case WALLET_KAIKAS:
@@ -32,6 +36,14 @@ export function getIconByType(type: string) {
       return '/assets/icons/wallet/metamask.svg';
     case WALLET_ABC:
       return '/assets/icons/wallet/abc_icon.png';
+    case FACEBOOK_ICON:
+      return '/assets/icons/fb-icon.png';
+    case GOOGLE_ICON:
+      return '/assets/icons/google-icon.png';
+    case APPLE_ICON:
+      return '/assets/icons/apple-icon.png';
+    case MAIL_ICON:
+      return '/assets/icons/email.png';
   }
 }
 

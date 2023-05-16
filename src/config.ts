@@ -51,6 +51,10 @@ export const WALLET_METAMASK = 'METAMASK';
 export const WALLET_ABC = 'ABC';
 export const WALLET_KAIKAS = 'KAIKAS';
 export const WALLET_KLIP = 'KLIP';
+export const FACEBOOK_ICON = 'FACEBOOK';
+export const GOOGLE_ICON = 'GOOGLE';
+export const APPLE_ICON = 'APPLE';
+export const MAIL_ICON = 'MAIL';
 
 export const ChainId = {
   POLYGON: 137,
