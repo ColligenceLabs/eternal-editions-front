@@ -47,8 +47,6 @@ export default function CreateWalletForm({ onClose }: Props) {
     onClose();
   };
 
-  const onChange = () => {};
-
   return (
     <Stack component="form" onSubmit={handleSubmit(onSubmit)} gap={3} width="min(400px, 100%)">
       <Header>Creating a Wallet</Header>
