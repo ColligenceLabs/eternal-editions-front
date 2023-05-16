@@ -27,6 +27,7 @@ import { useDispatch } from 'react-redux';
 import { ChangeEvent } from 'react';
 import { Base64 } from 'js-base64';
 import Router from 'next/router';
+import EmailLoginForm from './EmailLoginForm';
 
 // ----------------------------------------------------------------------
 const CustomIconButton = styled(IconButton)(({ theme }) => ({
@@ -228,133 +229,96 @@ export default function SignUp({ onClose, hideSns, ...other }) {
 
   return (
     <Stack {...other}>
-      <Typography id="transition-modal-title" variant="h4" component="h2" sx={{ mb: 2 }}>
-        Connect your account {openIDPWD ? '(기존회원)' : ''}
-      </Typography>
-
       {openIDPWD ? (
-        <Stack spacing={2} sx={{ mt: 4 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', gap: '0.5rem' }}>
-            <Box
-              sx={{
-                width: '100%',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '0.7rem',
-              }}
-            >
-              <TextField
-                label="ID"
-                variant="outlined"
-                fullWidth
-                size={'small'}
-                inputProps={{ style: { color: '#999999' } }}
-                value={userId}
-                onChange={handleChangeUserId}
-              />
-              <TextField
-                type="password"
-                label="Password"
-                variant="outlined"
-                fullWidth
-                size={'small'}
-                inputProps={{ style: { color: '#999999' } }}
-                value={userPWD}
-                onChange={handleChangeUserPWD}
-              />
-            </Box>
-            <Box>
-              <LogInButton onClick={onClickIDLogin}>Login</LogInButton>
-            </Box>
-          </Box>
-
-          <IDPWDButton onClick={() => setOpenIDPWD(false)}>뒤로</IDPWDButton>
-        </Stack>
+        <EmailLoginForm />
       ) : (
-        <Stack sx={{ mt: 4 }}>
-          <Stack spacing={1}>
-            {!hideSns && (
-              <Stack direction={'row'} justifyContent={'space-between'}>
-                <CustomIconButton
-                  onClick={() => {
-                    setOpenIDPWD(true);
-                  }}
-                >
-                  <Image alt="apple icon" src={getIconByType(APPLE_ICON)} sx={{ height: 32 }} />
-                </CustomIconButton>
-                <CustomIconButton onClick={() => handleSnsLogin('google')}>
-                  <Image alt="google icon" src={getIconByType(GOOGLE_ICON)} sx={{ height: 32 }} />
-                </CustomIconButton>
-                <CustomIconButton onClick={() => handleSnsLogin('facebook')}>
-                  <Image
-                    alt="facebook icon"
-                    src={getIconByType(FACEBOOK_ICON)}
-                    sx={{ width: 32, height: 32 }}
-                  />
-                </CustomIconButton>
-                <CustomIconButton>
-                  <Image
-                    alt="mail icon"
-                    src={getIconByType(MAIL_ICON)}
-                    sx={{ width: 30, pt: '2px' }}
-                  />
-                </CustomIconButton>
-              </Stack>
-            )}
-          </Stack>
+        <>
+          <Typography id="transition-modal-title" variant="h4" component="h2" sx={{ mb: 2 }}>
+            Connect your account {openIDPWD ? '(기존회원)' : ''}
+          </Typography>
 
-          <Stack spacing="12px" mt={8}>
-            <Typography variant="h4">or connect wallet</Typography>
-            <Stack gap="2px">
-              <CustomButton
-                variant="contained"
-                onClick={async () => {
-                  window.localStorage.setItem('loginBy', 'wallet');
-                  window.localStorage.removeItem('loginType');
-                  await connectWallet(WALLET_METAMASK);
-                  // await connectMetamask();
-                  // onClose();
-                }}
-                startIcon={
-                  <Image
-                    alt="metamask icon"
-                    src={getIconByType(WALLET_METAMASK)}
-                    sx={{ width: 24, height: 24, mx: 1 }}
-                  />
-                }
-              >
-                CONNECT META MASK
-              </CustomButton>
-
-              <CustomButton
-                variant="contained"
-                onClick={async () => {
-                  window.localStorage.setItem('loginBy', 'wallet');
-                  window.localStorage.removeItem('loginType');
-                  await connectWallet(WALLET_WALLECTCONNECT);
-                  // onClose();
-                }}
-                startIcon={
-                  <Image
-                    alt="metamask icon"
-                    src={getIconByType(WALLET_WALLECTCONNECT)}
-                    sx={{ width: 24, height: 24, mx: 1 }}
-                  />
-                }
-              >
-                CONNECT WALLET
-              </CustomButton>
+          <Stack sx={{ mt: 4 }}>
+            <Stack spacing={1}>
+              {!hideSns && (
+                <Stack direction={'row'} justifyContent={'space-between'}>
+                  <CustomIconButton
+                    onClick={() => {
+                      setOpenIDPWD(true);
+                    }}
+                  >
+                    <Image alt="apple icon" src={getIconByType(APPLE_ICON)} sx={{ height: 32 }} />
+                  </CustomIconButton>
+                  <CustomIconButton onClick={() => handleSnsLogin('google')}>
+                    <Image alt="google icon" src={getIconByType(GOOGLE_ICON)} sx={{ height: 32 }} />
+                  </CustomIconButton>
+                  <CustomIconButton onClick={() => handleSnsLogin('facebook')}>
+                    <Image
+                      alt="facebook icon"
+                      src={getIconByType(FACEBOOK_ICON)}
+                      sx={{ width: 32, height: 32 }}
+                    />
+                  </CustomIconButton>
+                  <CustomIconButton onClick={() => setOpenIDPWD(true)}>
+                    <Image
+                      alt="mail icon"
+                      src={getIconByType(MAIL_ICON)}
+                      sx={{ width: 30, pt: '2px' }}
+                    />
+                  </CustomIconButton>
+                </Stack>
+              )}
             </Stack>
-
-            <Typography variant={'caption'} sx={{ lineHeight: 1 }}>
-              If you don’t have a wallet, you can select a provider and create one now.
-              <Link href="https://eedao.notion.site/Eternal-Editions-168957fedc5a4ffe8ea7fcbc2ae1d05f">
-                {' '}
-                Learn more
-              </Link>
-            </Typography>
+            <Stack spacing="12px" mt={8}>
+              <Typography variant="h4">or connect wallet</Typography>
+              <Stack gap="2px">
+                <CustomButton
+                  variant="contained"
+                  onClick={async () => {
+                    window.localStorage.setItem('loginBy', 'wallet');
+                    window.localStorage.removeItem('loginType');
+                    await connectWallet(WALLET_METAMASK);
+                    // await connectMetamask();
+                    // onClose();
+                  }}
+                  startIcon={
+                    <Image
+                      alt="metamask icon"
+                      src={getIconByType(WALLET_METAMASK)}
+                      sx={{ width: 24, height: 24, mx: 1 }}
+                    />
+                  }
+                >
+                  CONNECT META MASK
+                </CustomButton>
+                <CustomButton
+                  variant="contained"
+                  onClick={async () => {
+                    window.localStorage.setItem('loginBy', 'wallet');
+                    window.localStorage.removeItem('loginType');
+                    await connectWallet(WALLET_WALLECTCONNECT);
+                    // onClose();
+                  }}
+                  startIcon={
+                    <Image
+                      alt="metamask icon"
+                      src={getIconByType(WALLET_WALLECTCONNECT)}
+                      sx={{ width: 24, height: 24, mx: 1 }}
+                    />
+                  }
+                >
+                  CONNECT WALLET
+                </CustomButton>
+              </Stack>
+              <Typography variant={'caption'} sx={{ lineHeight: 1 }}>
+                If you don’t have a wallet, you can select a provider and create one now.
+                <Link href="https://eedao.notion.site/Eternal-Editions-168957fedc5a4ffe8ea7fcbc2ae1d05f">
+                  {' '}
+                  Learn more
+                </Link>
+              </Typography>
+            </Stack>
           </Stack>
-        </Stack>
+        </>
       )}
     </Stack>
   );

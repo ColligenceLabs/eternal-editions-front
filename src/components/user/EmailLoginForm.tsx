@@ -1,7 +1,6 @@
 import { styled } from '@mui/material/styles';
 import { Stack, TextField, Typography, inputBaseClasses } from '@mui/material';
 import { SUCCESS } from '../../config';
-import { useWeb3React } from '@web3-react/core';
 import { eternalLogin } from '../../services/services';
 import { Base64 } from 'js-base64';
 import Router from 'next/router';
@@ -30,9 +29,7 @@ interface Props {
   onClose: () => void;
 }
 
-export default function EmailSignUpForm({ onClose }: Props) {
-  const context = useWeb3React();
-
+export default function EmailLoginForm({ onClose }: Props) {
   const {
     control,
     handleSubmit,
