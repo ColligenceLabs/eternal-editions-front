@@ -21,6 +21,7 @@ import {
 import RoundedButton from '../common/RoundedButton';
 import { RoundedSelect, RoundedSelectOption } from '../common/Select';
 import TicketSalesInfo from './TicketSalesInfo';
+import { MyTicketTypes } from 'src/@types/my/myTicket';
 
 const TYPES_OF_SALE = [
   {
@@ -49,10 +50,16 @@ const DURATIONS = [
 
 // ----------------------------------------------------------------------
 
-export default function TicketSellForm() {
+type TicketSellFormProps = {
+  sellTicketInfo: MyTicketTypes;
+};
+
+export default function TicketSellForm({ sellTicketInfo }: TicketSellFormProps) {
+  console.log(sellTicketInfo);
   const theme = useTheme();
   const [typeOfSale, setTypeOfSale] = useState(TYPES_OF_SALE[0].value);
   const [priceUnit, setPriceUnit] = useState(PRICE_UNITS[0].value);
+  const [amount, setAmount] = useState('');
   const [duration, setDuration] = useState(DURATIONS[0].value);
   const [creatorEarnings, setCreatorEarnings] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -62,7 +69,14 @@ export default function TicketSellForm() {
   };
 
   if (isSubmitting) {
-    return <TicketSalesInfo typeOfSale={typeOfSale} creatorEarnings={creatorEarnings} />;
+    return (
+      <TicketSalesInfo
+        sellTicketInfo={sellTicketInfo}
+        amount={amount}
+        typeOfSale={typeOfSale}
+        creatorEarnings={creatorEarnings}
+      />
+    );
   }
 
   return (
@@ -98,6 +112,8 @@ export default function TicketSellForm() {
         <Label>SET A PRICE</Label>
         <FormControl variant="standard" fullWidth>
           <StyledInput
+            value={amount}
+            onChange={({ target }) => setAmount(target.value)}
             placeholder="Amount"
             endAdornment={
               <InputAdornment position="end">
