@@ -19,6 +19,13 @@ export default function TicketSalesInfo({
 }: Props) {
   const isAuction = typeOfSale === 'auction';
 
+  const handleClickConfirm = async () => {
+    console.log('click confirm.');
+    console.log(sellTicketInfo);
+    console.log(`amount : ${amount}`);
+    console.log(`typeOfSale : ${typeOfSale}`);
+    console.log(`creatorEarnings : ${creatorEarnings}`);
+  };
   return (
     <Stack gap="24px" justifyContent="space-between" sx={{ height: '100%' }}>
       <Stack gap="12px">
@@ -80,7 +87,10 @@ export default function TicketSalesInfo({
         </Row>
       </Stack>
 
-      {isAuction ? <RoundedButton variant="withImage">CONFIRM</RoundedButton> : null}
+      {/*{isAuction ? <RoundedButton variant="withImage">CONFIRM</RoundedButton> : null}*/}
+      <RoundedButton variant="withImage" onClick={handleClickConfirm}>
+        CONFIRM
+      </RoundedButton>
     </Stack>
   );
 }
