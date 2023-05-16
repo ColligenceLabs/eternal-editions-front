@@ -36,7 +36,7 @@ const Content = styled(Box)(({ theme }) => ({
   paddingRight: '16px',
   [theme.breakpoints.up('md')]: {
     paddingLeft: '24px',
-    paddinRight: '24px',
+    paddingRight: '24px',
   },
 }));
 

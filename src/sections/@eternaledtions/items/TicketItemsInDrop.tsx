@@ -5,7 +5,7 @@ import { Iconify } from 'src/components';
 import arrowDown from '@iconify/icons-carbon/arrow-down';
 import { getTicketCountByCategory, getTicketsService } from 'src/services/services';
 import { SUCCESS } from 'src/config';
-import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
+import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import { useResponsive } from 'src/hooks';
 import { TextSelect, TextSelectOption } from 'src/components/common/Select';
 
@@ -25,6 +25,7 @@ const COLLECTIONS = [
 type Props = {
   categories?: string[];
   shouldHideCategories?: boolean;
+  items: TicketItemTypes[];
 };
 
 type CategoryTypes = {
@@ -32,7 +33,7 @@ type CategoryTypes = {
   count: string;
 };
 
-export default function TicketItemsInDrop({ categories: originCategories }: Props) {
+export default function TicketItemsInDrop({ categories: originCategories, items }: Props) {
   const isMobile = useResponsive('down', 'md');
   const [curPage, setCurPage] = useState(1);
   const [lastPage, setLastPage] = useState(0);
@@ -50,7 +51,6 @@ export default function TicketItemsInDrop({ categories: originCategories }: Prop
   };
 
   const getTickets = async () => {
-    console.log(selected);
     const res = await getTicketsService(1, perPage, selected);
     console.log(res);
     if (res.status === 200) {
@@ -155,9 +155,9 @@ export default function TicketItemsInDrop({ categories: originCategories }: Prop
         </Stack>
       </Stack>
 
-      {ticketInfoList.length ? (
+      {items?.length ? (
         <Grid container spacing={{ xs: 1, md: 3 }}>
-          {ticketInfoList.map((ticket, index) => (
+          {items.map((ticket, index) => (
             <TicketItem key={index} ticket={ticket} isInDrop={true} />
           ))}
         </Grid>

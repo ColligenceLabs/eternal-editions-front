@@ -8,7 +8,7 @@ import Radio from 'src/components/common/Radio';
 import palette from 'src/theme/palette';
 
 type Props = {
-  ticket: TicketInfoTypes;
+  ticket: TicketItemTypes;
   setIsTicketItemModalOpen: (value: boolean) => void;
 };
 
@@ -31,11 +31,36 @@ const methodType = {
 };
 
 const TicketItemModal = ({ ticket, setIsTicketItemModalOpen }: Props) => {
-  const { createdAt, mysteryboxItems, title } = ticket;
+  console.log('🚀 ~ file: TicketItemModal.tsx:34 ~ TicketItemModal ~ ticket:', ticket);
+  const { createdAt, mysteryboxItems, name } = ticket;
   const [quantity, setQuantity] = useState<number>(1);
   const [method, setMethod] = useState<string>(methodType.edcp);
   const [isCompleteModal, setIsCompleteModal] = useState<boolean>(false);
 
+  // const getCoinPrice = () => {
+  //   const url = 'https://bcn-api.talken.io/coinmarketcap/cmcQuotes?cmcIds=4256,3890';
+  //   try {
+  //     if (klayPrice === 0 || maticPrice === 0) {
+  //       axios(url).then((response) => {
+  //         const klayUsd = response.data.data[4256].quote.USD.price;
+  //         const klayKrw = response.data.data[4256].quote.KRW.price;
+  //         const maticUsd = response.data.data[3890].quote.USD.price;
+  //         const maticKrw = response.data.data[3890].quote.KRW.price;
+  //         setKlayPrice(parseFloat(klayUsd));
+  //         setMaticPrice(parseFloat(maticUsd));
+  //       });
+  //     }
+  //   } catch (error: any) {
+  //     console.log(new Error(error));
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   getCoinPrice();
+  // }, []);
+  // useEffect(() => {
+  //   setDollarPrice((price ?? 0) * maticPrice);
+  // }, [ticketInfo, maticPrice]);
   const onSubmit = () => {
     setIsCompleteModal(true);
   };
@@ -108,7 +133,7 @@ const TicketItemModal = ({ ticket, setIsTicketItemModalOpen }: Props) => {
               marginBottom: '4px',
             }}
           >
-            {title.en}
+            {name}
           </Typography>
           {createdAt && (
             <Typography
@@ -147,10 +172,11 @@ const TicketItemModal = ({ ticket, setIsTicketItemModalOpen }: Props) => {
         <Stack>
           <Divider sx={{ marginBottom: '12px' }} />
           <Stack gap={0.5}>
-            {ticketinfo(ticketLabel.day, 'Friday (November 11,2023)')}
+            {ticketinfo(ticketLabel.day, fDate(createdAt, 'EEEE (MMMM dd, yyyy)'))}
             {ticketinfo(ticketLabel.team, 'Team Yellow')}
             {isCompleteModal ? (
               <>
+                {/* setDollarPrice((ticketInfo?.price ?? 0) * maticPrice); */}
                 {ticketinfo(ticketLabel.qty, quantity)}
                 {ticketinfo(
                   ticketLabel.totalPrice,

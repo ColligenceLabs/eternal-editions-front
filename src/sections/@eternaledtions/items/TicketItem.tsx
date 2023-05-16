@@ -205,7 +205,7 @@ export default function TicketItem({ ticket, isInDrop }: Props) {
                   }}
                 >
                   {categoriesStr && categoriesStr.split(',').length > 0
-                    ? categoriesStr.split(',').map((category: string, index) => (
+                    ? categoriesStr.split(',').map((category: string, index: number) => (
                         <Chip
                           key={index}
                           label={category.toUpperCase()}
