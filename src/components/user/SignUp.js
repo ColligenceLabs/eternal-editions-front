@@ -303,12 +303,9 @@ export default function SignUp({ onClose, hideSns, ...other }) {
             )}
           </Stack>
 
-          <Typography variant="h4" sx={{ my: 5 }}>
-            or connect wallet
-          </Typography>
-
-          <Stack spacing={1}>
-            <Stack>
+          <Stack spacing="12px" mt={8}>
+            <Typography variant="h4">or connect wallet</Typography>
+            <Stack gap="2px">
               <CustomButton
                 variant="contained"
                 onClick={async () => {
@@ -328,8 +325,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
               >
                 CONNECT META MASK
               </CustomButton>
-            </Stack>
-            <Stack>
+
               <CustomButton
                 variant="contained"
                 onClick={async () => {
@@ -349,8 +345,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                 CONNECT WALLET
               </CustomButton>
             </Stack>
-          </Stack>
-          <Stack sx={{ mt: 1 }}>
+
             <Typography variant={'caption'} sx={{ lineHeight: 1 }}>
               If you don’t have a wallet, you can select a provider and create one now.
               <Link href="https://eedao.notion.site/Eternal-Editions-168957fedc5a4ffe8ea7fcbc2ae1d05f">
