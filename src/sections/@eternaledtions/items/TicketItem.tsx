@@ -7,13 +7,14 @@ import { varHover, varTranHover } from 'src/components/animate';
 import { fDate } from 'src/utils/formatTime';
 import NextLink from 'next/link';
 import { useResponsive } from 'src/hooks';
-import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
+import { TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import BuyNowButton from './BuyNowButton';
 import { useRouter } from 'next/router';
 import RoundedButton from 'src/components/common/RoundedButton';
 import ModalCustom from 'src/components/common/ModalCustom';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TicketItemModal from './TicketItemModal';
+import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -28,7 +29,7 @@ const Wrapper = styled(Stack)(() => ({
 // ----------------------------------------------------------------------
 
 type Props = {
-  ticket: TicketInfoTypes;
+  ticket: TicketItemTypes;
   isInDrop?: boolean;
 };
 
@@ -39,6 +40,39 @@ export default function TicketItem({ ticket, isInDrop }: Props) {
   const isOnAuction = router.query.status; // TODO: Update value
   const theme = useTheme();
   const [isTicketItemModalOpen, setIsTicketItemModalOpen] = useState(false);
+  const [dollarPrice, setDollarPrice] = useState(0);
+  const [maticPrice, setMaticPrice] = useState(0);
+  const [klayPrice, setKlayPrice] = useState(0);
+
+  const getCoinPrice = () => {
+    const url = 'https://bcn-api.talken.io/coinmarketcap/cmcQuotes?cmcIds=4256,3890';
+    try {
+      if (klayPrice === 0 || maticPrice === 0) {
+        axios(url).then((response) => {
+          const klayUsd = response.data.data[4256].quote.USD.price;
+          const klayKrw = response.data.data[4256].quote.KRW.price;
+          const maticUsd = response.data.data[3890].quote.USD.price;
+          const maticKrw = response.data.data[3890].quote.KRW.price;
+          setKlayPrice(parseFloat(klayUsd));
+          setMaticPrice(parseFloat(maticUsd));
+        });
+      }
+    } catch (error: any) {
+      console.log(new Error(error));
+    }
+  };
+
+  useEffect(() => {
+    getCoinPrice();
+  }, []);
+
+  useEffect(() => {
+    setDollarPrice((ticket.price ?? 0) * maticPrice);
+  }, [ticket, maticPrice]);
+
+  if (!ticket) {
+    return null;
+  }
 
   return (
     <Grid item xs={12} sm={6} md={4} lg={3}>
@@ -61,7 +95,7 @@ export default function TicketItem({ ticket, isInDrop }: Props) {
               transition={varTranHover()}
               sx={{ position: 'relative' }}
             >
-              <Image src={packageImage} alt={title.en} ratio="3/4" sx={{ minHeight: 280 }} />
+              <Image src={packageImage} alt={title?.en} ratio="3/4" sx={{ minHeight: 280 }} />
               <Box
                 sx={{
                   position: 'absolute',
@@ -104,7 +138,7 @@ export default function TicketItem({ ticket, isInDrop }: Props) {
                     fontWeight: theme.typography.fontWeightBold,
                   }}
                 >
-                  {title.en}
+                  {title?.en}
                 </TextMaxLine>
                 <Typography
                   sx={{
@@ -196,10 +230,9 @@ export default function TicketItem({ ticket, isInDrop }: Props) {
               fontSize: '16px',
               lineHeight: 24 / 16,
               marginLeft: '16px',
-              color: 'red',
             }}
           >
-            1,000 EDCP
+            {`${(dollarPrice / 10).toFixed(4)} EDCP`}
           </Typography>
           {isInDrop ? (
             <>
