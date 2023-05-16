@@ -13,7 +13,7 @@ type MyTicketSellProps = {
 };
 const MyTicketSell: React.FC<MyTicketSellProps> = ({ sellTicketInfo }) => {
   const theme = useTheme();
-
+  console.log(sellTicketInfo);
   return (
     <Box sx={{ height: '100%', [theme.breakpoints.down('md')]: { pt: '480px', height: 'auto' } }}>
       <CardWrapper>
@@ -27,8 +27,8 @@ const MyTicketSell: React.FC<MyTicketSellProps> = ({ sellTicketInfo }) => {
 
             <Badge label={'For sale'} />
           </Stack>
-          <TicketName>DCENTRAL Miami 2023 VIP</TicketName>
-          <TicketSellForm />
+          <TicketName>{sellTicketInfo.mysteryboxItem.name}</TicketName>
+          <TicketSellForm sellTicketInfo={sellTicketInfo} />
         </CardInner>
       </CardWrapper>
     </Box>

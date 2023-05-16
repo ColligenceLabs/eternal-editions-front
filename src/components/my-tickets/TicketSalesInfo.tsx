@@ -2,13 +2,21 @@ import { Stack } from '@mui/material';
 import React from 'react';
 import RoundedButton from '../common/RoundedButton';
 import { Hr, Label, Row, TotalValue, Value } from './StyledComponents';
+import { MyTicketTypes } from 'src/@types/my/myTicket';
 
 interface Props {
+  sellTicketInfo: MyTicketTypes;
+  amount: string;
   typeOfSale: string;
   creatorEarnings: string;
 }
 
-export default function TicketSalesInfo({ typeOfSale, creatorEarnings }: Props) {
+export default function TicketSalesInfo({
+  sellTicketInfo,
+  amount,
+  typeOfSale,
+  creatorEarnings,
+}: Props) {
   const isAuction = typeOfSale === 'auction';
 
   return (
