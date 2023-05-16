@@ -47,12 +47,12 @@ const modalStyle = {
   top: '30%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  maxWidth: 400,
   bgcolor: 'common.white',
   color: 'common.black',
   boxShadow: 24,
   p: 4,
   borderRadius: '24px',
+  width: 'min(100%, 400px)',
 };
 
 // ----------------------------------------------------------------------
