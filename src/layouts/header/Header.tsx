@@ -40,6 +40,7 @@ import onLogin, { setOnLogin } from 'src/store/slices/onLogin';
 
 // TODO : dkeys WASM Go Initialize...
 import 'src/abc/sandbox/index';
+import ModalCustom from 'src/components/common/ModalCustom';
 
 const modalStyle = {
   position: 'absolute',
@@ -293,8 +294,10 @@ export default function Header({ transparent, sx }: Props) {
           </Box>
         </Fade>
       </Modal>
-
-      <Modal
+      <ModalCustom open={joinOpen} onClose={handleJoinClose}>
+        <SignUp hideSns={false} onClose={handleJoinClose} />
+      </ModalCustom>
+      {/* <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         open={joinOpen}
@@ -310,7 +313,7 @@ export default function Header({ transparent, sx }: Props) {
             <SignUp hideSns={false} onClose={handleJoinClose} />
           </Box>
         </Fade>
-      </Modal>
+      </Modal> */}
 
       <Modal
         aria-labelledby="transition-modal-title"

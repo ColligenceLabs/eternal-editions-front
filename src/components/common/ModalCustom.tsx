@@ -1,6 +1,6 @@
 // icons
 import closeIcon from '@iconify/icons-carbon/close';
-import { Backdrop, Box, Modal, ModalProps, styled } from '@mui/material';
+import { Backdrop, Box, Fade, Modal, ModalProps, styled } from '@mui/material';
 import React from 'react';
 import { IconButtonAnimate } from '../animate';
 import Iconify from '../Iconify';
@@ -30,7 +30,6 @@ const Container = styled(Box)(({ theme }) => ({
 const Content = styled(Box)(({ theme }) => ({
   maxHeight: 'calc(100vh - 6rem)',
   position: 'relative',
-  img: { width: 1 },
   overflowY: 'auto',
   marginTop: 1,
   paddingLeft: '16px',
@@ -55,22 +54,24 @@ export default function ModalCustom({ open, children, onClose, ...props }: Props
       }}
       {...props}
     >
-      <Container sx={{ width: 'min(100%, 400px)' }}>
-        <Box
-          sx={{
-            position: 'absolute',
-            right: '0.5rem',
-            top: '0.5rem',
-            zIndex: 1,
-          }}
-        >
-          <IconButtonAnimate color="inherit" onClick={onClose}>
-            <Iconify icon={closeIcon} sx={{ width: 20, height: 20 }} />
-          </IconButtonAnimate>
-        </Box>
+      <Fade in={open}>
+        <Container sx={{ width: 'min(100%, 400px)' }}>
+          <Box
+            sx={{
+              position: 'absolute',
+              right: '0.5rem',
+              top: '0.5rem',
+              zIndex: 1,
+            }}
+          >
+            <IconButtonAnimate color="inherit" onClick={onClose}>
+              <Iconify icon={closeIcon} sx={{ width: 20, height: 20 }} />
+            </IconButtonAnimate>
+          </Box>
 
-        <Content>{children}</Content>
-      </Container>
+          <Content>{children}</Content>
+        </Container>
+      </Fade>
     </Modal>
   );
 }

@@ -35,6 +35,7 @@ import env from 'src/env';
 import { delUser } from 'src/store/slices/user';
 import { useDispatch } from 'react-redux';
 import { useWeb3React } from '@web3-react/core';
+import ModalCustom from 'src/components/common/ModalCustom';
 
 // ----------------------------------------------------------------------
 
@@ -292,7 +293,10 @@ export default function NavMobile({ navConfig, sx }: NavProps) {
             </Button>
           )}
         </Box>
-        <Modal
+        <ModalCustom open={joinOpen} onClose={handleJoinClose}>
+          <SignUp hideSns={false} onClose={handleJoinClose} />
+        </ModalCustom>
+        {/* <Modal
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"
           open={joinOpen}
@@ -308,7 +312,7 @@ export default function NavMobile({ navConfig, sx }: NavProps) {
               <SignUp hideSns={false} onClose={handleJoinClose} />
             </Box>
           </Fade>
-        </Modal>
+        </Modal> */}
       </Drawer>
     </>
   );
