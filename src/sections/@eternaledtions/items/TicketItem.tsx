@@ -36,7 +36,7 @@ type Props = {
 export default function TicketItem({ ticket, isInDrop }: Props) {
   const router = useRouter();
   const isMobile = useResponsive('down', 'md');
-  const { id, title, packageImage, categoriesStr, releaseDatetime, createdAt } = ticket;
+  const { id, name, imageLink, categoriesStr, releaseDatetime, createdAt } = ticket;
   const isOnAuction = router.query.status; // TODO: Update value
   const theme = useTheme();
   const [isTicketItemModalOpen, setIsTicketItemModalOpen] = useState(false);
@@ -95,7 +95,7 @@ export default function TicketItem({ ticket, isInDrop }: Props) {
               transition={varTranHover()}
               sx={{ position: 'relative' }}
             >
-              <Image src={packageImage} alt={title?.en} ratio="3/4" sx={{ minHeight: 280 }} />
+              <Image src={imageLink} alt={name} ratio="3/4" sx={{ minHeight: 280 }} />
               <Box
                 sx={{
                   position: 'absolute',
@@ -138,7 +138,7 @@ export default function TicketItem({ ticket, isInDrop }: Props) {
                     fontWeight: theme.typography.fontWeightBold,
                   }}
                 >
-                  {title?.en}
+                  {name}
                 </TextMaxLine>
                 <Typography
                   sx={{

@@ -61,6 +61,8 @@ export type TicketItemTypes = {
   remain: number;
   whlBool: boolean;
   whlBalance: number;
+  price: number;
+  imageLink: string;
 };
 
 export type PropertyTypes = {
