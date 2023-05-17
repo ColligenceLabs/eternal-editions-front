@@ -99,7 +99,7 @@ export const savePoint = async (data: any) => {
 
 export const getMyTickets = async (uid: string) =>
   await apiAuthAxios.get(
-    `/api/service/drops?buyer=${uid}&type=item&mode=each&sortBy=createdAt:ASC`
+    `/api/service/drops?buyer=${uid}&type=item&mode=each&sortBy=createdAt:DESC`
   );
 
 export const getTransactionsByUID = async (uid: string, page: number) =>
