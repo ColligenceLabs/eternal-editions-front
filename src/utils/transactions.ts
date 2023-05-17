@@ -1486,7 +1486,7 @@ export async function getItemSold(
   return sold;
 }
 
-export async function getGasPriceFRomAPI() {
+export async function getGasPriceFromAPI() {
   let gasPrice = '';
   // const target = localStorage.getItem('target');
   const target = env.REACT_APP_TARGET_NETWORK;

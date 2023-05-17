@@ -10,7 +10,7 @@ import typedMessage from '../abc/main/typedMessage';
 import GasUtil from '../abc/utils/gas';
 import { addHexPrefix } from '../abc/utils/string';
 import env from '../env';
-import { getGasPriceFRomAPI } from './transactions';
+import { getGasPriceFromAPI } from './transactions';
 import { BigNumber } from 'ethers';
 
 interface txResult {
@@ -80,7 +80,7 @@ export const abcSendTx = async (
   );
   console.log('=== gaslimit ==', gasLimit);
 
-  const gasPrice = await getGasPriceFRomAPI();
+  const gasPrice = await getGasPriceFromAPI();
   console.log('=== gasPrice ==', gasPrice);
 
   // 6. unSignedTx 생성

@@ -34,6 +34,12 @@ const nextConfig = {
     API_CLIENT_ADDRESS: 'https://market.eternaleditions.io',
     REMEMBER_ID_NAME: 'tx-remember-id',
     ACCESS_TOKEN_NAME: 'tx-access-token',
+    CONDUIT_KEYS_TO_CONDUIT: process.env.CONDUIT_KEYS_TO_CONDUIT,
+    CROSS_CHAIN_DEFAULT_CONDUIT_KEY:
+    process.env.CROSS_CHAIN_DEFAULT_CONDUIT_KEY,
+    TREASURY: process.env.TREASURY,
+    CREATOR_FEE: process.env.CREATOR_FEE,
+    TRADING_FEE: process.env.TRADING_FEE,
   },
   images: {
     domains: ['flagcdn.com'],

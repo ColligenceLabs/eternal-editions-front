@@ -75,6 +75,7 @@ export default function TicketSellForm({ sellTicketInfo }: TicketSellFormProps) 
         amount={amount}
         typeOfSale={typeOfSale}
         creatorEarnings={creatorEarnings}
+        duration={duration}
       />
     );
   }

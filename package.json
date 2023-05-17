@@ -17,6 +17,9 @@
   },
   "dependencies": {
     "@alch/alchemy-web3": "^1.4.7",
+    "@colligence/klip-web3-provider": "../../../ABCWallet/Provider/klip-web3-provider",
+    "@colligence/seaport-js": "^1.2.0",
+    "@colligence/web3modal": "../../../ABCWallet/Provider/klaytn-web3modal",
     "@emotion/cache": "^11.9.3",
     "@emotion/react": "^11.9.3",
     "@emotion/server": "^11.4.0",

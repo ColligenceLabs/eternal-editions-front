@@ -119,3 +119,7 @@ export const checkUserEmail = async (email: string) =>
   await apiAuthAxios.get(`/api/users/checkUser?email=${email}`);
 
 export const getSellItemInfo = async (id: string) => await customAxios(`/api/service/drops/${id}`);
+
+export const registerSell = async (data: any) => {
+  return await apiAuthAxios.post('/api/service/sellbook', data);
+};

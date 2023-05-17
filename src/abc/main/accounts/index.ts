@@ -145,6 +145,8 @@ class AccountController extends EventEmitter {
 
       await dispatch(setUser(user));
       await dispatch(setWallet(wallet));
+      secureLocalStorage.setItem('abcUser', JSON.stringify(user));
+      secureLocalStorage.setItem('abcWallets', JSON.stringify(wallet));
 
       this.accountService.initializeWalletAfterKeyGen({
         user,
