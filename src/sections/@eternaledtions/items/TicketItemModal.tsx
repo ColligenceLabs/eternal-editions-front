@@ -77,6 +77,8 @@ const TicketItemModal = ({
   const [abcToken, setAbcToken] = useState('');
   const [abcOpen, setAbcOpen] = useState(false);
   const [reload, setReload] = useState(false);
+  const [transactionHash, setTransactionHash] = useState('');
+  const [buyerAddress, setBuyerAddress] = useState('');
   const [otpLoading, setOtpLoading] = useState(false);
   const { library, chainId } = useActiveWeb3React();
   const { account } = useAccount();
@@ -163,6 +165,9 @@ const TicketItemModal = ({
           tokenId: tokenId,
         };
 
+        setTransactionHash(result?.transactionHash);
+        setBuyerAddress(abcUser.accounts[0].ethAddress);
+
         const res = await registerBuy(data);
         console.log('== call backend : registerBuy ==>', res.data);
         if (res.data.status === SUCCESS) {
@@ -177,6 +182,9 @@ const TicketItemModal = ({
             type: 'success',
             message: 'Purchase completed!',
           });
+
+          setIsCompleteModal(true);
+
           // return true;
         } else {
           // setIsBuyingWithMatic(false);
@@ -388,7 +396,7 @@ const TicketItemModal = ({
   }, [price, maticPrice]);
 
   const onSubmit = () => {
-    setIsCompleteModal(true);
+    method === methodType.edcp ? handleBuyWithPoint() : handleBuyWithMatic();
   };
 
   const onRedirectBack = () => {
@@ -396,7 +404,6 @@ const TicketItemModal = ({
   };
 
   const onComplete = () => {
-    method === methodType.edcp ? handleBuyWithPoint() : handleBuyWithMatic();
     setIsTicketItemModalOpen(false);
   };
 
@@ -466,11 +473,7 @@ const TicketItemModal = ({
                 {/* setDollarPrice((ticketInfo?.price ?? 0) * maticPrice); */}
                 {ticketinfo(ticketLabel.qty, quantity)}
                 {ticketinfo(ticketLabel.totalPrice, fullTotalPriceString)}
-                {ticketinfo(
-                  ticketLabel.transaction,
-                  '0x1234as5d4as8dsdasdas23da5dasdasdas25123',
-                  true
-                )}
+                {ticketinfo(ticketLabel.transaction, transactionHash)}
                 {ticketinfo(ticketLabel.paymentDate, '2022.10.11 13:00:25', true)}
               </>
             ) : (
