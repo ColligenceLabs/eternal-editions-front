@@ -26,6 +26,7 @@ import { LoadingButton } from '@mui/lab';
 import { abcSendTx } from 'src/utils/abcTransactions';
 import { collectionAbi } from 'src/config/abi/Collection';
 import Routes from 'src/routes';
+import moment from 'moment';
 
 type Props = {
   ticket: TicketItemTypes;
@@ -79,6 +80,7 @@ const TicketItemModal = ({
   const [reload, setReload] = useState(false);
   const [transactionHash, setTransactionHash] = useState('');
   const [buyerAddress, setBuyerAddress] = useState('');
+  const [paymentDate, setPaymentDate] = useState<Date | undefined>();
   const [otpLoading, setOtpLoading] = useState(false);
   const { library, chainId } = useActiveWeb3React();
   const { account } = useAccount();
@@ -183,6 +185,7 @@ const TicketItemModal = ({
             message: 'Purchase completed!',
           });
 
+          setPaymentDate(new Date());
           setIsCompleteModal(true);
 
           // return true;
@@ -474,7 +477,10 @@ const TicketItemModal = ({
                 {ticketinfo(ticketLabel.qty, quantity)}
                 {ticketinfo(ticketLabel.totalPrice, fullTotalPriceString)}
                 {ticketinfo(ticketLabel.transaction, transactionHash)}
-                {ticketinfo(ticketLabel.paymentDate, '2022.10.11 13:00:25', true)}
+                {ticketinfo(
+                  ticketLabel.paymentDate,
+                  moment(paymentDate).format('yyyy.MM.DD hh:mm:ss')
+                )}
               </>
             ) : (
               <>
