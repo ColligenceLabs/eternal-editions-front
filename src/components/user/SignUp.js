@@ -29,6 +29,7 @@ import { Base64 } from 'js-base64';
 import Router from 'next/router';
 import EmailLoginForm from './EmailLoginForm';
 import GoogleLogin from './GoogleLogin';
+import GoogleFlow from './GoogleFlow';
 
 // ----------------------------------------------------------------------
 const CustomIconButton = styled(IconButton)(({ theme }) => ({
@@ -236,7 +237,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
       ) : (
         <>
           {isGoogleLogin ? (
-            <GoogleLogin />
+            <GoogleFlow />
           ) : (
             <>
               <Typography id="transition-modal-title" variant="h4" component="h2" sx={{ mb: 2 }}>
@@ -278,13 +279,13 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                           sx={{ width: 30, pt: '2px' }}
                         />
                       </CustomIconButton>
-                      {/* <CustomIconButton onClick={() => setIsGoogleLogin(true)}>
+                      <CustomIconButton onClick={() => setIsGoogleLogin(true)}>
                         <Image
                           alt="google icon"
                           src={getIconByType(GOOGLE_ICON)}
                           sx={{ height: 32 }}
                         />
-                      </CustomIconButton> */}
+                      </CustomIconButton>
                     </Stack>
                   )}
                 </Stack>
