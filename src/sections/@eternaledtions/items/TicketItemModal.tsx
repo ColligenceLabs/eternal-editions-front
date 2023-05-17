@@ -65,6 +65,7 @@ const TicketItemModal = ({
   const [quantity, setQuantity] = useState<number>(1);
   const [method, setMethod] = useState<string>(methodType.edcp);
   const [isCompleteModal, setIsCompleteModal] = useState<boolean>(false);
+  const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
   const [klayPrice, setKlayPrice] = useState(0);
   const [maticPrice, setMaticPrice] = useState(0);
   const [dollarPrice, setDollarPrice] = useState(0);
@@ -412,211 +413,241 @@ const TicketItemModal = ({
 
   return (
     <>
-      <Stack gap={3}>
-        <Typography
-          sx={{
-            fontSize: { xs: '24px', md: '32px' },
-            fontWeight: 'bold',
-            lineHeight: { xs: '28px', md: '36px' },
-          }}
-        >
-          {isCompleteModal ? 'Complete' : 'Mint'}
-        </Typography>
-        <Stack>
-          <Typography
-            sx={{
-              fontSize: { xs: '16px', md: '24px' },
-              fontWeight: 'bold',
-              lineHeight: { xs: '24px', md: '28px' },
-              marginBottom: '4px',
+      {isUnauthorized ? (
+        <>
+          <Stack>
+            <Typography
+              sx={{
+                fontSize: { xs: '24px', md: '32px' },
+                fontWeight: 'bold',
+                lineHeight: { xs: '28px', md: '36px' },
+                mb: { xs: '9px', md: '16px' },
+              }}
+            >
+              !
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: { xs: '16px', md: '24px' },
+                fontWeight: 'bold',
+                lineHeight: { xs: '24px', md: '28px' },
+                mb: { xs: '24px', md: '55px' },
+              }}
+            >
+              This is an unauthorized wallet address.
+            </Typography>
+            <RoundedButton onClick={onComplete}>COMPLETE PURCHASE</RoundedButton>
+          </Stack>
+        </>
+      ) : (
+        <>
+          <Stack gap={3}>
+            <Typography
+              sx={{
+                fontSize: { xs: '24px', md: '32px' },
+                fontWeight: 'bold',
+                lineHeight: { xs: '28px', md: '36px' },
+              }}
+            >
+              {isCompleteModal ? 'Complete' : 'Mint'}
+            </Typography>
+            <Stack>
+              <Typography
+                sx={{
+                  fontSize: { xs: '16px', md: '24px' },
+                  fontWeight: 'bold',
+                  lineHeight: { xs: '24px', md: '28px' },
+                  marginBottom: '4px',
+                }}
+              >
+                {name}
+              </Typography>
+              {createdAt && (
+                <Typography
+                  sx={{
+                    fontSize: { xs: '12px', md: '16px' },
+                    lineHeight: { xs: '16px', md: '20px' },
+                    fontWeight: '400',
+                  }}
+                >
+                  {fDate(createdAt, 'MMMM dd')} -{' '}
+                  <span
+                    style={{
+                      fontSize: '16px',
+                      lineHeight: '20px',
+                      color: 'red',
+                    }}
+                  >
+                    31, 2022
+                  </span>
+                </Typography>
+              )}
+              {ticket.properties && (
+                <Typography
+                  sx={{
+                    fontSize: { xs: '12px', md: '16px' },
+                    lineHeight: { xs: '16px', md: '20px' },
+                    fontWeight: '400',
+                  }}
+                >
+                  {ticket.properties[0].type.toLowerCase() === ticketLabel.location &&
+                    ticket.properties[0].name}
+                </Typography>
+              )}
+            </Stack>
+            <Stack>
+              <Divider sx={{ marginBottom: '12px' }} />
+              <Stack gap={0.5}>
+                {ticketinfo(ticketLabel.day, fDate(createdAt, 'EEEE (MMMM dd, yyyy)'))}
+                {ticketinfo(ticketLabel.team, 'Team Yellow', true)}
+                {isCompleteModal ? (
+                  <>
+                    {/* setDollarPrice((ticketInfo?.price ?? 0) * maticPrice); */}
+                    {ticketinfo(ticketLabel.qty, quantity)}
+                    {ticketinfo(ticketLabel.totalPrice, fullTotalPriceString)}
+                    {ticketinfo(ticketLabel.transaction, transactionHash)}
+                    {ticketinfo(
+                      ticketLabel.paymentDate,
+                      moment(paymentDate).format('yyyy.MM.DD hh:mm:ss')
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {ticketinfo(ticketLabel.price, `${edcpPrice.toFixed(4)} EDCP (~$${price})`)}
+                    {ticketinfo(ticketLabel.limit, '5 per wallet', true)}
+                  </>
+                )}
+              </Stack>
+            </Stack>
+            {!isCompleteModal && <QuantityControl quantity={quantity} setQuantity={setQuantity} />}
+            {!isCompleteModal && (
+              <Stack gap={3}>
+                <Typography sx={{ color: '#999999', fontSize: '12px' }}>PAYMENT METHOD</Typography>
+                <Radio
+                  checked={method === methodType.edcp}
+                  value="edcp"
+                  label={
+                    <Typography
+                      fontWeight={700}
+                      fontSize={14}
+                      lineHeight="12px"
+                      letterSpacing="0.08em"
+                      textTransform="uppercase"
+                    >
+                      {methodType.edcp.toUpperCase()}
+                    </Typography>
+                  }
+                  onClick={() => setMethod('edcp')}
+                />
+                <Radio
+                  checked={method === methodType.usdc}
+                  value="usdc"
+                  label={
+                    <Typography
+                      fontWeight={700}
+                      fontSize={14}
+                      lineHeight="12px"
+                      letterSpacing="0.08em"
+                      textTransform="uppercase"
+                    >
+                      {methodType.usdc.toUpperCase()}
+                    </Typography>
+                  }
+                  onClick={() => setMethod('usdc')}
+                />
+              </Stack>
+            )}
+            {!isCompleteModal && <Divider />}
+          </Stack>
+          {isCompleteModal ? (
+            <Stack gap={0.25} sx={{ marginTop: '12px' }}>
+              <RoundedButton
+                onClick={onRedirectBack}
+                variant="inactive"
+                sx={{ color: palette.dark.common.black }}
+              >
+                MY ITEM
+              </RoundedButton>
+              <RoundedButton onClick={onComplete}>CONFIRM</RoundedButton>
+            </Stack>
+          ) : (
+            <Stack gap={3} sx={{ marginTop: '12px' }}>
+              {ticketinfo(ticketLabel.total, fullTotalPriceString)}
+              <RoundedButton onClick={onSubmit}>COMPLETE PURCHASE</RoundedButton>
+            </Stack>
+          )}
+
+          <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            open={abcOpen}
+            onClose={handleAbcClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 500,
             }}
           >
-            {name}
-          </Typography>
-          {createdAt && (
-            <Typography
-              sx={{
-                fontSize: { xs: '12px', md: '16px' },
-                lineHeight: { xs: '16px', md: '20px' },
-                fontWeight: '400',
-              }}
-            >
-              {fDate(createdAt, 'MMMM dd')} -{' '}
-              <span
-                style={{
-                  fontSize: '16px',
-                  lineHeight: '20px',
-                  color: 'red',
-                }}
-              >
-                31, 2022
-              </span>
-            </Typography>
-          )}
-          {ticket.properties && (
-            <Typography
-              sx={{
-                fontSize: { xs: '12px', md: '16px' },
-                lineHeight: { xs: '16px', md: '20px' },
-                fontWeight: '400',
-              }}
-            >
-              {ticket.properties[0].type.toLowerCase() === ticketLabel.location &&
-                ticket.properties[0].name}
-            </Typography>
-          )}
-        </Stack>
-        <Stack>
-          <Divider sx={{ marginBottom: '12px' }} />
-          <Stack gap={0.5}>
-            {ticketinfo(ticketLabel.day, fDate(createdAt, 'EEEE (MMMM dd, yyyy)'))}
-            {ticketinfo(ticketLabel.team, 'Team Yellow', true)}
-            {isCompleteModal ? (
-              <>
-                {/* setDollarPrice((ticketInfo?.price ?? 0) * maticPrice); */}
-                {ticketinfo(ticketLabel.qty, quantity)}
-                {ticketinfo(ticketLabel.totalPrice, fullTotalPriceString)}
-                {ticketinfo(ticketLabel.transaction, transactionHash)}
-                {ticketinfo(
-                  ticketLabel.paymentDate,
-                  moment(paymentDate).format('yyyy.MM.DD hh:mm:ss')
-                )}
-              </>
-            ) : (
-              <>
-                {ticketinfo(ticketLabel.price, `${edcpPrice.toFixed(4)} EDCP (~$${price})`)}
-                {ticketinfo(ticketLabel.limit, '5 per wallet', true)}
-              </>
-            )}
-          </Stack>
-        </Stack>
-        {!isCompleteModal && <QuantityControl quantity={quantity} setQuantity={setQuantity} />}
-        {!isCompleteModal && (
-          <Stack gap={3}>
-            <Typography sx={{ color: '#999999', fontSize: '12px' }}>PAYMENT METHOD</Typography>
-            <Radio
-              checked={method === methodType.edcp}
-              value="edcp"
-              label={
-                <Typography
-                  fontWeight={700}
-                  fontSize={14}
-                  lineHeight="12px"
-                  letterSpacing="0.08em"
-                  textTransform="uppercase"
-                >
-                  {methodType.edcp.toUpperCase()}
+            <Fade in={abcOpen}>
+              <Box sx={modalStyle}>
+                Google OTP :
+                <Typography variant="body3">
+                  Please check the 6-digit code in Google Authenticator and enter it.
                 </Typography>
-              }
-              onClick={() => setMethod('edcp')}
-            />
-            <Radio
-              checked={method === methodType.usdc}
-              value="usdc"
-              label={
-                <Typography
-                  fontWeight={700}
-                  fontSize={14}
-                  lineHeight="12px"
-                  letterSpacing="0.08em"
-                  textTransform="uppercase"
-                >
-                  {methodType.usdc.toUpperCase()}
-                </Typography>
-              }
-              onClick={() => setMethod('usdc')}
-            />
-          </Stack>
-        )}
-        {!isCompleteModal && <Divider />}
-      </Stack>
-      {isCompleteModal ? (
-        <Stack gap={0.25} sx={{ marginTop: '12px' }}>
-          <RoundedButton
-            onClick={onRedirectBack}
-            variant="inactive"
-            sx={{ color: palette.dark.common.black }}
-          >
-            MY ITEM
-          </RoundedButton>
-          <RoundedButton onClick={onComplete}>CONFIRM</RoundedButton>
-        </Stack>
-      ) : (
-        <Stack gap={3} sx={{ marginTop: '12px' }}>
-          {ticketinfo(ticketLabel.total, fullTotalPriceString)}
-          <RoundedButton onClick={onSubmit}>COMPLETE PURCHASE</RoundedButton>
-        </Stack>
+                <TextField
+                  sx={{ mt: 2 }}
+                  inputProps={{ style: { color: '#999999' } }}
+                  fullWidth
+                  variant="standard"
+                  label="Verification code"
+                  placeholder="Please Enter"
+                  value={abcToken}
+                  onChange={handleAbcTokenChange}
+                />
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: '10px' }}>
+                  <LoadingButton
+                    variant="outlined"
+                    size="medium"
+                    sx={{
+                      width: '100% !important',
+                      height: '36px',
+                      fontSize: 12,
+                      backgroundColor: '#f1f2f5',
+                      borderColor: '#f1f2f5',
+                      color: '#000000',
+                      boxShadow: 'none',
+                      '&:hover': {
+                        backgroundColor: '#08FF0C',
+                        borderColor: '#08FF0C',
+                        color: '#ffffff',
+                        boxShadow: 'none',
+                      },
+                      '&:active': {
+                        boxShadow: 'none',
+                        backgroundColor: 'background.paper',
+                        borderColor: 'background.paper',
+                        color: '#ffffff',
+                      },
+                    }}
+                    onClick={handleAbcConfirmClick}
+                    loading={otpLoading}
+                    disabled={otpLoading}
+                  >
+                    확인
+                  </LoadingButton>
+                </Box>
+              </Box>
+            </Fade>
+          </Modal>
+
+          <CSnackbar
+            open={openSnackbar.open}
+            type={openSnackbar.type}
+            message={openSnackbar.message}
+            handleClose={handleCloseSnackbar}
+          />
+        </>
       )}
-
-      <Modal
-        aria-labelledby="transition-modal-title"
-        aria-describedby="transition-modal-description"
-        open={abcOpen}
-        onClose={handleAbcClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
-        <Fade in={abcOpen}>
-          <Box sx={modalStyle}>
-            Google OTP :
-            <Typography variant="body3">
-              Please check the 6-digit code in Google Authenticator and enter it.
-            </Typography>
-            <TextField
-              sx={{ mt: 2 }}
-              inputProps={{ style: { color: '#999999' } }}
-              fullWidth
-              variant="standard"
-              label="Verification code"
-              placeholder="Please Enter"
-              value={abcToken}
-              onChange={handleAbcTokenChange}
-            />
-            <Box sx={{ display: 'flex', justifyContent: 'center', mt: '10px' }}>
-              <LoadingButton
-                variant="outlined"
-                size="medium"
-                sx={{
-                  width: '100% !important',
-                  height: '36px',
-                  fontSize: 12,
-                  backgroundColor: '#f1f2f5',
-                  borderColor: '#f1f2f5',
-                  color: '#000000',
-                  boxShadow: 'none',
-                  '&:hover': {
-                    backgroundColor: '#08FF0C',
-                    borderColor: '#08FF0C',
-                    color: '#ffffff',
-                    boxShadow: 'none',
-                  },
-                  '&:active': {
-                    boxShadow: 'none',
-                    backgroundColor: 'background.paper',
-                    borderColor: 'background.paper',
-                    color: '#ffffff',
-                  },
-                }}
-                onClick={handleAbcConfirmClick}
-                loading={otpLoading}
-                disabled={otpLoading}
-              >
-                확인
-              </LoadingButton>
-            </Box>
-          </Box>
-        </Fade>
-      </Modal>
-
-      <CSnackbar
-        open={openSnackbar.open}
-        type={openSnackbar.type}
-        message={openSnackbar.message}
-        handleClose={handleCloseSnackbar}
-      />
     </>
   );
 };
