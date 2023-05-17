@@ -44,6 +44,7 @@ export default function EmailLoginForm({ onClose }: Props) {
   });
 
   const onSubmit = async ({ email, password }: FormValuesProps) => {
+    console.log('email: ', email, password);
     const res = await eternalLogin({ email, password });
 
     if (res.data.status === SUCCESS) {

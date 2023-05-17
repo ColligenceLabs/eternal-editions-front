@@ -219,7 +219,7 @@ export default function KSPay() {
             <Stack gap={0.5}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Typography sx={{ color: '#999999', fontSize: '12px', lineHeight: 17 / 12 }}>
-                  PRUCHASE QUANTITY
+                  PURCHASE QUANTITY
                 </Typography>
                 <Typography sx={{ color: 'black', fontSize: '14px', lineHeight: 20 / 14 }}>
                   {quantity}

@@ -54,24 +54,24 @@ export default function ModalCustom({ open, children, onClose, ...props }: Props
       }}
       {...props}
     >
-      <Fade in={open}>
-        <Container sx={{ width: 'min(100%, 400px)' }}>
-          <Box
-            sx={{
-              position: 'absolute',
-              right: '0.5rem',
-              top: '0.5rem',
-              zIndex: 1,
-            }}
-          >
-            <IconButtonAnimate color="inherit" onClick={onClose}>
-              <Iconify icon={closeIcon} sx={{ width: 20, height: 20 }} />
-            </IconButtonAnimate>
-          </Box>
+      {/* <Fade in={open}> */}
+      <Container sx={{ width: 'min(100%, 400px)' }}>
+        <Box
+          sx={{
+            position: 'absolute',
+            right: '0.5rem',
+            top: '0.5rem',
+            zIndex: 1,
+          }}
+        >
+          <IconButtonAnimate color="inherit" onClick={onClose}>
+            <Iconify icon={closeIcon} sx={{ width: 20, height: 20 }} />
+          </IconButtonAnimate>
+        </Box>
 
-          <Content>{children}</Content>
-        </Container>
-      </Fade>
+        <Content>{children}</Content>
+      </Container>
+      {/* </Fade> */}
     </Modal>
   );
 }

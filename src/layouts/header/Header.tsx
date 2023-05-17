@@ -49,8 +49,8 @@ const modalStyle = {
   transform: 'translate(-50%, -50%)',
   bgcolor: 'common.white',
   color: 'common.black',
+  p: 3,
   boxShadow: 24,
-  p: 4,
   borderRadius: '24px',
   width: 'min(100%, 400px)',
 };
