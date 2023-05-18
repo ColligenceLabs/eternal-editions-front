@@ -1,7 +1,7 @@
 import axios from 'axios';
 import env from '../env';
 import { apiAuthAxios, customAxios } from './customAxios';
-import { AbcAddUserDto, AbcInitPasswordDto } from '../abc/main/abc/interface';
+import { AbcAddUserDto, AbcInitPasswordDto, AbcSnsAddUserDto } from '../abc/main/abc/interface';
 import { services } from 'src/abc/background/init';
 import queryString from 'query-string';
 
@@ -45,6 +45,15 @@ export const abcAddUser = async (dto: AbcAddUserDto) => {
       serviceid: process.env.ABC_SERVICE_ID,
     }),
     channelid: channelid,
+  });
+};
+
+export const abcJoin = async (dto: AbcSnsAddUserDto) => {
+  return await customAxios.post(`api/abc/join`, {
+    data: queryString.stringify({
+      ...dto,
+      serviceid: process.env.ABC_SERVICE_ID,
+    }),
   });
 };
 
