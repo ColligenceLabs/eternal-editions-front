@@ -115,7 +115,10 @@ export default function TicketDetailPage() {
     type: '',
     message: '',
   });
-
+  const [team, setTeam] = useState('');
+  const [day, setDay] = useState('');
+  const [duration, setDuration] = useState('');
+  const [location, setLocation] = useState('');
   const abcUser = useSelector((state: any) => state.user);
   const [abcToken, setAbcToken] = useState('');
   const [abcOpen, setAbcOpen] = useState(false);
@@ -478,10 +481,33 @@ export default function TicketDetailPage() {
                 });
               }
             }
-            return { ...item, remain: item.issueAmount - sold, whlBool, whlBalance };
+            const { properties } = item;
+            console.log(properties);
+
+            if (properties) {
+              properties.map((property) =>
+                property.type === 'team'
+                  ? setTeam(property.name)
+                  : property.type === 'day'
+                  ? setDay(property.name)
+                  : property.type === 'duration'
+                  ? setDuration(property.name)
+                  : property.type === 'location'
+                  ? setLocation(property.name)
+                  : null
+              );
+            }
+            console.log(day);
+            return {
+              ...item,
+              remain: item.issueAmount - sold,
+              whlBool,
+              whlBalance,
+            };
           })
         ));
 
+      console.log(temp);
       if (ticketInfoRes.data.status === SUCCESS) {
         setTicketInfo({ ...ticketInfoRes.data.data, mysteryboxItems: temp });
 
@@ -574,14 +600,8 @@ export default function TicketDetailPage() {
                   <Section>
                     <Label>Date</Label>
                     <Stack>
-                      {createdAt && <Value>{fDate(createdAt, 'EEEE (MMMM dd, yyyy)')}</Value>}
-                      {mysteryboxItems && (
-                        <Value>
-                          {mysteryboxItems[0].properties &&
-                            mysteryboxItems[0].properties[0].type.toLowerCase() === 'location' &&
-                            mysteryboxItems[0].properties[0].name}
-                        </Value>
-                      )}
+                      {createdAt && <Value>{day}</Value>}
+                      {mysteryboxItems && <Value>{location}</Value>}
                     </Stack>
                   </Section>
                 </Grid>
