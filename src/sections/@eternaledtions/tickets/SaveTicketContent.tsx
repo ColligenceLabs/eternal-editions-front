@@ -1,6 +1,6 @@
 import { Box, Divider, FormControl, Input, inputClasses, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
 import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 import RoundedButton from 'src/components/common/RoundedButton';
@@ -18,8 +18,19 @@ interface Props {
 export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
   const isMobile = useResponsive('down', 'md');
   const [isSaved, setIsSaved] = useState<boolean>(false);
+  const [qrTimestamp, setQrTimestamp] = useState(0);
   const saveTicket = () => setIsSaved(true);
   const transfer = () => onClose();
+
+  useEffect(() => {
+    console.log('start timestmap');
+    const now = new Date();
+    setQrTimestamp(now.setMinutes(now.getMinutes() + 5));
+  }, []);
+
+  useEffect(() => {
+    console.log(new Date(qrTimestamp));
+  }, [qrTimestamp]);
 
   return (
     <Box
@@ -33,11 +44,13 @@ export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
       <Box sx={{ textAlign: 'center' }}>
         <QRCode
           style={{}}
-          value={`https://entrace2023.eternaleditions.io/entrace-confirm?contractAddress=${ticketInfo.mysteryboxInfo.boxContractAddress}&tokenId=${ticketInfo.tokenId}`}
+          value={`https://entrance.eternaleditions.io/admin-e-ticket?type=2&tokenId=${ticketInfo.tokenId}&nftid=${ticketInfo.mysteryBoxId}&expireTime=${qrTimestamp}`}
           size={160}
         />
       </Box>
-
+      <Typography
+        sx={{ fontSize: '12px' }}
+      >{`https://entrance.eternaleditions.io/admin-e-ticket?type=2&tokenId=${ticketInfo.tokenId}&nftid=${ticketInfo.mysteryBoxId}&expireTime=${qrTimestamp}`}</Typography>
       <Stack gap="12px" mt="48px" mb="24px">
         <Stack gap={0.5}>
           <Typography
