@@ -1486,6 +1486,75 @@ export async function getItemSold(
   return sold;
 }
 
+export async function nftTransferFrom(
+  address: string,
+  receipient: string,
+  tokenId: string,
+  account: string,
+  library: any,
+  isKaikas: boolean
+): Promise<number> {
+  let gasPrice;
+  let contract: any;
+  if (isKaikas) {
+    // @ts-ignore : In case of Klaytn Kaikas Wallet
+    const caver = new Caver(window.klaytn);
+    gasPrice = await caver.rpc.klay.getGasPrice();
+    const collAbi: AbiItem[] = collectionAbi as AbiItem[];
+    contract = new caver.klay.Contract(collAbi, address);
+  } else {
+    contract = new ethers.Contract(address, collectionAbi, library?.getSigner());
+  }
+  let tx;
+
+  // gasLimit 계산
+  let gasLimit;
+  if (isKaikas)
+    gasLimit = await contract?.methods.transferFrom(account, receipient, tokenId).estimateGas({
+      from: account,
+    });
+  else gasLimit = await contract.estimateGas.transferFrom(account, receipient, tokenId);
+
+  // registerItems 요청
+  let receipt;
+  try {
+    let overrides: Overrides = {
+      from: account,
+      gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+    };
+
+    if (isKaikas) {
+      tx = await contract.methods
+        .transferFrom(account, receipient, tokenId)
+        .send(overrides)
+        .catch(async (err: any) => {
+          return FAILURE;
+        });
+      if (tx?.status) {
+        return SUCCESS;
+      } else return FAILURE;
+    } else {
+      // if (library._network.chainId === 8217)
+      overrides = { ...overrides, gasPrice };
+
+      tx = await contract.transferFrom(account, receipient, tokenId, overrides);
+
+      // receipt 대기
+      try {
+        receipt = await tx.wait();
+      } catch (e) {
+        return FAILURE;
+      }
+      if (receipt.status === 1) {
+        return SUCCESS;
+      } else return FAILURE;
+    }
+  } catch (e) {
+    console.log(e);
+    return FAILURE;
+  }
+}
+
 export async function getGasPriceFRomAPI() {
   let gasPrice = '';
   // const target = localStorage.getItem('target');
