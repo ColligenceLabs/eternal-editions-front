@@ -60,23 +60,15 @@ export default function TicketItemsInDrop({
   const [selected, setSelected] = useState('All');
   const [ticketInfoList, setTicketInfoList] = useState<TicketInfoTypes[]>([]);
   // const [categories, setCategories] = useState<CategoryTypes[]>([]);
-  const [collection, setCollection] = useState('default');
+  const [team, setTeam] = useState('default');
   const [salesType, setSalesType] = useState('default');
+  const [teams, setTeams] = useState<string[]>([]);
 
   // originCategories = ['All', ...Array.from(new Set(originCategories))];
   const perPage = 6;
 
   const handleChangeCategory = (event: React.SyntheticEvent, newValue: string) => {
     setSelected(newValue);
-  };
-
-  const getTickets = async () => {
-    const res = await getTicketsService(1, perPage, selected);
-    console.log(res);
-    if (res.status === 200) {
-      setTicketInfoList(res.data.list);
-      setLastPage(res.data.headers.x_pages_count);
-    }
   };
 
   const getMoreTickets = async () => {
@@ -87,19 +79,24 @@ export default function TicketItemsInDrop({
     }
   };
 
-  // const getCountByCategory = async () => {
-  //   const res = await getTicketCountByCategory();
-  //
-  //   if (res.data.status === SUCCESS) setCategories(res.data.data);
-  //   else {
-  //     console.log('[error] item count by category fetch failed. ');
-  //     const temp: CategoryTypes[] = originCategories.map((item) => ({
-  //       category: item.toLowerCase(),
-  //       count: '',
-  //     }));
-  //     setCategories([...temp]);
-  //   }
-  // };
+  useEffect(() => {
+    if (ticketInfo?.mysteryboxItems) {
+      const items = ticketInfo.mysteryboxItems;
+      console.log(items);
+      items.map((item) => {
+        if (item.properties) {
+          const team = item.properties.filter((property) => property.type === 'team');
+
+          if (team.length > 0 && team[0].name) {
+            console.log(team[0].name);
+            if (!teams.includes(team[0].name)) {
+              setTeams((cur) => [...cur, team[0].name]);
+            }
+          }
+        }
+      });
+    }
+  }, [ticketInfo]);
 
   useEffect(() => {
     setCurPage(1);
@@ -109,6 +106,11 @@ export default function TicketItemsInDrop({
   useEffect(() => {
     if (curPage !== 1) getMoreTickets();
   }, [curPage]);
+
+  useEffect(() => {
+    console.log(`team: ${team}`);
+    console.log(items);
+  }, [team]);
 
   if (!items) {
     return null;
@@ -153,16 +155,13 @@ export default function TicketItemsInDrop({
           }}
         >
           <Stack flexDirection="row" gap="27px">
-            <TextSelect
-              value={collection}
-              onChange={(event) => setCollection(event.target.value as string)}
-            >
+            <TextSelect value={team} onChange={(event) => setTeam(event.target.value as string)}>
               <TextSelectOption hidden value="default">
                 SELECT TEAM
               </TextSelectOption>
-              {COLLECTIONS.map((collection) => (
-                <TextSelectOption key={collection.value} value={collection.value}>
-                  {collection.label}
+              {teams.map((team) => (
+                <TextSelectOption key={team} value={team}>
+                  {team}
                 </TextSelectOption>
               ))}
             </TextSelect>
