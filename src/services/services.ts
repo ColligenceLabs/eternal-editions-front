@@ -112,7 +112,7 @@ export const getExchange = async () => await customAxios.get('/api/exchange');
 
 export const getOldMyTicket = async () => await apiAuthAxios.get('/api/users/tickets');
 
-export const getOldMyTicket2 = async (uid: string) =>
+export const getOldMyTicketByUid = async (uid: string) =>
   await apiAuthAxios.get(`/api/users/tickets/${uid}`);
 
 export const checkUserEmail = async (email: string) =>
