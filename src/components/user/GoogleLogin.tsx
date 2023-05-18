@@ -17,13 +17,12 @@ import { styled } from '@mui/material/styles';
 import palette from 'src/theme/palette';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import RoundedButton from '../common/RoundedButton';
-import { ACCOUNT_FULL_FORM, GoogleFormData } from './GoogleFlow';
+import { ACCOUNT_FULL_FORM, GoogleAccountData } from './GoogleFlow';
 import CheckboxFillIcon from 'src/assets/icons/checkboxFill';
 import CheckboxIcon from 'src/assets/icons/checkbox';
 import CheckboxIndeterminateFillIcon from 'src/assets/icons/checkboxIndeterminateFill';
 import CheckIcon from 'src/assets/icons/check';
 import CheckFillIcon from 'src/assets/icons/checkFill';
-import { terms } from './GoogleFullSignUp';
 
 type FormValuesProps = {
   email: string;
@@ -33,7 +32,7 @@ type FormValuesProps = {
   agree: boolean;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   menuPaper: {
     backgroundColor: 'white',
   },
@@ -44,7 +43,7 @@ const phoneRegExp =
 
 const FormSchema = Yup.object().shape({
   email: Yup.string().required('Email is required').email('That is not an email'),
-  birthDate: Yup.date().required('Birth date is required'),
+  birthDate: Yup.date().required('Birth date is required').typeError('Invalid date format'),
   phoneNumber: Yup.string()
     .matches(phoneRegExp, 'Phone number is not valid')
     .required('Phone number is required'),
@@ -52,10 +51,15 @@ const FormSchema = Yup.object().shape({
 });
 
 type Props = {
-  setData: (value: GoogleFormData) => void;
-  setForm: (value: string) => void;
+  setData: React.Dispatch<React.SetStateAction<Partial<GoogleAccountData>>>;
+  setForm: React.Dispatch<React.SetStateAction<string>>;
 };
 
+const terms = [
+  { title: '이용약관을 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
+  { title: '개인정보처리방침을 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
+  { title: '프로모션 관련 SMS, E-mail 수신에 동의합니다.', isRequired: false },
+];
 const GoogleLogin = ({ setForm, setData }: Props) => {
   const classes = useStyles();
   const {
@@ -68,14 +72,14 @@ const GoogleLogin = ({ setForm, setData }: Props) => {
     resolver: yupResolver(FormSchema),
     defaultValues: {
       email: '',
-      birthDate: new Date('12/25/2020'),
+      birthDate: new Date(),
       phoneNumber: '',
-      gender: 'female',
+      gender: 'male',
       agree: false,
     },
   });
 
-  const onSubmit = ({ email, birthDate, phoneNumber, gender, agree }: FormValuesProps) => {
+  const onSubmit = ({ email, birthDate, phoneNumber, gender }: FormValuesProps) => {
     setForm(ACCOUNT_FULL_FORM);
     setData({ email: email, birthDate: birthDate, phoneNumber: phoneNumber, gender: gender });
   };
@@ -91,6 +95,7 @@ const GoogleLogin = ({ setForm, setData }: Props) => {
       >
         Google Account
       </Typography>
+
       <Stack gap={1.5}>
         <Section>
           <Label as="label" sx={{ color: palette.dark.black.lighter }}>
@@ -130,14 +135,17 @@ const GoogleLogin = ({ setForm, setData }: Props) => {
               <DatePicker
                 {...restField}
                 inputRef={ref}
+                maxDate={new Date()}
+                inputFormat="dd/MM/yyyy"
                 renderInput={(inputProps) => (
                   <StyledTextField
+                    placeholder="00/00/0000"
                     variant="standard"
                     {...inputProps}
                     onBlur={onBlur}
                     name={name}
                     error={Boolean(error)}
-                    helperText={error ? 'That not a true Date' : null}
+                    helperText={error?.message}
                   />
                 )}
               />
@@ -211,7 +219,7 @@ const GoogleLogin = ({ setForm, setData }: Props) => {
                   indeterminateIcon={<CheckboxIndeterminateFillIcon />}
                 />
               }
-              label="Agree to all"
+              label="모두 동의합니다."
               {...field}
             />
           )}
@@ -223,7 +231,6 @@ const GoogleLogin = ({ setForm, setData }: Props) => {
             control={
               <Checkbox
                 checked={watch('agree')}
-                // checked={true}
                 sx={{ padding: 0, px: '8px' }}
                 icon={<CheckIcon />}
                 checkedIcon={<CheckFillIcon />}
@@ -248,7 +255,7 @@ const GoogleLogin = ({ setForm, setData }: Props) => {
 
 export default GoogleLogin;
 
-const StyledTextField = styled(TextField)(({ theme }) => ({
+export const StyledTextField = styled(TextField)(({ theme }) => ({
   [`.${inputBaseClasses.input}::placeholder`]: {
     color: '#BBBBBB',
   },
@@ -257,7 +264,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
   },
 }));
 
-const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+export const StyledMenuItem = styled(MenuItem)(({}) => ({
   backgroundColor: 'white',
   color: 'black',
   borderRadius: '0px',
