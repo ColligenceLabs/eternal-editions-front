@@ -8,13 +8,11 @@ import {
   tabsClasses,
   useTheme,
 } from '@mui/material';
-import React, { ReactNode, useEffect } from 'react';
+import React, { ReactNode } from 'react';
 import Routes from 'src/routes';
 import { useRouter } from 'next/router';
 import { useResponsive } from 'src/hooks';
 import NextLink from 'next/link';
-import { getMyTickets, getOldMyTicket, getOldMyTicketByUid } from 'src/services/services';
-import { useSelector } from 'react-redux';
 
 const LINKS = [
   {
@@ -114,19 +112,6 @@ interface Props {
 export default function SideMenu({ chipLabel }: Props) {
   const router = useRouter();
   const isMobile = useResponsive('down', 'md');
-  const { user } = useSelector((state: any) => state.webUser);
-  const fetchMyItemCount = async () => {
-    const ticketCount = await getMyTickets(user?.uid);
-    console.log(ticketCount);
-    const oldTicketCount = await getOldMyTicketByUid(user?.uid);
-    console.log(oldTicketCount);
-  };
-  useEffect(() => {
-    console.log(router.pathname);
-    if (router.pathname === '/my/tickets') {
-      fetchMyItemCount();
-    }
-  }, [router.pathname]);
 
   return (
     <Tabs
