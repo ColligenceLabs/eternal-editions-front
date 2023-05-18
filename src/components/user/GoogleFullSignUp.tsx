@@ -58,7 +58,7 @@ const FormSchema = Yup.object().shape({
     .length(6, 'Verification Code must be exactly 6 characters'),
 });
 
-const terms = [
+export const terms = [
   { title: 'Agree Terms and Conditions', isRequired: true },
   { title: 'Agree Privacy Policy', isRequired: true },
   { title: 'Receive SMS and E-mails for promotions', isRequired: false },
