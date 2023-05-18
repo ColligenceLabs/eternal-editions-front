@@ -144,7 +144,6 @@ export default function TicketDetailPage() {
     event.preventDefault();
     const { value } = event.target;
     setAbcToken(value);
-    // console.log(value);
   };
   const handleCloseSnackbar = () => {
     setOpenSnackbar({
@@ -456,7 +455,6 @@ export default function TicketDetailPage() {
   const fetchTicketInfo = async () => {
     if (slug && typeof slug === 'string') {
       const ticketInfoRes = await getTicketInfoService(slug);
-
       const contract = ticketInfoRes.data.data?.boxContractAddress;
       const whitelist = ticketInfoRes.data.data?.whitelistNftId;
       const whitelistAddress = ticketInfoRes.data.data?.whitelistNftContractAddress ?? '';
@@ -591,13 +589,7 @@ export default function TicketDetailPage() {
 
               <Section>
                 <Label>Description</Label>
-                <Value sx={{ color: 'red' }}>
-                  Welcome to Grumbies! The Grumbies Eternal Entry is dropping exclusively on
-                  OpenSea. After the mint a snapshot will be announced and holders of the Eternal
-                  Entry will bnesis Battle. In addition to the Grumbies Genesis Battle, the Grumbies
-                  Eternal Entry will give holders access to all future endeavors in the Grumbies
-                  universe. 
-                </Value>
+                {ticketInfo && <Value>{ticketInfo.introduction.en}</Value>}
               </Section>
 
               <Section>

@@ -17,8 +17,6 @@ export default function TicketPostItem({ ticket }: Props) {
     return null;
   }
 
-  console.log(ticket);
-
   const { id } = ticket;
 
   return (
