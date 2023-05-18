@@ -54,13 +54,13 @@ export default function SaveOldTicketContent({ ticketInfo, onClose }: Props) {
       <Box sx={{ textAlign: 'center' }}>
         <QRCode
           style={{}}
-          value={`https://entrance.eternaleditions.io/admin-e-ticket?type={2}&code=${ticketInfo.code}&expireTime=${qrTimestamp}`}
+          value={`https://entrance.eternaleditions.io/admin-e-ticket?type=1&code=${ticketInfo.code}&expireTime=${qrTimestamp}`}
           size={160}
         />
       </Box>
       <Typography
         sx={{ fontSize: '12px' }}
-      >{`https://entrance.eternaleditions.io/admin-e-ticket?type={2}&code=${ticketInfo.code}&expireTime=${qrTimestamp}`}</Typography>
+      >{`https://entrance.eternaleditions.io/admin-e-ticket?type=1&code=${ticketInfo.code}&expireTime=${qrTimestamp}`}</Typography>
       <Stack gap="12px" mt="48px" mb="24px">
         <Stack gap={0.5}>
           <Typography
