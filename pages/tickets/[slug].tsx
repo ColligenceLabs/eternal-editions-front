@@ -629,6 +629,7 @@ export default function TicketDetailPage() {
             boxContractAddress={boxContractAddress}
             quote={quote}
             mysterybox_id={id}
+            ticketInfo={ticketInfo}
           />
         </Container>
       </RootStyle>

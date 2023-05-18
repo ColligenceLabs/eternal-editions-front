@@ -1,6 +1,6 @@
 import { Stack, Typography, Divider, CircularProgress, Fade, TextField } from '@mui/material';
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { TicketItemTypes } from 'src/@types/ticket/ticketTypes';
+import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import RoundedButton from 'src/components/common/RoundedButton';
 import { fDate } from 'src/utils/formatTime';
 import QuantityControl from './QuantityControl';
@@ -34,6 +34,11 @@ type Props = {
   quote: string | undefined;
   mysterybox_id: number | undefined;
   setIsTicketItemModalOpen: (value: boolean) => void;
+  ticketInfo?: TicketInfoTypes;
+  day: string;
+  team: string;
+  duration: string;
+  location: string;
 };
 
 const ticketLabel = {
@@ -60,6 +65,11 @@ const TicketItemModal = ({
   quote,
   mysterybox_id,
   setIsTicketItemModalOpen,
+  ticketInfo,
+  day,
+  team,
+  duration,
+  location,
 }: Props) => {
   const { price, createdAt, name } = ticket;
   const [quantity, setQuantity] = useState<number>(1);
@@ -400,6 +410,7 @@ const TicketItemModal = ({
   }, [price, maticPrice]);
 
   const onSubmit = () => {
+    console.log(ticketInfo);
     method === methodType.edcp ? handleBuyWithPoint() : handleBuyWithMatic();
   };
 
@@ -470,16 +481,17 @@ const TicketItemModal = ({
                     fontWeight: '400',
                   }}
                 >
-                  {fDate(createdAt, 'MMMM dd')} -{' '}
-                  <span
-                    style={{
-                      fontSize: '16px',
-                      lineHeight: '20px',
-                      color: 'red',
-                    }}
-                  >
-                    31, 2022
-                  </span>
+                  {/*{fDate(createdAt, 'MMMM dd')} -{' '}*/}
+                  {/*<span*/}
+                  {/*  style={{*/}
+                  {/*    fontSize: '16px',*/}
+                  {/*    lineHeight: '20px',*/}
+                  {/*    color: 'red',*/}
+                  {/*  }}*/}
+                  {/*>*/}
+                  {/*  31, 2022*/}
+                  {/*</span>*/}
+                  {duration}
                 </Typography>
               )}
               {ticket.properties && (
@@ -490,16 +502,17 @@ const TicketItemModal = ({
                     fontWeight: '400',
                   }}
                 >
-                  {ticket.properties[0].type.toLowerCase() === ticketLabel.location &&
-                    ticket.properties[0].name}
+                  {/*{ticket.properties[0].type.toLowerCase() === ticketLabel.location &&*/}
+                  {/*  ticket.properties[0].name}*/}
+                  {location}
                 </Typography>
               )}
             </Stack>
             <Stack>
               <Divider sx={{ marginBottom: '12px' }} />
               <Stack gap={0.5}>
-                {ticketinfo(ticketLabel.day, fDate(createdAt, 'EEEE (MMMM dd, yyyy)'))}
-                {ticketinfo(ticketLabel.team, 'Team Yellow', true)}
+                {ticketinfo(ticketLabel.day, day)}
+                {ticketinfo(ticketLabel.team, `Team ${team}`)}
                 {isCompleteModal ? (
                   <>
                     {/* setDollarPrice((ticketInfo?.price ?? 0) * maticPrice); */}

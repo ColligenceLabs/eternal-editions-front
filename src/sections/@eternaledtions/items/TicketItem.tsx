@@ -4,10 +4,9 @@ import { Box, Grid, Chip, Stack, Typography, styled } from '@mui/material';
 import Routes from 'src/routes';
 import { Image, TextMaxLine } from 'src/components';
 import { varHover, varTranHover } from 'src/components/animate';
-import { fDate } from 'src/utils/formatTime';
 import NextLink from 'next/link';
 import { useResponsive } from 'src/hooks';
-import { TicketItemTypes } from 'src/@types/ticket/ticketTypes';
+import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import BuyNowButton from './BuyNowButton';
 import { useRouter } from 'next/router';
 import RoundedButton from 'src/components/common/RoundedButton';
@@ -15,6 +14,7 @@ import ModalCustom from 'src/components/common/ModalCustom';
 import { useEffect, useState } from 'react';
 import TicketItemModal from './TicketItemModal';
 import axios from 'axios';
+import { Modify } from 'notistack';
 
 // ----------------------------------------------------------------------
 
@@ -34,6 +34,7 @@ type Props = {
   boxContractAddress?: any;
   quote?: string | undefined;
   mysterybox_id: number | undefined;
+  ticketInfo?: TicketInfoTypes | null;
 };
 
 export default function TicketItem({
@@ -42,10 +43,20 @@ export default function TicketItem({
   boxContractAddress,
   quote,
   mysterybox_id,
+  ticketInfo,
 }: Props) {
   const router = useRouter();
   const isMobile = useResponsive('down', 'md');
-  const { id, name, imageLink, categoriesStr, releaseDatetime, createdAt, price } = ticket;
+  const { id, name, imageLink, categoriesStr, releaseDatetime, createdAt, price, properties } =
+    ticket;
+  console.log(releaseDatetime);
+  const [team, setTeam] = useState('');
+  const [day, setDay] = useState('');
+  const [duration, setDuration] = useState('');
+  const [location, setLocation] = useState('');
+
+  console.log(properties);
+
   const isOnAuction = router.query.status; // TODO: Update value
   const theme = useTheme();
   const [isTicketItemModalOpen, setIsTicketItemModalOpen] = useState(false);
@@ -70,6 +81,22 @@ export default function TicketItem({
       console.log(new Error(error));
     }
   };
+
+  useEffect(() => {
+    if (properties) {
+      properties.map((property) =>
+        property.type === 'team'
+          ? setTeam(property.name)
+          : property.type === 'day'
+          ? setDay(property.name)
+          : property.type === 'duration'
+          ? setDuration(property.name)
+          : property.type === 'location'
+          ? setLocation(property.name)
+          : null
+      );
+    }
+  }, [properties]);
 
   useEffect(() => {
     getCoinPrice();
@@ -156,22 +183,22 @@ export default function TicketItem({
                     color: 'common.white',
                   }}
                 >
-                  {createdAt && fDate(createdAt, 'EEEE (MMMM dd, yyyy)')}
+                  {/*{createdAt && fDate(createdAt, 'EEEE (MMMM dd, yyyy)')}*/}
+                  {day}
                 </Typography>
                 <Stack flexDirection="row" gap={0.5} alignItems="center">
                   <Typography
                     sx={{
                       fontSize: 12,
                       lineHeight: 16 / 12,
-                      color: 'red',
                     }}
                   >
-                    Team Purple
+                    {`Team ${team}`}
                   </Typography>
                   <Box
                     sx={{
                       border: '1px solid rgba(255, 255, 255, 0.6)',
-                      backgroundColor: '#A771FF',
+                      backgroundColor: `${team}`,
                       width: '8px',
                       height: '8px',
                       borderRadius: '100%',
@@ -264,6 +291,11 @@ export default function TicketItem({
                   boxContractAddress={boxContractAddress}
                   quote={quote}
                   mysterybox_id={mysterybox_id}
+                  ticketInfo={ticketInfo}
+                  day={day}
+                  team={team}
+                  duration={duration}
+                  location={location}
                   setIsTicketItemModalOpen={setIsTicketItemModalOpen}
                 />
               </ModalCustom>

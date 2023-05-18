@@ -8,6 +8,7 @@ import { SUCCESS } from 'src/config';
 import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import { useResponsive } from 'src/hooks';
 import { TextSelect, TextSelectOption } from 'src/components/common/Select';
+import { Modify } from 'notistack';
 
 const COLLECTIONS = [
   {
@@ -29,6 +30,7 @@ type Props = {
   boxContractAddress: any;
   quote: string | undefined;
   mysterybox_id: number | undefined;
+  ticketInfo?: TicketInfoTypes | null;
 };
 
 type CategoryTypes = {
@@ -36,23 +38,32 @@ type CategoryTypes = {
   count: string;
 };
 
+type ExTicketItemType = Modify<
+  TicketItemTypes,
+  {
+    categoriesStr: string;
+    releaseDatetime: Date;
+  }
+>;
+
 export default function TicketItemsInDrop({
-  categories: originCategories,
+  // categories: originCategories,
   items,
   boxContractAddress,
   quote,
   mysterybox_id,
+  ticketInfo,
 }: Props) {
   const isMobile = useResponsive('down', 'md');
   const [curPage, setCurPage] = useState(1);
   const [lastPage, setLastPage] = useState(0);
   const [selected, setSelected] = useState('All');
   const [ticketInfoList, setTicketInfoList] = useState<TicketInfoTypes[]>([]);
-  const [categories, setCategories] = useState<CategoryTypes[]>([]);
+  // const [categories, setCategories] = useState<CategoryTypes[]>([]);
   const [collection, setCollection] = useState('default');
   const [salesType, setSalesType] = useState('default');
 
-  originCategories = ['All', ...Array.from(new Set(originCategories))];
+  // originCategories = ['All', ...Array.from(new Set(originCategories))];
   const perPage = 6;
 
   const handleChangeCategory = (event: React.SyntheticEvent, newValue: string) => {
@@ -76,23 +87,23 @@ export default function TicketItemsInDrop({
     }
   };
 
-  const getCountByCategory = async () => {
-    const res = await getTicketCountByCategory();
-
-    if (res.data.status === SUCCESS) setCategories(res.data.data);
-    else {
-      console.log('[error] item count by category fetch failed. ');
-      const temp: CategoryTypes[] = originCategories.map((item) => ({
-        category: item.toLowerCase(),
-        count: '',
-      }));
-      setCategories([...temp]);
-    }
-  };
+  // const getCountByCategory = async () => {
+  //   const res = await getTicketCountByCategory();
+  //
+  //   if (res.data.status === SUCCESS) setCategories(res.data.data);
+  //   else {
+  //     console.log('[error] item count by category fetch failed. ');
+  //     const temp: CategoryTypes[] = originCategories.map((item) => ({
+  //       category: item.toLowerCase(),
+  //       count: '',
+  //     }));
+  //     setCategories([...temp]);
+  //   }
+  // };
 
   useEffect(() => {
     setCurPage(1);
-    getCountByCategory();
+    // getCountByCategory();
   }, [selected]);
 
   useEffect(() => {
@@ -183,6 +194,7 @@ export default function TicketItemsInDrop({
               boxContractAddress={boxContractAddress}
               quote={quote}
               mysterybox_id={mysterybox_id}
+              ticketInfo={ticketInfo}
             />
           ))}
         </Grid>
