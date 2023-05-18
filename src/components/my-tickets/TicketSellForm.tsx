@@ -52,9 +52,11 @@ const DURATIONS = [
 
 type TicketSellFormProps = {
   sellTicketInfo: MyTicketTypes;
+  team: string;
+  day: string;
 };
 
-export default function TicketSellForm({ sellTicketInfo }: TicketSellFormProps) {
+export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSellFormProps) {
   console.log(sellTicketInfo);
   const theme = useTheme();
   const [typeOfSale, setTypeOfSale] = useState(TYPES_OF_SALE[0].value);
@@ -84,11 +86,11 @@ export default function TicketSellForm({ sellTicketInfo }: TicketSellFormProps) 
       <Stack gap={{ xs: 2, md: 0 }}>
         <Row>
           <Label>Day</Label>
-          <Value>Wednesday (November 11,2023)</Value>
+          <Value>{day}</Value>
         </Row>
         <Row>
           <Label>Team</Label>
-          <Value>Team Yellow</Value>
+          <Value>{`Team ${team}`}</Value>
         </Row>
       </Stack>
 

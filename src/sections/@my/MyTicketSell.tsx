@@ -10,8 +10,11 @@ import { MyTicketTypes } from 'src/@types/my/myTicket';
 
 type MyTicketSellProps = {
   sellTicketInfo: MyTicketTypes;
+
+  team: string;
+  day: string;
 };
-const MyTicketSell: React.FC<MyTicketSellProps> = ({ sellTicketInfo }) => {
+const MyTicketSell: React.FC<MyTicketSellProps> = ({ sellTicketInfo, team, day }) => {
   const theme = useTheme();
   console.log(sellTicketInfo);
   return (
@@ -28,7 +31,7 @@ const MyTicketSell: React.FC<MyTicketSellProps> = ({ sellTicketInfo }) => {
             <Badge label={'For sale'} />
           </Stack>
           <TicketName>{sellTicketInfo.mysteryboxItem.name}</TicketName>
-          <TicketSellForm sellTicketInfo={sellTicketInfo} />
+          <TicketSellForm sellTicketInfo={sellTicketInfo} day={day} team={team} />
         </CardInner>
       </CardWrapper>
     </Box>
