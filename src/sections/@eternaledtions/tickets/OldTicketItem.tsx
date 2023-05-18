@@ -1,10 +1,11 @@
 // @mui
-import { Box, Button, Stack, Typography } from '@mui/material';
+import { Box, Button, DialogContent, DialogTitle, Stack, Typography } from '@mui/material';
 import { m } from 'framer-motion';
 import { Image, TextIconLabel, TextMaxLine, varHover, varTranHover } from 'src/components';
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { fDate } from '../../../utils/formatTime';
 import QRCode from 'react-qr-code';
+import DialogAnimate from '../../../components/animate/DialogAnimate';
 
 // ----------------------------------------------------------------------
 
@@ -17,15 +18,34 @@ type Props = {
     createdAt: Date;
     updatedAt: Date;
     status: string;
+    code: string;
   };
 };
 
 export default function OldTicketItem({ ticket }: Props) {
+  const [qrOpen, setQrOpen] = useState(false);
+  const [qrTimestamp, setQrTimestamp] = useState(0);
   console.log(ticket);
   const checkTicketId = (id: number) => {
     if (id >= 5758 && id <= 7787) return '2023';
     else return '2022';
   };
+
+  useEffect(() => {
+    console.log(qrOpen);
+    if (qrOpen) {
+      console.log('start timestmap');
+      const now = new Date();
+      setQrTimestamp(now.setMinutes(now.getMinutes() + 5));
+    } else {
+      console.log('reset timestamp');
+      setQrTimestamp(0);
+    }
+  }, [qrOpen]);
+
+  useEffect(() => {
+    console.log(new Date(qrTimestamp));
+  }, [qrTimestamp]);
 
   return ticket ? (
     <Stack
@@ -67,7 +87,12 @@ export default function OldTicketItem({ ticket }: Props) {
           </Stack>
 
           <Stack sx={{ mt: 4 }}>
-            <Button size="large" variant="contained" fullWidth={true}>
+            <Button
+              size="large"
+              variant="contained"
+              fullWidth={true}
+              onClick={() => setQrOpen(true)}
+            >
               TO ENTER
             </Button>
           </Stack>
@@ -100,6 +125,27 @@ export default function OldTicketItem({ ticket }: Props) {
 
         <Image src={ticket.thumbnail} alt={ticket.name} ratio="6/4" />
       </Box>
+      {qrOpen && (
+        <DialogAnimate
+          fullWidth
+          maxWidth="xs"
+          open={qrOpen}
+          onClose={() => setQrOpen(false)}
+          sx={{ bgcolor: '#fff' }}
+        >
+          <DialogTitle>QR Code</DialogTitle>
+          <DialogContent sx={{ textAlign: 'center' }}>
+            <QRCode
+              // value={`https://entrace2023.eternaleditions.io/entrace-confirm?contractAddress=${ticketInfo.boxContractAddress}&tokenId=${ticketInfo.tokenId}`}
+              value={`https://entrance.eternaleditions.io/admin-e-ticket?type={2}&code=${ticket.code}&expireTime=${qrTimestamp}`}
+              // size={isMobile ? 50 : 120}
+            />
+            <Typography
+              sx={{ color: '#000', fontSize: '12px' }}
+            >{`https://entrance.eternaleditions.io/admin-e-ticket?type={2}&code=${ticket.code}&expireTime=${qrTimestamp}`}</Typography>
+          </DialogContent>
+        </DialogAnimate>
+      )}
     </Stack>
   ) : null;
 }

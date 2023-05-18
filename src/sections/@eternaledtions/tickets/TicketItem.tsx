@@ -1,5 +1,15 @@
 // @mui
-import { Box, Button, Stack, Grid, Typography } from '@mui/material';
+import {
+  Box,
+  Button,
+  Stack,
+  Grid,
+  Typography,
+  Paper,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+} from '@mui/material';
 import { m } from 'framer-motion';
 import {
   Image,
@@ -8,6 +18,7 @@ import {
   varHover,
   varTranHover,
   EEAvatar,
+  varFade,
 } from 'src/components';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { fDate } from 'src/utils/formatTime';
@@ -15,12 +26,16 @@ import axios from 'axios';
 import QRCode from 'react-qr-code';
 // import { isMobile } from 'react-device-detect';
 import { useResponsive } from 'src/hooks';
+import DialogAnimate from '../../../components/animate/DialogAnimate';
 
 export default function TicketItem({ ticket }: any) {
+  // console.log(ticket);
   const isXs = useResponsive('down', 'sm');
   const isMobile = useResponsive('down', 'md');
   const [maticPrice, setMaticPrice] = useState(0);
   const [klayPrice, setKlayPrice] = useState(0);
+  const [qrOpen, setQrOpen] = useState(false);
+  const [qrTimestamp, setQrTimestamp] = useState(0);
   const [ticketInfo, setTicketInfo] = useState({
     // company: '',
     // companyImage: null,
@@ -33,6 +48,7 @@ export default function TicketItem({ ticket }: any) {
     boxContractAddress: '',
     no: '',
     tokenId: null,
+    mysteryBoxId: '',
   });
 
   const getCoinPrice = () => {
@@ -74,9 +90,26 @@ export default function TicketItem({ ticket }: any) {
         boxContractAddress: ticket.mysteryboxInfo.boxContractAddress,
         no: ticket.no,
         tokenId: ticket.tokenId,
+        ...ticket,
       });
     }
   }, [ticket]);
+
+  useEffect(() => {
+    console.log(qrOpen);
+    if (qrOpen) {
+      console.log('start timestmap');
+      const now = new Date();
+      setQrTimestamp(now.setMinutes(now.getMinutes() + 5));
+    } else {
+      console.log('reset timestamp');
+      setQrTimestamp(0);
+    }
+  }, [qrOpen]);
+
+  useEffect(() => {
+    console.log(new Date(qrTimestamp));
+  }, [qrTimestamp]);
 
   return (
     <Grid
@@ -180,8 +213,7 @@ export default function TicketItem({ ticket }: any) {
               label="Used"
               value={ticket?.status?.toLowerCase() === 'used' ? 'Used' : '-'}
             />
-            {/* <LineItem label="Number of tickets" value={ticketInfo.ticketNumber} /> */}
-
+            4{/* <LineItem label="Number of tickets" value={ticketInfo.ticketNumber} /> */}
             {/* <img src={'/assets/example/qr.png'} style={{ maxWidth: '120px' }} /> */}
             {/* 팝업 변경 예정 */}
             {/* <Stack sx={{ mt: isMobile ? 2 : 3 }} justifyContent="center" alignItems="center">
@@ -191,15 +223,40 @@ export default function TicketItem({ ticket }: any) {
               />
             </Stack> */}
             <Box sx={{ flexGrow: 1 }} />
-
             <Stack sx={{ mt: isMobile ? 2 : 4 }}>
-              <Button size={isMobile ? 'small' : 'large'} variant="vivid" fullWidth={true} disabled>
+              <Button
+                size={isMobile ? 'small' : 'large'}
+                variant="vivid"
+                fullWidth={true}
+                onClick={() => setQrOpen(true)}
+              >
                 TO ENTER
               </Button>
             </Stack>
           </Stack>
         </Stack>
       </Stack>
+      {qrOpen && (
+        <DialogAnimate
+          fullWidth
+          maxWidth="xs"
+          open={qrOpen}
+          onClose={() => setQrOpen(false)}
+          sx={{ bgcolor: '#fff' }}
+        >
+          <DialogTitle>QR Code</DialogTitle>
+          <DialogContent sx={{ textAlign: 'center' }}>
+            <QRCode
+              // value={`https://entrace2023.eternaleditions.io/entrace-confirm?contractAddress=${ticketInfo.boxContractAddress}&tokenId=${ticketInfo.tokenId}`}
+              value={`https://entrance.eternaleditions.io/admin-e-ticket?type=2&tokenId=${ticketInfo.tokenId}&nftid=${ticketInfo.mysteryBoxId}&expireTime=${qrTimestamp}`}
+              // size={isMobile ? 50 : 120}
+            />
+            <Typography
+              sx={{ color: '#000', fontSize: '12px' }}
+            >{`https://entrance.eternaleditions.io/admin-e-ticket?type=2&tokenId=${ticketInfo.tokenId}&nftid=${ticketInfo.mysteryBoxId}&expireTime=${qrTimestamp}`}</Typography>
+          </DialogContent>
+        </DialogAnimate>
+      )}
     </Grid>
   );
 }
