@@ -45,7 +45,9 @@ const phoneRegExp =
 const FormSchema = Yup.object().shape({
   email: Yup.string().required('Email is required').email('That is not an email'),
   birthDate: Yup.date().required('Birth date is required'),
-  phoneNumber: Yup.string().matches(phoneRegExp, 'Phone number is not valid'),
+  phoneNumber: Yup.string()
+    .matches(phoneRegExp, 'Phone number is not valid')
+    .required('Phone number is required'),
   agree: Yup.boolean().oneOf([true], 'Agree to all is required'),
 });
 
@@ -59,6 +61,7 @@ const GoogleLogin = ({ setForm, setData }: Props) => {
   const {
     control,
     handleSubmit,
+    watch,
     formState: { isValid },
   } = useForm<FormValuesProps>({
     mode: 'onTouched',
@@ -188,8 +191,8 @@ const GoogleLogin = ({ setForm, setData }: Props) => {
                   },
                 }}
               >
-                <StyledMenuItem value={'female'}>Male</StyledMenuItem>
-                <StyledMenuItem value={'male'}>Female</StyledMenuItem>
+                <StyledMenuItem value={'male'}>Male</StyledMenuItem>
+                <StyledMenuItem value={'female'}>Female</StyledMenuItem>
               </Select>
             )}
           />
@@ -219,6 +222,8 @@ const GoogleLogin = ({ setForm, setData }: Props) => {
             key={index}
             control={
               <Checkbox
+                checked={watch('agree')}
+                // checked={true}
                 sx={{ padding: 0, px: '8px' }}
                 icon={<CheckIcon />}
                 checkedIcon={<CheckFillIcon />}
