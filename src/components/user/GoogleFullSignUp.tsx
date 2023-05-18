@@ -10,7 +10,8 @@ import {
   MenuItem,
   FormControlLabel,
   Checkbox,
-  Box,
+  buttonBaseClasses,
+  InputAdornment,
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { Label, Section } from '../my-tickets/StyledComponents';
@@ -27,6 +28,7 @@ import CheckboxIndeterminateFillIcon from 'src/assets/icons/checkboxIndeterminat
 import CheckIcon from 'src/assets/icons/check';
 import CheckFillIcon from 'src/assets/icons/checkFill';
 import { WALLET_FORM } from './GoogleFlow';
+import { Input } from '@mui/material';
 
 type FormValuesProps = {
   email: string;
@@ -36,15 +38,24 @@ type FormValuesProps = {
   name: string;
   country: string;
   agree: boolean;
+  verificationCode: string;
 };
-
+interface Props {
+  setForm: React.Dispatch<React.SetStateAction<string>>;
+}
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 const FormSchema = Yup.object().shape({
   email: Yup.string().required('Email is required').email('That is not an email'),
   birthDate: Yup.date().required('Birth date is required'),
-  phoneNumber: Yup.string().matches(phoneRegExp, 'Phone number is not valid'),
+  name: Yup.string().required('Full name is required'),
+  phoneNumber: Yup.string()
+    .matches(phoneRegExp, 'Phone number is not valid')
+    .required('Phone number is required'),
+  verificationCode: Yup.string()
+    .required('Verification Code  is required')
+    .length(6, 'Verification Code must be exactly 6 characters'),
 });
 
 const terms = [
@@ -52,35 +63,41 @@ const terms = [
   { title: 'Agree Privacy Policy', isRequired: true },
   { title: 'Receive SMS and E-mails for promotions', isRequired: false },
 ];
-const GoogleFullSignUp = ({ setForm }) => {
-  //   const [isContinue, setIsContinue] = useState<boolean>(false);
+const countries = ['Korea', 'China', 'United States', 'Russian'];
+const GoogleFullSignUp = ({ setForm }: Props) => {
+  const [showVerifyCode, setShowVerifyCode] = useState<boolean>(false);
   const [reqDate, setreqDate] = useState(new Date());
   const {
     control,
-    register,
+    getValues,
     handleSubmit,
+    watch,
     formState: { isValid },
   } = useForm<FormValuesProps>({
     resolver: yupResolver(FormSchema),
     defaultValues: {
       email: 'the@vn.vn',
       birthDate: new Date('12/25/2020'),
-      gender: 'female',
+      gender: 'male',
+      agree: false,
+      country: 'Korea',
     },
   });
 
   const onSubmit = (values: FormValuesProps) => {
     const { email, birthDate, phoneNumber, gender } = values;
     console.log('submit', values);
+    setForm(WALLET_FORM);
   };
-
+  console.log('onSubmit', getValues('agree'));
   return (
-    <Stack gap={3} component="form" onSubmit={handleSubmit(onSubmit)}>
+    <Stack gap={2} component="form" onSubmit={handleSubmit(onSubmit)}>
       <Typography
         sx={{
           fontSize: { xs: '16px', md: '24px' },
           fontWeight: 'bold',
           lineHeight: { xs: '24px', md: '28px' },
+          mb: 2,
         }}
       >
         Google Account Full
@@ -119,8 +136,11 @@ const GoogleFullSignUp = ({ setForm }) => {
           control={control}
           render={({ field }) => (
             <Select {...field} sx={{ color: '#000' }}>
-              <MenuItem value={'female'}>Ten</MenuItem>
-              <MenuItem value={'male'}>Twenty</MenuItem>
+              {countries.map((country) => (
+                <MenuItem value={country} key={country}>
+                  {country}
+                </MenuItem>
+              ))}
             </Select>
           )}
         />
@@ -136,6 +156,7 @@ const GoogleFullSignUp = ({ setForm }) => {
           render={({ field, fieldState: { error } }) => (
             <StyledTextField
               {...field}
+              placeholder="Please enter your fullname"
               variant="standard"
               size={'small'}
               inputProps={{
@@ -156,13 +177,33 @@ const GoogleFullSignUp = ({ setForm }) => {
         <Controller
           name="birthDate"
           control={control}
-          render={({ field: { onChange, ...restField } }) => (
+          render={({ field: { ...restField }, fieldState: { error } }) => (
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DatePicker
-                renderInput={(params) => <StyledTextField {...params} />}
+                // onChange={()}
+                renderInput={(params) => (
+                  <StyledTextField {...params} error={Boolean(error)} helperText={error?.message} />
+                )}
                 {...restField}
               />
             </LocalizationProvider>
+          )}
+        />
+      </Section>
+
+      <Section>
+        <Label as="label" sx={{ color: palette.dark.black.lighter }}>
+          GENDER
+        </Label>
+
+        <Controller
+          name="gender"
+          control={control}
+          render={({ field }) => (
+            <Select {...field} sx={{ color: '#000' }}>
+              <MenuItem value={'female'}>Woman</MenuItem>
+              <MenuItem value={'male'}>Man</MenuItem>
+            </Select>
           )}
         />
       </Section>
@@ -175,38 +216,82 @@ const GoogleFullSignUp = ({ setForm }) => {
           name="phoneNumber"
           control={control}
           render={({ field, fieldState: { error } }) => (
-            <StyledTextField
-              {...field}
-              variant="standard"
-              size={'small'}
-              type="string"
-              inputProps={{
-                style: { color: palette.dark.common.black, fontSize: 14, lineHeight: 20 / 14 },
-              }}
-              fullWidth
-              error={Boolean(error)}
-              helperText={error?.message}
-            />
+            <>
+              <StyledInput
+                {...field}
+                placeholder="Please enter your phone number"
+                size={'small'}
+                inputProps={{
+                  style: { color: palette.dark.common.black, fontSize: 14, lineHeight: 20 / 14 },
+                }}
+                fullWidth
+                error={Boolean(error)}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <RoundedButton
+                      variant="inactive"
+                      disabled={!watch('phoneNumber')}
+                      onClick={() => setShowVerifyCode(true)}
+                      sx={{
+                        padding: '10px 16px',
+                        marginBottom: '24px',
+                        color: !!watch('phoneNumber')
+                          ? palette.dark.common.black
+                          : palette.dark.black.lighter,
+                        [`&.${buttonBaseClasses.root}`]: {
+                          fontSize: 12,
+                          lineHeight: 13 / 12,
+                        },
+                      }}
+                    >
+                      {getValues('verificationCode') ? 'Confirm' : 'SEND CODE'}
+                    </RoundedButton>
+                  </InputAdornment>
+                }
+              />
+              {error?.message && (
+                <Typography variant="caption" color={'error'}>
+                  {error?.message}
+                </Typography>
+              )}
+            </>
           )}
         />
       </Section>
-      <Section>
-        <Label as="label" sx={{ color: palette.dark.black.lighter }}>
-          GENDER
-        </Label>
+      {showVerifyCode && (
+        <Section>
+          <Label as="label" sx={{ color: palette.dark.black.lighter }}>
+            Verification Code
+          </Label>
+          <Controller
+            name="verificationCode"
+            control={control}
+            render={({ field, fieldState: { error } }) => (
+              <StyledTextField
+                {...field}
+                placeholder="Please enter verification code"
+                variant="standard"
+                size={'small'}
+                type="string"
+                inputProps={{
+                  style: { color: palette.dark.common.black, fontSize: 14, lineHeight: 20 / 14 },
+                }}
+                fullWidth
+                error={Boolean(error)}
+                helperText={error?.message}
+              />
+            )}
+          />
+        </Section>
+      )}
 
-        <Controller
-          name="gender"
-          control={control}
-          render={({ field }) => (
-            <Select {...field} sx={{ color: '#000' }}>
-              <MenuItem value={'female'}>Ten</MenuItem>
-              <MenuItem value={'male'}>Twenty</MenuItem>
-            </Select>
-          )}
-        />
-      </Section>
-      <Section>
+      <Typography variant={'caption'} sx={{ lineHeight: 16 / 12 }}>
+        Lost your code?{' '}
+        <Typography variant={'caption'} color={'#00BA03'} sx={{ cursor: 'pointer' }}>
+          Resend Code
+        </Typography>
+      </Typography>
+      <Stack gap={0}>
         <Controller
           name="agree"
           control={control}
@@ -214,7 +299,8 @@ const GoogleFullSignUp = ({ setForm }) => {
             <FormControlLabel
               control={
                 <Checkbox
-                  defaultChecked
+                  onChange={(e) => field.onChange(e.target.checked)}
+                  checked={field.value}
                   icon={<CheckboxIcon />}
                   checkedIcon={<CheckboxFillIcon />}
                   indeterminateIcon={<CheckboxIndeterminateFillIcon />}
@@ -230,6 +316,8 @@ const GoogleFullSignUp = ({ setForm }) => {
             key={index}
             control={
               <Checkbox
+                checked={watch('agree')}
+                // checked={true}
                 sx={{ padding: 0, px: '8px' }}
                 icon={<CheckIcon />}
                 checkedIcon={<CheckFillIcon />}
@@ -244,12 +332,9 @@ const GoogleFullSignUp = ({ setForm }) => {
             }
           />
         ))}
-      </Section>
-      <RoundedButton
-        type="submit"
-        //  disabled={!isValid}
-        onClick={() => setForm(WALLET_FORM)}
-      >
+      </Stack>
+
+      <RoundedButton type="submit" disabled={!watch('agree') || !watch('verificationCode')}>
         Continue
       </RoundedButton>
     </Stack>
@@ -259,6 +344,11 @@ const GoogleFullSignUp = ({ setForm }) => {
 export default GoogleFullSignUp;
 
 const StyledTextField = styled(TextField)(({ theme }) => ({
+  [`.${inputBaseClasses.input}::placeholder`]: {
+    color: '#BBBBBB',
+  },
+}));
+const StyledInput = styled(Input)(({ theme }) => ({
   [`.${inputBaseClasses.input}::placeholder`]: {
     color: '#BBBBBB',
   },

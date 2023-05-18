@@ -279,13 +279,13 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                           sx={{ width: 30, pt: '2px' }}
                         />
                       </CustomIconButton>
-                      <CustomIconButton onClick={() => setIsGoogleLogin(true)}>
+                      {/* <CustomIconButton onClick={() => setIsGoogleLogin(true)}>
                         <Image
                           alt="google icon"
                           src={getIconByType(GOOGLE_ICON)}
                           sx={{ height: 32 }}
                         />
-                      </CustomIconButton>
+                      </CustomIconButton> */}
                     </Stack>
                   )}
                 </Stack>
