@@ -47,6 +47,7 @@ export default function TicketItem({ ticket }: any) {
 
   useEffect(() => {
     if (ticket) {
+      console.log(ticket);
       const { properties } = ticket.mysteryboxItem;
 
       let day = '';
@@ -131,7 +132,7 @@ export default function TicketItem({ ticket }: any) {
                   py: isMobile ? 2 : 3,
                 }}
               >
-                <TextMaxLine variant="body2">{`#${ticketInfo.mysteryboxItem.no}`}</TextMaxLine>
+                <TextMaxLine variant="body2">{`#${ticketInfo.tokenId}`}</TextMaxLine>
                 <TextMaxLine variant="h3">{ticketInfo.mysteryboxItem.name}</TextMaxLine>
                 <TextMaxLine variant="body2">{ticketInfo.duration}</TextMaxLine>
                 <TextMaxLine variant="body2">{ticketInfo.location}</TextMaxLine>
