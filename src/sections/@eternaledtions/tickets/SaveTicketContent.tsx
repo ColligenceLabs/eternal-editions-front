@@ -1,6 +1,6 @@
 import { Box, Divider, FormControl, Input, inputClasses, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
 import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 import RoundedButton from 'src/components/common/RoundedButton';
@@ -18,8 +18,20 @@ export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
   const isMobile = useResponsive('down', 'md');
   const [isSaved, setIsSaved] = useState<boolean>(false);
   const [qrTimestamp, setQrTimestamp] = useState(0);
+  const [addresss, setAddresss] = useState('');
+
+  const handleChangeAddress = (event: ChangeEvent<HTMLInputElement>) => {
+    const { value } = event.target;
+    setAddresss(value);
+  };
+
   const saveTicket = () => setIsSaved(true);
-  const transfer = () => onClose();
+  const transfer = async () => {
+    console.log('click transfer');
+    console.log(ticketInfo);
+    console.log(`addresss : ${addresss}`);
+    onClose();
+  };
 
   useEffect(() => {
     const now = new Date();
@@ -85,8 +97,10 @@ export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
       {isSaved && (
         <>
           <FormControl variant="standard" fullWidth>
-            <Label sx={{ color: palette.dark.black.darker, mb: '12px' }}>PAYMENT AMOUNT</Label>
+            <Label sx={{ color: palette.dark.black.darker, mb: '12px' }}>ADDRESS</Label>
             <Input
+              value={addresss}
+              onChange={handleChangeAddress}
               placeholder="e.g. 1234..."
               inputProps={{
                 style: {
