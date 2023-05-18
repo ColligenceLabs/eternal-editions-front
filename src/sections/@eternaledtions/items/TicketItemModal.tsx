@@ -418,7 +418,7 @@ const TicketItemModal = ({
       const whlBalance = await getWhlBalanceNoSigner(contract, account, chainId);
       if (whlBalance < 1) {
         // TODO : Whitelist가 아닌 경우 구입을 못하게 차단
-        alert('구입 권한이 없습니다......');
+        setIsUnauthorized(true);
         return;
       }
     }
