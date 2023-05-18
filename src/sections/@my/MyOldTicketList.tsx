@@ -16,6 +16,7 @@ type OldTicketTypes = {
   createdAt: Date;
   updatedAt: Date;
   status: string;
+  code: string;
 };
 
 export default function MyOldTicketList({ loading }: Props) {
@@ -39,6 +40,7 @@ export default function MyOldTicketList({ loading }: Props) {
           createdAt: ticket.createdAt,
           updatedAt: ticket.updatedAt,
           status: ticket.status,
+          code: ticket.code,
         };
       });
       setOldTicket(temp);
