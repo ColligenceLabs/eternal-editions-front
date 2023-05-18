@@ -130,7 +130,7 @@ const TicketItemModal = ({
     // Collection
     const contract = boxContractAddress;
     const index = ticket.no - 1 ?? 0;
-    const amount = 1;
+    const amount = quantity;
 
     let quoteToken: string;
     let payment: BigNumber;
@@ -318,7 +318,7 @@ const TicketItemModal = ({
     // Collection
     const contract = boxContractAddress;
     const index = ticket.no - 1 ?? 0;
-    const amount = 1;
+    const amount = quantity;
 
     let quoteToken: string;
     let payment: BigNumber;
@@ -331,7 +331,7 @@ const TicketItemModal = ({
       const result = await buyItem(
         contract,
         index,
-        1,
+        amount,
         payment!.toString(),
         quoteToken!,
         account,
