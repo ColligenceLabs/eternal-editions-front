@@ -18,7 +18,7 @@ import { parseEther } from 'ethers/lib/utils';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import useAccount from 'src/hooks/useAccount';
 import { setWebUser } from 'src/store/slices/webUser';
-import { buyItem } from 'src/utils/transactions';
+import { buyItem, getWhlBalanceNoSigner } from 'src/utils/transactions';
 import { useRouter } from 'next/router';
 import { Modal } from '@mui/material';
 import { Backdrop } from '@mui/material';
@@ -409,8 +409,20 @@ const TicketItemModal = ({
     setDollarPrice((price ?? 0) * maticPrice);
   }, [price, maticPrice]);
 
-  const onSubmit = () => {
+  const onSubmit = async () => {
     console.log(ticketInfo);
+
+    if (ticketInfo && ticketInfo.whitelists && ticketInfo.whitelists.length > 0) {
+      const contract = ticketInfo.whitelists[0].boxContractAddress;
+
+      const whlBalance = await getWhlBalanceNoSigner(contract, account, chainId);
+      if (whlBalance < 1) {
+        // TODO : Whitelist가 아닌 경우 구입을 못하게 차단
+        alert('구입 권한이 없습니다......');
+        return;
+      }
+    }
+
     method === methodType.edcp ? handleBuyWithPoint() : handleBuyWithMatic();
   };
 
