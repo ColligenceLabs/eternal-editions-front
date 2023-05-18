@@ -30,6 +30,7 @@ import contracts from 'src/config/constants/contracts';
 import { parseEther } from 'ethers/lib/utils';
 import { SUCCESS } from 'src/config';
 import { LoadingButton } from '@mui/lab';
+import CSnackbar from 'src/components/common/CSnackbar';
 
 const modalStyle = {
   position: 'absolute',
@@ -68,6 +69,19 @@ export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
   const [abcOpen, setAbcOpen] = useState(false);
   const [otpLoading, setOtpLoading] = useState(false);
   const [isAbc, setIsAbc] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState({
+    open: false,
+    type: '',
+    message: '',
+  });
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar({
+      open: false,
+      type: '',
+      message: '',
+    });
+  };
 
   useEffect(() => {
     if (account === webUser.user.abc_address) {
@@ -118,21 +132,37 @@ export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
         const result = await abcSendTx(abcToken, contract, collectionAbi, method, txArgs, abcUser);
 
         if (parseInt(result.status.toString(), 16) === SUCCESS) {
-          // TODO : 성공 표시
+          setOpenSnackbar({
+            open: true,
+            type: 'success',
+            message: `Success Transfer.`,
+          });
           // TODO : DB drops 테이블에서 삭제 ?
         } else {
-          // TODO : 실패 표시
+          setOpenSnackbar({
+            open: true,
+            type: 'error',
+            message: `Field Transfer.`,
+          });
         }
       } catch (e: any) {}
     } else {
       // Metamask
       const result = await nftTransferFrom(contract, address, tokenId, account, library, false);
-
+      console.log(result);
       if (result === SUCCESS) {
-        // TODO : 성공 표시
+        setOpenSnackbar({
+          open: true,
+          type: 'success',
+          message: `Success Transfer.`,
+        });
         // TODO : DB drops 테이블에서 삭제 ?
       } else {
-        // TODO : 실패 표시
+        setOpenSnackbar({
+          open: true,
+          type: 'error',
+          message: `Field Transfer.`,
+        });
       }
     }
     // TODO : 버튼 로딩 끝
@@ -300,6 +330,12 @@ export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
           </Box>
         </Fade>
       </Modal>
+      <CSnackbar
+        open={openSnackbar.open}
+        type={openSnackbar.type}
+        message={openSnackbar.message}
+        handleClose={handleCloseSnackbar}
+      />
     </Box>
   );
 }
