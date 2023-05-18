@@ -6,7 +6,6 @@ import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 import RoundedButton from 'src/components/common/RoundedButton';
 import { Label, Section, Value } from 'src/components/my-tickets/StyledComponents';
 import { useResponsive } from 'src/hooks';
-// theme
 import palette from 'src/theme/palette';
 import { MyTicketTypes } from 'src/@types/my/myTicket';
 
@@ -23,14 +22,9 @@ export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
   const transfer = () => onClose();
 
   useEffect(() => {
-    console.log('start timestmap');
     const now = new Date();
     setQrTimestamp(now.setMinutes(now.getMinutes() + 5));
   }, []);
-
-  useEffect(() => {
-    console.log(new Date(qrTimestamp));
-  }, [qrTimestamp]);
 
   return (
     <Box
@@ -59,11 +53,11 @@ export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
               lineHeight: 28 / 24,
             }}
           >
-            Kansas City, KS Silver Editio
+            {ticketInfo.location}
           </Typography>
 
           <Stack>
-            <Typography variant="body2">November 11 - 13, 2022</Typography>
+            <Typography variant="body2">{ticketInfo.duration}</Typography>
             <Typography variant="body2">{ticketInfo.mysteryboxInfo.boxContractAddress}</Typography>
           </Stack>
         </Stack>
@@ -71,15 +65,15 @@ export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
         <Section>
           <Stack direction="row" justifyContent="space-between">
             <Label sx={{ color: palette.dark.black.darker }}>DAY</Label>
-            <Value sx={{ color: palette.dark.black.main }}> Saturday </Value>
+            <Value sx={{ color: palette.dark.black.main }}> {ticketInfo.day} </Value>
           </Stack>
           <Stack direction="row" justifyContent="space-between">
             <Label sx={{ color: palette.dark.black.darker }}>TEAM</Label>
-            <Label sx={{ color: palette.dark.black.main }}> Team Yellow </Label>
+            <Label sx={{ color: palette.dark.black.main }}> {`Team ${ticketInfo.team}`} </Label>
           </Stack>
           <Stack direction="row" justifyContent="space-between">
             <Label sx={{ color: palette.dark.black.darker }}>QTY</Label>
-            <Value sx={{ color: palette.dark.black.main }}> 1 </Value>
+            <Value sx={{ color: 'red' }}> 1 </Value>
           </Stack>
         </Section>
         <Divider />

@@ -40,81 +40,6 @@ export default function OldTicketItem({ ticket }: Props) {
     else return '2022';
   };
 
-  // return ticket ? (
-  //   <Stack
-  //     component={m.div}
-  //     whileHover="hover"
-  //     variants={varHover(1)}
-  //     transition={varTranHover()}
-  //     sx={{ borderRadius: 2, overflow: 'hidden', position: 'relative' }}
-  //   >
-  //     <Stack
-  //       justifyContent="space-between"
-  //       sx={{
-  //         p: 3,
-  //         borderRadius: 2,
-  //         height: 1,
-  //         zIndex: 1000,
-  //         right: 0,
-  //         width: {
-  //           sm: '50%',
-  //         },
-  //         position: 'absolute',
-  //         color: 'common.black',
-  //         backgroundColor: 'common.white',
-  //       }}
-  //     >
-  //       <Stack>
-  //         <LineItem icon={<></>} label="Reserve Price" value={'-'} />
-  //         {/* <LineItem icon={<></>} label="Location" value={'-'} /> */}
-  //         <LineItem icon={<></>} label="Number of tickets" value={1} />
-  //         <LineItem
-  //           icon={<></>}
-  //           label="Used"
-  //           value={ticket.status.toLowerCase() === 'used' ? 'Used' : '-'}
-  //         />
-  //
-  //         <Stack sx={{ mt: 3 }} justifyContent="center" alignItems="center">
-  //           {/*<img src={'/assets/example/qr.png'} style={{ maxWidth: '120px' }} />*/}
-  //           <QRCode value={ticket.qrcode} size={120} />
-  //         </Stack>
-  //
-  //         <Stack sx={{ mt: 4 }}>
-  //           <Button size="large" variant="contained" fullWidth={true}>
-  //             TO ENTER
-  //           </Button>
-  //         </Stack>
-  //       </Stack>
-  //     </Stack>
-  //
-  //     <Box
-  //       component={'div'}
-  //       sx={{
-  //         width: {
-  //           sm: '55%',
-  //         },
-  //       }}
-  //     >
-  //       <Stack spacing={1} sx={{ position: 'absolute', zIndex: 999, left: 20, top: 20 }}>
-  //         <TextMaxLine variant="h3" sx={{ width: '100%' }}>
-  //           {checkTicketId(ticket.id)} {ticket.name.replaceAll('"', '')}
-  //         </TextMaxLine>
-  //         <Typography
-  //           variant="body1"
-  //           sx={{
-  //             mb: 1,
-  //             mt: { xs: 1, sm: 0.5 },
-  //             color: 'common.white',
-  //           }}
-  //         >
-  //           {ticket.createdAt && fDate(ticket.createdAt)}
-  //         </Typography>
-  //       </Stack>
-  //
-  //       <Image src={ticket.thumbnail} alt={ticket.name} ratio="6/4" />
-  //     </Box>
-  //   </Stack>
-  // ) : null;
   return (
     <>
       {ticket ? (
@@ -170,7 +95,7 @@ export default function OldTicketItem({ ticket }: Props) {
                   py: isMobile ? 2 : 3,
                 }}
               >
-                <TextMaxLine variant="body2">{`#1`}</TextMaxLine>
+                <TextMaxLine variant="body2" sx={{ color: 'red' }}>{`#1`}</TextMaxLine>
 
                 <TextMaxLine variant="h3">{ticket.name}</TextMaxLine>
                 <TextMaxLine variant="body2" sx={{ color: 'red' }}>
@@ -196,10 +121,17 @@ export default function OldTicketItem({ ticket }: Props) {
             >
               <Stack flexDirection="row" justifyContent="space-between">
                 <Stack gap="12px">
-                  <LineItem label="Day" value={fDate(new Date(), 'EEEE (MMMM dd, yyyy)')} />
-                  <LineItem label="Team" value={'red'} />
-                  <LineItem label="Status" value={ticket.status} />
-                  {ticket.status.toUpperCase() !== 'MARKET' && <LineItem label="QTY" value={'1'} />}
+                  <LineItem label="Day" mock value={fDate(new Date(), 'EEEE (MMMM dd, yyyy)')} />
+                  <LineItem label="Team" mock value={'red'} />
+                  {ticket.status.toUpperCase() !== 'MARKET' && (
+                    <LineItem mock label="QTY" value={'1'} />
+                  )}
+                  {ticket.status === 'MARKET' && (
+                    <>
+                      <LineItem mock label="CURRENT PRICE" value={'1,200 EDCP (~$1,200)'} />
+                      <LineItem mock label="AUCTION ENDS IN" value={'01:12:32:11'} />
+                    </>
+                  )}
                 </Stack>
                 {ticket.status.toUpperCase() === 'TICKET' && (
                   <HyperlinkButton
@@ -274,9 +206,10 @@ export default function OldTicketItem({ ticket }: Props) {
 type LineItemProps = {
   label: string;
   value: any;
+  mock?: boolean;
 };
 
-function LineItem({ label, value }: LineItemProps) {
+function LineItem({ label, value, mock }: LineItemProps) {
   const isMobile = useResponsive('down', 'md');
   return (
     <Stack direction={'column'} gap="2px">
@@ -292,7 +225,7 @@ function LineItem({ label, value }: LineItemProps) {
       </Typography>
       <Typography
         sx={{
-          color: 'common.white',
+          color: mock ? 'red' : 'common.white',
           fontSize: isMobile ? '12px' : '14px',
           lineHeight: 20 / 14,
         }}

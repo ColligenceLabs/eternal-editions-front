@@ -49,13 +49,10 @@ export default function TicketItem({
   const isMobile = useResponsive('down', 'md');
   const { id, name, imageLink, categoriesStr, releaseDatetime, createdAt, price, properties } =
     ticket;
-  console.log(releaseDatetime);
   const [team, setTeam] = useState('');
   const [day, setDay] = useState('');
   const [duration, setDuration] = useState('');
   const [location, setLocation] = useState('');
-
-  console.log(properties);
 
   const isOnAuction = router.query.status; // TODO: Update value
   const theme = useTheme();
