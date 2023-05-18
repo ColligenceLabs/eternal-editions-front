@@ -455,7 +455,6 @@ export default function TicketDetailPage() {
   const fetchTicketInfo = async () => {
     if (slug && typeof slug === 'string') {
       const ticketInfoRes = await getTicketInfoService(slug);
-      console.log(ticketInfoRes);
       const contract = ticketInfoRes.data.data?.boxContractAddress;
       const whitelist = ticketInfoRes.data.data?.whitelistNftId;
       const whitelistAddress = ticketInfoRes.data.data?.whitelistNftContractAddress ?? '';
@@ -590,7 +589,7 @@ export default function TicketDetailPage() {
 
               <Section>
                 <Label>Description</Label>
-                <Value>{ticketInfo.introduction.en}</Value>
+                {ticketInfo && <Value>{ticketInfo.introduction.en}</Value>}
               </Section>
 
               <Section>
