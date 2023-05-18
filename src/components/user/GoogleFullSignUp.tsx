@@ -2,12 +2,9 @@ import * as Yup from 'yup';
 import React, { useState } from 'react';
 import {
   Stack,
-  Button,
   Typography,
-  TextField,
   inputBaseClasses,
   Select,
-  MenuItem,
   FormControlLabel,
   Checkbox,
   buttonBaseClasses,
@@ -27,28 +24,21 @@ import CheckboxIcon from 'src/assets/icons/checkbox';
 import CheckboxIndeterminateFillIcon from 'src/assets/icons/checkboxIndeterminateFill';
 import CheckIcon from 'src/assets/icons/check';
 import CheckFillIcon from 'src/assets/icons/checkFill';
-import { WALLET_FORM } from './GoogleFlow';
+import { GoogleAccountData, WALLET_FORM } from './GoogleFlow';
 import { Input } from '@mui/material';
+import { StyledMenuItem, StyledTextField } from './GoogleLogin';
+import { makeStyles } from '@material-ui/core/styles';
 
-type FormValuesProps = {
-  email: string;
-  birthDate: Date;
-  phoneNumber: string;
-  gender: string;
-  name: string;
-  country: string;
-  agree: boolean;
-  verificationCode: string;
-};
 interface Props {
   setForm: React.Dispatch<React.SetStateAction<string>>;
+  accountData: Partial<GoogleAccountData>;
 }
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
 const FormSchema = Yup.object().shape({
   email: Yup.string().required('Email is required').email('That is not an email'),
-  birthDate: Yup.date().required('Birth date is required'),
+  birthDate: Yup.date().required('Birth date is required').typeError('Invalid date format'),
   name: Yup.string().required('Full name is required'),
   phoneNumber: Yup.string()
     .matches(phoneRegExp, 'Phone number is not valid')
@@ -63,29 +53,27 @@ export const terms = [
   { title: 'Agree Privacy Policy', isRequired: true },
   { title: 'Receive SMS and E-mails for promotions', isRequired: false },
 ];
+
+const useStyles = makeStyles((theme) => ({
+  menuPaper: {
+    backgroundColor: 'white',
+  },
+}));
+
 const countries = ['Korea', 'China', 'United States', 'Russian'];
-const GoogleFullSignUp = ({ setForm }: Props) => {
+const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
   const [showVerifyCode, setShowVerifyCode] = useState<boolean>(false);
-  const [reqDate, setreqDate] = useState(new Date());
-  const {
-    control,
-    getValues,
-    handleSubmit,
-    watch,
-    formState: { isValid },
-  } = useForm<FormValuesProps>({
+  const classes = useStyles();
+  const { control, getValues, handleSubmit, watch } = useForm<GoogleAccountData>({
     resolver: yupResolver(FormSchema),
     defaultValues: {
-      email: 'the@vn.vn',
-      birthDate: new Date('12/25/2020'),
-      gender: 'male',
+      ...accountData,
       agree: false,
       country: 'Korea',
     },
   });
 
-  const onSubmit = (values: FormValuesProps) => {
-    const { email, birthDate, phoneNumber, gender } = values;
+  const onSubmit = (values: GoogleAccountData) => {
     console.log('submit', values);
     setForm(WALLET_FORM);
   };
@@ -135,11 +123,20 @@ const GoogleFullSignUp = ({ setForm }: Props) => {
           name="country"
           control={control}
           render={({ field }) => (
-            <Select {...field} sx={{ color: '#000' }}>
+            <Select
+              {...field}
+              variant="standard"
+              sx={{ color: '#000' }}
+              MenuProps={{
+                classes: {
+                  paper: classes.menuPaper,
+                },
+              }}
+            >
               {countries.map((country) => (
-                <MenuItem value={country} key={country}>
+                <StyledMenuItem value={country} key={country}>
                   {country}
-                </MenuItem>
+                </StyledMenuItem>
               ))}
             </Select>
           )}
@@ -177,17 +174,34 @@ const GoogleFullSignUp = ({ setForm }: Props) => {
         <Controller
           name="birthDate"
           control={control}
-          render={({ field: { ...restField }, fieldState: { error } }) => (
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                // onChange={()}
-                renderInput={(params) => (
-                  <StyledTextField {...params} error={Boolean(error)} helperText={error?.message} />
-                )}
-                {...restField}
-              />
-            </LocalizationProvider>
+          render={({ field: { ref, onBlur, name, ...restField }, fieldState: { error } }) => (
+            <DatePicker
+              {...restField}
+              inputRef={ref}
+              inputFormat="dd/MM/yyyy"
+              renderInput={(inputProps) => (
+                <StyledTextField
+                  variant="standard"
+                  {...inputProps}
+                  onBlur={onBlur}
+                  name={name}
+                  error={Boolean(error)}
+                  helperText={error?.message}
+                />
+              )}
+            />
           )}
+          // render={({ field: { ...restField }, fieldState: { error } }) => (
+          //   <LocalizationProvider dateAdapter={AdapterDayjs}>
+          //     <DatePicker
+          //       // onChange={()}
+          //       renderInput={(params) => (
+          //         <StyledTextField {...params} error={Boolean(error)} helperText={error?.message} />
+          //       )}
+          //       {...restField}
+          //     />
+          //   </LocalizationProvider>
+          // )}
         />
       </Section>
 
@@ -200,9 +214,18 @@ const GoogleFullSignUp = ({ setForm }: Props) => {
           name="gender"
           control={control}
           render={({ field }) => (
-            <Select {...field} sx={{ color: '#000' }}>
-              <MenuItem value={'female'}>Woman</MenuItem>
-              <MenuItem value={'male'}>Man</MenuItem>
+            <Select
+              {...field}
+              variant="standard"
+              sx={{ color: '#000' }}
+              MenuProps={{
+                classes: {
+                  paper: classes.menuPaper,
+                },
+              }}
+            >
+              <StyledMenuItem value={'female'}>Woman</StyledMenuItem>
+              <StyledMenuItem value={'male'}>Man</StyledMenuItem>
             </Select>
           )}
         />
@@ -244,7 +267,7 @@ const GoogleFullSignUp = ({ setForm }: Props) => {
                         },
                       }}
                     >
-                      {getValues('verificationCode') ? 'Confirm' : 'SEND CODE'}
+                      {'SEND CODE'}
                     </RoundedButton>
                   </InputAdornment>
                 }
@@ -343,12 +366,7 @@ const GoogleFullSignUp = ({ setForm }: Props) => {
 
 export default GoogleFullSignUp;
 
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  [`.${inputBaseClasses.input}::placeholder`]: {
-    color: '#BBBBBB',
-  },
-}));
-const StyledInput = styled(Input)(({ theme }) => ({
+const StyledInput = styled(Input)(({}) => ({
   [`.${inputBaseClasses.input}::placeholder`]: {
     color: '#BBBBBB',
   },

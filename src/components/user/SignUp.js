@@ -258,7 +258,14 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                           sx={{ height: 32 }}
                         />
                       </CustomIconButton>
-                      <CustomIconButton onClick={() => handleSnsLogin('google')}>
+                      {/* <CustomIconButton onClick={() => handleSnsLogin('google')}>
+                        <Image
+                          alt="google icon"
+                          src={getIconByType(GOOGLE_ICON)}
+                          sx={{ height: 32 }}
+                        />
+                      </CustomIconButton> */}
+                      <CustomIconButton onClick={() => setIsGoogleLogin(true)}>
                         <Image
                           alt="google icon"
                           src={getIconByType(GOOGLE_ICON)}
@@ -279,13 +286,6 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                           sx={{ width: 30, pt: '2px' }}
                         />
                       </CustomIconButton>
-                      {/* <CustomIconButton onClick={() => setIsGoogleLogin(true)}>
-                        <Image
-                          alt="google icon"
-                          src={getIconByType(GOOGLE_ICON)}
-                          sx={{ height: 32 }}
-                        />
-                      </CustomIconButton> */}
                     </Stack>
                   )}
                 </Stack>
