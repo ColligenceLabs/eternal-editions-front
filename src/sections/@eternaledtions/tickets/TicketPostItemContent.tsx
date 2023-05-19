@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 // ----------------------------------------------------------------------
 
 type Props = {
-  ticket: TicketInfoTypes;
+  ticket: TicketInfoTypes | null;
   shouldHideDetail?: boolean;
   sx?: SxProps;
 };

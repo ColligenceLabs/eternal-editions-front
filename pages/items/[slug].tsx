@@ -870,7 +870,7 @@ export default function TicketDetailPage() {
                     </Box>
                   ) : (
                     <LineItemByModal
-                      sx={{ whiteSpace: 'nowrap' }}
+                      style={{ whiteSpace: 'nowrap' }}
                       // icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
                       label={`${(dollarPrice / 10).toFixed(4)} EDCP`}
                       value={'PAY WITH EDCP'}
@@ -901,7 +901,7 @@ export default function TicketDetailPage() {
                     </Box>
                   ) : (
                     <LineItemByModal
-                      sx={{ whiteSpace: 'nowrap' }}
+                      style={{ whiteSpace: 'nowrap' }}
                       // icon={<Iconify icon={searchIcon} sx={{ color: 'common.black' }} />}
                       label={`${ticketInfo?.price} ${ticketInfo?.quote.toUpperCase()}`}
                       value={`PAY WITH ${ticketInfo?.quote.toUpperCase()}`}
@@ -1012,12 +1012,14 @@ type LineItemProps = {
   label: string;
   value: any;
   isBuying?: boolean;
+  style: any;
 };
 
-function LineItemByModal({ icon, label, value, isBuying }: LineItemProps) {
+function LineItemByModal({ icon, label, value, isBuying, style }: LineItemProps) {
   const isXs = useResponsive('down', 'sm');
   return (
     <TextIconLabel
+      style={style}
       icon={icon!}
       value={
         <>
