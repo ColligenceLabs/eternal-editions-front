@@ -150,7 +150,10 @@ export default function TicketPostItemContent({ ticket, shouldHideDetail, sx }: 
                 color: 'common.white',
               }}
             >
-              {createdAt && fDate(createdAt, 'EEEE (MMMM dd, yyyy)')}
+              {mysteryboxItems &&
+                mysteryboxItems[0].properties &&
+                mysteryboxItems[0].properties[0].type.toLowerCase() === 'day' &&
+                mysteryboxItems[0].properties[0].name}
             </Typography>
             <Typography
               sx={{
