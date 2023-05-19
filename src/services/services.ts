@@ -14,7 +14,8 @@ export const getTicketsService = (page: number, perPage: number, category: strin
 export const getTicketInfoService = (id: string) => customAxios.get(`api/service/mysterybox/${id}`);
 export const getTicketCountByCategory = () =>
   customAxios.get(`/api/service/mysterybox/category/count`);
-export const registerBuy = async (data: any) => await apiAuthAxios.post(`api/service/drops`, data);
+export const registerBuy = async (data: any) =>
+  await apiAuthAxios.post(`api/service/drops/eternal`, data);
 
 export const getBuyersService = async (id: any) =>
   await customAxios.get(`api/service/drops/mysterybox/${id}`);

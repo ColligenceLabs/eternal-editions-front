@@ -24,7 +24,7 @@ export function calculateGasMargin(value: BigNumber) {
 interface txResult {
   status: number;
   txHash: string;
-  tokenId: number;
+  tokenId: any[];
 }
 
 interface Overrides {
@@ -1373,7 +1373,7 @@ export async function buyItem(
 
   // registerItems 요청
   let receipt;
-  const result: txResult = { status: 0, txHash: '', tokenId: 0 };
+  const result: txResult = { status: 0, txHash: '', tokenId: [] };
   try {
     let overrides: Overrides = {
       from: account,
@@ -1422,9 +1422,18 @@ export async function buyItem(
         receipt = await tx.wait();
         // TODO: Get tokenId in the receipt and save into DB drops ?
         const events = receipt.events;
-        const recipient = hexToAddress(events[1].topics[2]);
-        const tokenIdHex = ethers.utils.defaultAbiCoder.decode(['uint256'], events[1].topics[3]);
-        result.tokenId = parseInt(tokenIdHex.toString());
+        const tokenIds = [];
+        let recipient;
+        for (let i = 0; i < amount; i++) {
+          recipient = hexToAddress(events[1 + i].topics[2]);
+          const tokenIdHex = ethers.utils.defaultAbiCoder.decode(
+            ['uint256'],
+            events[1 + i].topics[3]
+          );
+          const tokenId = parseInt(tokenIdHex.toString());
+          tokenIds.push(tokenId);
+        }
+        result.tokenId = tokenIds;
         console.log('== buyItem event ==>', recipient, result.tokenId);
       } catch (e) {
         result.status = FAILURE;

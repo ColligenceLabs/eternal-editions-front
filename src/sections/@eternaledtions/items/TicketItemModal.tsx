@@ -132,15 +132,17 @@ const TicketItemModal = ({
     const index = ticket.no - 1 ?? 0;
     const amount = quantity;
 
-    let quoteToken: string;
-    let payment: BigNumber;
-    if (quote === 'matic' || quote === 'wmatic') {
-      quoteToken = quote === 'matic' ? contracts.matic[chainId] : contracts.wmatic[chainId];
-      payment = parseEther(ticket?.price.toString() ?? '0').mul(amount);
-    }
+    const quoteToken =
+      quote === 'matic'
+        ? contracts.matic[chainId]
+        : quote === 'usdc'
+        ? contracts.usdt[chainId]
+        : contracts.usdt[chainId];
+    const payment = parseEther(ticket?.price.toString() ?? '0').mul(amount);
+
     try {
-      const method = 'buyItemEth';
-      const txArgs = [index, amount];
+      const method = quote === 'matic' ? 'buyItemEth' : 'buyItemQuote';
+      const txArgs = quote === 'matic' ? [index, amount] : [index, payment.toHexString(), amount];
       const result = await abcSendTx(
         abcToken,
         contract,
@@ -148,15 +150,24 @@ const TicketItemModal = ({
         method,
         txArgs,
         abcUser,
-        payment!.toHexString()
+        quote === 'matic' ? payment.toHexString() : undefined
       );
 
       // TODO: Get tokenId in the receipt and save into DB drops ?
       const events = result.logs;
-      const recipient = hexToAddress(events[1].topics[2]);
-      const tokenIdHex = ethers.utils.defaultAbiCoder.decode(['uint256'], events[1].topics[3]);
-      const tokenId = parseInt(tokenIdHex.toString());
-      console.log('== ABC buyItem event ==>', recipient, tokenId);
+      const tokenIds = [];
+      let recipient;
+      for (let i = 0; i < amount; i++) {
+        recipient = hexToAddress(events[1 + i].topics[2]);
+        const tokenIdHex = ethers.utils.defaultAbiCoder.decode(
+          ['uint256'],
+          events[1 + i].topics[3]
+        );
+        const tokenId = parseInt(tokenIdHex.toString());
+        tokenIds.push(tokenId);
+      }
+
+      console.log('== ABC buyItem event ==>', recipient, tokenIds);
 
       if (parseInt(result.status.toString(), 16) === SUCCESS) {
         // const left = await getItemAmount(
@@ -175,7 +186,8 @@ const TicketItemModal = ({
           txHash: result?.transactionHash,
           price: ticket?.price,
           itemId: ticket?.id,
-          tokenId: tokenId,
+          tokenId: tokenIds,
+          amount: amount,
         };
 
         setTransactionHash(result?.transactionHash);
@@ -267,6 +279,7 @@ const TicketItemModal = ({
         price: (((ticket?.price ?? 0) * maticPrice) / 10).toFixed(4),
         itemId: ticket?.id,
         usePoint: true,
+        amount: quantity,
       };
 
       console.log(data);
@@ -309,7 +322,7 @@ const TicketItemModal = ({
     }
   };
 
-  const handleBuyWithMatic = async () => {
+  const handleBuyWithCrypto = async () => {
     const loginBy = window.localStorage.getItem('loginBy') ?? 'sns';
     if (loginBy === 'sns') {
       setAbcOpen(true);
@@ -320,12 +333,13 @@ const TicketItemModal = ({
     const index = ticket.no - 1 ?? 0;
     const amount = quantity;
 
-    let quoteToken: string;
-    let payment: BigNumber;
-    if (quote === 'matic' || quote === 'wmatic') {
-      quoteToken = quote === 'matic' ? contracts.matic[chainId] : contracts.wmatic[chainId];
-      payment = parseEther(ticket?.price.toString() ?? '0').mul(amount);
-    }
+    const quoteToken =
+      quote === 'matic'
+        ? contracts.matic[chainId]
+        : quote === 'usdc'
+        ? contracts.usdt[chainId]
+        : contracts.usdt[chainId];
+    const payment = parseEther(ticket?.price.toString() ?? '0').mul(amount);
 
     try {
       const result = await buyItem(
@@ -357,6 +371,7 @@ const TicketItemModal = ({
           price: ticket?.price,
           itemId: ticket?.id,
           tokenId: result.tokenId,
+          amount: amount,
         };
 
         const res = await registerBuy(data);
@@ -423,7 +438,7 @@ const TicketItemModal = ({
       }
     }
 
-    method === methodType.edcp ? handleBuyWithPoint() : handleBuyWithMatic();
+    method === methodType.edcp ? handleBuyWithPoint() : handleBuyWithCrypto();
   };
 
   const onRedirectBack = () => {
