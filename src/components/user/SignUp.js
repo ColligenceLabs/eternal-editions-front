@@ -258,20 +258,20 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                           sx={{ height: 32 }}
                         />
                       </CustomIconButton>
-                      {/* <CustomIconButton onClick={() => handleSnsLogin('google')}>
-                        <Image
-                          alt="google icon"
-                          src={getIconByType(GOOGLE_ICON)}
-                          sx={{ height: 32 }}
-                        />
-                      </CustomIconButton> */}
-                      <CustomIconButton onClick={() => setIsGoogleLogin(true)}>
+                      <CustomIconButton onClick={() => handleSnsLogin('google')}>
                         <Image
                           alt="google icon"
                           src={getIconByType(GOOGLE_ICON)}
                           sx={{ height: 32 }}
                         />
                       </CustomIconButton>
+                      {/* <CustomIconButton onClick={() => setIsGoogleLogin(true)}>
+                        <Image
+                          alt="google icon"
+                          src={getIconByType(GOOGLE_ICON)}
+                          sx={{ height: 32 }}
+                        />
+                      </CustomIconButton> */}
                       <CustomIconButton onClick={() => handleSnsLogin('facebook')}>
                         <Image
                           alt="facebook icon"
