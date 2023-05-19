@@ -11,13 +11,12 @@ import { useEffect, useState } from 'react';
 // ----------------------------------------------------------------------
 
 type Props = {
-  ticket: TicketInfoTypes | null;
+  ticket: TicketInfoTypes;
   shouldHideDetail?: boolean;
   sx?: SxProps;
 };
 
 export default function TicketPostItemContent({ ticket, shouldHideDetail, sx }: Props) {
-  const { title, packageImage, categoriesStr, featured, whitelistNftId } = ticket;
   const theme = useTheme();
   const isMobile = useResponsive('down', 'md');
   const [location, setLocation] = useState('');
@@ -42,6 +41,8 @@ export default function TicketPostItemContent({ ticket, shouldHideDetail, sx }: 
   if (!ticket) {
     return null;
   }
+
+  const { title, packageImage, categoriesStr, featured, whitelistNftId } = ticket;
 
   return (
     <Stack
