@@ -51,6 +51,7 @@ import ModalCustom from 'src/components/common/ModalCustom';
 import { PriorityHigh } from '@mui/icons-material';
 import { FormControlLabel } from '@mui/material';
 import RoundedButton from 'src/components/common/RoundedButton';
+import CreateWalletForm from 'src/components/user/CreateWalletForm';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
@@ -127,6 +128,7 @@ export default function MyAccountPage({}: Props) {
   );
   const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
   const [isConfirmDeactivate, setIsConfirmDeactivate] = useState(false);
+  const [isOpenCreateWalletForm, setIsOpenCreateWalletForm] = useState<boolean>(false);
 
   const onCloseDeactivateModal = () => {
     deactivate();
@@ -568,6 +570,7 @@ Type: Address verification`;
                         gap: 0.25,
                       }}
                     >
+                      <CButton onClick={() => setIsOpenCreateWalletForm(true)}>CREATE</CButton>
                       <CButton
                         onClick={() => {
                           setDoAddWallet(true);
@@ -611,6 +614,17 @@ Type: Address verification`;
             </Grid>
           </Box>
         </MyAccountWrapper>
+
+        <ModalCustom
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          open={isOpenCreateWalletForm}
+          onClose={() => {
+            setIsOpenCreateWalletForm(false);
+          }}
+        >
+          <CreateWalletForm onClose={() => setIsOpenCreateWalletForm(false)} />
+        </ModalCustom>
 
         <ModalCustom
           aria-labelledby="transition-modal-title"

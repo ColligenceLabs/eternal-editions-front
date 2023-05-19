@@ -28,8 +28,9 @@ import { ChangeEvent } from 'react';
 import { Base64 } from 'js-base64';
 import Router from 'next/router';
 import EmailLoginForm from './EmailLoginForm';
-import GoogleLogin from './GoogleLogin';
 import GoogleFlow from './GoogleFlow';
+import NextLink from 'next/link';
+import Routes from 'src/routes';
 
 // ----------------------------------------------------------------------
 const CustomIconButton = styled(IconButton)(({ theme }) => ({
@@ -128,7 +129,6 @@ export default function SignUp({ onClose, hideSns, ...other }) {
   const [openIDPWD, setOpenIDPWD] = useState(false);
   const [userId, setUserId] = useState('');
   const [userPWD, setUserPWD] = useState('');
-  const [isGoogleLogin, setIsGoogleLogin] = useState(false);
 
   const handleChangeUserId = (event) => {
     setUserId(event.target.value);
@@ -236,111 +236,103 @@ export default function SignUp({ onClose, hideSns, ...other }) {
         <EmailLoginForm />
       ) : (
         <>
-          {isGoogleLogin ? (
-            <GoogleFlow />
-          ) : (
-            <>
-              <Typography id="transition-modal-title" variant="h4" component="h2" sx={{ mb: 2 }}>
-                Connect your account {openIDPWD ? '(기존회원)' : ''}
-              </Typography>
-              <Stack sx={{ mt: 4 }}>
-                <Stack spacing={1}>
-                  {!hideSns && (
-                    <Stack direction={'row'} justifyContent={'space-between'}>
-                      <CustomIconButton
-                        onClick={() => {
-                          setOpenIDPWD(true);
-                        }}
-                      >
-                        <Image
-                          alt="apple icon"
-                          src={getIconByType(APPLE_ICON)}
-                          sx={{ height: 32 }}
-                        />
-                      </CustomIconButton>
-                      <CustomIconButton onClick={() => handleSnsLogin('google')}>
-                        <Image
-                          alt="google icon"
-                          src={getIconByType(GOOGLE_ICON)}
-                          sx={{ height: 32 }}
-                        />
-                      </CustomIconButton>
-                      {/* <CustomIconButton onClick={() => setIsGoogleLogin(true)}>
-                        <Image
-                          alt="google icon"
-                          src={getIconByType(GOOGLE_ICON)}
-                          sx={{ height: 32 }}
-                        />
-                      </CustomIconButton> */}
-                      <CustomIconButton onClick={() => handleSnsLogin('facebook')}>
-                        <Image
-                          alt="facebook icon"
-                          src={getIconByType(FACEBOOK_ICON)}
-                          sx={{ width: 32, height: 32 }}
-                        />
-                      </CustomIconButton>
-                      <CustomIconButton onClick={() => setOpenIDPWD(true)}>
-                        <Image
-                          alt="mail icon"
-                          src={getIconByType(MAIL_ICON)}
-                          sx={{ width: 30, pt: '2px' }}
-                        />
-                      </CustomIconButton>
-                    </Stack>
-                  )}
+          <Typography id="transition-modal-title" variant="h4" component="h2" sx={{ mb: 2 }}>
+            Connect your account {openIDPWD ? '(기존회원)' : ''}
+          </Typography>
+          <Stack sx={{ mt: 4 }}>
+            <Stack spacing={1}>
+              {!hideSns && (
+                <Stack direction={'row'} justifyContent={'space-between'}>
+                  <CustomIconButton
+                    onClick={() => {
+                      setOpenIDPWD(true);
+                    }}
+                  >
+                    <Image alt="apple icon" src={getIconByType(APPLE_ICON)} sx={{ height: 32 }} />
+                  </CustomIconButton>
+                  <CustomIconButton onClick={() => handleSnsLogin('google')}>
+                    <Image alt="google icon" src={getIconByType(GOOGLE_ICON)} sx={{ height: 32 }} />
+                  </CustomIconButton>
+                  {/* <NextLink
+                    passHref
+                    as={Routes.eternalEditions.registerGoogle}
+                    href={Routes.eternalEditions.registerGoogle}
+                  >
+                    <CustomIconButton>
+                      <Image
+                        alt="google icon"
+                        src={getIconByType(GOOGLE_ICON)}
+                        sx={{ height: 32 }}
+                      />
+                    </CustomIconButton>
+                  </NextLink> */}
+                  <CustomIconButton onClick={() => handleSnsLogin('facebook')}>
+                    <Image
+                      alt="facebook icon"
+                      src={getIconByType(FACEBOOK_ICON)}
+                      sx={{ width: 32, height: 32 }}
+                    />
+                  </CustomIconButton>
+                  <CustomIconButton onClick={() => setOpenIDPWD(true)}>
+                    <Image
+                      alt="mail icon"
+                      src={getIconByType(MAIL_ICON)}
+                      sx={{ width: 30, pt: '2px' }}
+                    />
+                  </CustomIconButton>
                 </Stack>
-                <Stack spacing="12px" mt={8}>
-                  <Typography variant="h4">or connect wallet</Typography>
-                  <Stack gap="2px">
-                    <CustomButton
-                      variant="contained"
-                      onClick={async () => {
-                        window.localStorage.setItem('loginBy', 'wallet');
-                        window.localStorage.removeItem('loginType');
-                        await connectWallet(WALLET_METAMASK);
-                        // await connectMetamask();
-                        // onClose();
-                      }}
-                      startIcon={
-                        <Image
-                          alt="metamask icon"
-                          src={getIconByType(WALLET_METAMASK)}
-                          sx={{ width: 24, height: 24, mx: 1 }}
-                        />
-                      }
-                    >
-                      CONNECT META MASK
-                    </CustomButton>
-                    <CustomButton
-                      variant="contained"
-                      onClick={async () => {
-                        window.localStorage.setItem('loginBy', 'wallet');
-                        window.localStorage.removeItem('loginType');
-                        await connectWallet(WALLET_WALLECTCONNECT);
-                        // onClose();
-                      }}
-                      startIcon={
-                        <Image
-                          alt="metamask icon"
-                          src={getIconByType(WALLET_WALLECTCONNECT)}
-                          sx={{ width: 24, height: 24, mx: 1 }}
-                        />
-                      }
-                    >
-                      CONNECT WALLET
-                    </CustomButton>
-                  </Stack>
-                  <Typography variant={'caption'} sx={{ lineHeight: 16 / 12 }}>
-                    If you don’t have a wallet, you can select a provider and create one now.
-                    <Link href="https://eedao.notion.site/Eternal-Editions-168957fedc5a4ffe8ea7fcbc2ae1d05f">
-                      {' '}
-                      Learn more
-                    </Link>
-                  </Typography>
-                </Stack>
+              )}
+            </Stack>
+            <Stack spacing="12px" mt={8}>
+              <Typography variant="h4">or connect wallet</Typography>
+              <Stack gap="2px">
+                <CustomButton
+                  variant="contained"
+                  onClick={async () => {
+                    window.localStorage.setItem('loginBy', 'wallet');
+                    window.localStorage.removeItem('loginType');
+                    await connectWallet(WALLET_METAMASK);
+                    // await connectMetamask();
+                    // onClose();
+                  }}
+                  startIcon={
+                    <Image
+                      alt="metamask icon"
+                      src={getIconByType(WALLET_METAMASK)}
+                      sx={{ width: 24, height: 24, mx: 1 }}
+                    />
+                  }
+                >
+                  CONNECT META MASK
+                </CustomButton>
+                <CustomButton
+                  variant="contained"
+                  onClick={async () => {
+                    window.localStorage.setItem('loginBy', 'wallet');
+                    window.localStorage.removeItem('loginType');
+                    await connectWallet(WALLET_WALLECTCONNECT);
+                    // onClose();
+                  }}
+                  startIcon={
+                    <Image
+                      alt="metamask icon"
+                      src={getIconByType(WALLET_WALLECTCONNECT)}
+                      sx={{ width: 24, height: 24, mx: 1 }}
+                    />
+                  }
+                >
+                  CONNECT WALLET
+                </CustomButton>
               </Stack>
-            </>
-          )}
+              <Typography variant={'caption'} sx={{ lineHeight: 16 / 12 }}>
+                If you don’t have a wallet, you can select a provider and create one now.
+                <Link href="https://eedao.notion.site/Eternal-Editions-168957fedc5a4ffe8ea7fcbc2ae1d05f">
+                  {' '}
+                  Learn more
+                </Link>
+              </Typography>
+            </Stack>
+          </Stack>
         </>
       )}
     </Stack>
