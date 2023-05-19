@@ -9,6 +9,7 @@ import { fDate } from 'src/utils/formatTime';
 import { useResponsive } from 'src/hooks';
 import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 import { SxProps } from '@mui/system';
+import { useEffect, useState } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -22,12 +23,35 @@ export default function TicketPostItemContent({ ticket, shouldHideDetail, sx }: 
   const { push } = useRouter();
   const theme = useTheme();
   const isMobile = useResponsive('down', 'md');
+  const [location, setLocation] = useState('');
+  const [day, setDay] = useState('');
+
+  useEffect(() => {
+    if (ticket && ticket.mysteryboxItems && ticket.mysteryboxItems[0].properties) {
+      const location = ticket.mysteryboxItems[0].properties
+        .filter((item) => item.type === 'location')
+        .map((item) => item.name)
+        .join(', ');
+      setLocation(location);
+
+      const day = ticket.mysteryboxItems[0].properties
+        .filter((item) => item.type === 'day')
+        .map((item) => item.name)
+        .join(', ');
+      setDay(day);
+    }
+  }, [ticket]);
+
+  const test = [
+    { id: 1, type: 'location', name: 'SEOUL' },
+    { id: 2, type: 'team', name: 'RED' },
+    { id: 3, type: 'day', name: 'asdf' },
+  ];
 
   if (!ticket) {
     return null;
   }
 
-  console.log(ticket);
   const {
     id,
     title,
@@ -150,10 +174,7 @@ export default function TicketPostItemContent({ ticket, shouldHideDetail, sx }: 
                 color: 'common.white',
               }}
             >
-              {mysteryboxItems &&
-                mysteryboxItems[0].properties &&
-                mysteryboxItems[0].properties[0].type.toLowerCase() === 'day' &&
-                mysteryboxItems[0].properties[0].name}
+              {day}
             </Typography>
             <Typography
               sx={{
@@ -163,10 +184,7 @@ export default function TicketPostItemContent({ ticket, shouldHideDetail, sx }: 
                 lineHeight: 16 / 12,
               }}
             >
-              {mysteryboxItems &&
-                mysteryboxItems[0].properties &&
-                mysteryboxItems[0].properties[0].type.toLowerCase() === 'location' &&
-                mysteryboxItems[0].properties[0].name}
+              {location}
             </Typography>
           </Stack>
         </Stack>
