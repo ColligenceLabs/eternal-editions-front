@@ -1,11 +1,8 @@
 import { m } from 'framer-motion';
 import { useTheme } from '@mui/material/styles';
 import { Box, Chip, Stack, Typography } from '@mui/material';
-import Routes from 'src/routes';
 import { Image, TextMaxLine } from 'src/components';
 import { varHover, varTranHover } from 'src/components/animate';
-import { useRouter } from 'next/router';
-import { fDate } from 'src/utils/formatTime';
 import { useResponsive } from 'src/hooks';
 import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 import { SxProps } from '@mui/system';
@@ -20,7 +17,7 @@ type Props = {
 };
 
 export default function TicketPostItemContent({ ticket, shouldHideDetail, sx }: Props) {
-  const { push } = useRouter();
+  const { title, packageImage, categoriesStr, featured, whitelistNftId } = ticket;
   const theme = useTheme();
   const isMobile = useResponsive('down', 'md');
   const [location, setLocation] = useState('');
@@ -42,30 +39,9 @@ export default function TicketPostItemContent({ ticket, shouldHideDetail, sx }: 
     }
   }, [ticket]);
 
-  const test = [
-    { id: 1, type: 'location', name: 'SEOUL' },
-    { id: 2, type: 'team', name: 'RED' },
-    { id: 3, type: 'day', name: 'asdf' },
-  ];
-
   if (!ticket) {
     return null;
   }
-
-  const {
-    id,
-    title,
-    packageImage,
-    categoriesStr,
-    featured,
-    createdAt,
-    whitelistNftId,
-    mysteryboxItems,
-  } = ticket;
-
-  const handlerClick = () => {
-    push(Routes.eternalEditions.ticket(id.toString()));
-  };
 
   return (
     <Stack
@@ -83,7 +59,6 @@ export default function TicketPostItemContent({ ticket, shouldHideDetail, sx }: 
         cursor: 'pointer',
         ...sx,
       }}
-      // onClick={handlerClick}
     >
       <Box
         component={m.div}
@@ -118,22 +93,6 @@ export default function TicketPostItemContent({ ticket, shouldHideDetail, sx }: 
           }}
         >
           <Stack spacing={0.25}>
-            {/* <Stack
-                direction="row"
-                spacing={1}
-                alignItems="center"
-                sx={{ opacity: 0.72, typography: 'caption' }}
-              >
-                <EEAvatar
-                  account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
-                  image={featured?.company.image}
-                  nickname={featured?.company.name.en}
-                  sx={{ mr: 0, width: 24, height: 24 }}
-                />
-
-                <Typography>{featured?.company.name.en}</Typography>
-              </Stack> */}
-
             <Stack
               direction="row"
               spacing={1}
