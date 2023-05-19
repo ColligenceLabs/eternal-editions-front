@@ -1,27 +1,9 @@
 import { useEffect, useState } from 'react';
-import { Box, Grid, Button, Stack, Typography } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import TicketItem from './TicketItem';
-import { Iconify } from 'src/components';
-import arrowDown from '@iconify/icons-carbon/arrow-down';
-import { getTicketCountByCategory, getTicketsService } from 'src/services/services';
-import { SUCCESS } from 'src/config';
 import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import { useResponsive } from 'src/hooks';
 import { TextSelect, TextSelectOption } from 'src/components/common/Select';
-import { Modify } from 'notistack';
-
-const COLLECTIONS = [
-  {
-    label: 'Yellow Team',
-    value: 'yellow',
-  },
-  {
-    label: 'Purple Team',
-    value: 'purple',
-  },
-];
-
-// ----------------------------------------------------------------------
 
 type Props = {
   categories?: string[];
@@ -33,21 +15,7 @@ type Props = {
   ticketInfo?: TicketInfoTypes | null;
 };
 
-type CategoryTypes = {
-  category: string;
-  count: string;
-};
-
-type ExTicketItemType = Modify<
-  TicketItemTypes,
-  {
-    categoriesStr: string;
-    releaseDatetime: Date;
-  }
->;
-
 export default function TicketItemsInDrop({
-  // categories: originCategories,
   items,
   boxContractAddress,
   quote,
@@ -55,64 +23,73 @@ export default function TicketItemsInDrop({
   ticketInfo,
 }: Props) {
   const isMobile = useResponsive('down', 'md');
-  const [curPage, setCurPage] = useState(1);
-  const [lastPage, setLastPage] = useState(0);
-  const [selected, setSelected] = useState('All');
-  const [ticketInfoList, setTicketInfoList] = useState<TicketInfoTypes[]>([]);
-  // const [categories, setCategories] = useState<CategoryTypes[]>([]);
+
   const [team, setTeam] = useState('default');
-  const [salesType, setSalesType] = useState('default');
-  const [teams, setTeams] = useState<string[]>([]);
-
-  // originCategories = ['All', ...Array.from(new Set(originCategories))];
-  const perPage = 6;
-
-  const handleChangeCategory = (event: React.SyntheticEvent, newValue: string) => {
-    setSelected(newValue);
-  };
-
-  const getMoreTickets = async () => {
-    const res = await getTicketsService(curPage, perPage, selected);
-    console.log(res);
-    if (res.status === 200) {
-      setTicketInfoList((cur) => [...cur, ...res.data.list]);
-    }
-  };
+  const [day, setDay] = useState('default');
+  const [filterOptionTeams, setFilterOptionTeams] = useState<string[]>([]);
+  const [filterOptionDays, setFilterOptionDays] = useState<string[]>([]);
+  const [ticketItems, setTicketItems] = useState<TicketItemTypes[]>([]);
 
   useEffect(() => {
     if (ticketInfo?.mysteryboxItems) {
       const items = ticketInfo.mysteryboxItems;
-      console.log(items);
-      items.map((item) => {
-        if (item.properties) {
-          const team = item.properties.filter((property) => property.type === 'team');
 
-          if (team.length > 0 && team[0].name) {
-            console.log(team[0].name);
-            if (!teams.includes(team[0].name)) {
-              setTeams((cur) => [...cur, team[0].name]);
-            }
-          }
-        }
-      });
+      const tempTeams = Array.from(
+        new Set(
+          items
+            .flatMap(
+              (item) =>
+                item.properties && item.properties.filter((prop) => prop && prop.type === 'team')
+            )
+            .map((prop) => prop && prop.name)
+            .filter((name) => name !== null)
+        )
+      );
+
+      setFilterOptionTeams(tempTeams);
+
+      const tempDays = Array.from(
+        new Set(
+          items
+            .flatMap(
+              (item) => item.properties && item.properties.filter((prop) => prop.type === 'day')
+            )
+            .map((prop) => prop && prop.name)
+            .filter((name) => name !== null)
+        )
+      );
+
+      setFilterOptionDays(tempDays);
     }
   }, [ticketInfo]);
 
   useEffect(() => {
-    setCurPage(1);
-    // getCountByCategory();
-  }, [selected]);
+    if (items) {
+      let temp = items;
+
+      if (team !== 'default')
+        temp = temp.filter((ticket) => {
+          return ticket.properties.some(
+            (property) => property.type === 'team' && property.name === team
+          );
+        });
+
+      if (day !== 'default')
+        temp = temp.filter((ticket) => {
+          return ticket.properties.some(
+            (property) => property.type === 'day' && property.name === day
+          );
+        });
+
+      setTicketItems(temp);
+    }
+  }, [team, day]);
 
   useEffect(() => {
-    if (curPage !== 1) getMoreTickets();
-  }, [curPage]);
+    if (items) setTicketItems(items);
+  }, [items]);
 
-  useEffect(() => {
-    console.log(`team: ${team}`);
-    console.log(items);
-  }, [team]);
-
-  if (!items) {
+  if (!ticketItems) {
     return null;
   }
 
@@ -156,28 +133,26 @@ export default function TicketItemsInDrop({
         >
           <Stack flexDirection="row" gap="27px">
             <TextSelect value={team} onChange={(event) => setTeam(event.target.value as string)}>
-              <TextSelectOption hidden value="default">
-                SELECT TEAM
-              </TextSelectOption>
-              {teams.map((team) => (
+              <TextSelectOption value="default">SELECT TEAM</TextSelectOption>
+              {filterOptionTeams.map((team) => (
                 <TextSelectOption key={team} value={team}>
                   {team}
                 </TextSelectOption>
               ))}
             </TextSelect>
-            <TextSelect
-              value={salesType}
-              onChange={(event) => setSalesType(event.target.value as string)}
-            >
-              <TextSelectOption hidden value="default">
-                SELECT DAY
-              </TextSelectOption>
+            <TextSelect value={day} onChange={(event) => setDay(event.target.value as string)}>
+              <TextSelectOption value="default">SELECT DAY</TextSelectOption>
+              {filterOptionDays.map((day) => (
+                <TextSelectOption key={day} value={day}>
+                  {day}
+                </TextSelectOption>
+              ))}
             </TextSelect>
           </Stack>
         </Stack>
       </Stack>
 
-      {items?.length ? (
+      {ticketItems && ticketItems?.length ? (
         <Grid
           container
           spacing={{ xs: 1, md: 3 }}
@@ -185,7 +160,7 @@ export default function TicketItemsInDrop({
             mt: { md: 0 },
           }}
         >
-          {items.map((ticket, index) => (
+          {ticketItems.map((ticket, index) => (
             <TicketItem
               key={index}
               ticket={ticket}
@@ -202,30 +177,6 @@ export default function TicketItemsInDrop({
           No items hav been registered.
         </Typography>
       )}
-      {/* {curPage < lastPage && (
-        <Stack
-          alignItems="center"
-          sx={{
-            pt: 8,
-            pb: { xs: 8, md: 10 },
-          }}
-        >
-          <Button
-            size="large"
-            color="inherit"
-            variant="outlined"
-            endIcon={<Iconify icon={arrowDown} sx={{ width: 20, height: 20 }} />}
-            sx={{ color: 'common.white' }}
-            onClick={() => {
-              setCurPage((cur) => cur + 1);
-            }}
-          >
-            LOAD MORE
-          </Button>
-        </Stack>
-      )} */}
     </Box>
   );
 }
-
-// ----------------------------------------------------------------------
