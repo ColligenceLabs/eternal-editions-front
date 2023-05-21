@@ -24,7 +24,7 @@ export function calculateGasMargin(value: BigNumber) {
 interface txResult {
   status: number;
   txHash: string;
-  tokenId: number;
+  tokenId: any[];
 }
 
 interface Overrides {
@@ -1373,7 +1373,7 @@ export async function buyItem(
 
   // registerItems 요청
   let receipt;
-  const result: txResult = { status: 0, txHash: '', tokenId: 0 };
+  const result: txResult = { status: 0, txHash: '', tokenId: [] };
   try {
     let overrides: Overrides = {
       from: account,
@@ -1422,9 +1422,18 @@ export async function buyItem(
         receipt = await tx.wait();
         // TODO: Get tokenId in the receipt and save into DB drops ?
         const events = receipt.events;
-        const recipient = hexToAddress(events[1].topics[2]);
-        const tokenIdHex = ethers.utils.defaultAbiCoder.decode(['uint256'], events[1].topics[3]);
-        result.tokenId = parseInt(tokenIdHex.toString());
+        const tokenIds = [];
+        let recipient;
+        for (let i = 0; i < amount; i++) {
+          recipient = hexToAddress(events[1 + i].topics[2]);
+          const tokenIdHex = ethers.utils.defaultAbiCoder.decode(
+            ['uint256'],
+            events[1 + i].topics[3]
+          );
+          const tokenId = parseInt(tokenIdHex.toString());
+          tokenIds.push(tokenId);
+        }
+        result.tokenId = tokenIds;
         console.log('== buyItem event ==>', recipient, result.tokenId);
       } catch (e) {
         result.status = FAILURE;
@@ -1486,7 +1495,76 @@ export async function getItemSold(
   return sold;
 }
 
-export async function getGasPriceFromAPI() {
+export async function nftTransferFrom(
+  address: string,
+  receipient: string,
+  tokenId: string,
+  account: string,
+  library: any,
+  isKaikas: boolean
+): Promise<number> {
+  let gasPrice;
+  let contract: any;
+  if (isKaikas) {
+    // @ts-ignore : In case of Klaytn Kaikas Wallet
+    const caver = new Caver(window.klaytn);
+    gasPrice = await caver.rpc.klay.getGasPrice();
+    const collAbi: AbiItem[] = collectionAbi as AbiItem[];
+    contract = new caver.klay.Contract(collAbi, address);
+  } else {
+    contract = new ethers.Contract(address, collectionAbi, library?.getSigner());
+  }
+  let tx;
+
+  // gasLimit 계산
+  let gasLimit;
+  if (isKaikas)
+    gasLimit = await contract?.methods.transferFrom(account, receipient, tokenId).estimateGas({
+      from: account,
+    });
+  else gasLimit = await contract.estimateGas.transferFrom(account, receipient, tokenId);
+
+  // registerItems 요청
+  let receipt;
+  try {
+    let overrides: Overrides = {
+      from: account,
+      gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+    };
+
+    if (isKaikas) {
+      tx = await contract.methods
+        .transferFrom(account, receipient, tokenId)
+        .send(overrides)
+        .catch(async (err: any) => {
+          return FAILURE;
+        });
+      if (tx?.status) {
+        return SUCCESS;
+      } else return FAILURE;
+    } else {
+      // if (library._network.chainId === 8217)
+      overrides = { ...overrides, gasPrice };
+
+      tx = await contract.transferFrom(account, receipient, tokenId, overrides);
+
+      // receipt 대기
+      try {
+        receipt = await tx.wait();
+      } catch (e) {
+        return FAILURE;
+      }
+      if (receipt.status === 1) {
+        return SUCCESS;
+      } else return FAILURE;
+    }
+  } catch (e) {
+    console.log(e);
+    return FAILURE;
+  }
+}
+
+export async function getGasPriceFRomAPI() {
   let gasPrice = '';
   // const target = localStorage.getItem('target');
   const target = env.REACT_APP_TARGET_NETWORK;

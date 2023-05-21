@@ -14,7 +14,8 @@ export const getTicketsService = (page: number, perPage: number, category: strin
 export const getTicketInfoService = (id: string) => customAxios.get(`api/service/mysterybox/${id}`);
 export const getTicketCountByCategory = () =>
   customAxios.get(`/api/service/mysterybox/category/count`);
-export const registerBuy = async (data: any) => await apiAuthAxios.post(`api/service/drops`, data);
+export const registerBuy = async (data: any) =>
+  await apiAuthAxios.post(`api/service/drops/eternal`, data);
 
 export const getBuyersService = async (id: any) =>
   await customAxios.get(`api/service/drops/mysterybox/${id}`);
@@ -112,13 +113,19 @@ export const getExchange = async () => await customAxios.get('/api/exchange');
 
 export const getOldMyTicket = async () => await apiAuthAxios.get('/api/users/tickets');
 
-export const getOldMyTicket2 = async (uid: string) =>
+export const getOldMyTicketByUid = async (uid: string) =>
   await apiAuthAxios.get(`/api/users/tickets/${uid}`);
 
 export const checkUserEmail = async (email: string) =>
   await apiAuthAxios.get(`/api/users/checkUser?email=${email}`);
 
 export const getSellItemInfo = async (id: string) => await customAxios(`/api/service/drops/${id}`);
+
+export const getSellBooks = async (page: number, perPage?: number) => {
+  return await customAxios.get(
+    `/api/service/sellbook?page=${page}&limit=${perPage ? perPage : 5}sortBy=createdAt%3AASC`
+  );
+};
 
 export const registerSell = async (data: any) => {
   return await apiAuthAxios.post('/api/service/sellbook', data);

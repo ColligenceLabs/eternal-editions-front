@@ -1,14 +1,12 @@
 import { m } from 'framer-motion';
 import { useTheme } from '@mui/material/styles';
 import { Box, Chip, Stack, Typography } from '@mui/material';
-import Routes from 'src/routes';
 import { Image, TextMaxLine } from 'src/components';
 import { varHover, varTranHover } from 'src/components/animate';
-import { useRouter } from 'next/router';
-import { fDate } from 'src/utils/formatTime';
 import { useResponsive } from 'src/hooks';
 import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 import { SxProps } from '@mui/system';
+import { useEffect, useState } from 'react';
 
 // ----------------------------------------------------------------------
 
@@ -19,29 +17,32 @@ type Props = {
 };
 
 export default function TicketPostItemContent({ ticket, shouldHideDetail, sx }: Props) {
-  const { push } = useRouter();
   const theme = useTheme();
   const isMobile = useResponsive('down', 'md');
+  const [location, setLocation] = useState('');
+  const [day, setDay] = useState('');
+
+  useEffect(() => {
+    if (ticket && ticket.mysteryboxItems && ticket.mysteryboxItems[0].properties) {
+      const location = ticket.mysteryboxItems[0].properties
+        .filter((item) => item.type === 'location')
+        .map((item) => item.name)
+        .join(', ');
+      setLocation(location);
+
+      const day = ticket.mysteryboxItems[0].properties
+        .filter((item) => item.type === 'day')
+        .map((item) => item.name)
+        .join(', ');
+      setDay(day);
+    }
+  }, [ticket]);
 
   if (!ticket) {
     return null;
   }
 
-  console.log(ticket);
-  const {
-    id,
-    title,
-    packageImage,
-    categoriesStr,
-    featured,
-    createdAt,
-    whitelistNftId,
-    mysteryboxItems,
-  } = ticket;
-
-  const handlerClick = () => {
-    push(Routes.eternalEditions.ticket(id.toString()));
-  };
+  const { title, packageImage, categoriesStr, featured, whitelistNftId } = ticket;
 
   return (
     <Stack
@@ -59,7 +60,6 @@ export default function TicketPostItemContent({ ticket, shouldHideDetail, sx }: 
         cursor: 'pointer',
         ...sx,
       }}
-      // onClick={handlerClick}
     >
       <Box
         component={m.div}
@@ -94,22 +94,6 @@ export default function TicketPostItemContent({ ticket, shouldHideDetail, sx }: 
           }}
         >
           <Stack spacing={0.25}>
-            {/* <Stack
-                direction="row"
-                spacing={1}
-                alignItems="center"
-                sx={{ opacity: 0.72, typography: 'caption' }}
-              >
-                <EEAvatar
-                  account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
-                  image={featured?.company.image}
-                  nickname={featured?.company.name.en}
-                  sx={{ mr: 0, width: 24, height: 24 }}
-                />
-
-                <Typography>{featured?.company.name.en}</Typography>
-              </Stack> */}
-
             <Stack
               direction="row"
               spacing={1}
@@ -150,7 +134,7 @@ export default function TicketPostItemContent({ ticket, shouldHideDetail, sx }: 
                 color: 'common.white',
               }}
             >
-              {createdAt && fDate(createdAt, 'EEEE (MMMM dd, yyyy)')}
+              {day}
             </Typography>
             <Typography
               sx={{
@@ -160,10 +144,7 @@ export default function TicketPostItemContent({ ticket, shouldHideDetail, sx }: 
                 lineHeight: 16 / 12,
               }}
             >
-              {mysteryboxItems &&
-                mysteryboxItems[0].properties &&
-                mysteryboxItems[0].properties[0].type.toLowerCase() === 'location' &&
-                mysteryboxItems[0].properties[0].name}
+              {location}
             </Typography>
           </Stack>
         </Stack>

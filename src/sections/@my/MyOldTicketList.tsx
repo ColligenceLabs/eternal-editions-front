@@ -2,7 +2,7 @@
 import { Stack } from '@mui/material';
 import { JobItemSkeleton } from 'src/components';
 import { useEffect, useState } from 'react';
-import { getOldMyTicket, getOldMyTicket2 } from '../../services/services';
+import { getOldMyTicket, getOldMyTicketByUid } from '../../services/services';
 import OldTicketItem from '../@eternaledtions/tickets/OldTicketItem';
 import { useSelector } from 'react-redux';
 
@@ -16,6 +16,7 @@ type OldTicketTypes = {
   createdAt: Date;
   updatedAt: Date;
   status: string;
+  code: string;
 };
 
 export default function MyOldTicketList({ loading }: Props) {
@@ -25,7 +26,7 @@ export default function MyOldTicketList({ loading }: Props) {
   const fetchOldMyTickets = async () => {
     let result;
     // const result = await getOldMyTicket();
-    if (user?.uid) result = await getOldMyTicket2(user?.uid);
+    if (user?.uid) result = await getOldMyTicketByUid(user?.uid);
     else result = await getOldMyTicket();
     console.log(result);
     if (result.data && result.data.data?.length > 0) {
@@ -39,6 +40,7 @@ export default function MyOldTicketList({ loading }: Props) {
           createdAt: ticket.createdAt,
           updatedAt: ticket.updatedAt,
           status: ticket.status,
+          code: ticket.code,
         };
       });
       setOldTicket(temp);

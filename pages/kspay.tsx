@@ -277,7 +277,7 @@ export default function KSPay() {
               </Typography>
             </Box>
 
-            <form name="KSPayWeb" method="POST" onSubmit={() => handleSubmit(onSubmit)}>
+            <form name="KSPayWeb" method="POST" onSubmit={handleSubmit(onSubmit)}>
               <Stack spacing={2}>
                 <LoadingButton
                   fullWidth

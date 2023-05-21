@@ -73,7 +73,7 @@ export default function CreateWalletForm({ onClose }: Props) {
                 {...field}
                 placeholder="Please enter verification code."
                 size={'small'}
-                type="email"
+                type="string"
                 inputProps={{
                   style: { color: palette.dark.common.black, fontSize: 14, lineHeight: 20 / 14 },
                 }}
@@ -103,7 +103,9 @@ export default function CreateWalletForm({ onClose }: Props) {
         </Section>
       </Stack>
 
-      <RoundedButton disabled={!isValid}>Complete</RoundedButton>
+      <RoundedButton disabled={!isValid} type="submit">
+        Complete
+      </RoundedButton>
     </Stack>
   );
 }

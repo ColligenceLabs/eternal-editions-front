@@ -1,3 +1,5 @@
+import { array } from 'yup';
+
 export type TicketInfoTypes = {
   id: number;
   title: { ko: string; en: string };
@@ -41,6 +43,7 @@ export type TicketInfoTypes = {
   featuredId: string;
   // mysteryboxItems?: MBoxItemTypes[] | null;
   soldAmount: number;
+  whitelists: any[];
 };
 
 export type TicketItemTypes = {

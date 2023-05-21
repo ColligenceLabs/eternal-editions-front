@@ -14,7 +14,8 @@ const StyledButton = styled((props: ButtonProps) => <Button {...props} />)(({ th
   lineHeight: 12 / 14,
   letterSpacing: '0.08em',
   textTransform: 'uppercase',
-  padding: '22px 32px',
+  padding: '12px 22px',
+  height: '48px',
   '&:disabled': {
     background: 'rgba(0, 0, 0, 0.24)',
     backdropFilter: 'blur(50px)',

@@ -15,13 +15,25 @@ export default function MyTicketSellPage() {
   const theme = useTheme();
   const router = useRouter();
   const [sellTicketInfo, setSellTicketInfo] = useState<MyTicketTypes | null>(null);
+  const [team, setTeam] = useState('');
+  const [day, setDay] = useState('');
 
   const fetchSellItemInfo = async (id: string) => {
     const res = await getSellItemInfo(id);
     if (res.data.status === SUCCESS) {
       setSellTicketInfo(res.data.data);
+      console.log(res.data.data.mysteryboxItem.properties);
+      const { properties } = res.data.data.mysteryboxItem;
+      if (properties) {
+        properties.map((property: any) =>
+          property.type === 'team'
+            ? setTeam(property.name)
+            : property.type === 'day'
+            ? setDay(property.name)
+            : null
+        );
+      }
     }
-    console.log(res);
   };
   useEffect(() => {
     if (router.query.slug) {
@@ -47,7 +59,7 @@ export default function MyTicketSellPage() {
               },
             }}
           >
-            <MyTicketSell sellTicketInfo={sellTicketInfo} />
+            <MyTicketSell sellTicketInfo={sellTicketInfo} day={day} team={team} />
           </Container>
         </>
       )}

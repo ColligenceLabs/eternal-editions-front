@@ -1,4 +1,3 @@
-// @mui
 import { Box, Stack, Grid, Typography, useTheme } from '@mui/material';
 import { m } from 'framer-motion';
 import { Image, TextMaxLine, varHover, varTranHover } from 'src/components';
@@ -11,9 +10,12 @@ import Badge from 'src/components/ticket/Badge';
 import ModalCustom from 'src/components/common/ModalCustom';
 import Link from 'next/link';
 import SaveTicketContent from './SaveTicketContent';
-import { fDate } from 'src/utils/formatTime';
 import { MyTicketTypes } from 'src/@types/my/myTicket';
 
+type PropertiesType = {
+  type: string;
+  name: string;
+};
 export default function TicketItem({ ticket }: any) {
   const theme = useTheme();
   const isXs = useResponsive('down', 'sm');
@@ -22,18 +24,6 @@ export default function TicketItem({ ticket }: any) {
   const [klayPrice, setKlayPrice] = useState(0);
   const [open, setOpen] = useState<boolean>(false);
   const [ticketInfo, setTicketInfo] = useState<MyTicketTypes | null>(null);
-  // const [ticketInfo, setTicketInfo] = useState<any>({
-  //   // company: '',
-  //   // companyImage: null,
-  //   itemTitle: '',
-  //   itemImage: '',
-  //   price: 0,
-  //   location: '',
-  //   ticketNumber: '',
-  //   boxContractAddress: '',
-  //   no: '',
-  //   tokenId: null,
-  // });
 
   const getCoinPrice = () => {
     const url = 'https://bcn-api.talken.io/coinmarketcap/cmcQuotes?cmcIds=4256,3890';
@@ -57,26 +47,34 @@ export default function TicketItem({ ticket }: any) {
 
   useEffect(() => {
     if (ticket) {
-      const location =
-        ticket.mysteryboxItem.properties &&
-        ticket.mysteryboxItem.properties.find((item: any) =>
-          item.type.toLowerCase() === 'location' ? item : ''
+      console.log(ticket);
+      const { properties } = ticket.mysteryboxItem;
+
+      let day = '';
+      let location = '';
+      let duration = '';
+      let team = '';
+      if (properties) {
+        properties.map((property: PropertiesType) =>
+          property.type === 'team'
+            ? (team = property.name)
+            : property.type === 'day'
+            ? (day = property.name)
+            : property.type === 'duration'
+            ? (duration = property.name)
+            : property.type === 'location'
+            ? (location = property.name)
+            : null
         );
+      }
       setTicketInfo({
-        // company: ticket.companyname.en,
-        // companyImage: ticket.companyimage,
         ...ticket,
-        // itemTitle: ticket.mysteryboxItem.name,
-        // itemImage: ticket.mysteryboxItem.itemImage,
-        // price: ticket.mysteryboxItem.price,
-        location: location?.name ? location.name : '',
-        // ticketNumber: '1',
-        // boxContractAddress: ticket.mysteryboxInfo.boxContractAddress,
-        // no: ticket.no,
-        // tokenId: ticket.tokenId,
+        day,
+        team,
+        duration,
+        location,
       });
     }
-    // setTicketInfo(ticket);
   }, [ticket]);
 
   return (
@@ -134,12 +132,9 @@ export default function TicketItem({ ticket }: any) {
                   py: isMobile ? 2 : 3,
                 }}
               >
-                <TextMaxLine variant="body2">{`#${ticketInfo.mysteryboxItem.no}`}</TextMaxLine>
-
+                <TextMaxLine variant="body2">{`#${ticketInfo.tokenId}`}</TextMaxLine>
                 <TextMaxLine variant="h3">{ticketInfo.mysteryboxItem.name}</TextMaxLine>
-                <TextMaxLine variant="body2" sx={{ color: 'red' }}>
-                  {'November 11 - 13, 2022'}
-                </TextMaxLine>
+                <TextMaxLine variant="body2">{ticketInfo.duration}</TextMaxLine>
                 <TextMaxLine variant="body2">{ticketInfo.location}</TextMaxLine>
               </Stack>
               {/* </Stack> */}
@@ -158,20 +153,15 @@ export default function TicketItem({ ticket }: any) {
             >
               <Stack flexDirection="row" justifyContent="space-between">
                 <Stack gap="12px">
-                  <LineItem
-                    label="Day"
-                    value={fDate(ticketInfo.createdAt, 'EEEE (MMMM dd, yyyy)')}
-                  />
-                  <LineItem
-                    label="Team"
-                    value={ticketInfo.mysteryboxItem.name ? ticketInfo.mysteryboxItem.name : ''}
-                  />
-                  <LineItem
-                    label="Status"
-                    // value={ticketInfo.mysteryboxItem.name ? ticketInfo.mysteryboxItem.name : ''}
-                    value={ticketInfo.status}
-                  />
-                  {ticketInfo.status !== 'MARKET' && <LineItem label="QTY" value={'1'} />}
+                  <LineItem label="Day" value={ticketInfo.day} />
+                  <LineItem label="Team" value={ticketInfo.team} />
+                  {ticketInfo.status !== 'MARKET' && <LineItem mock label="QTY" value={'1'} />}
+                  {ticketInfo.status === 'MARKET' && (
+                    <>
+                      <LineItem mock label="CURRENT PRICE" value={'1,200 EDCP (~$1,200)'} />
+                      <LineItem mock label="AUCTION ENDS IN" value={'01:12:32:11'} />
+                    </>
+                  )}
                 </Stack>
                 {ticketInfo.status === 'TICKET' && (
                   <HyperlinkButton
@@ -206,11 +196,6 @@ export default function TicketItem({ ticket }: any) {
                   <Link
                     href={{
                       pathname: `/my/tickets/${ticketInfo.id}/`,
-                      // query: {
-                      //   // ticketInfo: JSON.stringify(ticketInfo),
-                      //   event: ticketInfo.mysteryboxInfo.id,
-                      //   ticket: ticketInfo.mysteryboxItem.id,
-                      // },
                     }}
                     passHref
                   >
@@ -247,9 +232,10 @@ type LineItemProps = {
   icon?: ReactElement;
   label: string;
   value: any;
+  mock?: boolean;
 };
 
-function LineItem({ label, value }: LineItemProps) {
+function LineItem({ mock, label, value }: LineItemProps) {
   const isMobile = useResponsive('down', 'md');
   return (
     <Stack direction={'column'} gap="2px">
@@ -265,7 +251,7 @@ function LineItem({ label, value }: LineItemProps) {
       </Typography>
       <Typography
         sx={{
-          color: 'common.white',
+          color: mock ? 'red' : 'common.white',
           fontSize: isMobile ? '12px' : '14px',
           lineHeight: 20 / 14,
         }}

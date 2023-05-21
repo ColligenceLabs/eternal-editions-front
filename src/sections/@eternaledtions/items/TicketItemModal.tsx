@@ -1,6 +1,6 @@
 import { Stack, Typography, Divider, CircularProgress, Fade, TextField } from '@mui/material';
 import React, { ChangeEvent, useEffect, useState } from 'react';
-import { TicketItemTypes } from 'src/@types/ticket/ticketTypes';
+import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import RoundedButton from 'src/components/common/RoundedButton';
 import { fDate } from 'src/utils/formatTime';
 import QuantityControl from './QuantityControl';
@@ -18,7 +18,7 @@ import { parseEther } from 'ethers/lib/utils';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import useAccount from 'src/hooks/useAccount';
 import { setWebUser } from 'src/store/slices/webUser';
-import { buyItem } from 'src/utils/transactions';
+import { buyItem, getWhlBalanceNoSigner } from 'src/utils/transactions';
 import { useRouter } from 'next/router';
 import { Modal } from '@mui/material';
 import { Backdrop } from '@mui/material';
@@ -34,6 +34,11 @@ type Props = {
   quote: string | undefined;
   mysterybox_id: number | undefined;
   setIsTicketItemModalOpen: (value: boolean) => void;
+  ticketInfo?: TicketInfoTypes;
+  day: string;
+  team: string;
+  duration: string;
+  location: string;
 };
 
 const ticketLabel = {
@@ -60,6 +65,11 @@ const TicketItemModal = ({
   quote,
   mysterybox_id,
   setIsTicketItemModalOpen,
+  ticketInfo,
+  day,
+  team,
+  duration,
+  location,
 }: Props) => {
   const { price, createdAt, name } = ticket;
   const [quantity, setQuantity] = useState<number>(1);
@@ -120,17 +130,19 @@ const TicketItemModal = ({
     // Collection
     const contract = boxContractAddress;
     const index = ticket.no - 1 ?? 0;
-    const amount = 1;
+    const amount = quantity;
 
-    let quoteToken: string;
-    let payment: BigNumber;
-    if (quote === 'matic' || quote === 'wmatic') {
-      quoteToken = quote === 'matic' ? contracts.matic[chainId] : contracts.wmatic[chainId];
-      payment = parseEther(ticket?.price.toString() ?? '0').mul(amount);
-    }
+    const quoteToken =
+      quote === 'matic'
+        ? contracts.matic[chainId]
+        : quote === 'usdc'
+        ? contracts.usdt[chainId]
+        : contracts.usdt[chainId];
+    const payment = parseEther(ticket?.price.toString() ?? '0').mul(amount);
+
     try {
-      const method = 'buyItemEth';
-      const txArgs = [index, amount];
+      const method = quote === 'matic' ? 'buyItemEth' : 'buyItemQuote';
+      const txArgs = quote === 'matic' ? [index, amount] : [index, payment.toHexString(), amount];
       const result = await abcSendTx(
         abcToken,
         contract,
@@ -138,15 +150,24 @@ const TicketItemModal = ({
         method,
         txArgs,
         abcUser,
-        payment!.toHexString()
+        quote === 'matic' ? payment.toHexString() : undefined
       );
 
       // TODO: Get tokenId in the receipt and save into DB drops ?
       const events = result.logs;
-      const recipient = hexToAddress(events[1].topics[2]);
-      const tokenIdHex = ethers.utils.defaultAbiCoder.decode(['uint256'], events[1].topics[3]);
-      const tokenId = parseInt(tokenIdHex.toString());
-      console.log('== ABC buyItem event ==>', recipient, tokenId);
+      const tokenIds = [];
+      let recipient;
+      for (let i = 0; i < amount; i++) {
+        recipient = hexToAddress(events[1 + i].topics[2]);
+        const tokenIdHex = ethers.utils.defaultAbiCoder.decode(
+          ['uint256'],
+          events[1 + i].topics[3]
+        );
+        const tokenId = parseInt(tokenIdHex.toString());
+        tokenIds.push(tokenId);
+      }
+
+      console.log('== ABC buyItem event ==>', recipient, tokenIds);
 
       if (parseInt(result.status.toString(), 16) === SUCCESS) {
         // const left = await getItemAmount(
@@ -165,7 +186,8 @@ const TicketItemModal = ({
           txHash: result?.transactionHash,
           price: ticket?.price,
           itemId: ticket?.id,
-          tokenId: tokenId,
+          tokenId: tokenIds,
+          amount: amount,
         };
 
         setTransactionHash(result?.transactionHash);
@@ -257,6 +279,7 @@ const TicketItemModal = ({
         price: (((ticket?.price ?? 0) * maticPrice) / 10).toFixed(4),
         itemId: ticket?.id,
         usePoint: true,
+        amount: quantity,
       };
 
       console.log(data);
@@ -299,7 +322,7 @@ const TicketItemModal = ({
     }
   };
 
-  const handleBuyWithMatic = async () => {
+  const handleBuyWithCrypto = async () => {
     const loginBy = window.localStorage.getItem('loginBy') ?? 'sns';
     if (loginBy === 'sns') {
       setAbcOpen(true);
@@ -308,20 +331,21 @@ const TicketItemModal = ({
     // Collection
     const contract = boxContractAddress;
     const index = ticket.no - 1 ?? 0;
-    const amount = 1;
+    const amount = quantity;
 
-    let quoteToken: string;
-    let payment: BigNumber;
-    if (quote === 'matic' || quote === 'wmatic') {
-      quoteToken = quote === 'matic' ? contracts.matic[chainId] : contracts.wmatic[chainId];
-      payment = parseEther(ticket?.price.toString() ?? '0').mul(amount);
-    }
+    const quoteToken =
+      quote === 'matic'
+        ? contracts.matic[chainId]
+        : quote === 'usdc'
+        ? contracts.usdt[chainId]
+        : contracts.usdt[chainId];
+    const payment = parseEther(ticket?.price.toString() ?? '0').mul(amount);
 
     try {
       const result = await buyItem(
         contract,
         index,
-        1,
+        amount,
         payment!.toString(),
         quoteToken!,
         account,
@@ -347,6 +371,7 @@ const TicketItemModal = ({
           price: ticket?.price,
           itemId: ticket?.id,
           tokenId: result.tokenId,
+          amount: amount,
         };
 
         const res = await registerBuy(data);
@@ -399,8 +424,21 @@ const TicketItemModal = ({
     setDollarPrice((price ?? 0) * maticPrice);
   }, [price, maticPrice]);
 
-  const onSubmit = () => {
-    method === methodType.edcp ? handleBuyWithPoint() : handleBuyWithMatic();
+  const onSubmit = async () => {
+    console.log(ticketInfo);
+
+    if (ticketInfo && ticketInfo.whitelists && ticketInfo.whitelists.length > 0) {
+      const contract = ticketInfo.whitelists[0].boxContractAddress;
+
+      const whlBalance = await getWhlBalanceNoSigner(contract, account, chainId);
+      if (whlBalance < 1) {
+        // TODO : Whitelist가 아닌 경우 구입을 못하게 차단
+        setIsUnauthorized(true);
+        return;
+      }
+    }
+
+    method === methodType.edcp ? handleBuyWithPoint() : handleBuyWithCrypto();
   };
 
   const onRedirectBack = () => {
@@ -470,16 +508,17 @@ const TicketItemModal = ({
                     fontWeight: '400',
                   }}
                 >
-                  {fDate(createdAt, 'MMMM dd')} -{' '}
-                  <span
-                    style={{
-                      fontSize: '16px',
-                      lineHeight: '20px',
-                      color: 'red',
-                    }}
-                  >
-                    31, 2022
-                  </span>
+                  {/*{fDate(createdAt, 'MMMM dd')} -{' '}*/}
+                  {/*<span*/}
+                  {/*  style={{*/}
+                  {/*    fontSize: '16px',*/}
+                  {/*    lineHeight: '20px',*/}
+                  {/*    color: 'red',*/}
+                  {/*  }}*/}
+                  {/*>*/}
+                  {/*  31, 2022*/}
+                  {/*</span>*/}
+                  {duration}
                 </Typography>
               )}
               {ticket.properties && (
@@ -490,16 +529,17 @@ const TicketItemModal = ({
                     fontWeight: '400',
                   }}
                 >
-                  {ticket.properties[0].type.toLowerCase() === ticketLabel.location &&
-                    ticket.properties[0].name}
+                  {/*{ticket.properties[0].type.toLowerCase() === ticketLabel.location &&*/}
+                  {/*  ticket.properties[0].name}*/}
+                  {location}
                 </Typography>
               )}
             </Stack>
             <Stack>
               <Divider sx={{ marginBottom: '12px' }} />
               <Stack gap={0.5}>
-                {ticketinfo(ticketLabel.day, fDate(createdAt, 'EEEE (MMMM dd, yyyy)'))}
-                {ticketinfo(ticketLabel.team, 'Team Yellow', true)}
+                {ticketinfo(ticketLabel.day, day)}
+                {ticketinfo(ticketLabel.team, `Team ${team}`)}
                 {isCompleteModal ? (
                   <>
                     {/* setDollarPrice((ticketInfo?.price ?? 0) * maticPrice); */}

@@ -3,9 +3,9 @@ import { Box, Grid, Button, Stack, Typography } from '@mui/material';
 import TicketItem from './TicketItem';
 import { Iconify } from 'src/components';
 import arrowDown from '@iconify/icons-carbon/arrow-down';
-import { getTicketCountByCategory, getTicketsService } from 'src/services/services';
+import { getSellBooks, getTicketCountByCategory, getTicketsService } from 'src/services/services';
 import { SUCCESS } from 'src/config';
-import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
+import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import { useResponsive } from 'src/hooks';
 import CategoryTabs from 'src/components/CategoryTabs';
 import { TextSelect, TextSelectOption } from 'src/components/common/Select';
@@ -33,6 +33,21 @@ type CategoryTypes = {
   count: string;
 };
 
+type SellBookTypes = {
+  id: number;
+  infoId: number;
+  itemId: number;
+  mysteryboxInfo: TicketInfoTypes;
+  mysteryboxItem: TicketItemTypes;
+  type: number;
+  uid: string;
+  wallet: string;
+  sellInfo: any;
+  price: number;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
 export default function TicketItems({ categories: originCategories, shouldHideCategories }: Props) {
   const [curPage, setCurPage] = useState(1);
   const [lastPage, setLastPage] = useState(0);
@@ -41,6 +56,7 @@ export default function TicketItems({ categories: originCategories, shouldHideCa
   const [categories, setCategories] = useState<CategoryTypes[]>([]);
   const [collection, setCollection] = useState('default');
   const [salesType, setSalesType] = useState('default');
+  const [sellBooks, setSellBooks] = useState<SellBookTypes[]>([]);
 
   originCategories = ['All', ...Array.from(new Set(originCategories))];
   const perPage = 6;
@@ -80,6 +96,18 @@ export default function TicketItems({ categories: originCategories, shouldHideCa
       setCategories([...temp]);
     }
   };
+
+  const fetchSellBooks = async () => {
+    const res = await getSellBooks(curPage, perPage);
+    console.log(res);
+    if (res.data.status === SUCCESS) {
+      setSellBooks(res.data.data.sellbooks);
+    }
+  };
+
+  useEffect(() => {
+    fetchSellBooks();
+  }, []);
 
   useEffect(() => {
     setCurPage(1);
