@@ -68,7 +68,7 @@ const phoneRegExp =
 const verifyCodeLength = 6;
 
 const FormSchema = Yup.object().shape({
-  email: Yup.string().required('Email is required').email('That is not an email'),
+  email: Yup.string().email('That is not an email').required('Email is required'),
   birthDate: Yup.date().required('Birth date is required').typeError('Invalid date format'),
   name: Yup.string().required('Full name is required'),
   phoneNumber: Yup.string()
@@ -98,15 +98,25 @@ const GoogleFullSignUp = () => {
   const [accountData, setAccountData] = useState<Partial<GoogleAccountData>>({});
   const dispatch = useDispatch();
   const { abcController, accountController } = controllers;
-
   const [idToken, setIdToken] = useState('');
   const [service, setService] = useState('');
-
+  const [wasClickedVerify, setWasClickedVerify] = useState<boolean>(false);
+  console.log('wasClickedVerify: ', wasClickedVerify);
   const [showVerifyCode, setShowVerifyCode] = useState<boolean>(false);
-  const { control, getValues, handleSubmit, watch, reset, formState } = useForm<GoogleAccountData>({
+  const {
+    control,
+    getValues,
+    handleSubmit,
+    watch,
+    reset,
+    setError,
+    clearErrors,
+    formState: { errors },
+  } = useForm<GoogleAccountData>({
     resolver: yupResolver(FormSchema),
     defaultValues: {
       ...accountData,
+      birthDate: new Date('12/31/2000'),
       agreeEternal: false,
       agreeABC: false,
       gender: 'male',
@@ -265,8 +275,6 @@ const GoogleFullSignUp = () => {
     // await userRegister({ abc_address: abcWallet });
   };
 
-  console.log('onSubmit', getValues('agree'), formState.errors);
-
   return (
     <Stack gap={2} component="form" onSubmit={handleSubmit(onSubmit)}>
       <Typography
@@ -292,7 +300,6 @@ const GoogleFullSignUp = () => {
               {...field}
               variant="standard"
               size={'small'}
-              type="email"
               inputProps={{
                 style: { color: palette.dark.common.black, fontSize: 14, lineHeight: 20 / 14 },
               }}
@@ -484,6 +491,15 @@ const GoogleFullSignUp = () => {
                         }
                         onClick={() => {
                           console.log(getValues('verificationCode'));
+                          if (getValues('verificationCode') !== '123123') {
+                            setError('verificationCode', {
+                              type: 'custom',
+                              message: 'This code is not correct',
+                            });
+                          } else {
+                            setWasClickedVerify(true);
+                            clearErrors('verificationCode');
+                          }
                         }}
                         sx={{
                           padding: '10px 16px',
@@ -604,7 +620,13 @@ const GoogleFullSignUp = () => {
 
       <RoundedButton
         type="submit"
-        disabled={!watch('agreeEternal') || !watch('agreeABC') || !watch('verificationCode')}
+        disabled={
+          !watch('agreeEternal') ||
+          !watch('agreeABC') ||
+          !watch('verificationCode') ||
+          Object.keys(errors).length > 0 ||
+          !wasClickedVerify
+        }
       >
         Continue
       </RoundedButton>
