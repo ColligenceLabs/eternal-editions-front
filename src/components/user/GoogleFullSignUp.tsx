@@ -33,7 +33,6 @@ import { AbcLoginResponse } from 'src/abc/schema/account';
 import secureLocalStorage from 'react-secure-storage';
 import { useDispatch } from 'react-redux';
 import { setAbcAuth } from 'src/store/slices/abcAuth';
-import { getSession } from 'src/services/services';
 import { RoundedSelectOption, MenuProps } from '../common/Select';
 
 const StyledInput = styled(Input)(({}) => ({
@@ -107,7 +106,6 @@ const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
   const [service, setService] = useState('');
 
   const [showVerifyCode, setShowVerifyCode] = useState<boolean>(false);
-  const classes = useStyles();
   const { control, getValues, handleSubmit, watch, reset } = useForm<GoogleAccountData>({
     resolver: yupResolver(FormSchema),
     defaultValues: {
@@ -134,7 +132,7 @@ const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
     fetchSession();
   }, []);
 
-  const onSubmit = (values: GoogleAccountData) => {
+  const onSubmit = async (values: GoogleAccountData) => {
     console.log('submit', values);
     // setForm(WALLET_FORM);
 
