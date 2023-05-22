@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Stack,
   Typography,
@@ -34,6 +34,7 @@ import secureLocalStorage from 'react-secure-storage';
 import { useDispatch } from 'react-redux';
 import { setAbcAuth } from 'src/store/slices/abcAuth';
 import { RoundedSelectOption, MenuProps } from '../common/Select';
+import countryList from 'react-select-country-list';
 
 const StyledInput = styled(Input)(({}) => ({
   [`.${inputBaseClasses.input}::placeholder`]: {
@@ -115,6 +116,8 @@ const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
       country: 'Korea',
     },
   });
+  const countryOptions = useMemo(() => countryList().getData(), []);
+  console.log('countryOptions: ', countryOptions);
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -313,9 +316,9 @@ const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
           control={control}
           render={({ field }) => (
             <Select {...field} variant="standard" sx={{ color: '#000' }} MenuProps={MenuProps}>
-              {countries.map((country) => (
-                <RoundedSelectOption value={country} key={country}>
-                  {country}
+              {countryOptions.map(({ value, label }: { value: string; label: string }) => (
+                <RoundedSelectOption value={value} key={value}>
+                  {label}
                 </RoundedSelectOption>
               ))}
             </Select>
