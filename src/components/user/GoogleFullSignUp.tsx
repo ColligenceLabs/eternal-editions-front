@@ -24,10 +24,8 @@ import CheckboxIndeterminateFillIcon from 'src/assets/icons/checkboxIndeterminat
 import CheckIcon from 'src/assets/icons/check';
 import CheckFillIcon from 'src/assets/icons/checkFill';
 import { Input } from '@mui/material';
-import { makeStyles } from '@material-ui/core/styles';
-import { abcJoin, abcLogin, getSession, userRegister } from 'src/services/services';
-import { setProvider } from 'src/store/slices/webUser';
-import { accountRestApi, controllers, services } from 'src/abc/background/init';
+import { abcLogin, getSession } from 'src/services/services';
+import { accountRestApi, controllers } from 'src/abc/background/init';
 import { AbcLoginResult, AbcSnsAddUserDto } from 'src/abc/main/abc/interface';
 import { AbcLoginResponse } from 'src/abc/schema/account';
 import secureLocalStorage from 'react-secure-storage';
@@ -60,15 +58,14 @@ type GoogleAccountData = {
   country: string;
   agree: boolean;
   verificationCode: string;
+  agreeEternal: boolean;
+  agreeABC: boolean;
 };
-
-interface Props {
-  setForm: React.Dispatch<React.SetStateAction<string>>;
-  accountData: Partial<GoogleAccountData>;
-}
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
+
+const verifyCodeLength = 6;
 
 const FormSchema = Yup.object().shape({
   email: Yup.string().required('Email is required').email('That is not an email'),
@@ -79,7 +76,7 @@ const FormSchema = Yup.object().shape({
     .required('Phone number is required'),
   verificationCode: Yup.string()
     .required('Verification Code  is required')
-    .length(6, 'Verification Code must be exactly 6 characters'),
+    .length(verifyCodeLength, 'Verification Code must be exactly 6 characters'),
 });
 
 export const termsEternal = [
@@ -97,9 +94,8 @@ export const termsABC = [
   { title: '마케팅 활용 및 광고성 정보 수신에 동의합니다.', isRequired: false },
 ];
 
-const countries = ['Korea', 'China', 'United States', 'Russian'];
-
-const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
+const GoogleFullSignUp = () => {
+  const [accountData, setAccountData] = useState<Partial<GoogleAccountData>>({});
   const dispatch = useDispatch();
   const { abcController, accountController } = controllers;
 
@@ -107,13 +103,14 @@ const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
   const [service, setService] = useState('');
 
   const [showVerifyCode, setShowVerifyCode] = useState<boolean>(false);
-  const { control, getValues, handleSubmit, watch, reset } = useForm<GoogleAccountData>({
+  const { control, getValues, handleSubmit, watch, reset, formState } = useForm<GoogleAccountData>({
     resolver: yupResolver(FormSchema),
     defaultValues: {
       ...accountData,
       agreeEternal: false,
       agreeABC: false,
-      country: 'Korea',
+      gender: 'male',
+      country: 'GB',
     },
   });
 
@@ -268,7 +265,7 @@ const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
     // await userRegister({ abc_address: abcWallet });
   };
 
-  console.log('onSubmit', getValues('agree'));
+  console.log('onSubmit', getValues('agree'), formState.errors);
 
   return (
     <Stack gap={2} component="form" onSubmit={handleSubmit(onSubmit)}>
@@ -471,11 +468,39 @@ const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
               <StyledTextField
                 {...field}
                 placeholder="Please enter verification code"
-                variant="standard"
                 size={'small'}
-                type="string"
                 inputProps={{
                   style: { color: palette.dark.common.black, fontSize: 14, lineHeight: 20 / 14 },
+                }}
+                variant="standard"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <RoundedButton
+                        variant="inactive"
+                        disabled={
+                          !getValues('verificationCode') ||
+                          getValues('verificationCode').length < verifyCodeLength
+                        }
+                        onClick={() => {
+                          console.log(getValues('verificationCode'));
+                        }}
+                        sx={{
+                          padding: '10px 16px',
+                          marginBottom: '24px',
+                          color: !!watch('phoneNumber')
+                            ? palette.dark.common.black
+                            : palette.dark.black.lighter,
+                          [`&.${buttonBaseClasses.root}`]: {
+                            fontSize: 12,
+                            lineHeight: 13 / 12,
+                          },
+                        }}
+                      >
+                        {'VERIFY CODE'}
+                      </RoundedButton>
+                    </InputAdornment>
+                  ),
                 }}
                 fullWidth
                 error={Boolean(error)}
