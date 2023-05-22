@@ -24,10 +24,8 @@ import CheckboxIndeterminateFillIcon from 'src/assets/icons/checkboxIndeterminat
 import CheckIcon from 'src/assets/icons/check';
 import CheckFillIcon from 'src/assets/icons/checkFill';
 import { Input } from '@mui/material';
-import { makeStyles } from '@material-ui/core/styles';
-import { abcJoin, abcLogin, getSession, userRegister } from 'src/services/services';
-import { setProvider } from 'src/store/slices/webUser';
-import { accountRestApi, controllers, services } from 'src/abc/background/init';
+import { abcLogin, getSession } from 'src/services/services';
+import { accountRestApi, controllers } from 'src/abc/background/init';
 import { AbcLoginResult, AbcSnsAddUserDto } from 'src/abc/main/abc/interface';
 import { AbcLoginResponse } from 'src/abc/schema/account';
 import secureLocalStorage from 'react-secure-storage';
@@ -62,11 +60,6 @@ type GoogleAccountData = {
   verificationCode: string;
 };
 
-interface Props {
-  setForm: React.Dispatch<React.SetStateAction<string>>;
-  accountData: Partial<GoogleAccountData>;
-}
-
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
@@ -99,7 +92,8 @@ export const termsABC = [
   { title: '마케팅 활용 및 광고성 정보 수신에 동의합니다.', isRequired: false },
 ];
 
-const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
+const GoogleFullSignUp = () => {
+  const [accountData, setAccountData] = useState<Partial<GoogleAccountData>>({});
   const dispatch = useDispatch();
   const { abcController, accountController } = controllers;
 
