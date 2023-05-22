@@ -148,7 +148,9 @@ export const getSellbookTeamsList = async () => {
 };
 
 export const getSellbookCategoryList = async () => {
-  return await customAxios(`http://localhost:5001/api/service/sellbook/category/count`);
+  return await customAxios(`/api/service/sellbook/category/count`);
 };
 
-export const sellBookInfoByID = async (id: string) => {};
+export const getSellbookInfoByID = async (id: string) => {
+  return await customAxios(`/api/service/sellbook/${id}`);
+};
