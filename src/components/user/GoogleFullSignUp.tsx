@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Stack,
   Typography,
@@ -9,14 +9,13 @@ import {
   Checkbox,
   buttonBaseClasses,
   InputAdornment,
+  TextField,
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { Label, Section } from '../my-tickets/StyledComponents';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { styled } from '@mui/material/styles';
 import palette from 'src/theme/palette';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import RoundedButton from '../common/RoundedButton';
 import CheckboxFillIcon from 'src/assets/icons/checkboxFill';
@@ -24,15 +23,21 @@ import CheckboxIcon from 'src/assets/icons/checkbox';
 import CheckboxIndeterminateFillIcon from 'src/assets/icons/checkboxIndeterminateFill';
 import CheckIcon from 'src/assets/icons/check';
 import CheckFillIcon from 'src/assets/icons/checkFill';
-import { GoogleAccountData, WALLET_FORM } from './GoogleFlow';
 import { Input } from '@mui/material';
-import { StyledMenuItem, StyledTextField } from './GoogleLogin';
-import { makeStyles } from '@material-ui/core/styles';
+import { getSession } from 'src/services/services';
+import { RoundedSelectOption, MenuProps } from '../common/Select';
 
-interface Props {
-  setForm: React.Dispatch<React.SetStateAction<string>>;
-  accountData: Partial<GoogleAccountData>;
-}
+type GoogleAccountData = {
+  email: string;
+  birthDate: Date;
+  phoneNumber: string;
+  gender: string;
+  name: string;
+  country: string;
+  agree: boolean;
+  verificationCode: string;
+};
+
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
@@ -54,16 +59,11 @@ export const terms = [
   { title: 'Receive SMS and E-mails for promotions', isRequired: false },
 ];
 
-const useStyles = makeStyles((theme) => ({
-  menuPaper: {
-    backgroundColor: 'white',
-  },
-}));
-
 const countries = ['Korea', 'China', 'United States', 'Russian'];
-const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
+
+const GoogleFullSignUp = () => {
+  const [accountData, setAccountData] = useState<Partial<GoogleAccountData>>({});
   const [showVerifyCode, setShowVerifyCode] = useState<boolean>(false);
-  const classes = useStyles();
   const { control, getValues, handleSubmit, watch } = useForm<GoogleAccountData>({
     resolver: yupResolver(FormSchema),
     defaultValues: {
@@ -73,11 +73,25 @@ const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
     },
   });
 
+  useEffect(() => {
+    const fetchSession = async () => {
+      const res = await getSession();
+      if (res.data?.providerAuthInfo) {
+        console.log('!! Session Info =', res.data?.providerAuthInfo);
+
+        const info = JSON.parse(res.data?.providerAuthInfo.provider_data);
+        setAccountData({ name: info.name, email: info.email });
+      }
+    };
+    fetchSession();
+  }, []);
+
   const onSubmit = (values: GoogleAccountData) => {
     console.log('submit', values);
-    setForm(WALLET_FORM);
   };
+
   console.log('onSubmit', getValues('agree'));
+
   return (
     <Stack gap={2} component="form" onSubmit={handleSubmit(onSubmit)}>
       <Typography
@@ -123,20 +137,11 @@ const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
           name="country"
           control={control}
           render={({ field }) => (
-            <Select
-              {...field}
-              variant="standard"
-              sx={{ color: '#000' }}
-              MenuProps={{
-                classes: {
-                  paper: classes.menuPaper,
-                },
-              }}
-            >
+            <Select {...field} variant="standard" sx={{ color: '#000' }} MenuProps={MenuProps}>
               {countries.map((country) => (
-                <StyledMenuItem value={country} key={country}>
+                <RoundedSelectOption value={country} key={country}>
                   {country}
-                </StyledMenuItem>
+                </RoundedSelectOption>
               ))}
             </Select>
           )}
@@ -214,18 +219,13 @@ const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
           name="gender"
           control={control}
           render={({ field }) => (
-            <Select
-              {...field}
-              variant="standard"
-              sx={{ color: '#000' }}
-              MenuProps={{
-                classes: {
-                  paper: classes.menuPaper,
-                },
-              }}
-            >
-              <StyledMenuItem value={'female'}>Woman</StyledMenuItem>
-              <StyledMenuItem value={'male'}>Man</StyledMenuItem>
+            <Select {...field} variant="standard" sx={{ color: '#000' }} MenuProps={MenuProps}>
+              <RoundedSelectOption key="female" value="female">
+                Woman
+              </RoundedSelectOption>
+              <RoundedSelectOption key="male" value="male">
+                Man
+              </RoundedSelectOption>
             </Select>
           )}
         />
@@ -369,5 +369,14 @@ export default GoogleFullSignUp;
 const StyledInput = styled(Input)(({}) => ({
   [`.${inputBaseClasses.input}::placeholder`]: {
     color: '#BBBBBB',
+  },
+}));
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  [`.${inputBaseClasses.input}::placeholder`]: {
+    color: '#BBBBBB',
+  },
+  '& input': {
+    color: theme.palette.common.black,
   },
 }));

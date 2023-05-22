@@ -8,6 +8,7 @@ import BuyNowButton from './BuyNowButton';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import Link from 'next/link';
 
 // ----------------------------------------------------------------------
 
@@ -85,167 +86,162 @@ export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
   }
 
   return (
-    <Grid item xs={12} sm={6} md={4} lg={3}>
-      <Wrapper>
-        <Stack
-          component={m.a}
-          whileHover="hover"
-          variants={varHover(1)}
-          transition={varTranHover()}
-          sx={{ borderRadius: 2, overflow: 'hidden', position: 'relative', cursor: 'pointer' }}
-        >
-          <Box
-            component={m.div}
-            variants={varHover(1.25)}
-            transition={varTranHover()}
-            sx={{ position: 'relative' }}
-          >
-            <Image src={imageLink} alt={name} ratio="3/4" sx={{ minHeight: 280 }} />
-            <Box
-              sx={{
-                position: 'absolute',
-                background: 'rgba(0, 0, 0, 0.2)',
-                zIndex: 3,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                top: 0,
-                // pointerEvents: 'none',
-              }}
-            />
-          </Box>
+    <Link href={`/items/${sellbookItem.itemId}`}>
+      <Grid component="a" item xs={12} sm={6} md={4} lg={3}>
+        <Wrapper>
           <Stack
-            justifyContent="flex-end"
-            sx={{
-              p: 2,
-              height: 1,
-              zIndex: 9,
-              position: 'absolute',
-              color: 'common.white',
-            }}
+            component={m.a}
+            whileHover="hover"
+            variants={varHover(1)}
+            transition={varTranHover()}
+            sx={{ borderRadius: 2, overflow: 'hidden', position: 'relative', cursor: 'pointer' }}
           >
-            <Stack spacing={0.25}>
-              <Typography
+            <Box
+              component={m.div}
+              variants={varHover(1.25)}
+              transition={varTranHover()}
+              sx={{ position: 'relative' }}
+            >
+              <Image src={imageLink} alt={name} ratio="3/4" sx={{ minHeight: 280 }} />
+              <Box
                 sx={{
-                  fontSize: 12,
-                  lineHeight: 12 / 17,
+                  position: 'absolute',
+                  background: 'rgba(0, 0, 0, 0.2)',
+                  zIndex: 3,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  top: 0,
                 }}
-              >
-                {`#${id}`}
-              </Typography>
-              <TextMaxLine
-                sx={{
-                  fontSize: { xs: 24, md: 40 },
-                  lineHeight: {
-                    xs: 28 / 24,
-                    md: 44 / 40,
-                  },
-                  fontWeight: theme.typography.fontWeightBold,
-                }}
-              >
-                {name}
-              </TextMaxLine>
-              <Typography
-                sx={{
-                  fontSize: 12,
-                  lineHeight: 16 / 12,
-                  color: 'common.white',
-                }}
-              >
-                {/*{createdAt && fDate(createdAt, 'EEEE (MMMM dd, yyyy)')}*/}
-                {day}
-              </Typography>
-              <Stack flexDirection="row" gap={0.5} alignItems="center">
+              />
+            </Box>
+            <Stack
+              justifyContent="flex-end"
+              sx={{
+                p: 2,
+                height: 1,
+                zIndex: 9,
+                position: 'absolute',
+                color: 'common.white',
+              }}
+            >
+              <Stack spacing={0.25}>
+                <Typography
+                  sx={{
+                    fontSize: 12,
+                    lineHeight: 12 / 17,
+                  }}
+                >
+                  {`#${id}`}
+                </Typography>
+                <TextMaxLine
+                  sx={{
+                    fontSize: { xs: 24, md: 40 },
+                    lineHeight: {
+                      xs: 28 / 24,
+                      md: 44 / 40,
+                    },
+                    fontWeight: theme.typography.fontWeightBold,
+                  }}
+                >
+                  {name}
+                </TextMaxLine>
                 <Typography
                   sx={{
                     fontSize: 12,
                     lineHeight: 16 / 12,
+                    color: 'common.white',
                   }}
                 >
-                  {`Team ${team}`}
+                  {/*{createdAt && fDate(createdAt, 'EEEE (MMMM dd, yyyy)')}*/}
+                  {day}
                 </Typography>
-                <Box
-                  sx={{
-                    border: '1px solid rgba(255, 255, 255, 0.6)',
-                    backgroundColor: `${team}`,
-                    width: '8px',
-                    height: '8px',
-                    borderRadius: '100%',
-                  }}
-                />
+                <Stack flexDirection="row" gap={0.5} alignItems="center">
+                  <Typography
+                    sx={{
+                      fontSize: 12,
+                      lineHeight: 16 / 12,
+                    }}
+                  >
+                    {`Team ${team}`}
+                  </Typography>
+                  <Box
+                    sx={{
+                      border: '1px solid rgba(255, 255, 255, 0.6)',
+                      backgroundColor: `${team}`,
+                      width: '8px',
+                      height: '8px',
+                      borderRadius: '100%',
+                    }}
+                  />
+                </Stack>
               </Stack>
             </Stack>
-          </Stack>
-          {!isInDrop && (
-            <>
-              <Stack
-                sx={{
-                  p: 2,
-                  height: 1,
-                  zIndex: 9,
-                  left: 0,
-                  position: 'absolute',
-                }}
-              >
-                <Chip
-                  label={isOnAuction ? 'On Auction' : 'For Sale'}
-                  variant="outlined"
-                  color="primary"
+            {!isInDrop && (
+              <>
+                <Stack
                   sx={{
-                    textTransform: 'uppercase',
-                    fontWeight: theme.typography.fontWeightBold,
+                    p: 2,
+                    height: 1,
+                    zIndex: 9,
+                    left: 0,
+                    position: 'absolute',
                   }}
-                />
-              </Stack>
-              <Stack
-                sx={{
-                  p: 2,
-                  height: 1,
-                  zIndex: 9,
-                  right: 0,
-                  position: 'absolute',
-                  display: 'flex',
-                  flexDirection: 'row',
-                  gap: 1,
-                }}
-              >
-                {categoriesStr && categoriesStr.split(',').length > 0
-                  ? categoriesStr.split(',').map((category: string, index: number) => (
-                      <Chip
-                        key={index}
-                        label={category.toUpperCase()}
-                        variant="outlined"
-                        sx={{
-                          fontWeight: theme.typography.fontWeightBold,
-                          color: theme.palette.common.white,
-                        }}
-                      />
-                    ))
-                  : null}
-              </Stack>
-            </>
-          )}
-        </Stack>
-
-        <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
-          <Typography
-            sx={{
-              fontWeight: 'bold',
-              fontSize: '16px',
-              lineHeight: 24 / 16,
-              marginLeft: '16px',
-              color: 'red',
-            }}
-          >
-            {`${(dollarPrice / 10).toFixed(4)} EDCP`}
-            {/*{sellbookItem.price} EDCP*/}
-          </Typography>
-          <BuyNowButton
-            releasedDate={releaseDatetime}
-            onClick={() => router.push(`/items/${id}`)}
-          />
-        </Stack>
-      </Wrapper>
-    </Grid>
+                >
+                  <Chip
+                    label={isOnAuction ? 'On Auction' : 'For Sale'}
+                    variant="outlined"
+                    color="primary"
+                    sx={{
+                      textTransform: 'uppercase',
+                      fontWeight: theme.typography.fontWeightBold,
+                    }}
+                  />
+                </Stack>
+                <Stack
+                  sx={{
+                    p: 2,
+                    height: 1,
+                    zIndex: 9,
+                    right: 0,
+                    position: 'absolute',
+                    display: 'flex',
+                    flexDirection: 'row',
+                    gap: 1,
+                  }}
+                >
+                  {categoriesStr && categoriesStr.split(',').length > 0
+                    ? categoriesStr.split(',').map((category: string, index: number) => (
+                        <Chip
+                          key={index}
+                          label={category.toUpperCase()}
+                          variant="outlined"
+                          sx={{
+                            fontWeight: theme.typography.fontWeightBold,
+                            color: theme.palette.common.white,
+                          }}
+                        />
+                      ))
+                    : null}
+                </Stack>
+              </>
+            )}
+          </Stack>
+          <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
+            <Typography
+              sx={{
+                fontWeight: 'bold',
+                fontSize: '16px',
+                lineHeight: 24 / 16,
+                marginLeft: '16px',
+              }}
+            >
+              {`${(dollarPrice / 10).toFixed(4)} EDCP`}
+            </Typography>
+            <BuyNowButton releasedDate={releaseDatetime} />
+          </Stack>
+        </Wrapper>
+      </Grid>
+    </Link>
   );
 }
