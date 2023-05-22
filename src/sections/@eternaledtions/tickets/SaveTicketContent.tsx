@@ -13,7 +13,6 @@ import {
 import { Stack } from '@mui/system';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
-import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 import RoundedButton from 'src/components/common/RoundedButton';
 import { Label, Section, Value } from 'src/components/my-tickets/StyledComponents';
 import { useResponsive } from 'src/hooks';
@@ -25,9 +24,7 @@ import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import useAccount from 'src/hooks/useAccount';
 import { useSelector } from 'react-redux';
 import { nftTransferFrom } from 'src/utils/transactions';
-import { BigNumber } from 'ethers';
 import contracts from 'src/config/constants/contracts';
-import { parseEther } from 'ethers/lib/utils';
 import { SUCCESS } from 'src/config';
 import { LoadingButton } from '@mui/lab';
 import CSnackbar from 'src/components/common/CSnackbar';
