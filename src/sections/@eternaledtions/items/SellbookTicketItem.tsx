@@ -34,7 +34,6 @@ export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
   // const isMobile = useResponsive('down', 'md');
   const { id, mysteryboxItem } = sellbookItem;
   const { name, imageLink, categoriesStr, releaseDatetime, price, properties } = mysteryboxItem;
-  console.log(sellbookItem);
   const [team, setTeam] = useState('');
   const [day, setDay] = useState('');
   const isOnAuction = router.query.status; // TODO: Update value
@@ -111,6 +110,7 @@ export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
                 right: 0,
                 bottom: 0,
                 top: 0,
+                // pointerEvents: 'none',
               }}
             />
           </Box>
@@ -234,11 +234,16 @@ export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
               fontSize: '16px',
               lineHeight: 24 / 16,
               marginLeft: '16px',
+              color: 'red',
             }}
           >
             {`${(dollarPrice / 10).toFixed(4)} EDCP`}
+            {/*{sellbookItem.price} EDCP*/}
           </Typography>
-          <BuyNowButton releasedDate={releaseDatetime} />
+          <BuyNowButton
+            releasedDate={releaseDatetime}
+            onClick={() => router.push(`/items/${id}`)}
+          />
         </Stack>
       </Wrapper>
     </Grid>
