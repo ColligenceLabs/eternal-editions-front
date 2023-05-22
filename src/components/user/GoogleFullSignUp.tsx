@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import {
   Stack,
   Typography,
@@ -24,8 +24,32 @@ import CheckboxIndeterminateFillIcon from 'src/assets/icons/checkboxIndeterminat
 import CheckIcon from 'src/assets/icons/check';
 import CheckFillIcon from 'src/assets/icons/checkFill';
 import { Input } from '@mui/material';
-import { getSession } from 'src/services/services';
+import { makeStyles } from '@material-ui/core/styles';
+import { abcJoin, abcLogin, getSession, userRegister } from 'src/services/services';
+import { setProvider } from 'src/store/slices/webUser';
+import { accountRestApi, controllers, services } from 'src/abc/background/init';
+import { AbcLoginResult, AbcSnsAddUserDto } from 'src/abc/main/abc/interface';
+import { AbcLoginResponse } from 'src/abc/schema/account';
+import secureLocalStorage from 'react-secure-storage';
+import { useDispatch } from 'react-redux';
+import { setAbcAuth } from 'src/store/slices/abcAuth';
 import { RoundedSelectOption, MenuProps } from '../common/Select';
+import countryList from 'react-select-country-list';
+
+const StyledInput = styled(Input)(({}) => ({
+  [`.${inputBaseClasses.input}::placeholder`]: {
+    color: '#BBBBBB',
+  },
+}));
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  [`.${inputBaseClasses.input}::placeholder`]: {
+    color: '#BBBBBB',
+  },
+  '& input': {
+    color: theme.palette.common.black,
+  },
+}));
 
 type GoogleAccountData = {
   email: string;
@@ -37,6 +61,11 @@ type GoogleAccountData = {
   agree: boolean;
   verificationCode: string;
 };
+
+interface Props {
+  setForm: React.Dispatch<React.SetStateAction<string>>;
+  accountData: Partial<GoogleAccountData>;
+}
 
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
@@ -53,41 +82,190 @@ const FormSchema = Yup.object().shape({
     .length(6, 'Verification Code must be exactly 6 characters'),
 });
 
-export const terms = [
-  { title: 'Agree Terms and Conditions', isRequired: true },
-  { title: 'Agree Privacy Policy', isRequired: true },
-  { title: 'Receive SMS and E-mails for promotions', isRequired: false },
+export const termsEternal = [
+  { title: '이용약관을 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
+  { title: '개인정보처리방침을 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
+  { title: '개인정보 제3자 제공 동의를 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
+  { title: '마케팅 활용 및 광고성 정보 수신에 동의합니다.', isRequired: false },
+];
+
+export const termsABC = [
+  { title: '14세 이상입니다.', isRequired: true },
+  { title: '이용약관을 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
+  { title: '개인정보 수집 및 이용을 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
+  { title: '개인정보 제3자 제공 동의를 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
+  { title: '마케팅 활용 및 광고성 정보 수신에 동의합니다.', isRequired: false },
 ];
 
 const countries = ['Korea', 'China', 'United States', 'Russian'];
 
-const GoogleFullSignUp = () => {
-  const [accountData, setAccountData] = useState<Partial<GoogleAccountData>>({});
+const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
+  const dispatch = useDispatch();
+  const { abcController, accountController } = controllers;
+
+  const [idToken, setIdToken] = useState('');
+  const [service, setService] = useState('');
+
   const [showVerifyCode, setShowVerifyCode] = useState<boolean>(false);
-  const { control, getValues, handleSubmit, watch } = useForm<GoogleAccountData>({
+  const { control, getValues, handleSubmit, watch, reset } = useForm<GoogleAccountData>({
     resolver: yupResolver(FormSchema),
     defaultValues: {
       ...accountData,
-      agree: false,
+      agreeEternal: false,
+      agreeABC: false,
       country: 'Korea',
     },
   });
 
+  const countryOptions = useMemo(() => countryList().getData(), []);
+
   useEffect(() => {
     const fetchSession = async () => {
       const res = await getSession();
+
       if (res.data?.providerAuthInfo) {
         console.log('!! Session Info =', res.data?.providerAuthInfo);
-
         const info = JSON.parse(res.data?.providerAuthInfo.provider_data);
-        setAccountData({ name: info.name, email: info.email });
+        console.log('!! Session provider_data = ', info);
+        setIdToken(res.data?.providerAuthInfo.provider_token);
+        setService(res.data?.providerAuthInfo.provider);
+        reset({ email: info.email, name: info.name });
       }
     };
     fetchSession();
   }, []);
 
-  const onSubmit = (values: GoogleAccountData) => {
+  const onSubmit = async (values: GoogleAccountData) => {
     console.log('submit', values);
+    // setForm(WALLET_FORM);
+
+    // DB users 에 입략받은 추가 정보 저장
+
+    // ABC 지갑 가입 여부 확인
+    const isExist = await abcController.getUser({
+      email: values.email,
+      successIfUserExist: true,
+    });
+    console.log('!! addUser =', isExist);
+
+    let abcWallet = '';
+    let abcAuth: AbcLoginResult = {
+      accessToken: '',
+      refreshToken: '',
+      tokenType: '',
+      expiresIn: 0,
+    };
+
+    if (isExist) {
+      // 기존 ABC Wallet 사용자
+
+      // ABC 로그인
+      const result = await abcLogin({
+        token: idToken,
+        service,
+        audience: 'https://mw.myabcwallet.com',
+      });
+
+      if (result.data.data !== null) {
+        const resData = AbcLoginResponse.parse(result.data);
+        abcAuth = {
+          accessToken: resData.access_token,
+          refreshToken: resData.refresh_token,
+          tokenType: resData.token_type,
+          expiresIn: resData.expire_in,
+        };
+
+        // 토큰 저장
+        await dispatch(setAbcAuth(abcAuth));
+        await secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
+
+        // 지갑 복구
+        const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
+        console.log('!! user =', user);
+
+        await accountController.recoverShare(
+          { password: '!owdin001', user, wallets, keepDB: false },
+          dispatch
+        );
+
+        abcWallet = user.accounts[0].ethAddress;
+      } else {
+        console.log('!! ABC Wallet SNS login ... failed !!');
+      }
+    } else {
+      // 신규 가입자 생성
+
+      // ABC 로그인
+      const result = await abcLogin({
+        token: idToken,
+        service,
+        audience: 'https://mw.myabcwallet.com',
+      });
+      console.log('!! 신규 가입자 abcLogin = ', result);
+
+      const sixCode = JSON.parse(result.data.msg).sixcode;
+      console.log('!! sixcode =', sixCode, values.email);
+      // console.log(
+      //   '!! Agreement =',
+      //   Number(getValues('abcAge')),
+      //   Number(getValues('abcTerms')),
+      //   Number(getValues('abcPrivate')),
+      //   Number(getValues('abcTirdParty')),
+      //   Number(getValues('abcMarketing'))
+      // );
+
+      const dto: AbcSnsAddUserDto = {
+        username: values.email,
+        code: sixCode,
+        joinpath: 'https://colligence.io',
+        overage: 1,
+        agree: 1,
+        collect: 1,
+        thirdparty: 1,
+        advertise: 1,
+      };
+
+      // try {
+      //   const newAccount = await abcJoin(dto);
+      //   console.log('!! created account =', newAccount);
+      // } catch (e) {
+      //   console.log('!! snsAddUser Error =', e);
+      // }
+      //
+      // // 신규 가입 후 ABC 로그인
+      // console.log('!! start to abc sns login !!');
+      // abcAuth = await abcController.snsLogin(idToken, service);
+      // console.log('!! abc sns login result =', abcAuth);
+      //
+      // // 토큰 저장
+      // await dispatch(setAbcAuth(abcAuth));
+      // await secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
+      //
+      // // MPC 지갑 생성
+      // await accountController.createMpcBaseAccount(
+      //   {
+      //     accountName: values.email,
+      //     password: '!owdin001',
+      //     email: values.email,
+      //   },
+      //   dispatch
+      // );
+      //
+      // // 생성된 MPC 지갑 정보 조회
+      // const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
+      // console.log('!! user =', user);
+      //
+      // await accountController.recoverShare(
+      //   { password: '!owdin001', user, wallets, keepDB: false },
+      //   dispatch
+      // );
+      //
+      // abcWallet = user.accounts[0].ethAddress;
+      console.log('!! Register a new ABC wallet user ... done !!');
+    }
+
+    // ABC 기 기압자 경우, 지갑 주소 저장
+    // await userRegister({ abc_address: abcWallet });
   };
 
   console.log('onSubmit', getValues('agree'));
@@ -102,7 +280,7 @@ const GoogleFullSignUp = () => {
           mb: 2,
         }}
       >
-        Google Account Full
+        Google Account
       </Typography>
       <Section>
         <Label as="label" sx={{ color: palette.dark.black.lighter }}>
@@ -138,9 +316,9 @@ const GoogleFullSignUp = () => {
           control={control}
           render={({ field }) => (
             <Select {...field} variant="standard" sx={{ color: '#000' }} MenuProps={MenuProps}>
-              {countries.map((country) => (
-                <RoundedSelectOption value={country} key={country}>
-                  {country}
+              {countryOptions.map(({ value, label }: { value: string; label: string }) => (
+                <RoundedSelectOption value={value} key={value}>
+                  {label}
                 </RoundedSelectOption>
               ))}
             </Select>
@@ -316,7 +494,7 @@ const GoogleFullSignUp = () => {
       </Typography>
       <Stack gap={0}>
         <Controller
-          name="agree"
+          name="agreeEternal"
           control={control}
           render={({ field }) => (
             <FormControlLabel
@@ -329,17 +507,59 @@ const GoogleFullSignUp = () => {
                   indeterminateIcon={<CheckboxIndeterminateFillIcon />}
                 />
               }
-              label="Agree to all"
+              label="Eternal Editions의 모든 약관에 동의합니다."
             />
           )}
         />
 
-        {terms.map(({ title, isRequired }, index) => (
+        {termsEternal.map(({ title, isRequired }, index) => (
           <FormControlLabel
             key={index}
             control={
               <Checkbox
-                checked={watch('agree')}
+                checked={watch('agreeEternal')}
+                // checked={true}
+                sx={{ padding: 0, px: '8px' }}
+                icon={<CheckIcon />}
+                checkedIcon={<CheckFillIcon />}
+                indeterminateIcon={<CheckboxIndeterminateFillIcon />}
+              />
+            }
+            label={
+              <span>
+                {isRequired && <span style={{ color: 'red' }}>* </span>}
+                {title}
+              </span>
+            }
+          />
+        ))}
+      </Stack>
+      <Stack gap={0}>
+        <Controller
+          name="agreeABC"
+          control={control}
+          render={({ field }) => (
+            <FormControlLabel
+              control={
+                <Checkbox
+                  onChange={(e) => field.onChange(e.target.checked)}
+                  checked={field.value}
+                  icon={<CheckboxIcon />}
+                  checkedIcon={<CheckboxFillIcon />}
+                  indeterminateIcon={<CheckboxIndeterminateFillIcon />}
+                />
+              }
+              label="ABC WALLET의 모든 약관에 동의합니다."
+            />
+          )}
+        />
+
+        {termsABC.map(({ title, isRequired }, index) => (
+          <FormControlLabel
+            key={index}
+            control={
+              <Checkbox
+                checked={watch('agreeABC')}
                 // checked={true}
                 sx={{ padding: 0, px: '8px' }}
                 icon={<CheckIcon />}
@@ -357,7 +577,10 @@ const GoogleFullSignUp = () => {
         ))}
       </Stack>
 
-      <RoundedButton type="submit" disabled={!watch('agree') || !watch('verificationCode')}>
+      <RoundedButton
+        type="submit"
+        disabled={!watch('agreeEternal') || !watch('agreeABC') || !watch('verificationCode')}
+      >
         Continue
       </RoundedButton>
     </Stack>
@@ -365,18 +588,3 @@ const GoogleFullSignUp = () => {
 };
 
 export default GoogleFullSignUp;
-
-const StyledInput = styled(Input)(({}) => ({
-  [`.${inputBaseClasses.input}::placeholder`]: {
-    color: '#BBBBBB',
-  },
-}));
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  [`.${inputBaseClasses.input}::placeholder`]: {
-    color: '#BBBBBB',
-  },
-  '& input': {
-    color: theme.palette.common.black,
-  },
-}));
