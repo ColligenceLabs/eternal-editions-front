@@ -70,6 +70,8 @@ interface Props {
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
+const verifyCodeLength = 6;
+
 const FormSchema = Yup.object().shape({
   email: Yup.string().required('Email is required').email('That is not an email'),
   birthDate: Yup.date().required('Birth date is required').typeError('Invalid date format'),
@@ -79,8 +81,10 @@ const FormSchema = Yup.object().shape({
     .required('Phone number is required'),
   verificationCode: Yup.string()
     .required('Verification Code  is required')
-    .length(6, 'Verification Code must be exactly 6 characters'),
+    .length(verifyCodeLength, 'Verification Code must be exactly 6 characters'),
 });
+
+console.log(FormSchema);
 
 export const termsEternal = [
   { title: '이용약관을 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
@@ -468,18 +472,39 @@ const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
             name="verificationCode"
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <StyledTextField
+              <StyledInput
                 {...field}
                 placeholder="Please enter verification code"
-                variant="standard"
                 size={'small'}
-                type="string"
                 inputProps={{
                   style: { color: palette.dark.common.black, fontSize: 14, lineHeight: 20 / 14 },
                 }}
                 fullWidth
                 error={Boolean(error)}
-                helperText={error?.message}
+                endAdornment={
+                  <InputAdornment position="end">
+                    <RoundedButton
+                      variant="inactive"
+                      disabled={getValues('verificationCode')?.length < verifyCodeLength}
+                      onClick={() => {
+                        console.log(getValues('verificationCode'));
+                      }}
+                      sx={{
+                        padding: '10px 16px',
+                        marginBottom: '24px',
+                        color: !!watch('phoneNumber')
+                          ? palette.dark.common.black
+                          : palette.dark.black.lighter,
+                        [`&.${buttonBaseClasses.root}`]: {
+                          fontSize: 12,
+                          lineHeight: 13 / 12,
+                        },
+                      }}
+                    >
+                      {'VERIFY CODE'}
+                    </RoundedButton>
+                  </InputAdornment>
+                }
               />
             )}
           />
