@@ -58,6 +58,8 @@ type GoogleAccountData = {
   country: string;
   agree: boolean;
   verificationCode: string;
+  agreeEternal: boolean;
+  agreeABC: boolean;
 };
 
 const phoneRegExp =
@@ -101,7 +103,7 @@ const GoogleFullSignUp = () => {
   const [service, setService] = useState('');
 
   const [showVerifyCode, setShowVerifyCode] = useState<boolean>(false);
-  const { control, getValues, handleSubmit, watch, reset } = useForm<GoogleAccountData>({
+  const { control, getValues, handleSubmit, watch, reset, formState } = useForm<GoogleAccountData>({
     resolver: yupResolver(FormSchema),
     defaultValues: {
       ...accountData,
@@ -263,7 +265,7 @@ const GoogleFullSignUp = () => {
     // await userRegister({ abc_address: abcWallet });
   };
 
-  console.log('onSubmit', getValues('agree'));
+  console.log('onSubmit', getValues('agree'), formState.errors);
 
   return (
     <Stack gap={2} component="form" onSubmit={handleSubmit(onSubmit)}>
@@ -463,42 +465,46 @@ const GoogleFullSignUp = () => {
             name="verificationCode"
             control={control}
             render={({ field, fieldState: { error } }) => (
-              <StyledInput
+              <StyledTextField
                 {...field}
                 placeholder="Please enter verification code"
                 size={'small'}
                 inputProps={{
                   style: { color: palette.dark.common.black, fontSize: 14, lineHeight: 20 / 14 },
                 }}
+                variant="standard"
+                InputProps={{
+                  endAdornment: (
+                    <InputAdornment position="end">
+                      <RoundedButton
+                        variant="inactive"
+                        disabled={
+                          !getValues('verificationCode') ||
+                          getValues('verificationCode').length < verifyCodeLength
+                        }
+                        onClick={() => {
+                          console.log(getValues('verificationCode'));
+                        }}
+                        sx={{
+                          padding: '10px 16px',
+                          marginBottom: '24px',
+                          color: !!watch('phoneNumber')
+                            ? palette.dark.common.black
+                            : palette.dark.black.lighter,
+                          [`&.${buttonBaseClasses.root}`]: {
+                            fontSize: 12,
+                            lineHeight: 13 / 12,
+                          },
+                        }}
+                      >
+                        {'VERIFY CODE'}
+                      </RoundedButton>
+                    </InputAdornment>
+                  ),
+                }}
                 fullWidth
                 error={Boolean(error)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <RoundedButton
-                      variant="inactive"
-                      disabled={
-                        !getValues('verificationCode') ||
-                        getValues('verificationCode').length < verifyCodeLength
-                      }
-                      onClick={() => {
-                        console.log(getValues('verificationCode'));
-                      }}
-                      sx={{
-                        padding: '10px 16px',
-                        marginBottom: '24px',
-                        color: !!watch('phoneNumber')
-                          ? palette.dark.common.black
-                          : palette.dark.black.lighter,
-                        [`&.${buttonBaseClasses.root}`]: {
-                          fontSize: 12,
-                          lineHeight: 13 / 12,
-                        },
-                      }}
-                    >
-                      {'VERIFY CODE'}
-                    </RoundedButton>
-                  </InputAdornment>
-                }
+                helperText={error?.message}
               />
             )}
           />
