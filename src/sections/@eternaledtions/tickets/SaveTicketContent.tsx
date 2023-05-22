@@ -148,7 +148,14 @@ export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
       } catch (e: any) {}
     } else {
       // Metamask
-      const result = await nftTransferFrom(contract, address, tokenId, account, library, false);
+      const result = await nftTransferFrom(
+        contract,
+        address,
+        tokenId.toString(),
+        account!,
+        library,
+        false
+      );
       console.log(result);
       if (result === SUCCESS) {
         setOpenSnackbar({
@@ -191,9 +198,7 @@ export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
           size={160}
         />
       </Box>
-      <Typography
-        sx={{ fontSize: '12px' }}
-      >{`https://entrance.eternaleditions.io/admin-e-ticket?type=2&tokenId=${ticketInfo.tokenId}&nftid=${ticketInfo.mysteryBoxId}&expireTime=${qrTimestamp}`}</Typography>
+
       <Stack gap="12px" mt="48px" mb="24px">
         <Stack gap={0.5}>
           <Typography
