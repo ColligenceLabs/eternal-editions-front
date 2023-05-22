@@ -24,7 +24,6 @@ import CheckboxIndeterminateFillIcon from 'src/assets/icons/checkboxIndeterminat
 import CheckIcon from 'src/assets/icons/check';
 import CheckFillIcon from 'src/assets/icons/checkFill';
 import { Input } from '@mui/material';
-import { StyledMenuItem, StyledTextField } from './GoogleLogin';
 import { makeStyles } from '@material-ui/core/styles';
 import { abcJoin, abcLogin, getSession, userRegister } from 'src/services/services';
 import { setProvider } from 'src/store/slices/webUser';
@@ -36,6 +35,21 @@ import { useDispatch } from 'react-redux';
 import { setAbcAuth } from 'src/store/slices/abcAuth';
 import { getSession } from 'src/services/services';
 import { RoundedSelectOption, MenuProps } from '../common/Select';
+
+const StyledInput = styled(Input)(({}) => ({
+  [`.${inputBaseClasses.input}::placeholder`]: {
+    color: '#BBBBBB',
+  },
+}));
+
+const StyledTextField = styled(TextField)(({ theme }) => ({
+  [`.${inputBaseClasses.input}::placeholder`]: {
+    color: '#BBBBBB',
+  },
+  '& input': {
+    color: theme.palette.common.black,
+  },
+}));
 
 type GoogleAccountData = {
   email: string;
@@ -49,8 +63,8 @@ type GoogleAccountData = {
 };
 
 interface Props {
-    setForm: React.Dispatch<React.SetStateAction<string>>;
-    accountData: Partial<GoogleAccountData>;
+  setForm: React.Dispatch<React.SetStateAction<string>>;
+  accountData: Partial<GoogleAccountData>;
 }
 
 const phoneRegExp =
@@ -254,7 +268,6 @@ const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
   };
 
   console.log('onSubmit', getValues('agree'));
-
 
   return (
     <Stack gap={2} component="form" onSubmit={handleSubmit(onSubmit)}>
@@ -574,18 +587,3 @@ const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
 };
 
 export default GoogleFullSignUp;
-
-const StyledInput = styled(Input)(({}) => ({
-  [`.${inputBaseClasses.input}::placeholder`]: {
-    color: '#BBBBBB',
-  },
-}));
-
-const StyledTextField = styled(TextField)(({ theme }) => ({
-  [`.${inputBaseClasses.input}::placeholder`]: {
-    color: '#BBBBBB',
-  },
-  '& input': {
-    color: theme.palette.common.black,
-  },
-}));

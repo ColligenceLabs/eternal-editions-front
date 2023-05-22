@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import GoogleFullSignUp from './GoogleFullSignUp';
-import GoogleLogin from './GoogleLogin';
-import CreateWalletForm from './CreateWalletForm';
 
 export const ACCOUNT_SHORT_FORM = 'ACCOUNT_SHORT_FORM';
 export const WALLET_FORM = 'WALLET_FORM';
