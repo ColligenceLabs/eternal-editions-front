@@ -18,13 +18,13 @@ export type GoogleAccountData = {
   verificationCode: string;
 };
 const GoogleFlow = () => {
-  const [form, setForm] = useState(ACCOUNT_SHORT_FORM);
+  const [form, setForm] = useState(ACCOUNT_FULL_FORM);
   const [data, setData] = useState<Partial<GoogleAccountData>>({});
   return (
     <>
-      {form === ACCOUNT_SHORT_FORM && <GoogleLogin setForm={setForm} setData={setData} />}
+      {/*{form === ACCOUNT_SHORT_FORM && <GoogleLogin setForm={setForm} setData={setData} />}*/}
       {form === ACCOUNT_FULL_FORM && <GoogleFullSignUp setForm={setForm} accountData={data} />}
-      {form === WALLET_FORM && <CreateWalletForm onClose={() => {}} />}
+      {/*{form === WALLET_FORM && <CreateWalletForm onClose={() => {}} />}*/}
     </>
   );
 };
