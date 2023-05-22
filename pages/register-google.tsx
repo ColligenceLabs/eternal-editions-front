@@ -15,10 +15,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 }));
 
 const Container = styled(Box)(({ theme }) => ({
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  margin: '0 auto',
   width: 'calc(100% - 2rem)',
   backgroundColor: theme.palette.common.white,
   color: theme.palette.common.black,

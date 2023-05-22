@@ -28,7 +28,6 @@ import { ChangeEvent } from 'react';
 import { Base64 } from 'js-base64';
 import Router from 'next/router';
 import EmailLoginForm from './EmailLoginForm';
-import GoogleFlow from './GoogleFlow';
 import NextLink from 'next/link';
 import Routes from 'src/routes';
 
@@ -253,7 +252,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                   <CustomIconButton onClick={() => handleSnsLogin('google')}>
                     <Image alt="google icon" src={getIconByType(GOOGLE_ICON)} sx={{ height: 32 }} />
                   </CustomIconButton>
-                  {/* <NextLink
+                  <NextLink
                     passHref
                     as={Routes.eternalEditions.registerGoogle}
                     href={Routes.eternalEditions.registerGoogle}
@@ -265,7 +264,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                         sx={{ height: 32 }}
                       />
                     </CustomIconButton>
-                  </NextLink> */}
+                  </NextLink>
                   <CustomIconButton onClick={() => handleSnsLogin('facebook')}>
                     <Image
                       alt="facebook icon"
