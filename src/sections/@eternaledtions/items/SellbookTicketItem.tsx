@@ -9,6 +9,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Link from 'next/link';
+import moment from 'moment';
 
 // ----------------------------------------------------------------------
 
@@ -30,10 +31,17 @@ type Props = {
 };
 
 export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
-  // console.log(sellbookItem);
+  console.log(sellbookItem);
   const router = useRouter();
   // const isMobile = useResponsive('down', 'md');
-  const { id, mysteryboxItem } = sellbookItem;
+  const {
+    id,
+    mysteryboxItem,
+    sellInfo: {
+      parameters: { startTime, endTime },
+    },
+  } = sellbookItem;
+
   const { name, imageLink, categoriesStr, releaseDatetime, price, properties } = mysteryboxItem;
   const [team, setTeam] = useState('');
   const [day, setDay] = useState('');
@@ -42,6 +50,8 @@ export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
   const [dollarPrice, setDollarPrice] = useState(0);
   const [maticPrice, setMaticPrice] = useState(0);
   const [klayPrice, setKlayPrice] = useState(0);
+  // const [startTime, setStartTime] = useState();
+  // const [endTime, setEndTime] = useState();
 
   const getCoinPrice = () => {
     const url = 'https://bcn-api.talken.io/coinmarketcap/cmcQuotes?cmcIds=4256,3890';
@@ -238,7 +248,7 @@ export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
             {`${(dollarPrice / 10).toFixed(4)} EDCP`}
           </Typography>
           <BuyNowButton
-            releasedDate={releaseDatetime}
+            releasedDate={startTime}
             onClick={() => router.push(`/items/${sellbookItem.id}`)}
           />
         </Stack>
