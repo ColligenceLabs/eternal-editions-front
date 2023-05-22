@@ -116,6 +116,7 @@ export default function MyAccountPage({}: Props) {
   const isDesktop = useResponsive('up', 'md');
   const { account } = useAccount();
   const { user }: { user: User } = useSelector((state: any) => state.webUser);
+  const abcUser = useSelector((state: any) => state.user);
   const context = useWeb3React();
   const { activate, chainId, deactivate, library } = context;
   const dispatch = useDispatch();
@@ -570,7 +571,15 @@ Type: Address verification`;
                         gap: 0.25,
                       }}
                     >
-                      <CButton onClick={() => setIsOpenCreateWalletForm(true)}>CREATE</CButton>
+                      <CButton
+                        onClick={() =>
+                          abcUser.twoFactorEnabled
+                            ? setIsOpenCreateWalletForm(true)
+                            : setIsOpenCreateWalletForm(true)
+                        }
+                      >
+                        CREATE
+                      </CButton>
                       <CButton
                         onClick={() => {
                           setDoAddWallet(true);
