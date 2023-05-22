@@ -252,7 +252,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                   <CustomIconButton onClick={() => handleSnsLogin('google')}>
                     <Image alt="google icon" src={getIconByType(GOOGLE_ICON)} sx={{ height: 32 }} />
                   </CustomIconButton>
-                  <NextLink
+                  {/* <NextLink
                     passHref
                     as={Routes.eternalEditions.registerGoogle}
                     href={Routes.eternalEditions.registerGoogle}
@@ -264,7 +264,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                         sx={{ height: 32 }}
                       />
                     </CustomIconButton>
-                  </NextLink>
+                  </NextLink> */}
                   <CustomIconButton onClick={() => handleSnsLogin('facebook')}>
                     <Image
                       alt="facebook icon"
