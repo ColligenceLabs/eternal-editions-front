@@ -130,3 +130,7 @@ export const getSellBooks = async (page: number, perPage?: number) => {
 export const registerSell = async (data: any) => {
   return await apiAuthAxios.post('/api/service/sellbook', data);
 };
+
+export const registerSellbookBuy = async (data: any, id: number) => {
+  return await apiAuthAxios.post(`/api/service/sellbook/buy/${id}`, data);
+};
