@@ -116,6 +116,8 @@ const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
       country: 'Korea',
     },
   });
+  const countryOptions = useMemo(() => countryList().getData(), []);
+  console.log('countryOptions: ', countryOptions);
 
   const countryOptions = useMemo(() => countryList().getData(), []);
 
