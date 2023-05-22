@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Stack,
   Typography,
@@ -15,8 +15,6 @@ import { Label, Section } from '../my-tickets/StyledComponents';
 import { yupResolver } from '@hookform/resolvers/yup';
 import { styled } from '@mui/material/styles';
 import palette from 'src/theme/palette';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import RoundedButton from '../common/RoundedButton';
 import CheckboxFillIcon from 'src/assets/icons/checkboxFill';
@@ -24,15 +22,11 @@ import CheckboxIcon from 'src/assets/icons/checkbox';
 import CheckboxIndeterminateFillIcon from 'src/assets/icons/checkboxIndeterminateFill';
 import CheckIcon from 'src/assets/icons/check';
 import CheckFillIcon from 'src/assets/icons/checkFill';
-import { GoogleAccountData, WALLET_FORM } from './GoogleFlow';
+import { GoogleAccountData } from './GoogleFlow';
 import { Input } from '@mui/material';
 import { StyledMenuItem, StyledTextField } from './GoogleLogin';
 import { makeStyles } from '@material-ui/core/styles';
 
-interface Props {
-  setForm: React.Dispatch<React.SetStateAction<string>>;
-  accountData: Partial<GoogleAccountData>;
-}
 const phoneRegExp =
   /^((\\+[1-9]{1,4}[ \\-]*)|(\\([0-9]{2,3}\\)[ \\-]*)|([0-9]{2,4})[ \\-]*)*?[0-9]{3,4}?[ \\-]*[0-9]{3,4}?$/;
 
@@ -61,7 +55,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const countries = ['Korea', 'China', 'United States', 'Russian'];
-const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
+const GoogleFullSignUp = () => {
+  const [accountData, setAccountData] = useState<Partial<GoogleAccountData>>({});
   const [showVerifyCode, setShowVerifyCode] = useState<boolean>(false);
   const classes = useStyles();
   const { control, getValues, handleSubmit, watch } = useForm<GoogleAccountData>({
@@ -75,7 +70,6 @@ const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
 
   const onSubmit = (values: GoogleAccountData) => {
     console.log('submit', values);
-    setForm(WALLET_FORM);
   };
   console.log('onSubmit', getValues('agree'));
   return (

@@ -1,9 +1,9 @@
 import { ReactElement } from 'react';
-import { Page, Iconify } from 'src/components';
+import { Page } from 'src/components';
 import { Box, styled } from '@mui/material';
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
 import Layout from 'src/layouts';
-import GoogleFlow from 'src/components/user/GoogleFlow';
+import GoogleFullSignUp from 'src/components/user/GoogleFullSignUp';
 
 const RootStyle = styled('div')(({ theme }) => ({
   paddingBottom: HEADER_MOBILE_HEIGHT,
@@ -50,7 +50,7 @@ const NewRegister = () => (
     <RootStyle>
       <Container sx={{ width: 'min(100%, 400px)' }}>
         <Content>
-          <GoogleFlow />
+          <GoogleFullSignUp />
         </Content>
       </Container>
     </RootStyle>
