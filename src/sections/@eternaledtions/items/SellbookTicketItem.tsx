@@ -4,13 +4,11 @@ import { Box, Grid, Chip, Stack, Typography, styled } from '@mui/material';
 import { Image, TextMaxLine } from 'src/components';
 import { varHover, varTranHover } from 'src/components/animate';
 import { useResponsive } from 'src/hooks';
-import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
+import BuyNowButton from './BuyNowButton';
 import { useRouter } from 'next/router';
-import RoundedButton from 'src/components/common/RoundedButton';
-import ModalCustom from 'src/components/common/ModalCustom';
 import { useEffect, useState } from 'react';
-import TicketItemModal from './TicketItemModal';
 import axios from 'axios';
+import Link from 'next/link';
 
 // ----------------------------------------------------------------------
 
@@ -25,33 +23,22 @@ const Wrapper = styled(Stack)(() => ({
 // ----------------------------------------------------------------------
 
 type Props = {
-  ticket: TicketItemTypes;
+  sellbookItem: any;
   isInDrop?: boolean;
   boxContractAddress?: any;
   quote?: string | undefined;
-  mysterybox_id: number | undefined;
-  ticketInfo?: TicketInfoTypes | null;
 };
 
-export default function TicketItem({
-  ticket,
-  isInDrop,
-  boxContractAddress,
-  quote,
-  mysterybox_id,
-  ticketInfo,
-}: Props) {
+export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
+  // console.log(sellbookItem);
   const router = useRouter();
-  const isMobile = useResponsive('down', 'md');
-  const { id, name, imageLink, categoriesStr, price, properties } = ticket;
+  // const isMobile = useResponsive('down', 'md');
+  const { id, mysteryboxItem } = sellbookItem;
+  const { name, imageLink, categoriesStr, releaseDatetime, price, properties } = mysteryboxItem;
   const [team, setTeam] = useState('');
   const [day, setDay] = useState('');
-  const [duration, setDuration] = useState('');
-  const [location, setLocation] = useState('');
-
   const isOnAuction = router.query.status; // TODO: Update value
   const theme = useTheme();
-  const [isTicketItemModalOpen, setIsTicketItemModalOpen] = useState(false);
   const [dollarPrice, setDollarPrice] = useState(0);
   const [maticPrice, setMaticPrice] = useState(0);
   const [klayPrice, setKlayPrice] = useState(0);
@@ -76,15 +63,11 @@ export default function TicketItem({
 
   useEffect(() => {
     if (properties) {
-      properties.map((property) =>
+      properties.map((property: any) =>
         property.type === 'team'
           ? setTeam(property.name)
           : property.type === 'day'
           ? setDay(property.name)
-          : property.type === 'duration'
-          ? setDuration(property.name)
-          : property.type === 'location'
-          ? setLocation(property.name)
           : null
       );
     }
@@ -98,12 +81,12 @@ export default function TicketItem({
     setDollarPrice((price ?? 0) * maticPrice);
   }, [price, maticPrice]);
 
-  if (!ticket) {
+  if (!sellbookItem) {
     return null;
   }
 
   return (
-    <Grid item xs={12} sm={6} md={4} lg={3}>
+    <Grid component="a" item xs={12} sm={6} md={4} lg={3}>
       <Wrapper>
         <Stack
           component={m.a}
@@ -128,7 +111,6 @@ export default function TicketItem({
                 right: 0,
                 bottom: 0,
                 top: 0,
-                // pointerEvents: 'none',
               }}
             />
           </Box>
@@ -244,7 +226,6 @@ export default function TicketItem({
             </>
           )}
         </Stack>
-
         <Stack flexDirection="row" justifyContent="space-between" alignItems="center">
           <Typography
             sx={{
@@ -256,39 +237,12 @@ export default function TicketItem({
           >
             {`${(dollarPrice / 10).toFixed(4)} EDCP`}
           </Typography>
-          <>
-            <RoundedButton
-              variant="withImage"
-              size={isMobile ? 'small' : 'large'}
-              sx={{ width: '50%' }}
-              onClick={() => setIsTicketItemModalOpen(true)}
-            >
-              MINT
-            </RoundedButton>
-            <ModalCustom
-              aria-labelledby="transition-modal-title"
-              aria-describedby="transition-modal-description"
-              open={isTicketItemModalOpen}
-              onClose={() => setIsTicketItemModalOpen(false)}
-            >
-              <TicketItemModal
-                ticket={ticket}
-                boxContractAddress={boxContractAddress}
-                quote={quote}
-                mysterybox_id={mysterybox_id}
-                ticketInfo={ticketInfo!}
-                day={day}
-                team={team}
-                duration={duration}
-                location={location}
-                setIsTicketItemModalOpen={setIsTicketItemModalOpen}
-              />
-            </ModalCustom>
-          </>
+          <BuyNowButton
+            releasedDate={releaseDatetime}
+            onClick={() => router.push(`/items/${sellbookItem.id}`)}
+          />
         </Stack>
       </Wrapper>
     </Grid>
   );
 }
-
-// ----------------------------------------------------------------------

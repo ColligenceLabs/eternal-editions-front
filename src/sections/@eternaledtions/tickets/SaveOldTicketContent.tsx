@@ -58,9 +58,6 @@ export default function SaveOldTicketContent({ ticketInfo, onClose }: Props) {
           size={160}
         />
       </Box>
-      <Typography
-        sx={{ fontSize: '12px' }}
-      >{`https://entrance.eternaleditions.io/admin-e-ticket?type=1&code=${ticketInfo.code}&expireTime=${qrTimestamp}`}</Typography>
       <Stack gap="12px" mt="48px" mb="24px">
         <Stack gap={0.5}>
           <Typography

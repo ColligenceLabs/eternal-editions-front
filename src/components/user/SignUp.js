@@ -28,7 +28,6 @@ import { ChangeEvent } from 'react';
 import { Base64 } from 'js-base64';
 import Router from 'next/router';
 import EmailLoginForm from './EmailLoginForm';
-import GoogleFlow from './GoogleFlow';
 import NextLink from 'next/link';
 import Routes from 'src/routes';
 

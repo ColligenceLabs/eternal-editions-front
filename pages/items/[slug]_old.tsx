@@ -149,17 +149,22 @@ export default function TicketDetailPage() {
   const isOnAuction = router.query.status === 'auction'; // TODO: Update value
 
   console.log(slug);
+  const handleAbcClose = () => {
+    setAbcToken('');
+    setAbcOpen(false);
+  };
+  const handleAbcTokenChange = (event: ChangeEvent<HTMLInputElement>) => {
+    event.preventDefault();
+    const { value } = event.target;
+    setAbcToken(value);
+    // console.log(value);
+  };
   const handleCloseSnackbar = () => {
     setOpenSnackbar({
       open: false,
       type: '',
       message: '',
     });
-  };
-
-  const handleAbcClose = () => {
-    setAbcToken('');
-    setAbcOpen(false);
   };
 
   const handleOpen = () => {
@@ -172,8 +177,373 @@ export default function TicketDetailPage() {
       });
     }
   };
-
   const handleClose = () => setOpen(false);
+
+  function hexToAddress(hexVal: any) {
+    return '0x' + hexVal.substr(-40);
+  }
+
+  const handleAbcConfirmClick = async () => {
+    setOtpLoading(true);
+    console.log(`abc token : ${abcToken}`); // Google OTP
+
+    if (selectedTicketItem) {
+      setIsBuyingWithMatic(true);
+
+      // Collection
+      const contract = ticketInfo?.boxContractAddress;
+      const quote = ticketInfo?.quote;
+      const index = selectedTicketItem.no - 1 ?? 0;
+      const amount = 1;
+
+      let quoteToken: string;
+      let payment: BigNumber;
+      if (quote === 'matic' || quote === 'wmatic') {
+        quoteToken = quote === 'matic' ? contracts.matic[chainId] : contracts.wmatic[chainId];
+        payment = parseEther(ticketInfo?.price.toString() ?? '0').mul(amount);
+      }
+      try {
+        const method = 'buyItemEth';
+        const txArgs = [index, amount];
+        const result = await abcSendTx(
+          abcToken,
+          contract,
+          collectionAbi,
+          method,
+          txArgs,
+          abcUser,
+          payment!.toHexString()
+        );
+
+        // TODO: Get tokenId in the receipt and save into DB drops ?
+        const events = result.logs;
+        const recipient = hexToAddress(events[1].topics[2]);
+        const tokenIdHex = ethers.utils.defaultAbiCoder.decode(['uint256'], events[1].topics[3]);
+        const tokenId = parseInt(tokenIdHex.toString());
+        console.log('== ABC buyItem event ==>', recipient, tokenId);
+
+        if (parseInt(result.status.toString(), 16) === SUCCESS) {
+          // const left = await getItemAmount(
+          //   contract,
+          //   index,
+          //   collectionItemInfo?.collectionInfo?.isCollection === true ? 2 : 1,
+          //   account,
+          //   library
+          // );
+
+          const data = {
+            mysterybox_id: ticketInfo?.id,
+            buyer: user.uid,
+            buyer_address: abcUser.accounts[0].ethAddress,
+            isSent: true,
+            txHash: result?.transactionHash,
+            price: ticketInfo?.price,
+            itemId: selectedTicketItem?.id,
+            tokenId: tokenId,
+          };
+
+          const res = await registerBuy(data);
+          console.log('== call backend : registerBuy ==>', res.data);
+          if (res.data.status === SUCCESS) {
+            // setOpenSnackbar({
+            //   open: true,
+            //   type: 'success',
+            //   message: 'Success',
+            // });
+            console.log('success');
+            setOpenSnackbar({
+              open: true,
+              type: 'success',
+              message: 'Purchase completed!',
+            });
+            // return true;
+          } else {
+            // setIsBuyingWithMatic(false);
+            // return false;
+          }
+        } else {
+          // setIsBuyingWithMatic(false);
+          // return false;
+          setOpenSnackbar({
+            open: true,
+            type: 'error',
+            message: `Purchase failed! TX Hash = ${result.transactionHash}`,
+          });
+        }
+      } catch (e: any) {
+        setIsBuyingWithMatic(false);
+        console.log(e);
+        // if (e.code == '-32603') setErrMsg('Not sufficient Klay balance!');
+        // return false;
+        setOpenSnackbar({
+          open: true,
+          type: 'error',
+          message: 'Purchase faield!',
+        });
+      }
+      setIsBuyingWithMatic(false);
+    } else {
+      console.log('Item not selected');
+    }
+    setAbcToken('');
+    setAbcOpen(false);
+    setOtpLoading(false);
+  };
+
+  const handleItemChange = (event: SelectChangeEvent) => {
+    console.log('handleItemChange', event.target.value);
+    setSelectedItem(event.target.value);
+
+    const result = ticketInfo?.mysteryboxItems.find(
+      (item: TicketItemTypes) => item.id.toString() === event.target.value.toString()
+    );
+
+    if (result) setSelectedTicketItem(result);
+  };
+
+  const handleBuyWithPoint = async () => {
+    if (isBuyingWithPoint) {
+      console.log('in progress');
+      return;
+    }
+    if (selectedTicketItem) {
+      try {
+        const session = await getSession();
+        if (!session.data.dropsUser) throw new Error('session expired.');
+        const loginBy = window.localStorage.getItem('loginBy') ?? 'sns';
+        setIsBuyingWithPoint(true);
+        const data = {
+          mysterybox_id: ticketInfo?.id,
+          buyer: session.data.dropsUser.uid,
+          buyer_address: loginBy === 'sns' ? abcUser.accounts[0].ethAddress : account,
+          isSent: false,
+          txHash: '',
+          // price: ticketInfo?.price,
+          price: (((ticketInfo?.price ?? 0) * maticPrice) / 10).toFixed(4),
+          itemId: selectedTicketItem?.id,
+          usePoint: true,
+        };
+
+        console.log(data);
+        const res = await registerBuy(data);
+        console.log(res.data);
+        if (res.data.status === SUCCESS) {
+          const userRes = await getUser();
+          console.log(userRes);
+          if (userRes.status === 200 && userRes.data.status != 0)
+            dispatch(setWebUser(userRes.data.user));
+          // res = await savePoint({
+          //   order_id: res.data.data.id,
+          //   point: ticketInfo?.price,
+          //   type: 'USE',
+          // });
+          console.log('success');
+          setOpenSnackbar({
+            open: true,
+            type: 'success',
+            message: 'Purchase completed!',
+          });
+          setReload((cur) => !cur);
+        } else {
+          console.log('Item not selected', res.data.message);
+          setOpenSnackbar({
+            open: true,
+            type: 'error',
+            message: `Purchase faield! ${res.data.message}`,
+          });
+        }
+      } catch (e) {
+        setIsBuyingWithMatic(false);
+        console.log(e);
+        setOpenSnackbar({
+          open: true,
+          type: 'error',
+          message: 'Purchase faield!',
+        });
+      } finally {
+        setOpen(false);
+        setIsBuyingWithPoint(false);
+      }
+    }
+  };
+
+  const handleBuyWithMatic = async () => {
+    if (selectedTicketItem) {
+      setIsBuyingWithMatic(true);
+
+      const loginBy = window.localStorage.getItem('loginBy') ?? 'sns';
+      if (loginBy === 'sns') {
+        setAbcOpen(true);
+        return;
+      }
+      // Collection
+      const contract = ticketInfo?.boxContractAddress;
+      const quote = ticketInfo?.quote;
+      const index = selectedTicketItem.no - 1 ?? 0;
+      const amount = 1;
+
+      let quoteToken: string;
+      let payment: BigNumber;
+      if (quote === 'matic' || quote === 'wmatic') {
+        quoteToken = quote === 'matic' ? contracts.matic[chainId] : contracts.wmatic[chainId];
+        payment = parseEther(ticketInfo?.price.toString() ?? '0').mul(amount);
+      }
+
+      try {
+        const result = await buyItem(
+          contract,
+          index,
+          1,
+          payment!.toString(),
+          quoteToken!,
+          account,
+          library,
+          false
+        );
+
+        if (result.status === SUCCESS) {
+          // const left = await getItemAmount(
+          //   contract,
+          //   index,
+          //   collectionItemInfo?.collectionInfo?.isCollection === true ? 2 : 1,
+          //   account,
+          //   library
+          // );
+
+          const data = {
+            mysterybox_id: ticketInfo?.id,
+            buyer: user.uid,
+            buyer_address: account,
+            isSent: true,
+            txHash: result?.txHash,
+            price: ticketInfo?.price,
+            itemId: selectedTicketItem?.id,
+            tokenId: result.tokenId,
+          };
+
+          const res = await registerBuy(data);
+          if (res.data.status === SUCCESS) {
+            // setOpenSnackbar({
+            //   open: true,
+            //   type: 'success',
+            //   message: 'Success',
+            // });
+            console.log('success');
+            setOpenSnackbar({
+              open: true,
+              type: 'success',
+              message: 'Purchase completed!',
+            });
+            setReload((cur) => !cur);
+            // return true;
+          } else {
+            // setIsBuyingWithMatic(false);
+            // return false;
+          }
+        } else {
+          // setIsBuyingWithMatic(false);
+          // return false;
+          // 구입 실패
+          setOpenSnackbar({
+            open: true,
+            type: 'error',
+            message: `Purchase failed! Tx Hash = ${result.txHash}`,
+          });
+        }
+      } catch (e: any) {
+        setIsBuyingWithMatic(false);
+        console.log(e);
+        // if (e.code == '-32603') setErrMsg('Not sufficient Klay balance!');
+        // return false;
+        setOpenSnackbar({
+          open: true,
+          type: 'error',
+          message: 'Purchase faield!',
+        });
+      }
+      setOpen(false);
+      setIsBuyingWithMatic(false);
+    } else {
+      console.log('Item not selected');
+    }
+  };
+
+  const fetchTicketInfo = async () => {
+    if (slug && typeof slug === 'string') {
+      const ticketInfoRes = await getTicketInfoService(slug);
+
+      const contract = ticketInfoRes.data.data.boxContractAddress;
+      const whitelist = ticketInfoRes.data.data.whitelistNftId;
+      const whitelistAddress = ticketInfoRes.data.data.whitelistNftContractAddress ?? '';
+      const temp = await Promise.all(
+        ticketInfoRes.data.data.mysteryboxItems.map(async (item: TicketItemTypes) => {
+          // todo getRemain
+          const sold = await getItemSold(contract, item.no - 1, chainId);
+          let whlBalance = 0;
+          let whlBool = false;
+          if (whitelist !== null && whitelist > 0 && account !== null) {
+            whlBalance = await getWhlBalanceNoSigner(whitelistAddress, account, chainId);
+            console.log('!! get whitelist balance =', account, whlBalance);
+            whlBool = true;
+            if (whlBool && whlBalance === 0) {
+              setOpenSnackbar({
+                open: true,
+                type: 'error',
+                message: 'Not in the whitelist or a wallet is not connected !!',
+              });
+            }
+          }
+          return { ...item, remain: item.issueAmount - sold, whlBool, whlBalance };
+        })
+      );
+
+      if (ticketInfoRes.data.status === SUCCESS) {
+        setTicketInfo({ ...ticketInfoRes.data.data, mysteryboxItems: temp });
+
+        // if (temp.length) {
+        //   setTimeout(() => handleItemChange({ target: { value: `${temp[0].id}` } }), 200);
+        // }
+      }
+    }
+  };
+
+  const fetchBuyersList = async () => {
+    if (slug && typeof slug === 'string') {
+      const buyersListRes = await getBuyersService(slug);
+      if (buyersListRes.data.status === SUCCESS) setBuyers(buyersListRes.data.data);
+    }
+  };
+
+  const getCoinPrice = () => {
+    const url = 'https://bcn-api.talken.io/coinmarketcap/cmcQuotes?cmcIds=4256,3890';
+    try {
+      if (klayPrice === 0 || maticPrice === 0) {
+        axios(url).then((response) => {
+          const klayUsd = response.data.data[4256].quote.USD.price;
+          const klayKrw = response.data.data[4256].quote.KRW.price;
+          const maticUsd = response.data.data[3890].quote.USD.price;
+          const maticKrw = response.data.data[3890].quote.KRW.price;
+          setKlayPrice(parseFloat(klayUsd));
+          setMaticPrice(parseFloat(maticUsd));
+        });
+      }
+    } catch (error: any) {
+      console.log(new Error(error));
+    }
+  };
+
+  useEffect(() => {
+    getCoinPrice();
+  }, []);
+
+  useEffect(() => {
+    fetchTicketInfo();
+    fetchBuyersList();
+  }, [slug, reload, account]);
+
+  useEffect(() => {
+    setDollarPrice((ticketInfo?.price ?? 0) * maticPrice);
+  }, [ticketInfo, maticPrice]);
 
   return (
     <Page title={`${slug} - Ticket`}>
@@ -222,10 +592,10 @@ export default function TicketDetailPage() {
                         label="On Auction"
                         style={{
                           background: 'linear-gradient(180deg, #08FF0C 0%, #4ADEFF 76.56%)',
-                          // '-webkit-background-clip': 'text',
-                          // '-webkit-text-fill-color': 'transparent',
+                          '-webkit-background-clip': 'text',
+                          '-webkit-text-fill-color': 'transparent',
                           backgroundClip: 'text',
-                          // textFillColor: 'transparent',
+                          textFillColor: 'transparent',
                           border: '1px solid',
                         }}
                       />
@@ -478,7 +848,7 @@ export default function TicketDetailPage() {
             </Stack>
             <Stack spacing={1} sx={{ pt: 3 }}>
               <Stack>
-                <Box>
+                <Box onClick={handleBuyWithPoint}>
                   {isBuyingWithPoint ? (
                     <Box
                       sx={{
@@ -509,7 +879,7 @@ export default function TicketDetailPage() {
                     />
                   )}
                 </Box>
-                <Box>
+                <Box onClick={handleBuyWithMatic}>
                   {isBuyingWithMatic ? (
                     <Box
                       sx={{
@@ -576,7 +946,7 @@ export default function TicketDetailPage() {
               label="Verification code"
               placeholder="Please Enter"
               value={abcToken}
-              // onChange={handleAbcTokenChange}
+              onChange={handleAbcTokenChange}
             />
             <Box sx={{ display: 'flex', justifyContent: 'center', mt: '10px' }}>
               <LoadingButton
@@ -603,7 +973,7 @@ export default function TicketDetailPage() {
                     color: '#ffffff',
                   },
                 }}
-                // onClick={handleAbcConfirmClick}
+                onClick={handleAbcConfirmClick}
                 loading={otpLoading}
                 disabled={otpLoading}
               >
