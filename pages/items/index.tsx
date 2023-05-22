@@ -7,8 +7,7 @@ import { Page } from 'src/components';
 import { Container } from '@mui/material';
 import { getAllCaseStudies } from 'src/utils/get-mardown/marketing/case-studies';
 import PageHeader from 'src/components/common/PageHeader';
-import TicketItems from 'src/sections/@eternaledtions/items/TicketItems';
-import TICKET from 'src/sample/ticket';
+import SellbookTicketItems from 'src/sections/@eternaledtions/items/SellbookTicketItems';
 
 // ----------------------------------------------------------------------
 
@@ -26,8 +25,6 @@ const RootStyle = styled('div')(({ theme }) => ({
 type Props = {};
 
 export default function ItemsPage({}: Props) {
-  const categories: string[] = TICKET.categories;
-
   return (
     <Page title="ITEMS">
       <RootStyle>
@@ -35,7 +32,8 @@ export default function ItemsPage({}: Props) {
           <PageHeader title="ITEMS" tooltipMessage="Guide text to describe Items." />
 
           {/*ITEMS 목록*/}
-          <TicketItems categories={categories} />
+          {/*<TicketItems categories={categories} />*/}
+          <SellbookTicketItems />
         </Container>
       </RootStyle>
     </Page>

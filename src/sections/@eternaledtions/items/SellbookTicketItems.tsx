@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Box, Grid, Button, Stack, Typography } from '@mui/material';
-import TicketItem from './TicketItem';
 import { Iconify } from 'src/components';
 import arrowDown from '@iconify/icons-carbon/arrow-down';
 import { getSellBooks, getTicketCountByCategory, getTicketsService } from 'src/services/services';
@@ -9,6 +8,8 @@ import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes'
 import { useResponsive } from 'src/hooks';
 import CategoryTabs from 'src/components/CategoryTabs';
 import { TextSelect, TextSelectOption } from 'src/components/common/Select';
+import SellbookTicketItem from 'src/sections/@eternaledtions/items/SellbookTicketItem';
+import TICKET from 'src/sample/ticket';
 
 const COLLECTIONS = [
   {
@@ -24,7 +25,6 @@ const COLLECTIONS = [
 // ----------------------------------------------------------------------
 
 type Props = {
-  categories?: string[];
   shouldHideCategories?: boolean;
 };
 
@@ -48,7 +48,7 @@ type SellBookTypes = {
   updatedAt: Date;
 };
 
-export default function TicketItems({ categories: originCategories, shouldHideCategories }: Props) {
+export default function SellbookTicketItems({ shouldHideCategories }: Props) {
   const [curPage, setCurPage] = useState(1);
   const [lastPage, setLastPage] = useState(0);
   const [selected, setSelected] = useState('All');
@@ -58,8 +58,8 @@ export default function TicketItems({ categories: originCategories, shouldHideCa
   const [salesType, setSalesType] = useState('default');
   const [sellBooks, setSellBooks] = useState<SellBookTypes[]>([]);
 
-  originCategories = ['All', ...Array.from(new Set(originCategories))];
-  const perPage = 6;
+  const originCategories = ['All', ...Array.from(new Set(TICKET.categories))];
+  const perPage = 8;
 
   const handleChangeCategory = (event: React.SyntheticEvent, newValue: string) => {
     setSelected(newValue);
@@ -105,18 +105,27 @@ export default function TicketItems({ categories: originCategories, shouldHideCa
     }
   };
 
+  const fetchMoreSellBooks = async () => {
+    const res = await getSellBooks(curPage, perPage);
+    console.log(res);
+    if (res.status === 200) {
+      setSellBooks((cur) => [...cur, ...res.data.data.sellbooks]);
+    }
+  };
+
   useEffect(() => {
-    fetchSellBooks();
-  }, []);
+    console.log(sellBooks);
+  }, [sellBooks]);
 
   useEffect(() => {
     setCurPage(1);
-    getTickets();
     getCountByCategory();
+    fetchSellBooks();
+    // getCountByCategory();
   }, [selected]);
 
   useEffect(() => {
-    if (curPage !== 1) getMoreTickets();
+    if (curPage !== 1) fetchMoreSellBooks();
   }, [curPage]);
 
   return (
@@ -178,10 +187,10 @@ export default function TicketItems({ categories: originCategories, shouldHideCa
         </Stack>
       </Stack>
 
-      {ticketInfoList.length ? (
+      {sellBooks.length ? (
         <Grid container spacing={3}>
-          {ticketInfoList.map((ticket, index) => (
-            <TicketItem key={index} ticket={ticket} />
+          {sellBooks.map((sellbookItem, index) => (
+            <SellbookTicketItem key={index} sellbookItem={sellbookItem} />
           ))}
         </Grid>
       ) : (
