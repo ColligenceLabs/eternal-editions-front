@@ -84,8 +84,6 @@ const FormSchema = Yup.object().shape({
     .length(verifyCodeLength, 'Verification Code must be exactly 6 characters'),
 });
 
-console.log(FormSchema);
-
 export const termsEternal = [
   { title: '이용약관을 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
   { title: '개인정보처리방침을 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
@@ -101,8 +99,6 @@ export const termsABC = [
   { title: '마케팅 활용 및 광고성 정보 수신에 동의합니다.', isRequired: false },
 ];
 
-const countries = ['Korea', 'China', 'United States', 'Russian'];
-
 const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
   const dispatch = useDispatch();
   const { abcController, accountController } = controllers;
@@ -117,7 +113,8 @@ const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
       ...accountData,
       agreeEternal: false,
       agreeABC: false,
-      country: 'Korea',
+      gender: 'male',
+      country: 'GB',
     },
   });
 
@@ -485,7 +482,10 @@ const GoogleFullSignUp = ({ setForm, accountData }: Props) => {
                   <InputAdornment position="end">
                     <RoundedButton
                       variant="inactive"
-                      disabled={getValues('verificationCode')?.length < verifyCodeLength}
+                      disabled={
+                        !getValues('verificationCode') ||
+                        getValues('verificationCode').length < verifyCodeLength
+                      }
                       onClick={() => {
                         console.log(getValues('verificationCode'));
                       }}
