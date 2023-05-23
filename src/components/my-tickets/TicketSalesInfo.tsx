@@ -18,7 +18,8 @@ interface Props {
   amount: string;
   typeOfSale: string;
   creatorEarnings: string;
-  duration: string;
+  startDate: Date;
+  endDate: Date;
 }
 
 export default function TicketSalesInfo({
@@ -26,7 +27,8 @@ export default function TicketSalesInfo({
   amount,
   typeOfSale,
   creatorEarnings,
-  duration,
+  startDate,
+  endDate,
 }: Props) {
   const isAuction = typeOfSale === 'auction';
 
@@ -43,11 +45,10 @@ export default function TicketSalesInfo({
     console.log(`amount : ${amount}`);
     console.log(`typeOfSale : ${typeOfSale}`);
     console.log(`creatorEarnings : ${creatorEarnings}`);
-    console.log(`duration : ${duration}`); // unit : month
 
     if (typeOfSale === 'fixed') {
       let order;
-      const endTime = Math.round(Date.now() / 1000 + 60 * 60 * 24 * 30 * parseInt(duration));
+      const endTime = Math.round(endDate.getTime() / 1000);
 
       console.log('=== wallet, library ===', wallet, library);
       if (!wallet && !library) {
@@ -135,6 +136,9 @@ export default function TicketSalesInfo({
         price: amount,
         team: team[0].name,
         dropsId: sellTicketInfo.id,
+        startDate,
+        endDate,
+        creatorFee: creatorEarnings,
       };
       console.log('!! Fixed Price sellOrder in DB = ', sellOrder);
       const result = await registerSell(sellOrder);
