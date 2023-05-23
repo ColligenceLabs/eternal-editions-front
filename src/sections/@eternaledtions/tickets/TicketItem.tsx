@@ -155,7 +155,7 @@ export default function TicketItem({ ticket }: any) {
                 <Stack gap="12px">
                   <LineItem label="Day" value={ticketInfo.day} />
                   <LineItem label="Team" value={ticketInfo.team} />
-                  {ticketInfo.status !== 'MARKET' && <LineItem mock label="QTY" value={'1'} />}
+                  {ticketInfo.status !== 'MARKET' && <LineItem label="QTY" value={'1'} />}
                   {ticketInfo.status === 'MARKET' && (
                     <>
                       <LineItem mock label="CURRENT PRICE" value={'1,200 EDCP (~$1,200)'} />
