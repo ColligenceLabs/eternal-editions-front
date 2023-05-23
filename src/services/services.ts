@@ -168,4 +168,4 @@ export const getMintLimitCount = async (itemId: number, uid: string) => {
   return await apiAuthAxios.get(`/api/service/drops/count/${itemId}/${uid}`);
 };
 
-export const removeUser = async () => await customAxios.delete('/api/users');
+export const removeUser = async () => await apiAuthAxios.delete('/api/users');

@@ -22,6 +22,7 @@ import {
   ChainId,
   HEADER_DESKTOP_HEIGHT,
   HEADER_MOBILE_HEIGHT,
+  SUCCESS,
   WALLET_METAMASK,
   WALLET_WALLECTCONNECT,
 } from 'src/config';
@@ -174,6 +175,10 @@ export default function MyAccountPage({}: Props) {
   const handleClickDeactivate = async () => {
     const res = await removeUser();
     console.log(res);
+    if (res.data.status === SUCCESS) {
+      await logout();
+      router.push('/');
+    }
   };
 
   const connectWallet = async (id: any) => {
