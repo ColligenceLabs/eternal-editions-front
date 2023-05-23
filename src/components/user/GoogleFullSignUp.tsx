@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import {
   Stack,
   Typography,
@@ -60,14 +60,14 @@ type GoogleAccountData = {
   agreeEternal: boolean;
   agreeABC: boolean;
   eeTerms: boolean;
-  eePrivate: false;
-  eeThirdParty: false;
-  eeMarketing: false;
-  abcTerms: false;
-  abcAge: false;
-  abcPrivate: false;
-  abcThirdParty: false;
-  abcMarketing: false;
+  eePrivate: boolean;
+  eeThirdParty: boolean;
+  eeMarketing: boolean;
+  abcTerms: boolean;
+  abcAge: boolean;
+  abcPrivate: boolean;
+  abcThirdParty: boolean;
+  abcMarketing: boolean;
 };
 
 const phoneRegExp =
@@ -87,7 +87,13 @@ const FormSchema = Yup.object().shape({
     .length(verifyCodeLength, 'Verification Code must be exactly 6 characters'),
 });
 
-export const termsEternal = [
+type Term = {
+  key: keyof GoogleAccountData;
+  title: string;
+  isRequired: boolean;
+};
+
+export const termsEternal: Term[] = [
   { title: '이용약관을 모두 확인하였으며, 이에 동의합니다.', isRequired: true, key: 'eeTerms' },
   {
     title: '개인정보처리방침을 모두 확인하였으며, 이에 동의합니다.',
@@ -102,7 +108,7 @@ export const termsEternal = [
   { title: '마케팅 활용 및 광고성 정보 수신에 동의합니다.', isRequired: false, key: 'eeMarketing' },
 ];
 
-export const termsABC = [
+export const termsABC: Term[] = [
   { key: 'abcAge', title: '14세 이상입니다.', isRequired: true },
   { key: 'abcTerms', title: '이용약관을 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
   {
@@ -124,7 +130,7 @@ export const termsABC = [
 const defaultValues = {
   birthDate: new Date('12/31/2000'),
   gender: 'male',
-  country: 'GB',
+  country: 'KR',
   agreeEternal: false,
   agreeABC: false,
   eeTerms: false,
@@ -322,24 +328,31 @@ const GoogleFullSignUp = () => {
       });
     }
   };
-  const onChangeAgreeEternal = (e) => {
+  const onChangeAgreeEternal = (e: ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
     setValue('agreeEternal', checked);
     termsEternal.forEach((term) => {
       setValue(term.key, checked);
     });
   };
-  const onChangeAgreeABC = (e) => {
+  const onChangeAgreeABC = (e: ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
     setValue('agreeABC', checked);
     termsABC.forEach((term) => {
       setValue(term.key, checked);
     });
   };
-  const onChangeDetailAgree = (value, key, keyTerm) => {
+  const onChangeDetailAgree = (
+    value: boolean,
+    key: keyof GoogleAccountData,
+    keyTerm: keyof GoogleAccountData
+  ) => {
     setValue(key, value);
-    const listKeyTerm = (keyTerm === 'agreeABC' ? termsABC : termsEternal).map((term) => term.key);
+    const listKeyTerm = (keyTerm === 'agreeABC' ? termsABC : termsEternal).map(
+      (term) => term.key
+    ) as (keyof GoogleAccountData)[];
     const multipleValues = getValues(listKeyTerm);
+
     if (!multipleValues.includes(false)) {
       setValue(keyTerm, true);
     } else {
@@ -639,7 +652,7 @@ const GoogleFullSignUp = () => {
                     onChange={(e) => {
                       onChangeDetailAgree(e.target.checked, key, 'agreeEternal');
                     }}
-                    checked={field.value}
+                    checked={!!field.value}
                     sx={{ padding: '4px', px: '8px' }}
                     icon={<CheckIcon />}
                     checkedIcon={<CheckFillIcon />}
@@ -692,7 +705,7 @@ const GoogleFullSignUp = () => {
                     onChange={(e) => {
                       onChangeDetailAgree(e.target.checked, key, 'agreeABC');
                     }}
-                    checked={field.value}
+                    checked={!!field.value}
                     sx={{ padding: '4px', px: '8px' }}
                     icon={<CheckIcon />}
                     checkedIcon={<CheckFillIcon />}
