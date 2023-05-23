@@ -56,6 +56,8 @@ export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSell
   const [amount, setAmount] = useState('');
   const [creatorEarnings, setCreatorEarnings] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [startDate, setStartDate] = useState(new Date());
+  const [endDate, setEndDate] = useState(new Date());
   const [durations, setDurations] = useState([
     {
       label: '1 MONTH (2022.11.16 ~ 2022.11.16)',
@@ -74,14 +76,25 @@ export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSell
     const currentMonth = today.getMonth() + 1; // Note: Months are zero-based, so we add 1
     const currentDay = today.getDate();
 
-    const formattedDate = `${currentYear}.${currentMonth.toString().padStart(2, '0')}.${currentDay
+    const lastDay = new Date(today.setMonth(today.getMonth() + 1));
+    const endYear = lastDay.getFullYear();
+    const endMonth = lastDay.getMonth() + 1; // Note: Months are zero-based, so we add 1
+    const endDay = lastDay.getDate();
+
+    const startDate = `${currentYear}.${currentMonth.toString().padStart(2, '0')}.${currentDay
       .toString()
       .padStart(2, '0')}`;
 
+    const endDate = `${endYear}.${endMonth.toString().padStart(2, '0')}.${endDay
+      .toString()
+      .padStart(2, '0')}`;
+
+    setStartDate(today);
+    setEndDate(lastDay);
     setDurations([
       {
         ...durations[0],
-        label: `1 MONTH (${formattedDate} ~ ${formattedDate})`,
+        label: `1 MONTH (${startDate} ~ ${endDate})`,
       },
     ]);
   }, []);
