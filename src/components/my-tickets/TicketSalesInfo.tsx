@@ -1,5 +1,5 @@
-import { Stack } from '@mui/material';
-import React from 'react';
+import { Box, CircularProgress, Stack } from '@mui/material';
+import React, { useState } from 'react';
 import RoundedButton from '../common/RoundedButton';
 import { Hr, Label, Row, TotalValue, Value } from './StyledComponents';
 import { MyTicketTypes } from 'src/@types/my/myTicket';
@@ -34,7 +34,10 @@ export default function TicketSalesInfo({
   const { account: wallet, library } = useWeb3React();
   const { account } = useAccount();
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const handleClickConfirm = async () => {
+    setIsLoading(true);
     console.log('click confirm.');
     console.log(sellTicketInfo);
     console.log(`amount : ${amount}`);
@@ -146,9 +149,10 @@ export default function TicketSalesInfo({
     // } else {
     //   console.log('click Dutch auction');
     // }
+    setIsLoading(false);
   };
   return (
-    <Stack gap="24px" justifyContent="space-between" sx={{ height: '100%' }}>
+    <Stack gap="24px" justifyContent="space-between" sx={{ height: '100%' }} position={'relative'}>
       <Stack gap="12px">
         <Stack gap={{ xs: 2, md: '7px' }}>
           <Row>
@@ -209,9 +213,26 @@ export default function TicketSalesInfo({
       </Stack>
 
       {/*{isAuction ? <RoundedButton variant="withImage">CONFIRM</RoundedButton> : null}*/}
-      <RoundedButton variant="withImage" onClick={handleClickConfirm}>
-        CONFIRM
-      </RoundedButton>
+      {isLoading ? (
+        <Box
+          sx={{
+            // width: '100%',
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            position: 'fixed',
+            bottom: '30px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+          }}
+        >
+          <CircularProgress size={'2rem'} />
+        </Box>
+      ) : (
+        <RoundedButton variant="withImage" onClick={handleClickConfirm}>
+          CONFIRM
+        </RoundedButton>
+      )}
     </Stack>
   );
 }
