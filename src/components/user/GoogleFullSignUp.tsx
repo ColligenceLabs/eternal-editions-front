@@ -246,7 +246,7 @@ const GoogleFullSignUp = () => {
         await userRegister({
           abc_address: abcWallet,
           country: values.country,
-          birthday: values.birthDate.toDateString(),
+          birthday: values.birthDate,
           gender: values.gender,
           phone: values.phoneNumber,
         });
@@ -328,7 +328,7 @@ const GoogleFullSignUp = () => {
       await userRegister({
         abc_address: abcWallet,
         country: values.country,
-        birthday: values.birthDate.toDateString(),
+        birthday: values.birthDate,
         gender: values.gender,
         phone: values.phoneNumber,
       });
