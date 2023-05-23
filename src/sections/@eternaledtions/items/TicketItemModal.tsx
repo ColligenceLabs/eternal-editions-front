@@ -265,6 +265,7 @@ const TicketItemModal = ({
       return;
     }
 
+    setIsLoading(true);
     try {
       const session = await getSession();
       if (!session.data.dropsUser) throw new Error('session expired.');
@@ -328,6 +329,7 @@ const TicketItemModal = ({
       setAbcOpen(true);
       return;
     }
+    setIsLoading(true);
     // Collection
     const contract = boxContractAddress;
     const index = ticket.no - 1 ?? 0;
@@ -405,6 +407,8 @@ const TicketItemModal = ({
         type: 'error',
         message: 'Purchase faield!',
       });
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -612,8 +616,24 @@ const TicketItemModal = ({
             </Stack>
           ) : (
             <Stack gap={3} sx={{ marginTop: '12px' }}>
-              {ticketinfo(ticketLabel.total, fullTotalPriceString)}
-              <RoundedButton onClick={onSubmit}>COMPLETE PURCHASE</RoundedButton>
+              {isLoading ? (
+                <Box
+                  sx={{
+                    // width: '100%',
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    mt: '10px',
+                  }}
+                >
+                  <CircularProgress size={'2rem'} />
+                </Box>
+              ) : (
+                <>
+                  {ticketinfo(ticketLabel.total, fullTotalPriceString)}
+                  <RoundedButton onClick={onSubmit}>COMPLETE PURCHASE</RoundedButton>
+                </>
+              )}
             </Stack>
           )}
 
