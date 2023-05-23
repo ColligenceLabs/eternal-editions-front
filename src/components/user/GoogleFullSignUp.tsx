@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, InputHTMLAttributes, useEffect, useMemo, useState } from 'react';
 import {
   Stack,
   Typography,
@@ -10,6 +10,7 @@ import {
   buttonBaseClasses,
   InputAdornment,
   TextField,
+  CheckboxProps,
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { Label, Section } from '../my-tickets/StyledComponents';
@@ -60,14 +61,14 @@ type GoogleAccountData = {
   agreeEternal: boolean;
   agreeABC: boolean;
   eeTerms: boolean;
-  eePrivate: false;
-  eeThirdParty: false;
-  eeMarketing: false;
-  abcTerms: false;
-  abcAge: false;
-  abcPrivate: false;
-  abcThirdParty: false;
-  abcMarketing: false;
+  eePrivate: boolean;
+  eeThirdParty: boolean;
+  eeMarketing: boolean;
+  abcTerms: boolean;
+  abcAge: boolean;
+  abcPrivate: boolean;
+  abcThirdParty: boolean;
+  abcMarketing: boolean;
 };
 
 const phoneRegExp =
@@ -322,28 +323,31 @@ const GoogleFullSignUp = () => {
       });
     }
   };
-  const onChangeAgreeEternal = (e) => {
+  const onChangeAgreeEternal = (e: ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
     setValue('agreeEternal', checked);
     termsEternal.forEach((term) => {
-      setValue(term.key, checked);
+      setValue(term.key as keyof GoogleAccountData, checked);
     });
   };
-  const onChangeAgreeABC = (e) => {
+  const onChangeAgreeABC = (e: ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
     setValue('agreeABC', checked);
     termsABC.forEach((term) => {
-      setValue(term.key, checked);
+      setValue(term.key as keyof GoogleAccountData, checked);
     });
   };
-  const onChangeDetailAgree = (value, key, keyTerm) => {
+  const onChangeDetailAgree = (value: string, key: keyof GoogleAccountData, keyTerm: string) => {
     setValue(key, value);
-    const listKeyTerm = (keyTerm === 'agreeABC' ? termsABC : termsEternal).map((term) => term.key);
+    const listKeyTerm = (keyTerm === 'agreeABC' ? termsABC : termsEternal).map(
+      (term) => term.key
+    ) as (keyof GoogleAccountData)[];
     const multipleValues = getValues(listKeyTerm);
+
     if (!multipleValues.includes(false)) {
-      setValue(keyTerm, true);
+      setValue(keyTerm as keyof GoogleAccountData, true);
     } else {
-      setValue(keyTerm, false);
+      setValue(keyTerm as keyof GoogleAccountData, false);
     }
   };
 
@@ -627,7 +631,7 @@ const GoogleFullSignUp = () => {
 
         {termsEternal.map(({ title, isRequired, key }) => (
           <Controller
-            name={key}
+            name={key as keyof GoogleAccountData}
             control={control}
             key={key}
             render={({ field }) => (
@@ -639,7 +643,7 @@ const GoogleFullSignUp = () => {
                     onChange={(e) => {
                       onChangeDetailAgree(e.target.checked, key, 'agreeEternal');
                     }}
-                    checked={field.value}
+                    checked={!!field.value}
                     sx={{ padding: '4px', px: '8px' }}
                     icon={<CheckIcon />}
                     checkedIcon={<CheckFillIcon />}
@@ -692,7 +696,7 @@ const GoogleFullSignUp = () => {
                     onChange={(e) => {
                       onChangeDetailAgree(e.target.checked, key, 'agreeABC');
                     }}
-                    checked={field.value}
+                    checked={!!field.value}
                     sx={{ padding: '4px', px: '8px' }}
                     icon={<CheckIcon />}
                     checkedIcon={<CheckFillIcon />}
