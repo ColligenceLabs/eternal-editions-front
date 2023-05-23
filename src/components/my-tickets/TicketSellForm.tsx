@@ -7,7 +7,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FootText,
   Hr,
@@ -41,13 +41,6 @@ const PRICE_UNITS = [
   },
 ];
 
-const DURATIONS = [
-  {
-    label: '1 MONTH (2022.11.16 ~ 2022.11.16)',
-    value: '1',
-  },
-];
-
 // ----------------------------------------------------------------------
 
 type TicketSellFormProps = {
@@ -57,18 +50,41 @@ type TicketSellFormProps = {
 };
 
 export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSellFormProps) {
-  console.log(sellTicketInfo);
   const theme = useTheme();
   const [typeOfSale, setTypeOfSale] = useState(TYPES_OF_SALE[0].value);
   const [priceUnit, setPriceUnit] = useState(PRICE_UNITS[0].value);
   const [amount, setAmount] = useState('');
-  const [duration, setDuration] = useState(DURATIONS[0].value);
   const [creatorEarnings, setCreatorEarnings] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [durations, setDurations] = useState([
+    {
+      label: '1 MONTH (2022.11.16 ~ 2022.11.16)',
+      value: '1',
+    },
+  ]);
+  const [duration, setDuration] = useState(durations[0].value);
 
   const onSubmit = () => {
     setIsSubmitting(true);
   };
+
+  useEffect(() => {
+    const today = new Date();
+    const currentYear = today.getFullYear();
+    const currentMonth = today.getMonth() + 1; // Note: Months are zero-based, so we add 1
+    const currentDay = today.getDate();
+
+    const formattedDate = `${currentYear}.${currentMonth.toString().padStart(2, '0')}.${currentDay
+      .toString()
+      .padStart(2, '0')}`;
+
+    setDurations([
+      {
+        ...durations[0],
+        label: `1 MONTH (${formattedDate} ~ ${formattedDate})`,
+      },
+    ]);
+  }, []);
 
   if (isSubmitting) {
     return (
@@ -143,7 +159,7 @@ export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSell
           value={duration}
           onChange={(event) => setDuration(event.target.value as string)}
         >
-          {DURATIONS.map((option) => (
+          {durations.map((option) => (
             <RoundedSelectOption key={option.value} value={option.value}>
               {option.label}
             </RoundedSelectOption>
