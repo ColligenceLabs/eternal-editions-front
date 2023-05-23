@@ -106,7 +106,8 @@ export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSell
         amount={amount}
         typeOfSale={typeOfSale}
         creatorEarnings={creatorEarnings}
-        duration={duration}
+        startDate={startDate}
+        endDate={endDate}
       />
     );
   }
