@@ -6,6 +6,7 @@ import {
   Input,
   InputAdornment,
   buttonBaseClasses,
+  Box,
 } from '@mui/material';
 import { Label, Section } from '../my-tickets/StyledComponents';
 import palette from 'src/theme/palette';
@@ -14,6 +15,13 @@ import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import QRCode from 'react-qr-code';
+import React, { useEffect, useState } from 'react';
+import { getSession, updateAbcAddress, userRegister } from 'src/services/services';
+import { useDispatch, useSelector } from 'react-redux';
+import { controllers } from 'src/abc/background/init';
+import { ClipboardCopy } from 'src/utils/wallet';
+import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
+import { setTwoFa } from 'src/store/slices/twoFa';
 
 // ----------------------------------------------------------------------
 
@@ -43,8 +51,39 @@ export default function CreateWalletForm({ onClose }: Props) {
     },
   });
 
+  const { abcController, accountController } = controllers;
+  const dispatch = useDispatch();
+
+  const [qrCode, setQrCode] = useState('');
+  const [qrSecret, setQrSecret] = useState('');
+  const [resetCode, setResetCode] = useState('');
+
+  useEffect(() => {
+    const getQrCode = async () => {
+      const { qrcode, secret } = await accountController.generateTwoFactor({ reset: false });
+      console.log('!! OTP =', qrcode, secret);
+      setQrCode(qrcode);
+      setQrSecret(secret);
+    };
+    getQrCode();
+  }, []);
+
   const onSubmit = async ({ verificationCode }: FormValuesProps) => {
-    onClose();
+    console.log('!! verificationCode = ', verificationCode);
+
+    // optToken : 입력 받은 OTP 값을 입력 받은 후 아래 코드 실행
+    const twofaResetCode = await accountController.verifyTwoFactorGen({ token: verificationCode });
+    console.log('!! OTP 등록 = ', qrSecret, twofaResetCode);
+
+    if (twofaResetCode) {
+      dispatch(setTwoFa({ secret: qrSecret, reset: twofaResetCode }));
+      setResetCode(twofaResetCode);
+
+      alert('등록이 완료되었습니다.');
+      onClose();
+    } else {
+      alert('인증 코드 오류입니다.');
+    }
   };
 
   return (
@@ -58,7 +97,27 @@ export default function CreateWalletForm({ onClose }: Props) {
         </Typography>
 
         <Stack alignItems="center">
-          <QRCode value={`https://entrace2023.eternaleditions.io/entrace-confirm`} size={160} />
+          {/*<QRCode value={qrCode} size={160} />*/}
+          <img className="QRCode" src={qrCode} alt="qrapp" />
+          {/* TODO : 나란히 배치할 것...*/}
+          <Typography noWrap={true} sx={{ fontSize: '10px' }}>
+            {qrSecret}
+          </Typography>
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              borderRadius: '50%',
+              backgroundColor: '#F5F5F5',
+              width: '32px',
+              height: '32px',
+              cursor: 'pointer',
+            }}
+            onClick={() => ClipboardCopy(qrSecret ?? '', '복사되었습니다.')}
+          >
+            <ContentCopyOutlinedIcon sx={{ fontSize: '14px', m: 0, p: 0 }} />
+          </Box>
         </Stack>
 
         <Section>
@@ -79,24 +138,24 @@ export default function CreateWalletForm({ onClose }: Props) {
                 }}
                 fullWidth
                 error={Boolean(error)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <RoundedButton
-                      variant="inactive"
-                      sx={{
-                        padding: '10px 16px',
-                        marginBottom: '24px',
-                        color: isValid ? palette.dark.common.black : palette.dark.black.lighter,
-                        [`&.${buttonBaseClasses.root}`]: {
-                          fontSize: 12,
-                          lineHeight: 13 / 12,
-                        },
-                      }}
-                    >
-                      {getValues('verificationCode') ? 'Confirm' : 'SEND CODE'}
-                    </RoundedButton>
-                  </InputAdornment>
-                }
+                // endAdornment={
+                //   <InputAdornment position="end">
+                //     <RoundedButton
+                //       variant="inactive"
+                //       sx={{
+                //         padding: '10px 16px',
+                //         marginBottom: '24px',
+                //         color: isValid ? palette.dark.common.black : palette.dark.black.lighter,
+                //         [`&.${buttonBaseClasses.root}`]: {
+                //           fontSize: 12,
+                //           lineHeight: 13 / 12,
+                //         },
+                //       }}
+                //     >
+                //       {getValues('verificationCode') ? 'Confirm' : 'SEND CODE'}
+                //     </RoundedButton>
+                //   </InputAdornment>
+                // }
               />
             )}
           />

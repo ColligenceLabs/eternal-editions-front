@@ -155,9 +155,9 @@ export default function WalletPopover({}) {
                     cursor: 'pointer',
                   }}
                   onClick={() => {
-                      if(account) {
-                          window.open(`https://polygonscan.com/address/${account}`);
-                      }
+                    if (account) {
+                      window.open(`https://polygonscan.com/address/${account}`);
+                    }
                   }}
                 >
                   <OpenInNewOutlinedIcon sx={{ fontSize: '14px' }} />

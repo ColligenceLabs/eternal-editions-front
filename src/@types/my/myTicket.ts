@@ -21,4 +21,5 @@ export type MyTicketTypes = {
   location?: string;
   duration?: string;
   team?: string;
+  quote?: string;
 };

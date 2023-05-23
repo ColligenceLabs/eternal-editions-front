@@ -121,10 +121,38 @@ export const checkUserEmail = async (email: string) =>
 
 export const getSellItemInfo = async (id: string) => await customAxios(`/api/service/drops/${id}`);
 
-export const getSellBooks = async (page: number, perPage?: number) => {
-  return await customAxios.get(
-    `/api/service/sellbook?page=${page}&limit=${perPage ? perPage : 5}sortBy=createdAt%3AASC`
-  );
+export const getSellBooks = async (
+  page: number,
+  perPage?: number,
+  category?: string,
+  type?: string,
+  team?: string
+) => {
+  console.log(category);
+  console.log(type);
+  console.log(team);
+  let url = `/api/service/sellbook?page=${page}&limit=${
+    perPage ? perPage : 5
+  }&sortBy=createdAt:ASC`;
+
+  if (category && category.toLowerCase() !== 'all') url = `${url}&category=${category}`;
+  if (type && type !== '0') url = `${url}&type=${type}`;
+  if (team && team.toLowerCase() !== 'default') url = `${url}&team=${team}`;
+
+  console.log(url);
+  return await customAxios.get(url);
+};
+
+export const getSellbookTeamsList = async () => {
+  return await customAxios(`/api/service/sellbook/teams`);
+};
+
+export const getSellbookCategoryList = async () => {
+  return await customAxios(`/api/service/sellbook/category/count`);
+};
+
+export const getSellbookInfoByID = async (id: string) => {
+  return await customAxios(`/api/service/sellbook/${id}`);
 };
 
 export const registerSell = async (data: any) => {

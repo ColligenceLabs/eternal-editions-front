@@ -1,36 +1,39 @@
 import { useEffect, useState } from 'react';
-import { Box, Grid, Button, Stack, Typography } from '@mui/material';
-import TicketItem from './TicketItem';
+import { Grid, Button, Stack, Typography } from '@mui/material';
 import { Iconify } from 'src/components';
 import arrowDown from '@iconify/icons-carbon/arrow-down';
-import { getSellBooks, getTicketCountByCategory, getTicketsService } from 'src/services/services';
+import { getSellbookCategoryList, getSellBooks, getSellbookTeamsList } from 'src/services/services';
 import { SUCCESS } from 'src/config';
 import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
-import { useResponsive } from 'src/hooks';
 import CategoryTabs from 'src/components/CategoryTabs';
 import { TextSelect, TextSelectOption } from 'src/components/common/Select';
+import SellbookTicketItem from 'src/sections/@eternaledtions/items/SellbookTicketItem';
+import TICKET from 'src/sample/ticket';
 
-const COLLECTIONS = [
+const SALE_TYPE = [
+  { label: 'SELECT SALES TYPE', value: '0' },
   {
-    label: 'Team Yellow',
-    value: 'yellow',
+    label: 'Fixed Price',
+    value: '1',
   },
   {
-    label: 'Team Purple',
-    value: 'purple',
+    label: 'Auction',
+    value: '2',
   },
 ];
 
-// ----------------------------------------------------------------------
-
 type Props = {
-  categories?: string[];
   shouldHideCategories?: boolean;
 };
 
 type CategoryTypes = {
   category: string;
   count: string;
+};
+
+type TeamType = {
+  label: string;
+  value: string;
 };
 
 type SellBookTypes = {
@@ -48,43 +51,25 @@ type SellBookTypes = {
   updatedAt: Date;
 };
 
-export default function TicketItems({ categories: originCategories, shouldHideCategories }: Props) {
+export default function SellbookTicketItems({ shouldHideCategories }: Props) {
   const [curPage, setCurPage] = useState(1);
   const [lastPage, setLastPage] = useState(0);
-  const [selected, setSelected] = useState('All');
-  const [ticketInfoList, setTicketInfoList] = useState<TicketInfoTypes[]>([]);
+  const [category, setCategory] = useState('All');
   const [categories, setCategories] = useState<CategoryTypes[]>([]);
-  const [collection, setCollection] = useState('default');
-  const [salesType, setSalesType] = useState('default');
+  const [salesType, setSalesType] = useState('0');
   const [sellBooks, setSellBooks] = useState<SellBookTypes[]>([]);
+  const [teams, setTeams] = useState<TeamType[]>([]);
+  const [team, setTeam] = useState('default');
 
-  originCategories = ['All', ...Array.from(new Set(originCategories))];
-  const perPage = 6;
+  const originCategories = ['All', ...Array.from(new Set(TICKET.categories))];
+  const perPage = 8;
 
   const handleChangeCategory = (event: React.SyntheticEvent, newValue: string) => {
-    setSelected(newValue);
+    setCategory(newValue);
   };
 
-  const getTickets = async () => {
-    console.log(selected);
-    const res = await getTicketsService(1, perPage, selected);
-    console.log(res);
-    if (res.status === 200) {
-      setTicketInfoList(res.data.list);
-      setLastPage(res.data.headers.x_pages_count);
-    }
-  };
-
-  const getMoreTickets = async () => {
-    const res = await getTicketsService(curPage, perPage, selected);
-    console.log(res);
-    if (res.status === 200) {
-      setTicketInfoList((cur) => [...cur, ...res.data.list]);
-    }
-  };
-
-  const getCountByCategory = async () => {
-    const res = await getTicketCountByCategory();
+  const fetchCountByCategory = async () => {
+    const res = await getSellbookCategoryList();
 
     if (res.data.status === SUCCESS) setCategories(res.data.data);
     else {
@@ -97,26 +82,43 @@ export default function TicketItems({ categories: originCategories, shouldHideCa
     }
   };
 
-  const fetchSellBooks = async () => {
-    const res = await getSellBooks(curPage, perPage);
-    console.log(res);
+  const fetchTeamList = async () => {
+    const res = await getSellbookTeamsList();
+
     if (res.data.status === SUCCESS) {
+      const temp = res.data.data.teams.map((team: any) => ({
+        label: team.team,
+        value: team.team,
+      }));
+      setTeams([{ label: 'SELECT COLLECTION', value: 'default' }, ...temp]);
+    }
+  };
+
+  const fetchSellBooks = async () => {
+    const res = await getSellBooks(curPage, perPage, category, salesType, team);
+    if (res.data.status === SUCCESS) {
+      setLastPage(res.data.data.headers.x_pages_count);
       setSellBooks(res.data.data.sellbooks);
     }
   };
 
-  useEffect(() => {
-    fetchSellBooks();
-  }, []);
+  const fetchMoreSellBooks = async () => {
+    const res = await getSellBooks(curPage, perPage, category, salesType, team);
+    if (res.status === 200) {
+      setSellBooks((cur) => [...cur, ...res.data.data.sellbooks]);
+    }
+  };
 
   useEffect(() => {
     setCurPage(1);
-    getTickets();
-    getCountByCategory();
-  }, [selected]);
+    fetchCountByCategory();
+    fetchSellBooks();
+    fetchTeamList();
+    // fetchCountByCategory();
+  }, [category, salesType, team]);
 
   useEffect(() => {
-    if (curPage !== 1) getMoreTickets();
+    if (curPage !== 1) fetchMoreSellBooks();
   }, [curPage]);
 
   return (
@@ -138,7 +140,7 @@ export default function TicketItems({ categories: originCategories, shouldHideCa
         {!shouldHideCategories ? (
           <CategoryTabs
             categories={categories}
-            value={selected.toLocaleLowerCase()}
+            value={category.toLocaleLowerCase()}
             onChange={handleChangeCategory}
           />
         ) : null}
@@ -153,18 +155,16 @@ export default function TicketItems({ categories: originCategories, shouldHideCa
             },
           }}
         >
-          <TextSelect
-            value={collection}
-            onChange={(event) => setCollection(event.target.value as string)}
-          >
+          <TextSelect value={team} onChange={(event) => setTeam(event.target.value as string)}>
             <TextSelectOption hidden value="default">
               SELECT COLLECTION
             </TextSelectOption>
-            {COLLECTIONS.map((collection) => (
-              <TextSelectOption key={collection.value} value={collection.value}>
-                {collection.label}
-              </TextSelectOption>
-            ))}
+            {teams &&
+              teams.map((team) => (
+                <TextSelectOption key={team.value} value={team.value}>
+                  {team.label}
+                </TextSelectOption>
+              ))}
           </TextSelect>
 
           <TextSelect
@@ -174,14 +174,19 @@ export default function TicketItems({ categories: originCategories, shouldHideCa
             <TextSelectOption hidden value="default">
               SELECT SALES TYPE
             </TextSelectOption>
+            {SALE_TYPE.map((type) => (
+              <TextSelectOption key={type.value} value={type.value}>
+                {type.label}
+              </TextSelectOption>
+            ))}
           </TextSelect>
         </Stack>
       </Stack>
 
-      {ticketInfoList.length ? (
+      {sellBooks.length ? (
         <Grid container spacing={3}>
-          {ticketInfoList.map((ticket, index) => (
-            <TicketItem key={index} ticket={ticket} />
+          {sellBooks.map((sellbookItem, index) => (
+            <SellbookTicketItem key={index} sellbookItem={sellbookItem} />
           ))}
         </Grid>
       ) : (

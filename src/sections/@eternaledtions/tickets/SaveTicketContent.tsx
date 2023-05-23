@@ -13,7 +13,6 @@ import {
 import { Stack } from '@mui/system';
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
-import { TicketInfoTypes } from 'src/@types/ticket/ticketTypes';
 import RoundedButton from 'src/components/common/RoundedButton';
 import { Label, Section, Value } from 'src/components/my-tickets/StyledComponents';
 import { useResponsive } from 'src/hooks';
@@ -25,9 +24,7 @@ import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import useAccount from 'src/hooks/useAccount';
 import { useSelector } from 'react-redux';
 import { nftTransferFrom } from 'src/utils/transactions';
-import { BigNumber } from 'ethers';
 import contracts from 'src/config/constants/contracts';
-import { parseEther } from 'ethers/lib/utils';
 import { SUCCESS } from 'src/config';
 import { LoadingButton } from '@mui/lab';
 import CSnackbar from 'src/components/common/CSnackbar';
@@ -148,7 +145,14 @@ export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
       } catch (e: any) {}
     } else {
       // Metamask
-      const result = await nftTransferFrom(contract, address, tokenId, account, library, false);
+      const result = await nftTransferFrom(
+        contract,
+        address,
+        tokenId.toString(),
+        account!,
+        library,
+        false
+      );
       console.log(result);
       if (result === SUCCESS) {
         setOpenSnackbar({
@@ -191,9 +195,7 @@ export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
           size={160}
         />
       </Box>
-      <Typography
-        sx={{ fontSize: '12px' }}
-      >{`https://entrance.eternaleditions.io/admin-e-ticket?type=2&tokenId=${ticketInfo.tokenId}&nftid=${ticketInfo.mysteryBoxId}&expireTime=${qrTimestamp}`}</Typography>
+
       <Stack gap="12px" mt="48px" mb="24px">
         <Stack gap={0.5}>
           <Typography

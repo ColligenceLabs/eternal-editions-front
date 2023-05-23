@@ -67,6 +67,8 @@ export type TicketItemTypes = {
   price: number;
   imageLink: string;
   createdAt: string;
+  categoriesStr?: string;
+  releaseDatetime?: Date;
 };
 
 export type PropertyTypes = {
