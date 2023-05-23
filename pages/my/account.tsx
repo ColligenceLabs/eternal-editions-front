@@ -33,7 +33,7 @@ import Image from 'src/components/Image';
 import NextLink from 'next/link';
 import Routes from 'src/routes';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteAddress, updateAddress } from 'src/services/services';
+import { deactivate, deleteAddress, removeUser, updateAddress } from 'src/services/services';
 import { setWebUser } from 'src/store/slices/webUser';
 import { useWeb3React } from '@web3-react/core';
 import env from 'src/env';
@@ -169,6 +169,11 @@ export default function MyAccountPage({}: Props) {
       console.log(error.message);
     }
     setIsLoading(false);
+  };
+
+  const handleClickDeactivate = async () => {
+    const res = await removeUser();
+    console.log(res);
   };
 
   const connectWallet = async (id: any) => {
@@ -730,6 +735,7 @@ Type: Address verification`;
                 disabled={!isConfirmDeactivate}
                 variant="inactive"
                 sx={{ color: palette.dark.common.black }}
+                onClick={handleClickDeactivate}
               >
                 Deactivate
               </RoundedButton>
