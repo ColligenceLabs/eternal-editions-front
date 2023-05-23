@@ -265,10 +265,12 @@ export default function TicketDetailPage() {
                           <Row>
                             <Label>Starting Price</Label>
                             <Stack flexDirection="row" gap={0.5} sx={{ color: 'red' }}>
-                              <TotalValue>{`${(dollarPrice / 10).toFixed(4)} EDCP`}</TotalValue>
-                              <TotalValue
-                                sx={{ opacity: 0.6 }}
-                              >{`(~$${sellbookInfo.price})`}</TotalValue>
+                              {/*<TotalValue>{`${(dollarPrice / 10).toFixed(4)} EDCP`}</TotalValue>*/}
+                              {/*<TotalValue*/}
+                              {/*  sx={{ opacity: 0.6 }}*/}
+                              {/*>{`(~$${sellbookInfo.price})`}</TotalValue>*/}
+                              <TotalValue>{`${sellbookInfo.price} EDCP`}</TotalValue>
+                              <TotalValue sx={{ opacity: 0.6 }}>{`(~$${'0'})`}</TotalValue>
                             </Stack>
                           </Row>
                         ) : null}
@@ -276,10 +278,8 @@ export default function TicketDetailPage() {
                         <Row>
                           <Label>Current Price</Label>
                           <Stack flexDirection="row" gap={0.5}>
-                            <TotalValue>{`${(dollarPrice / 10).toFixed(4)} EDCP`}</TotalValue>
-                            <TotalValue
-                              sx={{ opacity: 0.6 }}
-                            >{`(~$${sellbookInfo.price})`}</TotalValue>
+                            <TotalValue>{`${sellbookInfo.price} EDCP`}</TotalValue>
+                            <TotalValue sx={{ opacity: 0.6 }}>{`(~$${'0'})`}</TotalValue>
                           </Stack>
                         </Row>
                       </Stack>

@@ -133,7 +133,7 @@ export const getSellBooks = async (
   console.log(team);
   let url = `/api/service/sellbook?page=${page}&limit=${
     perPage ? perPage : 5
-  }&sortBy=createdAt:ASC`;
+  }&sortBy=createdAt:DESC`;
 
   if (category && category.toLowerCase() !== 'all') url = `${url}&category=${category}`;
   if (type && type !== '0') url = `${url}&type=${type}`;
