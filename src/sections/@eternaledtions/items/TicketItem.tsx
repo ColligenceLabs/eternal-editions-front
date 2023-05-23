@@ -52,27 +52,27 @@ export default function TicketItem({
   const isOnAuction = router.query.status; // TODO: Update value
   const theme = useTheme();
   const [isTicketItemModalOpen, setIsTicketItemModalOpen] = useState(false);
-  const [dollarPrice, setDollarPrice] = useState(0);
-  const [maticPrice, setMaticPrice] = useState(0);
-  const [klayPrice, setKlayPrice] = useState(0);
+  const [edcpPrice, setEdcpPrice] = useState(0);
+  // const [maticPrice, setMaticPrice] = useState(0);
+  // const [klayPrice, setKlayPrice] = useState(0);
 
-  const getCoinPrice = () => {
-    const url = 'https://bcn-api.talken.io/coinmarketcap/cmcQuotes?cmcIds=4256,3890';
-    try {
-      if (klayPrice === 0 || maticPrice === 0) {
-        axios(url).then((response) => {
-          const klayUsd = response.data.data[4256].quote.USD.price;
-          // const klayKrw = response.data.data[4256].quote.KRW.price;
-          const maticUsd = response.data.data[3890].quote.USD.price;
-          // const maticKrw = response.data.data[3890].quote.KRW.price;
-          setKlayPrice(parseFloat(klayUsd));
-          setMaticPrice(parseFloat(maticUsd));
-        });
-      }
-    } catch (error: any) {
-      console.log(new Error(error));
-    }
-  };
+  // const getCoinPrice = () => {
+  //   const url = 'https://bcn-api.talken.io/coinmarketcap/cmcQuotes?cmcIds=4256,3890';
+  //   try {
+  //     if (klayPrice === 0 || maticPrice === 0) {
+  //       axios(url).then((response) => {
+  //         const klayUsd = response.data.data[4256].quote.USD.price;
+  //         const klayKrw = response.data.data[4256].quote.KRW.price;
+  //         const maticUsd = response.data.data[3890].quote.USD.price;
+  //         const maticKrw = response.data.data[3890].quote.KRW.price;
+  //         setKlayPrice(parseFloat(klayUsd));
+  //         setMaticPrice(parseFloat(maticUsd));
+  //       });
+  //     }
+  //   } catch (error: any) {
+  //     console.log(new Error(error));
+  //   }
+  // };
 
   useEffect(() => {
     if (properties) {
@@ -90,13 +90,13 @@ export default function TicketItem({
     }
   }, [properties]);
 
-  useEffect(() => {
-    getCoinPrice();
-  }, []);
+  // useEffect(() => {
+  //   getCoinPrice();
+  // }, []);
 
   useEffect(() => {
-    setDollarPrice((price ?? 0) * maticPrice);
-  }, [price, maticPrice]);
+    setEdcpPrice(price / 10);
+  }, [price]);
 
   if (!ticket) {
     return null;
@@ -254,7 +254,7 @@ export default function TicketItem({
               marginLeft: '16px',
             }}
           >
-            {`${(dollarPrice / 10).toFixed(4)} EDCP`}
+            {`${edcpPrice.toFixed(4)} EDCP`}
           </Typography>
           <>
             <RoundedButton
