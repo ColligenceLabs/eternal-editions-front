@@ -175,14 +175,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
         .getSigner()
         .signMessage(message)
         .catch(() => deactivate());
-      console.log('===11', signature);
-      if (!signature) {
-        console.log('===22', signature)
-        // deactivate();
-        // window.localStorage.removeItem('loginBy');
-        // window.localStorage.removeItem('loginType');
-        return;
-      } // 서명 거부
+      if (!signature) return; // 서명 거부
       const data = { message, signature, isAbc };
       const res = await requestWalletLogin(data);
       if (res.data === 'loginSuccess') {
