@@ -124,7 +124,7 @@ export const termsABC = [
 const defaultValues = {
   birthDate: new Date('12/31/2000'),
   gender: 'male',
-  country: 'GB',
+  country: 'KR',
   agreeEternal: false,
   agreeABC: false,
   eeTerms: false,
