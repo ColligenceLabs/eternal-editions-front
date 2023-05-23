@@ -82,8 +82,8 @@ export default function TicketSalesInfo({
             const abcUser = JSON.parse(secureLocalStorage.getItem('abcUser') as string);
             console.log('==========================', abcUser);
             console.log(
-                '=============>',
-                abcUser && abcUser?.accounts ? abcUser?.accounts[0].ethAddress : 'No ethAddress'
+              '=============>',
+              abcUser && abcUser?.accounts ? abcUser?.accounts[0].ethAddress : 'No ethAddress'
             );
 
             const provider = new ethers.providers.Web3Provider(instance);
@@ -92,27 +92,31 @@ export default function TicketSalesInfo({
             console.log('=============>', signer);
 
             order = await fixedPriceSell(
-                sellTicketInfo.mysteryboxInfo?.boxContractAddress,
-                sellTicketInfo.tokenId.toString(),
-                utils.parseEther((amount ?? '0.0').toString()).toString(), // TODO : what is default price ?
-                endTime.toString(),
-                sellTicketInfo.mysteryboxInfo?.creatorAddress,
-                account,
-                provider
+              sellTicketInfo.mysteryboxInfo?.boxContractAddress,
+              sellTicketInfo.tokenId.toString(),
+              utils.parseEther((amount ?? '0.0').toString()).toString(), // TODO : what is default price ?
+              endTime.toString(),
+              sellTicketInfo.mysteryboxInfo?.creatorAddress,
+              account,
+              provider
             );
           }
         }
       } else if (wallet && library) {
         order = await fixedPriceSell(
-            sellTicketInfo.mysteryboxInfo?.boxContractAddress,
-            sellTicketInfo.tokenId.toString(),
-            utils.parseEther((amount ?? '0.0').toString()).toString(), // TODO : what is default price ?
-            endTime.toString(),
-            sellTicketInfo.mysteryboxInfo?.creatorAddress,
-            wallet,
-            library
+          sellTicketInfo.mysteryboxInfo?.boxContractAddress,
+          sellTicketInfo.tokenId.toString(),
+          utils.parseEther((amount ?? '0.0').toString()).toString(), // TODO : what is default price ?
+          endTime.toString(),
+          sellTicketInfo.mysteryboxInfo?.creatorAddress,
+          wallet,
+          library
         );
       }
+
+      const team = sellTicketInfo.mysteryboxItem.properties.filter(
+        (property: any) => property.type === 'team'
+      );
 
       const sellOrder = {
         uid: webUser.user.uid,
@@ -126,7 +130,9 @@ export default function TicketSalesInfo({
         sellInfo: order,
         tokenId: sellTicketInfo.tokenId,
         price: amount,
+        team: team[0].name,
       };
+      console.log('!! Fixed Price sellOrder in DB = ', sellOrder);
       const result = await registerSell(sellOrder);
       console.log('!! Sell Result : ', result);
       if (result.status === 200) {

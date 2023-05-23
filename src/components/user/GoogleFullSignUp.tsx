@@ -24,7 +24,7 @@ import CheckboxIndeterminateFillIcon from 'src/assets/icons/checkboxIndeterminat
 import CheckIcon from 'src/assets/icons/check';
 import CheckFillIcon from 'src/assets/icons/checkFill';
 import { Input } from '@mui/material';
-import { abcLogin, getSession } from 'src/services/services';
+import { abcLogin, getSession, userRegister } from 'src/services/services';
 import { accountRestApi, controllers } from 'src/abc/background/init';
 import { AbcLoginResult, AbcSnsAddUserDto } from 'src/abc/main/abc/interface';
 import { AbcLoginResponse } from 'src/abc/schema/account';
@@ -196,6 +196,15 @@ const GoogleFullSignUp = () => {
         );
 
         abcWallet = user.accounts[0].ethAddress;
+
+        // ABC 신규 기압자 DB 등록
+        await userRegister({
+          abc_address: abcWallet,
+          country: values.country,
+          birthday: values.birthDate.toDateString(),
+          gender: values.gender,
+          phone: values.phoneNumber,
+        });
       } else {
         console.log('!! ABC Wallet SNS login ... failed !!');
       }
@@ -269,10 +278,10 @@ const GoogleFullSignUp = () => {
       //
       // abcWallet = user.accounts[0].ethAddress;
       console.log('!! Register a new ABC wallet user ... done !!');
-    }
 
-    // ABC 기 기압자 경우, 지갑 주소 저장
-    // await userRegister({ abc_address: abcWallet });
+      // ABC 기 기압자 경우, 지갑 주소 저장
+      await userRegister({ abc_address: abcWallet });
+    }
   };
 
   return (
