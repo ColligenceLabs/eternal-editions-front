@@ -99,14 +99,14 @@ const TicketItemModal = ({
   const router = useRouter();
   const { user } = useSelector((state: any) => state.webUser);
 
-  const edcpPrice = dollarPrice / 10;
+  const edcpPrice = price / 10;
   const totalPriceEDCP = edcpPrice * quantity;
   const totalPriceUSDC = price * quantity;
   const totalPriceString =
     method === methodType.edcp
       ? `${totalPriceEDCP.toFixed(4)} EDCP`
-      : `${totalPriceUSDC.toFixed(3)} USDC`;
-  const fullTotalPriceString = `${totalPriceString} (~$${totalPriceUSDC.toFixed(3)})`;
+      : `${totalPriceUSDC.toFixed(4)} USDC`;
+  const fullTotalPriceString = `${totalPriceString} (~$${totalPriceUSDC.toFixed(4)})`;
 
   const handleAbcClose = () => {
     setAbcToken('');
@@ -558,7 +558,7 @@ const TicketItemModal = ({
                 ) : (
                   <>
                     {ticketinfo(ticketLabel.price, `${edcpPrice.toFixed(4)} EDCP (~$${price})`)}
-                    {ticketinfo(ticketLabel.limit, '5 per wallet', true)}
+                    {ticketinfo(ticketLabel.limit, '5 per wallet')}
                   </>
                 )}
               </Stack>
