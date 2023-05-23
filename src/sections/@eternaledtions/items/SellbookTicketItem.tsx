@@ -3,13 +3,10 @@ import { useTheme } from '@mui/material/styles';
 import { Box, Grid, Chip, Stack, Typography, styled } from '@mui/material';
 import { Image, TextMaxLine } from 'src/components';
 import { varHover, varTranHover } from 'src/components/animate';
-import { useResponsive } from 'src/hooks';
 import BuyNowButton from './BuyNowButton';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import Link from 'next/link';
-import moment from 'moment';
 
 // ----------------------------------------------------------------------
 
@@ -38,7 +35,7 @@ export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
     id,
     mysteryboxItem,
     sellInfo: {
-      parameters: { startTime, endTime },
+      parameters: { startTime },
     },
   } = sellbookItem;
 
@@ -245,7 +242,8 @@ export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
               marginLeft: '16px',
             }}
           >
-            {`${(dollarPrice / 10).toFixed(4)} EDCP`}
+            {/*{`${(dollarPrice / 10).toFixed(4)} EDCP`}*/}
+            {`${sellbookItem.price} EDCP`}
           </Typography>
           <BuyNowButton
             releasedDate={startTime}
