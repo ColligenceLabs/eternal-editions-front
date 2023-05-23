@@ -88,7 +88,13 @@ const FormSchema = Yup.object().shape({
     .length(verifyCodeLength, 'Verification Code must be exactly 6 characters'),
 });
 
-export const termsEternal = [
+type Term = {
+  key: keyof GoogleAccountData;
+  title: string;
+  isRequired: boolean;
+};
+
+export const termsEternal: Term[] = [
   { title: '이용약관을 모두 확인하였으며, 이에 동의합니다.', isRequired: true, key: 'eeTerms' },
   {
     title: '개인정보처리방침을 모두 확인하였으며, 이에 동의합니다.',
@@ -103,7 +109,7 @@ export const termsEternal = [
   { title: '마케팅 활용 및 광고성 정보 수신에 동의합니다.', isRequired: false, key: 'eeMarketing' },
 ];
 
-export const termsABC = [
+export const termsABC: Term[] = [
   { key: 'abcAge', title: '14세 이상입니다.', isRequired: true },
   { key: 'abcTerms', title: '이용약관을 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
   {
@@ -327,17 +333,21 @@ const GoogleFullSignUp = () => {
     const checked = e.target.checked;
     setValue('agreeEternal', checked);
     termsEternal.forEach((term) => {
-      setValue(term.key as keyof GoogleAccountData, checked);
+      setValue(term.key, checked);
     });
   };
   const onChangeAgreeABC = (e: ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
     setValue('agreeABC', checked);
     termsABC.forEach((term) => {
-      setValue(term.key as keyof GoogleAccountData, checked);
+      setValue(term.key, checked);
     });
   };
-  const onChangeDetailAgree = (value: string, key: keyof GoogleAccountData, keyTerm: string) => {
+  const onChangeDetailAgree = (
+    value: boolean,
+    key: keyof GoogleAccountData,
+    keyTerm: keyof GoogleAccountData
+  ) => {
     setValue(key, value);
     const listKeyTerm = (keyTerm === 'agreeABC' ? termsABC : termsEternal).map(
       (term) => term.key
@@ -345,9 +355,9 @@ const GoogleFullSignUp = () => {
     const multipleValues = getValues(listKeyTerm);
 
     if (!multipleValues.includes(false)) {
-      setValue(keyTerm as keyof GoogleAccountData, true);
+      setValue(keyTerm, true);
     } else {
-      setValue(keyTerm as keyof GoogleAccountData, false);
+      setValue(keyTerm, false);
     }
   };
 
@@ -631,7 +641,7 @@ const GoogleFullSignUp = () => {
 
         {termsEternal.map(({ title, isRequired, key }) => (
           <Controller
-            name={key as keyof GoogleAccountData}
+            name={key}
             control={control}
             key={key}
             render={({ field }) => (
