@@ -39,6 +39,7 @@ const PRICE_UNITS = [
     label: 'EDCP',
     value: 'edcp',
   },
+  { label: 'USDC', value: 'usdc' },
 ];
 
 // ----------------------------------------------------------------------
@@ -52,7 +53,9 @@ type TicketSellFormProps = {
 export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSellFormProps) {
   const theme = useTheme();
   const [typeOfSale, setTypeOfSale] = useState(TYPES_OF_SALE[0].value);
-  const [priceUnit, setPriceUnit] = useState(PRICE_UNITS[0].value);
+  const [priceUnit, setPriceUnit] = useState(
+    sellTicketInfo.usePoint ? PRICE_UNITS[0].value : PRICE_UNITS[1].value
+  );
   const [amount, setAmount] = useState('');
   const [creatorEarnings, setCreatorEarnings] = useState('7.5');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -66,6 +69,7 @@ export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSell
   ]);
   const [duration, setDuration] = useState(durations[0].value);
 
+  console.log(sellTicketInfo);
   const onSubmit = () => {
     setIsSubmitting(true);
   };
@@ -150,17 +154,18 @@ export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSell
             placeholder="Amount"
             endAdornment={
               <InputAdornment position="end">
-                <RoundedSelect
-                  size="small"
-                  value={priceUnit}
-                  onChange={(event) => setPriceUnit(event.target.value as string)}
-                >
-                  {PRICE_UNITS.map((unit) => (
-                    <RoundedSelectOption key={unit.value} value={unit.value}>
-                      {unit.label}
-                    </RoundedSelectOption>
-                  ))}
-                </RoundedSelect>
+                {priceUnit.toUpperCase()}
+                {/*<RoundedSelect*/}
+                {/*  size="small"*/}
+                {/*  value={priceUnit}*/}
+                {/*  // onChange={(event) => setPriceUnit(event.target.value as string)}*/}
+                {/*>*/}
+                {/*  {PRICE_UNITS.map((unit) => (*/}
+                {/*    <RoundedSelectOption key={unit.value} value={unit.value}>*/}
+                {/*      {unit.label}*/}
+                {/*    </RoundedSelectOption>*/}
+                {/*  ))}*/}
+                {/*</RoundedSelect>*/}
               </InputAdornment>
             }
           />
