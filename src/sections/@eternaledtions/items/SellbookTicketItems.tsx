@@ -86,10 +86,12 @@ export default function SellbookTicketItems({ shouldHideCategories }: Props) {
     const res = await getSellbookTeamsList();
 
     if (res.data.status === SUCCESS) {
-      const temp = res.data.data.teams.map((team: any) => ({
-        label: team.team,
-        value: team.team,
-      }));
+      const temp = res.data.data.teams
+        .map((team: any) => ({
+          label: team.team,
+          value: team.team,
+        }))
+        .filter((item: any) => item.label !== null);
       setTeams([{ label: 'SELECT COLLECTION', value: 'default' }, ...temp]);
     }
   };
