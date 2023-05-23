@@ -60,6 +60,14 @@ type GoogleAccountData = {
   agreeEternal: boolean;
   agreeABC: boolean;
   eeTerms: boolean;
+  eePrivate: false;
+  eeThirdParty: false;
+  eeMarketing: false;
+  abcTerms: false;
+  abcAge: false;
+  abcPrivate: false;
+  abcThirdParty: false;
+  abcMarketing: false;
 };
 
 const phoneRegExp =
@@ -259,11 +267,11 @@ const GoogleFullSignUp = () => {
         username: values.email,
         code: sixCode,
         joinpath: 'https://colligence.io',
-        overage: 1,
-        agree: 1,
-        collect: 1,
-        thirdparty: 1,
-        advertise: 1,
+        overage: values.abcAge ? 1 : 0,
+        agree: values.abcTerms ? 1 : 0,
+        collect: values.abcPrivate ? 1 : 0,
+        thirdparty: values.abcThirdParty ? 1 : 0,
+        advertise: values.abcMarketing ? 1 : 0,
       };
 
       // try {

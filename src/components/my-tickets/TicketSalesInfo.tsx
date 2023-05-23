@@ -134,6 +134,7 @@ export default function TicketSalesInfo({
         tokenId: sellTicketInfo.tokenId,
         price: amount,
         team: team[0].name,
+        dropsId: sellTicketInfo.id,
       };
       console.log('!! Fixed Price sellOrder in DB = ', sellOrder);
       const result = await registerSell(sellOrder);
