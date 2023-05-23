@@ -1,6 +1,7 @@
 import { styled } from '@mui/material/styles';
 
 type Props = {
+  perLimit: number;
   quantity: number;
   setQuantity: (value: number) => void;
 };
@@ -29,7 +30,7 @@ const HideInnerOuterSpinButton = styled('input')(() => ({
   width: `calc(100% - ${size} * 2)`,
 }));
 
-const QuantityControl = ({ quantity, setQuantity }: Props) => (
+const QuantityControl = ({ perLimit, quantity, setQuantity }: Props) => (
   <div style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
     <button
       style={{ ...quantityButtonStyle, borderTopLeftRadius: '50%', borderBottomLeftRadius: '50%' }}
@@ -57,7 +58,10 @@ const QuantityControl = ({ quantity, setQuantity }: Props) => (
         borderTopRightRadius: '50%',
         borderBottomRightRadius: '50%',
       }}
-      onClick={() => setQuantity(quantity + 1)}
+      onClick={() => {
+        if (quantity >= perLimit) return;
+        setQuantity(quantity + 1);
+      }}
     >
       +
     </button>

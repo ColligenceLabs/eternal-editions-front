@@ -10,7 +10,7 @@ import axios from 'axios';
 import { Box } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import CSnackbar from 'src/components/common/CSnackbar';
-import { getSession, getUser, registerBuy } from 'src/services/services';
+import { getMintLimitCount, getSession, getUser, registerBuy } from 'src/services/services';
 import { SUCCESS } from 'src/config';
 import { BigNumber, ethers } from 'ethers';
 import contracts from 'src/config/constants/contracts';
@@ -71,7 +71,7 @@ const TicketItemModal = ({
   duration,
   location,
 }: Props) => {
-  const { price, createdAt, name } = ticket;
+  const { price, createdAt, name, id } = ticket;
   const [quantity, setQuantity] = useState<number>(1);
   const [method, setMethod] = useState<string>(methodType.edcp);
   const [isCompleteModal, setIsCompleteModal] = useState<boolean>(false);
@@ -93,6 +93,7 @@ const TicketItemModal = ({
   const [buyerAddress, setBuyerAddress] = useState('');
   const [paymentDate, setPaymentDate] = useState<Date | undefined>();
   const [otpLoading, setOtpLoading] = useState(false);
+  const [perLimit, setPerLimit] = useState(5);
   const { library, chainId } = useActiveWeb3React();
   const { account } = useAccount();
   const dispatch = useDispatch();
@@ -283,7 +284,6 @@ const TicketItemModal = ({
         amount: quantity,
       };
 
-      console.log(data);
       const res = await registerBuy(data);
       console.log(res.data);
       if (res.data.status === SUCCESS) {
@@ -420,8 +420,16 @@ const TicketItemModal = ({
     });
   };
 
+  const fetchMintLimitCount = async () => {
+    const res = await getMintLimitCount(id, user.uid);
+    console.log(ticket);
+    console.log(res.data);
+    if (res.data.status === SUCCESS) setPerLimit(5 - res.data.data);
+  };
+
   useEffect(() => {
     getCoinPrice();
+    fetchMintLimitCount();
   }, []);
 
   useEffect(() => {
@@ -429,8 +437,6 @@ const TicketItemModal = ({
   }, [price, maticPrice]);
 
   const onSubmit = async () => {
-    console.log(ticketInfo);
-
     if (ticketInfo && ticketInfo.whitelists && ticketInfo.whitelists.length > 0) {
       const contract = ticketInfo.whitelists[0].boxContractAddress;
 
@@ -558,12 +564,14 @@ const TicketItemModal = ({
                 ) : (
                   <>
                     {ticketinfo(ticketLabel.price, `${edcpPrice.toFixed(4)} EDCP (~$${price})`)}
-                    {ticketinfo(ticketLabel.limit, '5 per wallet')}
+                    {ticketinfo(ticketLabel.limit, `${perLimit} per wallet`)}
                   </>
                 )}
               </Stack>
             </Stack>
-            {!isCompleteModal && <QuantityControl quantity={quantity} setQuantity={setQuantity} />}
+            {!isCompleteModal && (
+              <QuantityControl perLimit={perLimit} quantity={quantity} setQuantity={setQuantity} />
+            )}
             {!isCompleteModal && (
               <Stack gap={3}>
                 <Typography sx={{ color: '#999999', fontSize: '12px' }}>PAYMENT METHOD</Typography>

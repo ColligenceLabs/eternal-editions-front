@@ -162,3 +162,7 @@ export const registerSell = async (data: any) => {
 export const registerSellbookBuy = async (data: any, id: number) => {
   return await apiAuthAxios.post(`/api/service/sellbook/buy/${id}`, data);
 };
+
+export const getMintLimitCount = async (itemId: number, uid: string) => {
+  return await apiAuthAxios.get(`/api/service/drops/count/${itemId}/${uid}`);
+};
