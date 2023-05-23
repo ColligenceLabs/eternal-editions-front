@@ -564,7 +564,7 @@ const TicketItemModal = ({
                 ) : (
                   <>
                     {ticketinfo(ticketLabel.price, `${edcpPrice.toFixed(4)} EDCP (~$${price})`)}
-                    {ticketinfo(ticketLabel.limit, `${perLimit} per wallet`)}
+                    {ticketinfo(ticketLabel.limit, `5 per wallet (${5 - perLimit} / 5)`)}
                   </>
                 )}
               </Stack>
