@@ -242,8 +242,14 @@ const GoogleFullSignUp = () => {
 
         abcWallet = user.accounts[0].ethAddress;
 
-        // ABC 기 기압자 경우, 지갑 주소 업데이트
-        await userRegister({ abc_address: abcWallet });
+        // ABC 기 기압자 또는 탈퇴 후 재 가입자 정보 업데이트
+        await userRegister({
+          abc_address: abcWallet,
+          country: values.country,
+          birthday: values.birthDate.toDateString(),
+          gender: values.gender,
+          phone: values.phoneNumber,
+        });
       } else {
         console.log('!! ABC Wallet SNS login ... failed !!');
       }
