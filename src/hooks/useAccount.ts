@@ -12,6 +12,8 @@ export default function useAccount() {
     if (loginBy === 'wallet') {
       if (walletAccount) {
         setAccount(walletAccount);
+      } else {
+        setAccount(walletAccount);
       }
     } else {
       if (abcAccount && abcAccount.accounts && abcAccount.accounts.length > 0) {

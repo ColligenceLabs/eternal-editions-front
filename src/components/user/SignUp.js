@@ -175,13 +175,21 @@ export default function SignUp({ onClose, hideSns, ...other }) {
         .getSigner()
         .signMessage(message)
         .catch(() => deactivate());
-      if (!signature) return; // 서명 거부
+      console.log('===11', signature);
+      if (!signature) {
+        console.log('===22', signature)
+        // deactivate();
+        // window.localStorage.removeItem('loginBy');
+        // window.localStorage.removeItem('loginType');
+        return;
+      } // 서명 거부
       const data = { message, signature, isAbc };
       const res = await requestWalletLogin(data);
       if (res.data === 'loginSuccess') {
         const userRes = await getUser();
         if (userRes.status === 200 && userRes.data.status !== 0)
           dispatch(setWebUser(userRes.data.user));
+        window.localStorage.setItem('walletStatus', 'connected');
         onClose();
         // createToken();
       }
