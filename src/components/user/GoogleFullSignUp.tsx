@@ -56,10 +56,10 @@ type GoogleAccountData = {
   gender: string;
   name: string;
   country: string;
-  agree: boolean;
   verificationCode: string;
   agreeEternal: boolean;
   agreeABC: boolean;
+  eeTerms: boolean;
 };
 
 const phoneRegExp =
@@ -80,20 +80,55 @@ const FormSchema = Yup.object().shape({
 });
 
 export const termsEternal = [
-  { title: '이용약관을 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
-  { title: '개인정보처리방침을 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
-  { title: '개인정보 제3자 제공 동의를 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
-  { title: '마케팅 활용 및 광고성 정보 수신에 동의합니다.', isRequired: false },
+  { title: '이용약관을 모두 확인하였으며, 이에 동의합니다.', isRequired: true, key: 'eeTerms' },
+  {
+    title: '개인정보처리방침을 모두 확인하였으며, 이에 동의합니다.',
+    isRequired: true,
+    key: 'eePrivate',
+  },
+  {
+    title: '개인정보 제3자 제공 동의를 모두 확인하였으며, 이에 동의합니다.',
+    isRequired: true,
+    key: 'eeThirdParty',
+  },
+  { title: '마케팅 활용 및 광고성 정보 수신에 동의합니다.', isRequired: false, key: 'eeMarketing' },
 ];
 
 export const termsABC = [
-  { title: '14세 이상입니다.', isRequired: true },
-  { title: '이용약관을 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
-  { title: '개인정보 수집 및 이용을 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
-  { title: '개인정보 제3자 제공 동의를 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
-  { title: '마케팅 활용 및 광고성 정보 수신에 동의합니다.', isRequired: false },
+  { key: 'abcAge', title: '14세 이상입니다.', isRequired: true },
+  { key: 'abcTerms', title: '이용약관을 모두 확인하였으며, 이에 동의합니다.', isRequired: true },
+  {
+    key: 'abcPrivate',
+    title: '개인정보 수집 및 이용을 모두 확인하였으며, 이에 동의합니다.',
+    isRequired: true,
+  },
+  {
+    key: 'abcThirdParty',
+    title: '개인정보 제3자 제공 동의를 모두 확인하였으며, 이에 동의합니다.',
+    isRequired: true,
+  },
+  {
+    key: 'abcMarketing',
+    title: '마케팅 활용 및 광고성 정보 수신에 동의합니다.',
+    isRequired: false,
+  },
 ];
-
+const defaultValues = {
+  birthDate: new Date('12/31/2000'),
+  gender: 'male',
+  country: 'GB',
+  agreeEternal: false,
+  agreeABC: false,
+  eeTerms: false,
+  eePrivate: false,
+  eeThirdParty: false,
+  eeMarketing: false,
+  abcAge: false,
+  abcTerms: false,
+  abcPrivate: false,
+  abcThirdParty: false,
+  abcMarketing: false,
+};
 const GoogleFullSignUp = () => {
   const [accountData, setAccountData] = useState<Partial<GoogleAccountData>>({});
   const dispatch = useDispatch();
@@ -101,7 +136,6 @@ const GoogleFullSignUp = () => {
   const [idToken, setIdToken] = useState('');
   const [service, setService] = useState('');
   const [wasClickedVerify, setWasClickedVerify] = useState<boolean>(false);
-  console.log('wasClickedVerify: ', wasClickedVerify);
   const [showVerifyCode, setShowVerifyCode] = useState<boolean>(false);
   const {
     control,
@@ -111,16 +145,13 @@ const GoogleFullSignUp = () => {
     reset,
     setError,
     clearErrors,
+    setValue,
     formState: { errors },
   } = useForm<GoogleAccountData>({
     resolver: yupResolver(FormSchema),
     defaultValues: {
+      ...defaultValues,
       ...accountData,
-      birthDate: new Date('12/31/2000'),
-      agreeEternal: false,
-      agreeABC: false,
-      gender: 'male',
-      country: 'GB',
     },
   });
 
@@ -136,7 +167,7 @@ const GoogleFullSignUp = () => {
         console.log('!! Session provider_data = ', info);
         setIdToken(res.data?.providerAuthInfo.provider_token);
         setService(res.data?.providerAuthInfo.provider);
-        reset({ email: info.email, name: info.name });
+        reset({ ...defaultValues, email: info.email, name: info.name });
       }
     };
     fetchSession();
@@ -281,6 +312,30 @@ const GoogleFullSignUp = () => {
         gender: values.gender,
         phone: values.phoneNumber,
       });
+    }
+  };
+  const onChangeAgreeEternal = (e) => {
+    const checked = e.target.checked;
+    setValue('agreeEternal', checked);
+    termsEternal.forEach((term) => {
+      setValue(term.key, checked);
+    });
+  };
+  const onChangeAgreeABC = (e) => {
+    const checked = e.target.checked;
+    setValue('agreeABC', checked);
+    termsABC.forEach((term) => {
+      setValue(term.key, checked);
+    });
+  };
+  const onChangeDetailAgree = (value, key, keyTerm) => {
+    setValue(key, value);
+    const listKeyTerm = (keyTerm === 'agreeABC' ? termsABC : termsEternal).map((term) => term.key);
+    const multipleValues = getValues(listKeyTerm);
+    if (!multipleValues.includes(false)) {
+      setValue(keyTerm, true);
+    } else {
+      setValue(keyTerm, false);
     }
   };
 
@@ -550,7 +605,7 @@ const GoogleFullSignUp = () => {
             <FormControlLabel
               control={
                 <Checkbox
-                  onChange={(e) => field.onChange(e.target.checked)}
+                  onChange={onChangeAgreeEternal}
                   checked={field.value}
                   icon={<CheckboxIcon />}
                   checkedIcon={<CheckboxFillIcon />}
@@ -562,25 +617,35 @@ const GoogleFullSignUp = () => {
           )}
         />
 
-        {termsEternal.map(({ title, isRequired }, index) => (
-          <FormControlLabel
-            key={index}
-            control={
-              <Checkbox
-                checked={watch('agreeEternal')}
-                // checked={true}
-                sx={{ padding: 0, px: '8px' }}
-                icon={<CheckIcon />}
-                checkedIcon={<CheckFillIcon />}
-                indeterminateIcon={<CheckboxIndeterminateFillIcon />}
+        {termsEternal.map(({ title, isRequired, key }) => (
+          <Controller
+            name={key}
+            control={control}
+            key={key}
+            render={({ field }) => (
+              <FormControlLabel
+                sx={{ alignItems: 'start' }}
+                control={
+                  <Checkbox
+                    {...field}
+                    onChange={(e) => {
+                      onChangeDetailAgree(e.target.checked, key, 'agreeEternal');
+                    }}
+                    checked={field.value}
+                    sx={{ padding: '4px', px: '8px' }}
+                    icon={<CheckIcon />}
+                    checkedIcon={<CheckFillIcon />}
+                    indeterminateIcon={<CheckboxIndeterminateFillIcon />}
+                  />
+                }
+                label={
+                  <span>
+                    {isRequired && <span style={{ color: 'red' }}>* </span>}
+                    {title}
+                  </span>
+                }
               />
-            }
-            label={
-              <span>
-                {isRequired && <span style={{ color: 'red' }}>* </span>}
-                {title}
-              </span>
-            }
+            )}
           />
         ))}
       </Stack>
@@ -592,7 +657,8 @@ const GoogleFullSignUp = () => {
             <FormControlLabel
               control={
                 <Checkbox
-                  onChange={(e) => field.onChange(e.target.checked)}
+                  // onChange={(e) => field.onChange(e.target.checked)}
+                  onChange={onChangeAgreeABC}
                   checked={field.value}
                   icon={<CheckboxIcon />}
                   checkedIcon={<CheckboxFillIcon />}
@@ -604,25 +670,35 @@ const GoogleFullSignUp = () => {
           )}
         />
 
-        {termsABC.map(({ title, isRequired }, index) => (
-          <FormControlLabel
-            key={index}
-            control={
-              <Checkbox
-                checked={watch('agreeABC')}
-                // checked={true}
-                sx={{ padding: 0, px: '8px' }}
-                icon={<CheckIcon />}
-                checkedIcon={<CheckFillIcon />}
-                indeterminateIcon={<CheckboxIndeterminateFillIcon />}
+        {termsABC.map(({ title, isRequired, key }, index) => (
+          <Controller
+            name={key}
+            control={control}
+            key={key}
+            render={({ field }) => (
+              <FormControlLabel
+                sx={{ alignItems: 'start' }}
+                control={
+                  <Checkbox
+                    {...field}
+                    onChange={(e) => {
+                      onChangeDetailAgree(e.target.checked, key, 'agreeABC');
+                    }}
+                    checked={field.value}
+                    sx={{ padding: '4px', px: '8px' }}
+                    icon={<CheckIcon />}
+                    checkedIcon={<CheckFillIcon />}
+                    indeterminateIcon={<CheckboxIndeterminateFillIcon />}
+                  />
+                }
+                label={
+                  <span>
+                    {isRequired && <span style={{ color: 'red' }}>* </span>}
+                    {title}
+                  </span>
+                }
               />
-            }
-            label={
-              <span>
-                {isRequired && <span style={{ color: 'red' }}>* </span>}
-                {title}
-              </span>
-            }
+            )}
           />
         ))}
       </Stack>
@@ -630,9 +706,13 @@ const GoogleFullSignUp = () => {
       <RoundedButton
         type="submit"
         disabled={
-          !watch('agreeEternal') ||
-          !watch('agreeABC') ||
-          !watch('verificationCode') ||
+          !watch('eeTerms') ||
+          !watch('eePrivate') ||
+          !watch('eeThirdParty') ||
+          !watch('abcAge') ||
+          !watch('abcTerms') ||
+          !watch('abcPrivate') ||
+          !watch('abcThirdParty') ||
           Object.keys(errors).length > 0 ||
           !wasClickedVerify
         }
