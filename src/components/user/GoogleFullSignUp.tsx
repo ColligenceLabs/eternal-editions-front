@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import React, { ChangeEvent, InputHTMLAttributes, useEffect, useMemo, useState } from 'react';
+import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import {
   Stack,
   Typography,
@@ -10,7 +10,6 @@ import {
   buttonBaseClasses,
   InputAdornment,
   TextField,
-  CheckboxProps,
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { Label, Section } from '../my-tickets/StyledComponents';
