@@ -20,6 +20,9 @@ export interface User {
   point: null;
   abc_address: string;
   password: null;
+  birthday: string;
+  gender: string;
+  phone: string;
 }
 
 export interface Session {

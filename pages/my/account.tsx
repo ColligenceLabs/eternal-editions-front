@@ -1,10 +1,5 @@
 import { ReactElement, useEffect, useState } from 'react';
-// utils
-// @types
-// _data
-// layouts
 import Layout from 'src/layouts';
-// components
 import { Page } from 'src/components';
 import {
   Box,
@@ -34,7 +29,7 @@ import Image from 'src/components/Image';
 import NextLink from 'next/link';
 import Routes from 'src/routes';
 import { useDispatch, useSelector } from 'react-redux';
-import { deactivate, deleteAddress, removeUser, updateAddress } from 'src/services/services';
+import { deleteAddress, removeUser, updateAddress } from 'src/services/services';
 import { setWebUser } from 'src/store/slices/webUser';
 import { useWeb3React } from '@web3-react/core';
 import env from 'src/env';
@@ -45,7 +40,6 @@ import useResponsive from 'src/hooks/useResponsive';
 import MyAccountWrapper from 'src/components/AccountWrapper';
 import palette from 'src/theme/palette';
 import { User } from 'src/@types/user';
-import Radio from 'src/components/common/Radio';
 import { delUser } from 'src/store/slices/user';
 import { useRouter } from 'next/router';
 import ModalCustom from 'src/components/common/ModalCustom';
@@ -53,6 +47,7 @@ import { PriorityHigh } from '@mui/icons-material';
 import { FormControlLabel } from '@mui/material';
 import RoundedButton from 'src/components/common/RoundedButton';
 import CreateWalletForm from 'src/components/user/CreateWalletForm';
+import moment from 'moment';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
@@ -110,9 +105,7 @@ const Icon = styled(Box)(({ theme }) => ({
   alignItems: 'center',
 }));
 
-type Props = {};
-
-export default function MyAccountPage({}: Props) {
+export default function MyAccountPage() {
   const router = useRouter();
   const isDesktop = useResponsive('up', 'md');
   const { account } = useAccount();
@@ -499,21 +492,23 @@ Type: Address verification`;
                   <Divider />
                   <Stack gap="12px">
                     <SectionHeader>Birth Date</SectionHeader>
-                    <SectionText color="red">12/25/1984</SectionText>
+                    <SectionText>{moment(user.birthday).format('MM/DD/YYYY')}</SectionText>
                   </Stack>
 
                   <Divider />
 
                   <Stack gap="12px">
                     <SectionHeader>Gender</SectionHeader>
-                    <SectionText color="red">Male</SectionText>
+                    <SectionText>
+                      {user.gender.replace(/^[a-z]/, (char) => char.toUpperCase())}
+                    </SectionText>
                   </Stack>
 
                   <Divider />
 
                   <Stack gap="12px">
                     <SectionHeader>Phone Number</SectionHeader>
-                    <SectionText color="red">+82 10-1234-5678</SectionText>
+                    <SectionText>{user.phone}</SectionText>
                   </Stack>
 
                   <Divider />
