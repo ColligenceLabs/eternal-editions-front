@@ -4,6 +4,7 @@ import { apiAuthAxios, customAxios } from './customAxios';
 import { AbcAddUserDto, AbcInitPasswordDto, AbcSnsAddUserDto } from '../abc/main/abc/interface';
 import { services } from 'src/abc/background/init';
 import queryString from 'query-string';
+import { assignWith } from 'lodash';
 
 export const getTicketsService = (page: number, perPage: number, category: string) =>
   // const url = `${API_URL}/service/collection/mysterybox/?&page=${page}&limit=${perPage}&category=${category.toLowerCase()}`;
@@ -162,3 +163,9 @@ export const registerSell = async (data: any) => {
 export const registerSellbookBuy = async (data: any, id: number) => {
   return await apiAuthAxios.post(`/api/service/sellbook/buy/${id}`, data);
 };
+
+export const getMintLimitCount = async (itemId: number, uid: string) => {
+  return await apiAuthAxios.get(`/api/service/drops/count/${itemId}/${uid}`);
+};
+
+export const removeUser = async () => await customAxios.delete('/api/users');
