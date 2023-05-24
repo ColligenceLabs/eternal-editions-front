@@ -1,8 +1,8 @@
 import React, { ReactElement, useEffect, useState } from 'react';
-import { styled, useTheme, Container, Grid, Stack, Typography } from '@mui/material';
+import { styled, useTheme, Container, Grid, Stack, Typography, Box, Modal } from '@mui/material';
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT, SUCCESS } from 'src/config';
 import Layout from 'src/layouts';
-import { Page } from 'src/components';
+import { IconButtonAnimate, Page, Scrollbar } from 'src/components';
 import { useRouter } from 'next/router';
 import { getTicketInfoService } from 'src/services/services';
 import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
@@ -15,6 +15,8 @@ import { Label, Section, Value } from 'src/components/my-tickets/StyledComponent
 import CompanyInfo from 'src/components/ticket/CompanyInfo';
 import ScheduleCard from 'src/components/ticket/ScheduleCard';
 import TicketItemsInDrop from 'src/sections/@eternaledtions/items/TicketItemsInDrop';
+import RoundedButton from 'src/components/common/RoundedButton';
+import CloseIcon from 'src/assets/icons/close';
 
 const RootStyle = styled('div')(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,
@@ -25,13 +27,31 @@ const RootStyle = styled('div')(({ theme }) => ({
   },
 }));
 
+const modalStyle = {
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  transform: 'translate(-50%, -50%)',
+  maxWidth: 400,
+  width: 'calc(100% - 2rem)',
+  bgcolor: 'common.white',
+  color: 'common.black',
+  border: 'none',
+  borderRadius: '24px',
+  boxShadow: 24,
+  pt: 2,
+  pb: 2,
+  pl: 3,
+  pr: 3,
+};
+
 export default function TicketDetailPage() {
   const router = useRouter();
   const theme = useTheme();
   const { chainId } = useActiveWeb3React();
   const { account } = useAccount();
   const { slug } = router.query;
-
+  const [descriptionOpen, setDescriptionOpen] = useState(false);
   const [ticketInfo, setTicketInfo] = useState<TicketInfoTypes | null>(null);
   const [openSnackbar, setOpenSnackbar] = useState({
     open: false,
@@ -54,7 +74,6 @@ export default function TicketDetailPage() {
   const fetchTicketInfo = async () => {
     if (slug && typeof slug === 'string') {
       const ticketInfoRes = await getTicketInfoService(slug);
-      console.log(ticketInfoRes);
       const contract = ticketInfoRes.data.data?.boxContractAddress;
       const whitelist = ticketInfoRes.data.data?.whitelistNftId;
       const whitelistAddress = ticketInfoRes.data.data?.whitelistNftContractAddress ?? '';
@@ -89,7 +108,6 @@ export default function TicketDetailPage() {
                   : null
               );
             }
-            console.log(day);
             return {
               ...item,
               remain: item.issueAmount - sold,
@@ -186,6 +204,11 @@ export default function TicketDetailPage() {
                   />
                 </Stack>
               </Section>
+              <Section>
+                <RoundedButton onClick={() => setDescriptionOpen(true)}>
+                  Show Ticket Detail
+                </RoundedButton>
+              </Section>
             </Grid>
           </Grid>
 
@@ -205,6 +228,67 @@ export default function TicketDetailPage() {
         message={openSnackbar.message}
         handleClose={handleCloseSnackbar}
       />
+
+      <Modal
+        open={descriptionOpen}
+        onClose={() => setDescriptionOpen(false)}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box
+          sx={{
+            ...modalStyle,
+            maxWidth: 1200,
+          }}
+        >
+          <Box
+            sx={{
+              position: 'absolute',
+              right: '2rem',
+              top: '2rem',
+              zIndex: 1,
+            }}
+          >
+            <IconButtonAnimate
+              color="inherit"
+              onClick={() => setDescriptionOpen(false)}
+              sx={{
+                bgcolor: 'rgba(0,0,0,.3)',
+                transition: 'all .3s',
+                '&:hover': {
+                  bgcolor: '#454F5B',
+                },
+              }}
+            >
+              <Box
+                sx={{
+                  width: 24,
+                  height: 24,
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <CloseIcon />
+              </Box>
+            </IconButtonAnimate>
+          </Box>
+
+          <Box
+            sx={{
+              overflow: 'scroll',
+              maxHeight: 'calc(100vh - 6rem)',
+              position: 'relative',
+              img: { width: 1 },
+            }}
+          >
+            <Scrollbar sx={{ py: { xs: 3, md: 0 } }}>
+              {ticketInfo?.bannerImage && <img src={ticketInfo?.bannerImage} alt="description" />}
+              {/*{ticketInfo.bannerImage && <img src={ticketInfo.bannerImage} alt="description" />}*/}
+            </Scrollbar>
+          </Box>
+        </Box>
+      </Modal>
     </Page>
   );
 }
