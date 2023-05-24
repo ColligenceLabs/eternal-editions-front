@@ -14,11 +14,11 @@ import { getMintLimitCount, getSession, getUser, registerBuy } from 'src/service
 import { SUCCESS } from 'src/config';
 import { BigNumber, ethers } from 'ethers';
 import contracts from 'src/config/constants/contracts';
-import { parseEther } from 'ethers/lib/utils';
+import { parseEther, parseUnits } from 'ethers/lib/utils';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import useAccount from 'src/hooks/useAccount';
 import { setWebUser } from 'src/store/slices/webUser';
-import { buyItem, getWhlBalanceNoSigner } from 'src/utils/transactions';
+import { approveKIP7, buyItem, getWhlBalanceNoSigner } from 'src/utils/transactions';
 import { useRouter } from 'next/router';
 import { Modal } from '@mui/material';
 import { Backdrop } from '@mui/material';
@@ -339,9 +339,25 @@ const TicketItemModal = ({
       quote === 'matic'
         ? contracts.matic[chainId]
         : quote === 'usdc'
-        ? contracts.usdt[chainId]
+        ? contracts.usdc[chainId]
         : contracts.usdt[chainId];
-    const payment = parseEther(ticket?.price.toString() ?? '0').mul(amount);
+    let payment;
+    if (quote === 'matic') payment = parseEther(ticket?.price.toString() ?? '0').mul(amount);
+    // else if (quote === 'usdc' || quote === 'usdt')
+    else payment = parseUnits((ticket?.price * amount).toString() ?? '0', 6);
+    console.log('!! payment = ', payment.toString());
+
+    if (quote !== 'matic') {
+      const result = await approveKIP7(
+        quoteToken,
+        contract,
+        payment.toString(),
+        account,
+        library,
+        false
+      );
+      console.log('=== approve result ===', result);
+    }
 
     try {
       const result = await buyItem(
