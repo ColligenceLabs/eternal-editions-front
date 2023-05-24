@@ -22,9 +22,7 @@ const RootStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-type Props = {};
-
-export default function ItemsPage({}: Props) {
+export default function ItemsPage() {
   return (
     <Page title="ITEMS">
       <RootStyle>
