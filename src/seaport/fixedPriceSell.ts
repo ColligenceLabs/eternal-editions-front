@@ -108,7 +108,7 @@ export const fixedPriceSell = async (
       restrictedByZone: false,
       allowPartialFills: true,
     },
-    account
+    account!
   );
 
   const order = await executeAllActions();
