@@ -1421,14 +1421,16 @@ export async function buyItem(
       try {
         receipt = await tx.wait();
         // TODO: Get tokenId in the receipt and save into DB drops ?
+        console.log('=========>', receipt);
         const events = receipt.events;
         const tokenIds = [];
         let recipient;
+        const startIx = quote === '0x0000000000000000000000000000000000000000' ? 1 : 2;
         for (let i = 0; i < amount; i++) {
-          recipient = hexToAddress(events[1 + i].topics[2]);
+          recipient = hexToAddress(events[startIx + i].topics[2]);
           const tokenIdHex = ethers.utils.defaultAbiCoder.decode(
             ['uint256'],
-            events[1 + i].topics[3]
+            events[startIx + i].topics[3]
           );
           const tokenId = parseInt(tokenIdHex.toString());
           tokenIds.push(tokenId);

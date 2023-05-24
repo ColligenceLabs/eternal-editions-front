@@ -25,12 +25,11 @@ const development: ENV = {
   ABC_SERVER_ADDRESS: 'dev-api.id.myabcwallet.com',
   KSPAY_STORE_ID: '2999199999',
   PAYPAL_CLIENT_ID:
-      'AV5hU4TbGl7mLklHuzp2Zv5m47PwKDyKOmVKigLWl9CP9weg1S9GbCHaVbQaKCThJaWpHYwNweQYPTek',
+    'AV5hU4TbGl7mLklHuzp2Zv5m47PwKDyKOmVKigLWl9CP9weg1S9GbCHaVbQaKCThJaWpHYwNweQYPTek',
   CONDUIT_KEYS_TO_CONDUIT: process.env.CONDUIT_KEYS_TO_CONDUIT ?? '',
-  CROSS_CHAIN_DEFAULT_CONDUIT_KEY:
-      process.env.CROSS_CHAIN_DEFAULT_CONDUIT_KEY ?? '',
+  CROSS_CHAIN_DEFAULT_CONDUIT_KEY: process.env.CROSS_CHAIN_DEFAULT_CONDUIT_KEY ?? '',
   TREASURY: process.env.TREASURY,
-  CREATOR_FEE: parseInt(process.env.REATOR_FEE ?? '0'),
+  CREATOR_FEE: parseInt(process.env.CREATOR_FEE ?? '0'),
   TRADING_FEE: parseInt(process.env.TRADING_FEE ?? '0'),
 };
 
@@ -44,10 +43,9 @@ const staging: ENV = {
   ABC_SERVER_ADDRESS: 'dev-api.id.myabcwallet.com',
   KSPAY_STORE_ID: '2999199999',
   PAYPAL_CLIENT_ID:
-      'AV5hU4TbGl7mLklHuzp2Zv5m47PwKDyKOmVKigLWl9CP9weg1S9GbCHaVbQaKCThJaWpHYwNweQYPTek',
+    'AV5hU4TbGl7mLklHuzp2Zv5m47PwKDyKOmVKigLWl9CP9weg1S9GbCHaVbQaKCThJaWpHYwNweQYPTek',
   CONDUIT_KEYS_TO_CONDUIT: process.env.CONDUIT_KEYS_TO_CONDUIT ?? '',
-  CROSS_CHAIN_DEFAULT_CONDUIT_KEY:
-      process.env.CROSS_CHAIN_DEFAULT_CONDUIT_KEY ?? '',
+  CROSS_CHAIN_DEFAULT_CONDUIT_KEY: process.env.CROSS_CHAIN_DEFAULT_CONDUIT_KEY ?? '',
   TREASURY: process.env.TREASURY,
   CREATOR_FEE: parseInt(process.env.CREATOR_FEE ?? '0'),
   TRADING_FEE: parseInt(process.env.TRADING_FEE ?? '0'),
@@ -63,20 +61,19 @@ const production: ENV = {
   ABC_SERVER_ADDRESS: 'api.id.myabcwallet.com',
   KSPAY_STORE_ID: '2034700002',
   PAYPAL_CLIENT_ID:
-      'AcWHLL4-YeK_CtZyYmJni1zLTK7cxVU56m-bfI909cBP4wm1si5ZSEeBl8OhOOiYsuZlG-lc1nnCFtdN',
+    'AcWHLL4-YeK_CtZyYmJni1zLTK7cxVU56m-bfI909cBP4wm1si5ZSEeBl8OhOOiYsuZlG-lc1nnCFtdN',
   CONDUIT_KEYS_TO_CONDUIT: process.env.CONDUIT_KEYS_TO_CONDUIT ?? '',
-  CROSS_CHAIN_DEFAULT_CONDUIT_KEY:
-      process.env.CROSS_CHAIN_DEFAULT_CONDUIT_KEY ?? '',
+  CROSS_CHAIN_DEFAULT_CONDUIT_KEY: process.env.CROSS_CHAIN_DEFAULT_CONDUIT_KEY ?? '',
   TREASURY: process.env.TREASURY,
   CREATOR_FEE: parseInt(process.env.CREATOR_FEE ?? '0'),
   TRADING_FEE: parseInt(process.env.TRADING_FEE ?? '0'),
 };
 
 const env =
-    process.env.NEXT_PUBLIC_APP_PHASE === 'staging'
-        ? staging
-        : process.env.NEXT_PUBLIC_APP_PHASE === 'production'
-            ? production
-            : development;
+  process.env.NEXT_PUBLIC_APP_PHASE === 'staging'
+    ? staging
+    : process.env.NEXT_PUBLIC_APP_PHASE === 'production'
+    ? production
+    : development;
 
 export default env;

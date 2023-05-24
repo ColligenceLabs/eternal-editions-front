@@ -14,6 +14,7 @@ import Web3Modal from '@colligence/web3modal';
 import secureLocalStorage from 'react-secure-storage';
 import { fDate } from 'src/utils/formatTime';
 import { englishAuctionSell } from 'src/seaport/englishAuction';
+import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 
 interface Props {
   sellTicketInfo: MyTicketTypes;
@@ -36,7 +37,7 @@ export default function TicketSalesInfo({
 }: Props) {
   const isAuction = typeOfSale === 'auction';
   const webUser = useSelector((state: any) => state.webUser);
-  const { account: wallet, library } = useWeb3React();
+  const { library, chainId } = useActiveWeb3React();
   const { account } = useAccount();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -99,8 +100,7 @@ export default function TicketSalesInfo({
 
     const sellOrder = {
       uid: webUser.user.uid,
-      // wallet: account,
-      wallet,
+      wallet: account,
       type: type, // Fixed Price Sell
       // @ts-ignore null일 수 가 없음.
       mysteryboxId: sellTicketInfo.mysteryboxInfo.id,
@@ -138,32 +138,40 @@ export default function TicketSalesInfo({
   const sellByCrypto = async () => {
     let order;
     const endTime = Math.round(endDate.getTime() / 1000);
+    let price;
+    if (sellTicketInfo.mysteryboxInfo?.quote === 'matic')
+      price = utils.parseEther((amount ?? '0.0').toString()).toString();
+    else price = utils.parseUnits(amount ?? '0.0', 6).toString();
 
     if (typeOfSale === 'fixed') {
       console.log('click Fixed Price');
 
-      console.log('=== wallet, library ===', wallet, library);
-      if (!wallet && !library) {
+      console.log('=== account, library ===', account, library);
+      if (!library) {
         const provider = await getAbcWeb3Provider();
 
         // TODO : CreatorFee 를 어떻게 처리할 것인지 확인이 필요함.
         order = await fixedPriceSell(
           sellTicketInfo.mysteryboxInfo?.boxContractAddress,
           sellTicketInfo.tokenId.toString(),
-          utils.parseEther((amount ?? '0.0').toString()).toString(), // TODO : what is default price ?
+          price,
+          sellTicketInfo.mysteryboxInfo?.quote,
+          chainId,
           endTime.toString(),
           sellTicketInfo.mysteryboxInfo?.creatorAddress,
           account,
           provider
         );
-      } else if (wallet && library) {
+      } else if (library) {
         order = await fixedPriceSell(
           sellTicketInfo.mysteryboxInfo?.boxContractAddress,
           sellTicketInfo.tokenId.toString(),
-          utils.parseEther((amount ?? '0.0').toString()).toString(), // TODO : what is default price ?
+          price,
+          sellTicketInfo.mysteryboxInfo?.quote,
+          chainId,
           endTime.toString(),
           sellTicketInfo.mysteryboxInfo?.creatorAddress,
-          wallet,
+          account,
           library
         );
       }
@@ -172,28 +180,32 @@ export default function TicketSalesInfo({
     } else if (typeOfSale === 'auction') {
       console.log('click English auction');
 
-      console.log('=== wallet, library ===', wallet, library);
-      if (!wallet && !library) {
+      console.log('=== account, library ===', account, library);
+      if (!library) {
         const provider = await getAbcWeb3Provider();
 
         // TODO : CreatorFee 를 어떻게 처리할 것인지 확인이 필요함.
         order = await englishAuctionSell(
           sellTicketInfo.mysteryboxInfo?.boxContractAddress,
           sellTicketInfo.tokenId.toString(),
-          utils.parseEther((amount ?? '0.0').toString()).toString(), // TODO : what is default price ?
+          price,
+          sellTicketInfo.mysteryboxInfo?.quote,
+          chainId,
           endTime.toString(),
           sellTicketInfo.mysteryboxInfo?.creatorAddress,
           account,
           provider
         );
-      } else if (wallet && library) {
+      } else if (library) {
         order = await englishAuctionSell(
           sellTicketInfo.mysteryboxInfo?.boxContractAddress,
           sellTicketInfo.tokenId.toString(),
-          utils.parseEther((amount ?? '0.0').toString()).toString(), // TODO : what is default price ?
+          price,
+          sellTicketInfo.mysteryboxInfo?.quote,
+          chainId,
           endTime.toString(),
           sellTicketInfo.mysteryboxInfo?.creatorAddress,
-          wallet,
+          account,
           library
         );
       }
@@ -212,19 +224,19 @@ export default function TicketSalesInfo({
 
     // buyerAddress 비교 - ABC 로 산 건지, Metamask 로 산 건지 비교
     if (sellTicketInfo.buyerAddress === webUser.user.eth_address) {
-      if (!wallet && !library) {
+      if (!library) {
         alert('Metamask 지갑으로 다시 로그인을 하세요');
         return;
       }
     } else if (sellTicketInfo.buyerAddress === webUser.user.abc_address) {
-      if (wallet && library) {
+      if (library) {
         alert('SNS 계정으로 다시 로그인을 하세요');
         return;
       }
     }
 
-    if (sellTicketInfo.usePoint) await sellByCrypto();
-    else await sellByPoint();
+    if (sellTicketInfo.usePoint) await sellByPoint();
+    else await sellByCrypto();
 
     setIsLoading(false);
   };

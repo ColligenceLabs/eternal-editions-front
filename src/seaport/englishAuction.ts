@@ -1,11 +1,14 @@
 import { Seaport } from '@colligence/seaport-js';
 import env from '../env';
 import { BigNumber, ethers } from 'ethers';
+import contracts from 'src/config/constants/contracts';
 
 export const englishAuctionSell = async (
   address: string,
   tokenId: string,
   price: string,
+  quote: string,
+  chainId: number,
   endTime: string,
   creator: string | null | undefined,
   account: string | null | undefined,
@@ -32,30 +35,37 @@ export const englishAuctionSell = async (
   const tradingFee = priceBN.mul(env.TRADING_FEE).div(1000);
   const creatorShare = priceBN.mul(env.CREATOR_FEE).div(1000);
   const profit = priceBN.sub(tradingFee).sub(creatorShare);
+  const quoteToken =
+    quote === 'matic'
+      ? contracts.matic[chainId]
+      : quote === 'usdc'
+      ? contracts.usdc[chainId]
+      : contracts.usdt[chainId];
   console.log(
     '=====>',
     priceBN.toString(),
     tradingFee.toString(),
     creatorShare.toString(),
-    profit.toString()
+    profit.toString(),
+    quoteToken
   );
 
   const consideration = [];
   consideration.push({
-    token: '0x0000000000000000000000000000000000000000',
+    token: quoteToken,
     amount: profit.toString(),
     endAmount: profit.toString(),
     recipient: undefined,
   });
   consideration.push({
-    token: '0x0000000000000000000000000000000000000000',
+    token: quoteToken,
     amount: tradingFee.toString(),
     endAmount: tradingFee.toString(),
     recipient: env.TREASURY,
   });
   if (creator)
     consideration.push({
-      token: '0x0000000000000000000000000000000000000000',
+      token: quoteToken,
       amount: creatorShare.toString(),
       endAmount: creatorShare.toString(),
       recipient: creator,

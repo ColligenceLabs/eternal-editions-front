@@ -59,6 +59,7 @@ import secureLocalStorage from 'react-secure-storage';
 import { fullfillment } from 'src/seaport/fullfillment';
 import CloseIcon from 'src/assets/icons/close';
 import { IconButtonAnimate } from 'src/components/animate';
+import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 
 const PAY_TYPE = [
   {
@@ -142,7 +143,7 @@ export default function TicketDetailPage() {
   });
 
   const webUser = useSelector((state: any) => state.webUser);
-  const { account: wallet, library } = useWeb3React();
+  const { library, chainId } = useActiveWeb3React();
   const { account } = useAccount();
 
   const handleCloseSnackbar = () => {
@@ -244,13 +245,13 @@ export default function TicketDetailPage() {
     // TODO : Seaport 호출
     let result;
 
-    if (!wallet && !library) {
+    if (!library) {
       const provider = await getAbcWeb3Provider();
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       result = await fullfillment(sellbookInfo?.sellInfo, account!, provider);
-    } else if (account && library) {
+    } else if (library) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      result = await fullfillment(sellbookInfo?.sellInfo, wallet!, library);
+      result = await fullfillment(sellbookInfo?.sellInfo, account!, library);
     }
 
     console.log('!! fullfillment result = ', result);
