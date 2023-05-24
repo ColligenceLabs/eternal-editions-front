@@ -31,14 +31,9 @@ export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
   // console.log(sellbookItem);
   const router = useRouter();
   // const isMobile = useResponsive('down', 'md');
-  const {
-    id,
-    mysteryboxItem,
-    sellInfo: {
-      parameters: { startTime },
-    },
-  } = sellbookItem;
-
+  const { id, mysteryboxItem, sellInfo } = sellbookItem;
+  let startDate = new Date();
+  if (sellInfo && sellInfo.parameters) startDate = sellInfo.parameters.startDate;
   const { name, imageLink, categoriesStr, releaseDatetime, price, properties } = mysteryboxItem;
   const [team, setTeam] = useState('');
   const [day, setDay] = useState('');
@@ -246,7 +241,7 @@ export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
             {`${sellbookItem.price} ${sellbookItem.drop?.usePoint ? 'EDCP' : 'USDC'}`}
           </Typography>
           <BuyNowButton
-            releasedDate={startTime}
+            releasedDate={startDate}
             onClick={() => router.push(`/items/${sellbookItem.id}`)}
           />
         </Stack>
