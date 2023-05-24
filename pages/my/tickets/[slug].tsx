@@ -17,12 +17,13 @@ export default function MyTicketSellPage() {
   const [sellTicketInfo, setSellTicketInfo] = useState<MyTicketTypes | null>(null);
   const [team, setTeam] = useState('');
   const [day, setDay] = useState('');
+  const [isForSale, setIsForSale] = useState(false);
 
   const fetchSellItemInfo = async (id: string) => {
     const res = await getSellItemInfo(id);
     if (res.data.status === SUCCESS) {
+      setIsForSale(!!res.data.data.sellbook);
       setSellTicketInfo(res.data.data);
-      console.log(res.data.data.mysteryboxItem.properties);
       const { properties } = res.data.data.mysteryboxItem;
       if (properties) {
         properties.map((property: any) =>
@@ -37,7 +38,6 @@ export default function MyTicketSellPage() {
   };
   useEffect(() => {
     if (router.query.slug) {
-      console.log(router);
       fetchSellItemInfo(router.query.slug as string);
     }
   }, [router]);
@@ -59,7 +59,12 @@ export default function MyTicketSellPage() {
               },
             }}
           >
-            <MyTicketSell sellTicketInfo={sellTicketInfo} day={day} team={team} />
+            <MyTicketSell
+              sellTicketInfo={sellTicketInfo}
+              day={day}
+              team={team}
+              isForSale={isForSale}
+            />
           </Container>
         </>
       )}
@@ -70,7 +75,6 @@ export default function MyTicketSellPage() {
 // ----------------------------------------------------------------------
 
 MyTicketSellPage.getLayout = function getLayout(page: ReactElement) {
-  console.log(page);
   return (
     <Layout verticalAlign="top" disabledFooter>
       {page}

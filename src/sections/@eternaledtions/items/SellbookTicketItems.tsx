@@ -100,6 +100,7 @@ export default function SellbookTicketItems({ shouldHideCategories }: Props) {
     const res = await getSellBooks(curPage, perPage, category, salesType, team);
     if (res.data.status === SUCCESS) {
       setLastPage(res.data.data.headers.x_pages_count);
+
       setSellBooks(res.data.data.sellbooks);
     }
   };

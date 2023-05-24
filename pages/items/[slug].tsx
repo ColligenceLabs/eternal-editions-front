@@ -28,7 +28,7 @@ import { BigNumber, ethers } from 'ethers';
 // layouts
 import Layout from 'src/layouts';
 // components
-import { Page, TextIconLabel } from 'src/components';
+import { Page, TextIconLabel, Scrollbar } from 'src/components';
 // sections
 import { useRouter } from 'next/router';
 import { getSellbookInfoByID, getSession, registerSellbookBuy } from 'src/services/services';
@@ -57,6 +57,8 @@ import { AbcWeb3Provider } from '@colligence/klip-web3-provider';
 import Web3Modal from '@colligence/web3modal';
 import secureLocalStorage from 'react-secure-storage';
 import { fullfillment } from 'src/seaport/fullfillment';
+import CloseIcon from 'src/assets/icons/close';
+import { IconButtonAnimate } from 'src/components/animate';
 
 const PAY_TYPE = [
   {
@@ -132,6 +134,7 @@ export default function TicketDetailPage() {
   const [day, setDay] = useState('');
   const [team, setTeam] = useState('');
   const [isOnAuction, setIsOnAuction] = useState(false);
+  const [descriptionOpen, setDescriptionOpen] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState({
     open: false,
     type: '',
@@ -177,7 +180,7 @@ export default function TicketDetailPage() {
           );
         }
       }
-      if (res.data.data.sellbook.drop.usePoint) setPayType('edcp');
+      if (res.data.data.sellbook.drop && res.data.data.sellbook.drop.usePoint) setPayType('edcp');
       else setPayType('usdc');
     }
   };
@@ -366,7 +369,9 @@ export default function TicketDetailPage() {
                               {/*<TotalValue*/}
                               {/*  sx={{ opacity: 0.6 }}*/}
                               {/*>{`(~$${sellbookInfo.price})`}</TotalValue>*/}
-                              <TotalValue>{`${sellbookInfo.price} EDCP`}</TotalValue>
+                              <TotalValue>{`${
+                                sellbookInfo.price
+                              } ${payType.toUpperCase()}`}</TotalValue>
                               <TotalValue sx={{ opacity: 0.6 }}>{`(~$${'0'})`}</TotalValue>
                             </Stack>
                           </Row>
@@ -375,8 +380,12 @@ export default function TicketDetailPage() {
                         <Row>
                           <Label>Current Price</Label>
                           <Stack flexDirection="row" gap={0.5}>
-                            <TotalValue>{`${sellbookInfo.price} EDCP`}</TotalValue>
-                            <TotalValue sx={{ opacity: 0.6 }}>{`(~$${'0'})`}</TotalValue>
+                            <TotalValue>{`${
+                              sellbookInfo.price
+                            } ${payType.toUpperCase()}`}</TotalValue>
+                            <TotalValue sx={{ opacity: 0.6 }}>{`(~$${
+                              payType === 'edcp' ? sellbookInfo.price / 10 : sellbookInfo.price
+                            })`}</TotalValue>
                           </Stack>
                         </Row>
                       </Stack>
@@ -426,10 +435,10 @@ export default function TicketDetailPage() {
                               value={payType}
                               onChange={(event) => setPayType(event.target.value as string)}
                             >
-                              <RoundedSelectOption value="default" hidden>
-                                Select pay type
-                              </RoundedSelectOption>
-                              {PAY_TYPE.map((option) => (
+                              {/*<RoundedSelectOption value={payType} hidden>*/}
+                              {/*  Select pay type*/}
+                              {/*</RoundedSelectOption>*/}
+                              {PAY_TYPE.filter((type) => type.value === payType).map((option) => (
                                 <RoundedSelectOption key={option.value} value={option.value}>
                                   {option.label}
                                 </RoundedSelectOption>
@@ -452,10 +461,16 @@ export default function TicketDetailPage() {
                           {sellbookInfo.mysteryboxInfo.introduction.en}
                         </DetailAccordion>
 
-                        <DetailAccordion title={'About new Reality Now'} sx={{ color: 'red' }}>
-                          Our mission is to cultivate and incentivize a space for collective
-                          wellness. A utopia where holders can access live coaches and specialists
-                          to grow the mind, body, and spirit all within a safe community.
+                        <DetailAccordion title={'About new Reality Now'}>
+                          {sellbookInfo.mysteryboxInfo.bannerImage && (
+                            <Box onClick={() => setDescriptionOpen(true)}>
+                              <img
+                                width="100%"
+                                src={sellbookInfo.mysteryboxInfo.bannerImage}
+                                alt={'image'}
+                              />
+                            </Box>
+                          )}
                         </DetailAccordion>
                       </Stack>
                     </CardInner>
@@ -464,6 +479,68 @@ export default function TicketDetailPage() {
               </Grid>
             </Container>
           </RootStyle>
+
+          <Modal
+            open={descriptionOpen}
+            onClose={() => setDescriptionOpen(false)}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box
+              sx={{
+                ...modalStyle,
+                maxWidth: 1200,
+              }}
+            >
+              <Box
+                sx={{
+                  position: 'absolute',
+                  right: '2rem',
+                  top: '2rem',
+                  zIndex: 1,
+                }}
+              >
+                <IconButtonAnimate
+                  color="inherit"
+                  onClick={() => setDescriptionOpen(false)}
+                  sx={{
+                    bgcolor: 'rgba(0,0,0,.3)',
+                    transition: 'all .3s',
+                    '&:hover': {
+                      bgcolor: '#454F5B',
+                    },
+                  }}
+                >
+                  <Box
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <CloseIcon />
+                  </Box>
+                </IconButtonAnimate>
+              </Box>
+
+              <Box
+                sx={{
+                  overflow: 'scroll',
+                  maxHeight: 'calc(100vh - 6rem)',
+                  position: 'relative',
+                  img: { width: 1 },
+                }}
+              >
+                <Scrollbar sx={{ py: { xs: 3, md: 0 } }}>
+                  {sellbookInfo.mysteryboxInfo.bannerImage && (
+                    <img src={sellbookInfo.mysteryboxInfo.bannerImage} alt="description" />
+                  )}
+                </Scrollbar>
+              </Box>
+            </Box>
+          </Modal>
 
           <Modal
             aria-labelledby="transition-modal-title"

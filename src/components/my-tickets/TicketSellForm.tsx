@@ -48,9 +48,15 @@ type TicketSellFormProps = {
   sellTicketInfo: MyTicketTypes;
   team: string;
   day: string;
+  isForSale: boolean;
 };
 
-export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSellFormProps) {
+export default function TicketSellForm({
+  sellTicketInfo,
+  team,
+  day,
+  isForSale,
+}: TicketSellFormProps) {
   const theme = useTheme();
   const [typeOfSale, setTypeOfSale] = useState(TYPES_OF_SALE[0].value);
   const [priceUnit, setPriceUnit] = useState(
@@ -58,7 +64,7 @@ export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSell
   );
   const [amount, setAmount] = useState('');
   const [creatorEarnings, setCreatorEarnings] = useState('7.5');
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(isForSale);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [durations, setDurations] = useState([
@@ -68,11 +74,27 @@ export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSell
     },
   ]);
   const [duration, setDuration] = useState(durations[0].value);
+  const [potentialEarning, setPotentialEarning] = useState(0);
 
-  console.log(sellTicketInfo);
   const onSubmit = () => {
     setIsSubmitting(true);
   };
+
+  useEffect(() => {
+    if (parseFloat(amount) >= 0) {
+      setPotentialEarning(parseFloat(amount) - parseFloat(amount) / 10);
+    } else {
+      setPotentialEarning(0);
+    }
+  }, [amount]);
+
+  useEffect(() => {
+    if (isForSale && sellTicketInfo.sellbook) {
+      setAmount(sellTicketInfo.sellbook?.price.toString());
+      setStartDate(sellTicketInfo.sellbook?.startDate);
+      setEndDate(sellTicketInfo.sellbook?.endDate);
+    }
+  }, [isForSale]);
 
   useEffect(() => {
     const today = new Date();
@@ -85,20 +107,20 @@ export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSell
     const endMonth = lastDay.getMonth() + 1; // Note: Months are zero-based, so we add 1
     const endDay = lastDay.getDate();
 
-    const startDate = `${currentYear}.${currentMonth.toString().padStart(2, '0')}.${currentDay
+    const startDateStr = `${currentYear}.${currentMonth.toString().padStart(2, '0')}.${currentDay
       .toString()
       .padStart(2, '0')}`;
 
-    const endDate = `${endYear}.${endMonth.toString().padStart(2, '0')}.${endDay
+    const endDateStr = `${endYear}.${endMonth.toString().padStart(2, '0')}.${endDay
       .toString()
       .padStart(2, '0')}`;
 
-    setStartDate(today);
-    setEndDate(lastDay);
+    setStartDate(new Date(startDateStr));
+    setEndDate(new Date(endDateStr));
     setDurations([
       {
         ...durations[0],
-        label: `1 MONTH (${startDate} ~ ${endDate})`,
+        label: `1 MONTH (${startDateStr} ~ ${endDateStr})`,
       },
     ]);
   }, []);
@@ -112,6 +134,7 @@ export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSell
         creatorEarnings={creatorEarnings}
         startDate={startDate}
         endDate={endDate}
+        isForSale={isForSale}
       />
     );
   }
@@ -256,7 +279,7 @@ export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSell
       <Row>
         <Label>Potential earning</Label>
         <TotalValue>
-          {parseFloat(amount) - parseFloat(amount) / 10} {priceUnit.toUpperCase()}
+          {potentialEarning} {priceUnit.toUpperCase()}
         </TotalValue>
       </Row>
 

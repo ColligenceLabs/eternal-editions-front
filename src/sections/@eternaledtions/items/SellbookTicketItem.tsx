@@ -28,7 +28,7 @@ type Props = {
 };
 
 export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
-  console.log(sellbookItem);
+  // console.log(sellbookItem);
   const router = useRouter();
   // const isMobile = useResponsive('down', 'md');
   const {
@@ -243,7 +243,7 @@ export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
             }}
           >
             {/*{`${(dollarPrice / 10).toFixed(4)} EDCP`}*/}
-            {`${sellbookItem.price} EDCP`}
+            {`${sellbookItem.price} ${sellbookItem.drop?.usePoint ? 'EDCP' : 'USDC'}`}
           </Typography>
           <BuyNowButton
             releasedDate={startTime}

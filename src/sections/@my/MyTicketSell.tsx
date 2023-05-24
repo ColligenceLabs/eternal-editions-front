@@ -13,8 +13,9 @@ type MyTicketSellProps = {
 
   team: string;
   day: string;
+  isForSale: boolean;
 };
-const MyTicketSell: React.FC<MyTicketSellProps> = ({ sellTicketInfo, team, day }) => {
+const MyTicketSell: React.FC<MyTicketSellProps> = ({ sellTicketInfo, team, day, isForSale }) => {
   const theme = useTheme();
   console.log(sellTicketInfo);
   return (
@@ -24,14 +25,18 @@ const MyTicketSell: React.FC<MyTicketSellProps> = ({ sellTicketInfo, team, day }
           <Stack flexDirection="row" justifyContent="space-between">
             <CompanyInfo
               account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
-              image={`url(/assets/static/avatars/1.jpg)`}
-              label={`by @iloveseoul`}
+              // image={`url(/assets/static/avatars/1.jpg)`}
+              label={`by @${sellTicketInfo.mysteryboxInfo.featuredId}`}
             />
-
-            <Badge label={'For sale'} />
+            {isForSale && <Badge label={'For sale'} />}
           </Stack>
           <TicketName>{sellTicketInfo.mysteryboxItem.name}</TicketName>
-          <TicketSellForm sellTicketInfo={sellTicketInfo} day={day} team={team} />
+          <TicketSellForm
+            sellTicketInfo={sellTicketInfo}
+            day={day}
+            team={team}
+            isForSale={isForSale}
+          />
         </CardInner>
       </CardWrapper>
     </Box>

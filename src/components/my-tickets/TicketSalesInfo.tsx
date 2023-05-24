@@ -12,6 +12,7 @@ import { ethers, utils } from 'ethers';
 import { AbcWeb3Provider } from '@colligence/klip-web3-provider';
 import Web3Modal from '@colligence/web3modal';
 import secureLocalStorage from 'react-secure-storage';
+import { fDate } from 'src/utils/formatTime';
 import { englishAuctionSell } from 'src/seaport/englishAuction';
 
 interface Props {
@@ -21,6 +22,7 @@ interface Props {
   creatorEarnings: string;
   startDate: Date;
   endDate: Date;
+  isForSale: boolean;
 }
 
 export default function TicketSalesInfo({
@@ -30,9 +32,9 @@ export default function TicketSalesInfo({
   creatorEarnings,
   startDate,
   endDate,
+  isForSale,
 }: Props) {
   const isAuction = typeOfSale === 'auction';
-
   const webUser = useSelector((state: any) => state.webUser);
   const { account: wallet, library } = useWeb3React();
   const { account } = useAccount();
@@ -247,7 +249,7 @@ export default function TicketSalesInfo({
           </Row>
           <Row>
             <Label>Reserve Price</Label>
-            <Value>$ 37.45(Ξ 0.02871)</Value>
+            <Value sx={{ color: 'red' }}>$ 37.45(Ξ 0.02871)</Value>
           </Row>
           {isAuction ? (
             <Row>
@@ -257,7 +259,9 @@ export default function TicketSalesInfo({
           ) : null}
           <Row>
             <Label>Duration of Listing</Label>
-            <Value>2022.11.16 ~ 2022.12.16</Value>
+            <Value>
+              {fDate(startDate, 'yyyy.MM.dd')} ~ {fDate(endDate, 'yyyy.MM.dd')}
+            </Value>
           </Row>
           <Row>
             <Label>Creator Earnings</Label>
@@ -269,7 +273,9 @@ export default function TicketSalesInfo({
         <Stack gap={{ xs: 2, md: '7px' }}>
           <Row>
             <Label>Listing Price</Label>
-            <Value>-- EDCP</Value>
+            <Value>
+              {amount} {sellTicketInfo.usePoint ? 'EDCP' : 'USDC'}
+            </Value>
           </Row>
           <Row>
             <Label>Service fee</Label>
@@ -283,31 +289,38 @@ export default function TicketSalesInfo({
         <Hr />
         <Row>
           <Label>Potential earning</Label>
-          <TotalValue>-- EDCP</TotalValue>
+          <TotalValue>
+            {parseFloat(amount) - parseFloat(amount) / 10}{' '}
+            {sellTicketInfo.usePoint ? 'EDCP' : 'USDC'}
+          </TotalValue>
         </Row>
       </Stack>
 
-      {/*{isAuction ? <RoundedButton variant="withImage">CONFIRM</RoundedButton> : null}*/}
-      {isLoading ? (
-        <Box
-          sx={{
-            // width: '100%',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            position: 'fixed',
-            bottom: '30px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-          }}
-        >
-          <CircularProgress size={'2rem'} />
-        </Box>
-      ) : (
-        <RoundedButton variant="withImage" onClick={handleClickConfirm}>
-          CONFIRM
-        </RoundedButton>
+      {!isForSale && (
+        <>
+          {isLoading ? (
+            <Box
+              sx={{
+                // width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                position: 'fixed',
+                bottom: '30px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+              }}
+            >
+              <CircularProgress size={'2rem'} />
+            </Box>
+          ) : (
+            <RoundedButton variant="withImage" onClick={handleClickConfirm}>
+              CONFIRM
+            </RoundedButton>
+          )}
+        </>
       )}
+      {/*{isAuction ? <RoundedButton variant="withImage">CONFIRM</RoundedButton> : null}*/}
     </Stack>
   );
 }
