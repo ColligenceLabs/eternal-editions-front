@@ -11,6 +11,7 @@ import ModalCustom from 'src/components/common/ModalCustom';
 import Link from 'next/link';
 import SaveTicketContent from './SaveTicketContent';
 import { MyTicketTypes } from 'src/@types/my/myTicket';
+import useCountdown from 'src/hooks/useCountdown';
 
 type PropertiesType = {
   type: string;
@@ -24,7 +25,9 @@ export default function TicketItem({ ticket }: any) {
   const [klayPrice, setKlayPrice] = useState(0);
   const [open, setOpen] = useState<boolean>(false);
   const [ticketInfo, setTicketInfo] = useState<MyTicketTypes | null>(null);
-
+  const { days, hours, minutes, seconds } = useCountdown(
+    new Date(ticket.sellbook?.endDate ? ticket.sellbook?.endDate : null)
+  );
   const getCoinPrice = () => {
     const url = 'https://bcn-api.talken.io/coinmarketcap/cmcQuotes?cmcIds=4256,3890';
     try {
@@ -47,9 +50,7 @@ export default function TicketItem({ ticket }: any) {
 
   useEffect(() => {
     if (ticket) {
-      console.log(ticket);
       const { properties } = ticket.mysteryboxItem;
-
       let day = '';
       let location = '';
       let duration = '';
@@ -156,10 +157,22 @@ export default function TicketItem({ ticket }: any) {
                   <LineItem label="Day" value={ticketInfo.day} />
                   <LineItem label="Team" value={ticketInfo.team} />
                   {ticketInfo.status !== 'MARKET' && <LineItem label="QTY" value={'1'} />}
-                  {ticketInfo.status === 'MARKET' && (
+                  {ticketInfo.status === 'MARKET' && ticketInfo.sellbook && (
                     <>
-                      <LineItem mock label="CURRENT PRICE" value={'1,200 EDCP (~$1,200)'} />
-                      <LineItem mock label="AUCTION ENDS IN" value={'01:12:32:11'} />
+                      <LineItem
+                        label="CURRENT PRICE"
+                        value={
+                          ticketInfo.usePoint
+                            ? `${ticketInfo.sellbook?.price} EDCP (~$${
+                                ticketInfo.sellbook?.price / 10
+                              })`
+                            : `${ticketInfo.sellbook?.price} USDC (~$${ticketInfo.sellbook?.price})`
+                        }
+                      />
+                      <LineItem
+                        label="AUCTION ENDS IN"
+                        value={`${days}:${hours}:${minutes}:${seconds}`}
+                      />
                     </>
                   )}
                 </Stack>
