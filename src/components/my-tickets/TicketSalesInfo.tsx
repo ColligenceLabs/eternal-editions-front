@@ -12,6 +12,7 @@ import { ethers, utils } from 'ethers';
 import { AbcWeb3Provider } from '@colligence/klip-web3-provider';
 import Web3Modal from '@colligence/web3modal';
 import secureLocalStorage from 'react-secure-storage';
+import { englishAuctionSell } from 'src/seaport/englishAuction';
 
 interface Props {
   sellTicketInfo: MyTicketTypes;
@@ -38,74 +39,121 @@ export default function TicketSalesInfo({
 
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleClickConfirm = async () => {
-    setIsLoading(true);
-    console.log('click confirm.');
-    console.log(sellTicketInfo);
-    console.log(`amount : ${amount}`);
-    console.log(`typeOfSale : ${typeOfSale}`);
-    console.log(`creatorEarnings : ${creatorEarnings}`);
+  const getAbcWeb3Provider = async () => {
+    console.log('!!!!!!!!!! USE ABC-WEB3-PROVIDER !!!!!!!!!!');
+
+    let provider: any = null;
+    const rlt = await getSession();
+
+    if (rlt.data?.providerAuthInfo) {
+      // TODO: abc-web3-provider 초기화
+      const id_token = rlt.data?.providerAuthInfo?.provider_token;
+      const service = rlt.data?.providerAuthInfo?.provider;
+      const data = JSON.parse(rlt.data?.providerAuthInfo?.provider_data);
+      const email = data.email;
+      console.log(service, id_token, data.email);
+
+      const providerOptions = {
+        abc: {
+          package: AbcWeb3Provider, //required
+          options: {
+            bappName: 'web3Modal Example App', //required
+            chainId: '0x13881',
+            rpcUrl: 'https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78', //required
+            email,
+            id_token,
+            serv: service,
+          },
+        },
+      };
+      const web3Modal = new Web3Modal({
+        providerOptions: providerOptions, //required
+      });
+
+      // Connect Wallet
+      const instance = await web3Modal.connect();
+
+      if (instance) {
+        const abcUser = JSON.parse(secureLocalStorage.getItem('abcUser') as string);
+        console.log('==========================', abcUser);
+        console.log(
+          '=============>',
+          abcUser && abcUser?.accounts ? abcUser?.accounts[0].ethAddress : 'No ethAddress'
+        );
+
+        provider = new ethers.providers.Web3Provider(instance);
+        // await provider.enable();
+        const signer = provider.getSigner();
+        console.log('=============>', signer);
+      }
+    }
+    return provider;
+  };
+
+  const insertSellbook = async (order: any, type: number) => {
+    const team = sellTicketInfo.mysteryboxItem.properties.filter(
+      (property: any) => property.type === 'team'
+    );
+
+    const sellOrder = {
+      uid: webUser.user.uid,
+      // wallet: account,
+      wallet,
+      type: type, // Fixed Price Sell
+      // @ts-ignore null일 수 가 없음.
+      mysteryboxId: sellTicketInfo.mysteryboxInfo.id,
+      // @ts-ignore null일 수 가 없음.
+      mysteryboxItemId: sellTicketInfo.mysteryboxItem.id,
+      sellInfo: order,
+      tokenId: sellTicketInfo.tokenId,
+      price: amount,
+      team: team[0].name,
+      dropsId: sellTicketInfo.id,
+      startDate,
+      endDate,
+      creatorFee: creatorEarnings,
+    };
+    console.log('!! sellOrder for DB = ', sellOrder);
+    const result = await registerSell(sellOrder);
+    console.log('!! Sell Result : ', result);
+    if (result.status === 200) {
+      console.log('... Success');
+    } else {
+      console.log('... Failed');
+    }
+  };
+
+  const sellByPoint = async () => {
+    if (typeOfSale === 'fixed') {
+      console.log('click Fixed Price');
+      await insertSellbook(null, 1);
+    } else if (typeOfSale === 'auction') {
+      console.log('click English auction');
+      await insertSellbook(null, 2);
+    }
+  };
+
+  const sellByCrypto = async () => {
+    let order;
+    const endTime = Math.round(endDate.getTime() / 1000);
 
     if (typeOfSale === 'fixed') {
-      let order;
-      const endTime = Math.round(endDate.getTime() / 1000);
+      console.log('click Fixed Price');
 
       console.log('=== wallet, library ===', wallet, library);
       if (!wallet && !library) {
-        console.log('!!!!!!!!!! USE ABC-WEB3-PROVIDER !!!!!!!!!!');
-        const rlt = await getSession();
-        if (rlt.data?.providerAuthInfo) {
-          // TODO: abc-web3-provider 초기화
-          const id_token = rlt.data?.providerAuthInfo?.provider_token;
-          const service = rlt.data?.providerAuthInfo?.provider;
-          const data = JSON.parse(rlt.data?.providerAuthInfo?.provider_data);
-          const email = data.email;
-          console.log(service, id_token, data.email);
+        const provider = await getAbcWeb3Provider();
 
-          const providerOptions = {
-            abc: {
-              package: AbcWeb3Provider, //required
-              options: {
-                bappName: 'web3Modal Example App', //required
-                chainId: '0x13881',
-                rpcUrl: 'https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78', //required
-                email,
-                id_token,
-                serv: service,
-              },
-            },
-          };
-          const web3Modal = new Web3Modal({
-            providerOptions: providerOptions, //required
-          });
-
-          // Connect Wallet
-          const instance = await web3Modal.connect();
-
-          if (instance) {
-            const abcUser = JSON.parse(secureLocalStorage.getItem('abcUser') as string);
-            console.log('==========================', abcUser);
-            console.log(
-              '=============>',
-              abcUser && abcUser?.accounts ? abcUser?.accounts[0].ethAddress : 'No ethAddress'
-            );
-
-            const provider = new ethers.providers.Web3Provider(instance);
-            // await provider.enable();
-            const signer = provider.getSigner();
-            console.log('=============>', signer);
-
-            order = await fixedPriceSell(
-              sellTicketInfo.mysteryboxInfo?.boxContractAddress,
-              sellTicketInfo.tokenId.toString(),
-              utils.parseEther((amount ?? '0.0').toString()).toString(), // TODO : what is default price ?
-              endTime.toString(),
-              sellTicketInfo.mysteryboxInfo?.creatorAddress,
-              account,
-              provider
-            );
-          }
-        }
+        // TODO : CreatorFee 를 어떻게 처리할 것인지 확인이 필요함.
+        order = await fixedPriceSell(
+          sellTicketInfo.mysteryboxInfo?.boxContractAddress,
+          sellTicketInfo.tokenId.toString(),
+          utils.parseEther((amount ?? '0.0').toString()).toString(), // TODO : what is default price ?
+          endTime.toString(),
+          sellTicketInfo.mysteryboxInfo?.creatorAddress,
+          account,
+          provider
+        );
       } else if (wallet && library) {
         order = await fixedPriceSell(
           sellTicketInfo.mysteryboxInfo?.boxContractAddress,
@@ -118,42 +166,64 @@ export default function TicketSalesInfo({
         );
       }
 
-      const team = sellTicketInfo.mysteryboxItem.properties.filter(
-        (property: any) => property.type === 'team'
-      );
+      await insertSellbook(order, 1);
+    } else if (typeOfSale === 'auction') {
+      console.log('click English auction');
 
-      const sellOrder = {
-        uid: webUser.user.uid,
-        // wallet: account,
-        wallet,
-        type: 1, // Fixed Price Sell
-        // @ts-ignore null일 수 가 없음.
-        mysteryboxId: sellTicketInfo.mysteryboxInfo.id,
-        // @ts-ignore null일 수 가 없음.
-        mysteryboxItemId: sellTicketInfo.mysteryboxItem.id,
-        sellInfo: order,
-        tokenId: sellTicketInfo.tokenId,
-        price: amount,
-        team: team[0].name,
-        dropsId: sellTicketInfo.id,
-        startDate,
-        endDate,
-        creatorFee: creatorEarnings,
-      };
-      console.log('!! Fixed Price sellOrder in DB = ', sellOrder);
-      const result = await registerSell(sellOrder);
-      console.log('!! Sell Result : ', result);
-      if (result.status === 200) {
-        console.log('... Success');
-      } else {
-        console.log('... Failed');
+      console.log('=== wallet, library ===', wallet, library);
+      if (!wallet && !library) {
+        const provider = await getAbcWeb3Provider();
+
+        // TODO : CreatorFee 를 어떻게 처리할 것인지 확인이 필요함.
+        order = await englishAuctionSell(
+          sellTicketInfo.mysteryboxInfo?.boxContractAddress,
+          sellTicketInfo.tokenId.toString(),
+          utils.parseEther((amount ?? '0.0').toString()).toString(), // TODO : what is default price ?
+          endTime.toString(),
+          sellTicketInfo.mysteryboxInfo?.creatorAddress,
+          account,
+          provider
+        );
+      } else if (wallet && library) {
+        order = await englishAuctionSell(
+          sellTicketInfo.mysteryboxInfo?.boxContractAddress,
+          sellTicketInfo.tokenId.toString(),
+          utils.parseEther((amount ?? '0.0').toString()).toString(), // TODO : what is default price ?
+          endTime.toString(),
+          sellTicketInfo.mysteryboxInfo?.creatorAddress,
+          wallet,
+          library
+        );
+      }
+
+      await insertSellbook(order, 2);
+    }
+  };
+
+  const handleClickConfirm = async () => {
+    setIsLoading(true);
+    console.log('click confirm.');
+    console.log(sellTicketInfo);
+    console.log(`amount : ${amount}`);
+    console.log(`typeOfSale : ${typeOfSale}`);
+    console.log(`creatorEarnings : ${creatorEarnings}`);
+
+    // buyerAddress 비교 - ABC 로 산 건지, Metamask 로 산 건지 비교
+    if (sellTicketInfo.buyerAddress === webUser.user.eth_address) {
+      if (!wallet && !library) {
+        alert('Metamask 지갑으로 다시 로그인을 하세요');
+        return;
+      }
+    } else if (sellTicketInfo.buyerAddress === webUser.user.abc_address) {
+      if (wallet && library) {
+        alert('SNS 계정으로 다시 로그인을 하세요');
+        return;
       }
     }
-    // else if (methodId === 1) {
-    //   console.log('click English auction');
-    // } else {
-    //   console.log('click Dutch auction');
-    // }
+
+    if (sellTicketInfo.usePoint) await sellByCrypto();
+    else await sellByPoint();
+
     setIsLoading(false);
   };
   return (
