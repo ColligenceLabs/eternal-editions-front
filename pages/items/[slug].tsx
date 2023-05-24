@@ -31,7 +31,7 @@ import Layout from 'src/layouts';
 import { Page, TextIconLabel } from 'src/components';
 // sections
 import { useRouter } from 'next/router';
-import { getSellbookInfoByID } from 'src/services/services';
+import { getSellbookInfoByID, getSession, registerSellbookBuy } from 'src/services/services';
 import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import { useResponsive } from 'src/hooks';
 
@@ -51,6 +51,12 @@ import RoundedButton from 'src/components/common/RoundedButton';
 import { ArrowDropDown } from '@mui/icons-material';
 import moment from 'moment';
 import FixedBackground from 'src/components/common/FixedBackground';
+import { useWeb3React } from '@web3-react/core';
+import useAccount from 'src/hooks/useAccount';
+import { AbcWeb3Provider } from '@colligence/klip-web3-provider';
+import Web3Modal from '@colligence/web3modal';
+import secureLocalStorage from 'react-secure-storage';
+import { fullfillment } from 'src/seaport/fullfillment';
 
 const PAY_TYPE = [
   {
@@ -131,6 +137,11 @@ export default function TicketDetailPage() {
     type: '',
     message: '',
   });
+
+  const webUser = useSelector((state: any) => state.webUser);
+  const { account: wallet, library } = useWeb3React();
+  const { account } = useAccount();
+
   const handleCloseSnackbar = () => {
     setOpenSnackbar({
       open: false,
@@ -166,12 +177,98 @@ export default function TicketDetailPage() {
           );
         }
       }
+      if (res.data.data.sellbook.drop.usePoint) setPayType('edcp');
+      else setPayType('usdc');
+    }
+  };
+
+  const getAbcWeb3Provider = async () => {
+    console.log('!!!!!!!!!! USE ABC-WEB3-PROVIDER !!!!!!!!!!');
+
+    let provider: any = null;
+    const rlt = await getSession();
+
+    if (rlt.data?.providerAuthInfo) {
+      // TODO: abc-web3-provider 초기화
+      const id_token = rlt.data?.providerAuthInfo?.provider_token;
+      const service = rlt.data?.providerAuthInfo?.provider;
+      const data = JSON.parse(rlt.data?.providerAuthInfo?.provider_data);
+      const email = data.email;
+      console.log(service, id_token, data.email);
+
+      const providerOptions = {
+        abc: {
+          package: AbcWeb3Provider, //required
+          options: {
+            bappName: 'web3Modal Example App', //required
+            chainId: '0x13881',
+            rpcUrl: 'https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78', //required
+            email,
+            id_token,
+            serv: service,
+          },
+        },
+      };
+      const web3Modal = new Web3Modal({
+        providerOptions: providerOptions, //required
+      });
+
+      // Connect Wallet
+      const instance = await web3Modal.connect();
+
+      if (instance) {
+        const abcUser = JSON.parse(secureLocalStorage.getItem('abcUser') as string);
+        console.log('==========================', abcUser);
+        console.log(
+          '=============>',
+          abcUser && abcUser?.accounts ? abcUser?.accounts[0].ethAddress : 'No ethAddress'
+        );
+
+        provider = new ethers.providers.Web3Provider(instance);
+        // await provider.enable();
+        const signer = provider.getSigner();
+        console.log('=============>', signer);
+      }
+    }
+    return provider;
+  };
+
+  const buyWithPoint = async () => {
+    // TODO : Banckend API 호출 (Fixed Price Sell Buy)
+  };
+
+  const buyWithCrypto = async () => {
+    // TODO : Seaport 호출
+    let result;
+
+    if (!wallet && !library) {
+      const provider = await getAbcWeb3Provider();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      result = await fullfillment(sellbookInfo?.sellInfo, account!, provider);
+    } else if (account && library) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      result = await fullfillment(sellbookInfo?.sellInfo, wallet!, library);
+    }
+
+    console.log('!! fullfillment result = ', result);
+
+    if (result) {
+      const data = {
+        buyer: webUser.user.uid,
+        buyerAddress: account,
+        price: sellbookInfo?.price,
+        txHash: result?.transactionHash,
+      };
+
+      await registerSellbookBuy(data, sellbookInfo?.id!);
     }
   };
 
   const handleClickBuy = async () => {
     console.log('buy now');
     console.log(`pay type :: ${payType}`);
+    if (payType === 'edcp') await buyWithPoint();
+    else await buyWithCrypto();
   };
 
   const handleClickBid = async () => {
