@@ -261,7 +261,9 @@ export default function TicketSalesInfo({
           </Row>
           <Row>
             <Label>Reserve Price</Label>
-            <Value sx={{ color: 'red' }}>$ 37.45(Ξ 0.02871)</Value>
+            <Value>{`${sellTicketInfo.mysteryboxItem.price / 10} EDCP ($ ${
+              sellTicketInfo.mysteryboxItem.price
+            })`}</Value>
           </Row>
           {isAuction ? (
             <Row>
