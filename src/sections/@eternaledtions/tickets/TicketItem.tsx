@@ -220,14 +220,21 @@ export default function TicketItem({ ticket }: any) {
               )}
               {ticketInfo.status === 'MARKET' && (
                 <Stack sx={{ mt: 1 }} direction="row" spacing={2} justifyContent={'flex-end'}>
-                  <RoundedButton
-                    sx={{ flexBasis: '50%' }}
-                    variant="withImage"
-                    size={isMobile ? 'small' : 'large'}
-                    fullWidth
+                  <Link
+                    href={{
+                      pathname: `/my/tickets/${ticketInfo.id}/`,
+                    }}
+                    passHref
                   >
-                    SALE INFO
-                  </RoundedButton>
+                    <RoundedButton
+                      sx={{ flexBasis: '50%' }}
+                      variant="withImage"
+                      size={isMobile ? 'small' : 'large'}
+                      fullWidth
+                    >
+                      SALE INFO
+                    </RoundedButton>
+                  </Link>
                 </Stack>
               )}
             </Stack>
