@@ -486,13 +486,15 @@ Type: Address verification`;
 
                   <Stack gap="12px">
                     <SectionHeader>NAME</SectionHeader>
-                    <SectionText>{user.name}</SectionText>
+                    <SectionText>{user.name && user.name}</SectionText>
                   </Stack>
 
                   <Divider />
                   <Stack gap="12px">
                     <SectionHeader>Birth Date</SectionHeader>
-                    <SectionText>{moment(user.birthday).format('MM/DD/YYYY')}</SectionText>
+                    <SectionText>
+                      {user.birthday && moment(user.birthday).format('MM/DD/YYYY')}
+                    </SectionText>
                   </Stack>
 
                   <Divider />
@@ -500,7 +502,7 @@ Type: Address verification`;
                   <Stack gap="12px">
                     <SectionHeader>Gender</SectionHeader>
                     <SectionText>
-                      {user.gender.replace(/^[a-z]/, (char) => char.toUpperCase())}
+                      {user.gender && user.gender.replace(/^[a-z]/, (char) => char.toUpperCase())}
                     </SectionText>
                   </Stack>
 
@@ -508,7 +510,7 @@ Type: Address verification`;
 
                   <Stack gap="12px">
                     <SectionHeader>Phone Number</SectionHeader>
-                    <SectionText>{user.phone}</SectionText>
+                    <SectionText>{user.phone && user.phone}</SectionText>
                   </Stack>
 
                   <Divider />

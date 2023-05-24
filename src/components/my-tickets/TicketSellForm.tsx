@@ -39,6 +39,7 @@ const PRICE_UNITS = [
     label: 'EDCP',
     value: 'edcp',
   },
+  { label: 'USDC', value: 'usdc' },
 ];
 
 // ----------------------------------------------------------------------
@@ -52,9 +53,11 @@ type TicketSellFormProps = {
 export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSellFormProps) {
   const theme = useTheme();
   const [typeOfSale, setTypeOfSale] = useState(TYPES_OF_SALE[0].value);
-  const [priceUnit, setPriceUnit] = useState(PRICE_UNITS[0].value);
+  const [priceUnit, setPriceUnit] = useState(
+    sellTicketInfo.usePoint ? PRICE_UNITS[0].value : PRICE_UNITS[1].value
+  );
   const [amount, setAmount] = useState('');
-  const [creatorEarnings, setCreatorEarnings] = useState('');
+  const [creatorEarnings, setCreatorEarnings] = useState('7.5');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -66,6 +69,7 @@ export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSell
   ]);
   const [duration, setDuration] = useState(durations[0].value);
 
+  console.log(sellTicketInfo);
   const onSubmit = () => {
     setIsSubmitting(true);
   };
@@ -150,17 +154,18 @@ export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSell
             placeholder="Amount"
             endAdornment={
               <InputAdornment position="end">
-                <RoundedSelect
-                  size="small"
-                  value={priceUnit}
-                  onChange={(event) => setPriceUnit(event.target.value as string)}
-                >
-                  {PRICE_UNITS.map((unit) => (
-                    <RoundedSelectOption key={unit.value} value={unit.value}>
-                      {unit.label}
-                    </RoundedSelectOption>
-                  ))}
-                </RoundedSelect>
+                {priceUnit.toUpperCase()}
+                {/*<RoundedSelect*/}
+                {/*  size="small"*/}
+                {/*  value={priceUnit}*/}
+                {/*  // onChange={(event) => setPriceUnit(event.target.value as string)}*/}
+                {/*>*/}
+                {/*  {PRICE_UNITS.map((unit) => (*/}
+                {/*    <RoundedSelectOption key={unit.value} value={unit.value}>*/}
+                {/*      {unit.label}*/}
+                {/*    </RoundedSelectOption>*/}
+                {/*  ))}*/}
+                {/*</RoundedSelect>*/}
               </InputAdornment>
             }
           />
@@ -199,38 +204,44 @@ export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSell
         </>
       ) : null}
 
-      <Box>
-        <Label>CREATOR EARNINGS</Label>
-        <FormControl variant="standard" fullWidth>
-          <StyledInput
-            value={creatorEarnings}
-            onChange={({ target }) => setCreatorEarnings(target.value)}
-            endAdornment={
-              <InputAdornment position="end">
-                <Typography color="white" fontWeight="bold" fontSize={14} lineHeight={12 / 14}>
-                  %
-                </Typography>
-              </InputAdornment>
-            }
-          />
-        </FormControl>
-        <FootText mt="12px">
-          Creator earning are optional for this collection. You can give them up to 7.50% of your
-          sale.
-        </FootText>
-      </Box>
+      {/*<Box>*/}
+      {/*  <Label>CREATOR EARNINGS</Label>*/}
+      {/*  <FormControl variant="standard" fullWidth>*/}
+      {/*    <StyledInput*/}
+      {/*      value={creatorEarnings}*/}
+      {/*      onChange={({ target }) => setCreatorEarnings(target.value)}*/}
+      {/*      endAdornment={*/}
+      {/*        <InputAdornment position="end">*/}
+      {/*          <Typography color="white" fontWeight="bold" fontSize={14} lineHeight={12 / 14}>*/}
+      {/*            %*/}
+      {/*          </Typography>*/}
+      {/*        </InputAdornment>*/}
+      {/*      }*/}
+      {/*    />*/}
+      {/*  </FormControl>*/}
+      {/*  <FootText mt="12px">*/}
+      {/*    Creator earning are optional for this collection. You can give them up to 7.50% of your*/}
+      {/*    sale.*/}
+      {/*  </FootText>*/}
+      {/*</Box>*/}
 
       <Section>
         <Label>Summary</Label>
         <Stack gap="7px">
           <Row>
             <Label>Listing Price</Label>
-            <Value>-- {priceUnit.toUpperCase()}</Value>
+            <Value>
+              {amount} {priceUnit.toUpperCase()}
+            </Value>
           </Row>
           <Row>
             <Label>Service fee</Label>
             <Value>2.5%</Value>
-          </Row>{' '}
+          </Row>
+          {/*<Row>*/}
+          {/*  <Label>CREATOR EARNINGS</Label>*/}
+          {/*  <Value>7.5%</Value>*/}
+          {/*</Row>*/}
           {creatorEarnings ? (
             <Row>
               <Label>Creator earnings</Label>
@@ -244,7 +255,9 @@ export default function TicketSellForm({ sellTicketInfo, team, day }: TicketSell
 
       <Row>
         <Label>Potential earning</Label>
-        <TotalValue>-- {priceUnit.toUpperCase()}</TotalValue>
+        <TotalValue>
+          {parseFloat(amount) - parseFloat(amount) / 10} {priceUnit.toUpperCase()}
+        </TotalValue>
       </Row>
 
       <RoundedButton sx={{ mt: 3 }} onClick={onSubmit}>

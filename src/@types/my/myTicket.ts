@@ -22,4 +22,22 @@ export type MyTicketTypes = {
   duration?: string;
   team?: string;
   quote?: string;
+  sellbook?: {
+    createdAt: Date;
+    creatorFee: number;
+    dropsId: number;
+    endDate: Date;
+    id: number;
+    infoId: number;
+    itemId: number;
+    price: number;
+    sellInfo: any;
+    startDate: Date;
+    team: string;
+    tokenId: number;
+    type: number;
+    uid: string;
+    updatedAt: Date;
+    wallet: string;
+  };
 };
