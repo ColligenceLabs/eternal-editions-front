@@ -51,7 +51,7 @@ export default function TicketSalesInfo({
   const { account } = useAccount();
 
   const [isLoading, setIsLoading] = useState(false);
-
+  console.log(sellTicketInfo);
   const getAbcWeb3Provider = async () => {
     console.log('!!!!!!!!!! USE ABC-WEB3-PROVIDER !!!!!!!!!!');
 
@@ -280,9 +280,13 @@ export default function TicketSalesInfo({
           </Row>
           <Row>
             <Label>Reserve Price</Label>
-            <Value>{`${sellTicketInfo.mysteryboxItem.price / 10} EDCP ($ ${
-              sellTicketInfo.mysteryboxItem.price
-            })`}</Value>
+            {sellTicketInfo.usePoint ? (
+              <Value>{`${sellTicketInfo.mysteryboxItem.price / 10} EDCP ($ ${
+                sellTicketInfo.mysteryboxItem.price
+              })`}</Value>
+            ) : (
+              <Value>{`${sellTicketInfo.mysteryboxItem.price} USDC ($ ${sellTicketInfo.mysteryboxItem.price})`}</Value>
+            )}
           </Row>
           {isAuction ? (
             <Row>
