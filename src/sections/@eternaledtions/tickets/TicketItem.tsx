@@ -2,7 +2,6 @@ import { Box, Stack, Grid, Typography, useTheme } from '@mui/material';
 import { m } from 'framer-motion';
 import { Image, TextMaxLine, varHover, varTranHover } from 'src/components';
 import React, { ReactElement, useEffect, useState } from 'react';
-import axios from 'axios';
 import { useResponsive } from 'src/hooks';
 import RoundedButton from 'src/components/common/RoundedButton';
 import HyperlinkButton from 'src/components/ticket/HyperlinkButton';
@@ -21,32 +20,11 @@ export default function TicketItem({ ticket }: any) {
   const theme = useTheme();
   const isXs = useResponsive('down', 'sm');
   const isMobile = useResponsive('down', 'md');
-  const [maticPrice, setMaticPrice] = useState(0);
-  const [klayPrice, setKlayPrice] = useState(0);
   const [open, setOpen] = useState<boolean>(false);
   const [ticketInfo, setTicketInfo] = useState<MyTicketTypes | null>(null);
   const { days, hours, minutes, seconds } = useCountdown(
     new Date(ticket.sellbook?.endDate ? ticket.sellbook?.endDate : null)
   );
-  const getCoinPrice = () => {
-    const url = 'https://bcn-api.talken.io/coinmarketcap/cmcQuotes?cmcIds=4256,3890';
-    try {
-      if (klayPrice === 0 || maticPrice === 0) {
-        axios(url).then((response) => {
-          const klayUsd = response.data.data[4256].quote.USD.price;
-          const maticUsd = response.data.data[3890].quote.USD.price;
-          setKlayPrice(parseFloat(klayUsd));
-          setMaticPrice(parseFloat(maticUsd));
-        });
-      }
-    } catch (error: any) {
-      console.log(new Error(error));
-    }
-  };
-
-  useEffect(() => {
-    getCoinPrice();
-  }, []);
 
   useEffect(() => {
     if (ticket) {
