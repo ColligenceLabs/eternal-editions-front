@@ -1,5 +1,5 @@
 import { Box, CircularProgress, Stack } from '@mui/material';
-import React, { useState } from 'react';
+import React, { SetStateAction, useState } from 'react';
 import RoundedButton from '../common/RoundedButton';
 import { Hr, Label, Row, TotalValue, Value } from './StyledComponents';
 import { MyTicketTypes } from 'src/@types/my/myTicket';
@@ -15,6 +15,7 @@ import secureLocalStorage from 'react-secure-storage';
 import { fDate } from 'src/utils/formatTime';
 import { englishAuctionSell } from 'src/seaport/englishAuction';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
+import CSnackbar from 'src/components/common/CSnackbar';
 
 interface Props {
   sellTicketInfo: MyTicketTypes;
@@ -24,6 +25,8 @@ interface Props {
   startDate: Date;
   endDate: Date;
   isForSale: boolean;
+
+  setOpenSnackbar: SetStateAction<any>;
 }
 
 export default function TicketSalesInfo({
@@ -34,6 +37,7 @@ export default function TicketSalesInfo({
   startDate,
   endDate,
   isForSale,
+  setOpenSnackbar,
 }: Props) {
   const isAuction = typeOfSale === 'auction';
   const webUser = useSelector((state: any) => state.webUser);
@@ -119,19 +123,32 @@ export default function TicketSalesInfo({
     const result = await registerSell(sellOrder);
     console.log('!! Sell Result : ', result);
     if (result.status === 200) {
-      console.log('... Success');
+      setOpenSnackbar({
+        open: true,
+        type: 'success',
+        message: 'Sell completed!',
+      });
     } else {
       console.log('... Failed');
+      setOpenSnackbar({
+        open: true,
+        type: 'error',
+        message: 'Failed Sell!',
+      });
     }
   };
 
   const sellByPoint = async () => {
-    if (typeOfSale === 'fixed') {
-      console.log('click Fixed Price');
-      await insertSellbook(null, 1);
-    } else if (typeOfSale === 'auction') {
-      console.log('click English auction');
-      await insertSellbook(null, 2);
+    try {
+      if (typeOfSale === 'fixed') {
+        console.log('click Fixed Price');
+        await insertSellbook(null, 1);
+      } else if (typeOfSale === 'auction') {
+        console.log('click English auction');
+        await insertSellbook(null, 2);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -176,7 +193,8 @@ export default function TicketSalesInfo({
         );
       }
 
-      await insertSellbook(order, 1);
+      const result = await insertSellbook(order, 1);
+      console.log(result);
     } else if (typeOfSale === 'auction') {
       console.log('click English auction');
 
@@ -334,6 +352,7 @@ export default function TicketSalesInfo({
           )}
         </>
       )}
+
       {/*{isAuction ? <RoundedButton variant="withImage">CONFIRM</RoundedButton> : null}*/}
     </Stack>
   );
