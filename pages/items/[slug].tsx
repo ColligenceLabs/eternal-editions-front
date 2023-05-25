@@ -239,6 +239,16 @@ export default function TicketDetailPage() {
 
   const buyWithPoint = async () => {
     // TODO : Banckend API 호출 (Fixed Price Sell Buy)
+    const data = {
+      buyer: webUser.user.uid,
+      buyerAddress: account,
+      price: sellbookInfo?.price,
+      txHash: null,
+    };
+    console.log('!! buyWithPoint data = ', data);
+
+    const result = await registerSellbookBuy(data, sellbookInfo?.id!);
+    console.log('!! buyWithPoint result = ', result);
   };
 
   const buyWithCrypto = async () => {
