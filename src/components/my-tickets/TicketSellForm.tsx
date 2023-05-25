@@ -7,7 +7,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { SetStateAction, useEffect, useState } from 'react';
 import {
   FootText,
   Hr,
@@ -49,6 +49,7 @@ type TicketSellFormProps = {
   team: string;
   day: string;
   isForSale: boolean;
+  setOpenSnackbar: SetStateAction<any>;
 };
 
 export default function TicketSellForm({
@@ -56,6 +57,7 @@ export default function TicketSellForm({
   team,
   day,
   isForSale,
+  setOpenSnackbar,
 }: TicketSellFormProps) {
   const theme = useTheme();
   const [typeOfSale, setTypeOfSale] = useState(TYPES_OF_SALE[0].value);
@@ -135,6 +137,7 @@ export default function TicketSellForm({
         startDate={startDate}
         endDate={endDate}
         isForSale={isForSale}
+        setOpenSnackbar={setOpenSnackbar}
       />
     );
   }

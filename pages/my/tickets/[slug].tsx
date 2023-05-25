@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import Layout from 'src/layouts';
 import { Page } from 'src/components';
 import { Container, useTheme } from '@mui/material';
@@ -8,6 +8,7 @@ import { useRouter } from 'next/router';
 import { getSellItemInfo } from 'src/services/services';
 import { MyTicketTypes } from 'src/@types/my/myTicket';
 import FixedBackground from 'src/components/common/FixedBackground';
+import CSnackbar from 'src/components/common/CSnackbar';
 
 // ----------------------------------------------------------------------
 
@@ -18,6 +19,19 @@ export default function MyTicketSellPage() {
   const [team, setTeam] = useState('');
   const [day, setDay] = useState('');
   const [isForSale, setIsForSale] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState({
+    open: false,
+    type: '',
+    message: '',
+  });
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar({
+      open: false,
+      type: '',
+      message: '',
+    });
+  };
 
   const fetchSellItemInfo = async (id: string) => {
     const res = await getSellItemInfo(id);
@@ -64,6 +78,13 @@ export default function MyTicketSellPage() {
               day={day}
               team={team}
               isForSale={isForSale}
+              setOpenSnackbar={setOpenSnackbar}
+            />
+            <CSnackbar
+              open={openSnackbar.open}
+              type={openSnackbar.type}
+              message={openSnackbar.message}
+              handleClose={handleCloseSnackbar}
             />
           </Container>
         </>

@@ -1,5 +1,5 @@
 import { Box, CircularProgress, Stack } from '@mui/material';
-import React, { useState } from 'react';
+import React, { SetStateAction, useState } from 'react';
 import RoundedButton from '../common/RoundedButton';
 import { Hr, Label, Row, TotalValue, Value } from './StyledComponents';
 import { MyTicketTypes } from 'src/@types/my/myTicket';
@@ -15,6 +15,7 @@ import secureLocalStorage from 'react-secure-storage';
 import { fDate } from 'src/utils/formatTime';
 import { englishAuctionSell } from 'src/seaport/englishAuction';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
+import CSnackbar from 'src/components/common/CSnackbar';
 
 interface Props {
   sellTicketInfo: MyTicketTypes;
@@ -24,6 +25,8 @@ interface Props {
   startDate: Date;
   endDate: Date;
   isForSale: boolean;
+
+  setOpenSnackbar: SetStateAction<any>;
 }
 
 enum sellType {
@@ -40,6 +43,7 @@ export default function TicketSalesInfo({
   startDate,
   endDate,
   isForSale,
+  setOpenSnackbar,
 }: Props) {
   const isAuction = typeOfSale === 'auction';
   const webUser = useSelector((state: any) => state.webUser);
@@ -47,7 +51,7 @@ export default function TicketSalesInfo({
   const { account } = useAccount();
 
   const [isLoading, setIsLoading] = useState(false);
-
+  console.log(sellTicketInfo);
   const getAbcWeb3Provider = async () => {
     console.log('!!!!!!!!!! USE ABC-WEB3-PROVIDER !!!!!!!!!!');
 
@@ -125,9 +129,18 @@ export default function TicketSalesInfo({
     const result = await registerSell(sellOrder);
     console.log('!! Sell Result : ', result);
     if (result.status === 200) {
-      console.log('... Success');
+      setOpenSnackbar({
+        open: true,
+        type: 'success',
+        message: 'Sell completed!',
+      });
     } else {
       console.log('... Failed');
+      setOpenSnackbar({
+        open: true,
+        type: 'error',
+        message: 'Failed Sell!',
+      });
     }
   };
 
@@ -267,9 +280,13 @@ export default function TicketSalesInfo({
           </Row>
           <Row>
             <Label>Reserve Price</Label>
-            <Value>{`${sellTicketInfo.mysteryboxItem.price / 10} EDCP ($ ${
-              sellTicketInfo.mysteryboxItem.price
-            })`}</Value>
+            {sellTicketInfo.usePoint ? (
+              <Value>{`${sellTicketInfo.mysteryboxItem.price / 10} EDCP ($ ${
+                sellTicketInfo.mysteryboxItem.price
+              })`}</Value>
+            ) : (
+              <Value>{`${sellTicketInfo.mysteryboxItem.price} USDC ($ ${sellTicketInfo.mysteryboxItem.price})`}</Value>
+            )}
           </Row>
           {isAuction ? (
             <Row>
@@ -340,6 +357,7 @@ export default function TicketSalesInfo({
           )}
         </>
       )}
+
       {/*{isAuction ? <RoundedButton variant="withImage">CONFIRM</RoundedButton> : null}*/}
     </Stack>
   );

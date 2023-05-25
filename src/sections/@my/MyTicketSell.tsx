@@ -1,5 +1,5 @@
 import { Box, Stack, useTheme } from '@mui/material';
-import React from 'react';
+import React, { SetStateAction } from 'react';
 import TicketSellForm from 'src/components/my-tickets/TicketSellForm';
 import Badge from 'src/components/ticket/Badge';
 import { CardInner } from 'src/components/ticket/CardInner';
@@ -14,8 +14,15 @@ type MyTicketSellProps = {
   team: string;
   day: string;
   isForSale: boolean;
+  setOpenSnackbar: SetStateAction<any>;
 };
-const MyTicketSell: React.FC<MyTicketSellProps> = ({ sellTicketInfo, team, day, isForSale }) => {
+const MyTicketSell: React.FC<MyTicketSellProps> = ({
+  sellTicketInfo,
+  team,
+  day,
+  isForSale,
+  setOpenSnackbar,
+}) => {
   const theme = useTheme();
   console.log(sellTicketInfo);
   return (
@@ -36,6 +43,7 @@ const MyTicketSell: React.FC<MyTicketSellProps> = ({ sellTicketInfo, team, day, 
             day={day}
             team={team}
             isForSale={isForSale}
+            setOpenSnackbar={setOpenSnackbar}
           />
         </CardInner>
       </CardWrapper>
