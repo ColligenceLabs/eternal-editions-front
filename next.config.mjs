@@ -21,7 +21,7 @@ const nextConfig = {
     ABC_SERVICE_ID: 'https://mw.myabcwallet.com',
     SENTRY_DSN: 'https://33738b9d7e4f432b919d7d03412bbe34@o1346368.ingest.sentry.io/6624178',
     ISS: 'abc',
-    SECURE_LOCAL_STORAGE_HASH_KEY: process.env.SECURE_LOCAL_STORAGE_HASH_KEY,
+    NEXT_PUBLIC_SECURE_LOCAL_STORAGE_HASH_KEY: process.env.NEXT_PUBLIC_SECURE_LOCAL_STORAGE_HASH_KEYY,
 
     API_SERVER_ADDRESS: 'https://api.eternaleditions.io',
     // API_SERVER_ADDRESS: 'https://api.dev.eternaleditions.io',
