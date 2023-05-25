@@ -422,12 +422,25 @@ export default function TicketDetailPage() {
                         <Row>
                           <Label>Current Price</Label>
                           <Stack flexDirection="row" gap={0.5}>
-                            <TotalValue>{`${
-                              sellbookInfo.price
-                            } ${payType.toUpperCase()}`}</TotalValue>
-                            <TotalValue sx={{ opacity: 0.6 }}>{`(~$${
-                              payType === 'edcp' ? sellbookInfo.price / 10 : sellbookInfo.price
-                            })`}</TotalValue>
+                            {payType === 'edcp' ? (
+                              <>
+                                <TotalValue>{`${
+                                  sellbookInfo.price / 10
+                                } ${payType.toUpperCase()}`}</TotalValue>
+                                <TotalValue
+                                  sx={{ opacity: 0.6 }}
+                                >{`(~$${sellbookInfo.price})`}</TotalValue>
+                              </>
+                            ) : (
+                              <>
+                                <TotalValue>{`${
+                                  sellbookInfo.price
+                                } ${payType.toUpperCase()}`}</TotalValue>
+                                <TotalValue sx={{ opacity: 0.6 }}>{`(~$${
+                                  payType === 'edcp' ? sellbookInfo.price / 10 : sellbookInfo.price
+                                })`}</TotalValue>
+                              </>
+                            )}
                           </Stack>
                         </Row>
                       </Stack>
