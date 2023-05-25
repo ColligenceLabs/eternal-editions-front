@@ -1,5 +1,5 @@
 import { Stack, Typography, Divider, CircularProgress, Fade, TextField } from '@mui/material';
-import React, { ChangeEvent, useEffect, useState } from 'react';
+import React, { ChangeEvent, SetStateAction, useEffect, useState } from 'react';
 import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import RoundedButton from 'src/components/common/RoundedButton';
 import { fDate } from 'src/utils/formatTime';
@@ -39,6 +39,8 @@ type Props = {
   team: string;
   duration: string;
   location: string;
+  isLoading: boolean;
+  setIsLoading: SetStateAction<any>;
 };
 
 const ticketLabel = {
@@ -70,6 +72,8 @@ const TicketItemModal = ({
   team,
   duration,
   location,
+  isLoading,
+  setIsLoading,
 }: Props) => {
   const { price, createdAt, name, id } = ticket;
   const [quantity, setQuantity] = useState<number>(1);
@@ -79,7 +83,7 @@ const TicketItemModal = ({
   const [klayPrice, setKlayPrice] = useState(0);
   const [maticPrice, setMaticPrice] = useState(0);
   const [dollarPrice, setDollarPrice] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
+  // const [isLoading, setIsLoading] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState({
     open: false,
     type: '',
@@ -248,9 +252,9 @@ const TicketItemModal = ({
       if (klayPrice === 0 || maticPrice === 0) {
         axios(url).then((response) => {
           const klayUsd = response.data.data[4256].quote.USD.price;
-          const klayKrw = response.data.data[4256].quote.KRW.price;
+          // const klayKrw = response.data.data[4256].quote.KRW.price;
           const maticUsd = response.data.data[3890].quote.USD.price;
-          const maticKrw = response.data.data[3890].quote.KRW.price;
+          // const maticKrw = response.data.data[3890].quote.KRW.price;
           setKlayPrice(parseFloat(klayUsd));
           setMaticPrice(parseFloat(maticUsd));
         });

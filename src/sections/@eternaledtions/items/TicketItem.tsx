@@ -10,7 +10,6 @@ import RoundedButton from 'src/components/common/RoundedButton';
 import ModalCustom from 'src/components/common/ModalCustom';
 import { useEffect, useState } from 'react';
 import TicketItemModal from './TicketItemModal';
-import axios from 'axios';
 
 // ----------------------------------------------------------------------
 
@@ -48,6 +47,7 @@ export default function TicketItem({
   const [day, setDay] = useState('');
   const [duration, setDuration] = useState('');
   const [location, setLocation] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const isOnAuction = router.query.status; // TODO: Update value
   const theme = useTheme();
@@ -269,7 +269,7 @@ export default function TicketItem({
               aria-labelledby="transition-modal-title"
               aria-describedby="transition-modal-description"
               open={isTicketItemModalOpen}
-              onClose={() => setIsTicketItemModalOpen(false)}
+              onClose={() => !isLoading && setIsTicketItemModalOpen(false)}
             >
               <TicketItemModal
                 ticket={ticket}
@@ -282,6 +282,8 @@ export default function TicketItem({
                 duration={duration}
                 location={location}
                 setIsTicketItemModalOpen={setIsTicketItemModalOpen}
+                isLoading={isLoading}
+                setIsLoading={setIsLoading}
               />
             </ModalCustom>
           </>
