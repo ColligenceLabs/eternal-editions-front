@@ -27,12 +27,12 @@ export const apiClient = axios.create({
   // adapter: fetchAdapter,
 });
 
-apiClient.interceptors.request.use((cfg) => {
+apiClient.interceptors.request.use(async (cfg) => {
   console.log('--- axios-- cfg--', cfg);
   // const { abcAuth } = dekeyStore.getState();
   // const abcAuth = JSON.parse(window.localStorage.getItem('abcAuth'));
-  // TODO : 가끔 못 읽는 경우가 있는 듯...
-  const abcAuth = JSON.parse(<string>secureLocalStorage.getItem('abcAuth'));
+  // TODO : 가끔 못 읽는 경우가 있는 듯 -> await 추가 후 상황 변화 확인 필요
+  const abcAuth = JSON.parse(<string>await secureLocalStorage.getItem('abcAuth'));
 
   // @ts-ignore
   if (!cfg?.headers?.authorization) {
