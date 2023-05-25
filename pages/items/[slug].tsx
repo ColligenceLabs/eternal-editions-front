@@ -126,7 +126,6 @@ export default function TicketDetailPage() {
   const { slug } = router.query;
   const isMobile = useResponsive('down', 'md');
   const abcUser = useSelector((state: any) => state.user);
-  const [dollarPrice, setDollarPrice] = useState(0);
   const [payType, setPayType] = useState('default');
   const [abcToken, setAbcToken] = useState('');
   const [abcOpen, setAbcOpen] = useState(false);

@@ -81,9 +81,6 @@ const TicketItemModal = ({
   const [method, setMethod] = useState<string>(methodType.edcp);
   const [isCompleteModal, setIsCompleteModal] = useState<boolean>(false);
   const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
-  const [klayPrice, setKlayPrice] = useState(0);
-  const [maticPrice, setMaticPrice] = useState(0);
-  const [dollarPrice, setDollarPrice] = useState(0);
   // const [isLoading, setIsLoading] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState({
     open: false,
@@ -284,24 +281,6 @@ const TicketItemModal = ({
     setOtpLoading(false);
   };
 
-  const getCoinPrice = () => {
-    const url = 'https://bcn-api.talken.io/coinmarketcap/cmcQuotes?cmcIds=4256,3890';
-    try {
-      if (klayPrice === 0 || maticPrice === 0) {
-        axios(url).then((response) => {
-          const klayUsd = response.data.data[4256].quote.USD.price;
-          // const klayKrw = response.data.data[4256].quote.KRW.price;
-          const maticUsd = response.data.data[3890].quote.USD.price;
-          // const maticKrw = response.data.data[3890].quote.KRW.price;
-          setKlayPrice(parseFloat(klayUsd));
-          setMaticPrice(parseFloat(maticUsd));
-        });
-      }
-    } catch (error: any) {
-      console.log(new Error(error));
-    }
-  };
-
   const handleBuyWithPoint = async () => {
     if (isLoading) {
       console.log('in progress');
@@ -486,13 +465,8 @@ const TicketItemModal = ({
   };
 
   useEffect(() => {
-    getCoinPrice();
     fetchMintLimitCount();
   }, []);
-
-  useEffect(() => {
-    setDollarPrice((price ?? 0) * maticPrice);
-  }, [price, maticPrice]);
 
   const onSubmit = async () => {
     if (ticketInfo && ticketInfo.whitelists && ticketInfo.whitelists.length > 0) {
@@ -610,7 +584,6 @@ const TicketItemModal = ({
                 {ticketinfo(ticketLabel.team, `Team ${team}`)}
                 {isCompleteModal ? (
                   <>
-                    {/* setDollarPrice((ticketInfo?.price ?? 0) * maticPrice); */}
                     {ticketinfo(ticketLabel.qty, quantity)}
                     {ticketinfo(ticketLabel.totalPrice, fullTotalPriceString)}
                     {ticketinfo(ticketLabel.transaction, transactionHash)}

@@ -51,6 +51,7 @@ export default function TicketSalesInfo({
   const { account } = useAccount();
 
   const [isLoading, setIsLoading] = useState(false);
+  const [endSubmit, setEndSubmit] = useState(false);
   console.log(sellTicketInfo);
   const getAbcWeb3Provider = async () => {
     console.log('!!!!!!!!!! USE ABC-WEB3-PROVIDER !!!!!!!!!!');
@@ -134,6 +135,7 @@ export default function TicketSalesInfo({
         type: 'success',
         message: 'Sell completed!',
       });
+      setEndSubmit(true);
     } else {
       console.log('... Failed');
       setOpenSnackbar({
@@ -350,7 +352,7 @@ export default function TicketSalesInfo({
             >
               <CircularProgress size={'2rem'} />
             </Box>
-          ) : (
+          ) : endSubmit ? null : (
             <RoundedButton variant="withImage" onClick={handleClickConfirm}>
               CONFIRM
             </RoundedButton>

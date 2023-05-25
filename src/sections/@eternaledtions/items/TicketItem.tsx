@@ -53,26 +53,6 @@ export default function TicketItem({
   const theme = useTheme();
   const [isTicketItemModalOpen, setIsTicketItemModalOpen] = useState(false);
   const [edcpPrice, setEdcpPrice] = useState(0);
-  // const [maticPrice, setMaticPrice] = useState(0);
-  // const [klayPrice, setKlayPrice] = useState(0);
-
-  // const getCoinPrice = () => {
-  //   const url = 'https://bcn-api.talken.io/coinmarketcap/cmcQuotes?cmcIds=4256,3890';
-  //   try {
-  //     if (klayPrice === 0 || maticPrice === 0) {
-  //       axios(url).then((response) => {
-  //         const klayUsd = response.data.data[4256].quote.USD.price;
-  //         const klayKrw = response.data.data[4256].quote.KRW.price;
-  //         const maticUsd = response.data.data[3890].quote.USD.price;
-  //         const maticKrw = response.data.data[3890].quote.KRW.price;
-  //         setKlayPrice(parseFloat(klayUsd));
-  //         setMaticPrice(parseFloat(maticUsd));
-  //       });
-  //     }
-  //   } catch (error: any) {
-  //     console.log(new Error(error));
-  //   }
-  // };
 
   useEffect(() => {
     if (properties) {
@@ -89,10 +69,6 @@ export default function TicketItem({
       );
     }
   }, [properties]);
-
-  // useEffect(() => {
-  //   getCoinPrice();
-  // }, []);
 
   useEffect(() => {
     setEdcpPrice(price / 10);

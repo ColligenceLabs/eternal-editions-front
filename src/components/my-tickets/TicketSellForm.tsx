@@ -286,7 +286,11 @@ export default function TicketSellForm({
         </TotalValue>
       </Row>
 
-      <RoundedButton sx={{ mt: 3 }} onClick={onSubmit}>
+      <RoundedButton
+        sx={{ mt: 3 }}
+        onClick={onSubmit}
+        disabled={!amount || isNaN(parseFloat(amount)) || parseFloat(amount) <= 0}
+      >
         COMPLETE LISTING
       </RoundedButton>
     </>
