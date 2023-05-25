@@ -670,7 +670,9 @@ const TicketItemModal = ({
               ) : (
                 <>
                   {ticketinfo(ticketLabel.total, fullTotalPriceString)}
-                  <RoundedButton onClick={onSubmit}>COMPLETE PURCHASE</RoundedButton>
+                  <RoundedButton onClick={onSubmit} disabled={perLimit === 0}>
+                    COMPLETE PURCHASE
+                  </RoundedButton>
                 </>
               )}
             </Stack>
