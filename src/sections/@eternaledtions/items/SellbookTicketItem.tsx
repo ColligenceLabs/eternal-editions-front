@@ -248,7 +248,10 @@ export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
             }}
           >
             {/*{`${(dollarPrice / 10).toFixed(4)} EDCP`}*/}
-            {`${sellbookItem.price} ${sellbookItem.drop?.usePoint ? 'EDCP' : 'USDC'}`}
+
+            {`${sellbookItem.drop?.usePoint ? sellbookItem.price / 10 : sellbookItem.price} ${
+              sellbookItem.drop?.usePoint ? 'EDCP' : 'USDC'
+            }`}
           </Typography>
           <BuyNowButton
             releasedDate={startDate}
