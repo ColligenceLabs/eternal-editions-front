@@ -31,7 +31,7 @@ import { useOffSetTop, useResponsive } from '../../hooks';
 import useAccount from '../../hooks/useAccount';
 import useActiveWeb3React from '../../hooks/useActiveWeb3React';
 import { useEagerConnect, useInactiveListener } from '../../hooks/useEagerConnect';
-import {abcLogin, getSession} from '../../services/services';
+import { abcLogin, getSession } from '../../services/services';
 import { setAbcAuth } from '../../store/slices/abcAuth';
 import { abcSendTx } from '../../utils/abcTransactions';
 import { NavDesktop, NavMobile, navConfig } from '../nav';
@@ -160,8 +160,8 @@ export default function Header({ transparent, sx }: Props) {
           const abcUser = JSON.parse(secureLocalStorage.getItem('abcUser') as string);
           console.log('==========================', abcUser);
           console.log(
-              '=============>',
-              abcUser && abcUser?.accounts ? abcUser?.accounts[0].ethAddress : 'No ethAddress'
+            '=============>',
+            abcUser && abcUser?.accounts ? abcUser?.accounts[0].ethAddress : 'No ethAddress'
           );
 
           const provider = new ethers.providers.Web3Provider(instance);
