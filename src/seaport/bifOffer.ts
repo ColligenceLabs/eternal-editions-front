@@ -3,7 +3,7 @@ import env from '../env';
 import { BigNumber, ethers } from 'ethers';
 import contracts from 'src/config/constants/contracts';
 
-export const fixedPriceSell = async (
+export const bidOffer = async (
   address: string,
   tokenId: string,
   price: string,
@@ -33,8 +33,8 @@ export const fixedPriceSell = async (
 
   const priceBN = BigNumber.from(price);
   const tradingFee = priceBN.mul(env.TRADING_FEE).div(1000);
-  const creatorShare = priceBN.mul(env.CREATOR_FEE).div(1000);
-  const profit = priceBN.sub(tradingFee).sub(creatorShare);
+  // const creatorShare = priceBN.mul(env.CREATOR_FEE).div(1000);
+  // const profit = priceBN.sub(tradingFee).sub(creatorShare);
   const quoteToken =
     quote === 'matic'
       ? contracts.matic[chainId]
@@ -45,43 +45,46 @@ export const fixedPriceSell = async (
     '=====>',
     priceBN.toString(),
     tradingFee.toString(),
-    creatorShare.toString(),
-    profit.toString(),
+    // creatorShare.toString(),
+    // profit.toString(),
     quoteToken
   );
 
   const consideration = [];
-  consideration.push({
-    token: quoteToken,
-    amount: profit.toString(),
-    endAmount: profit.toString(),
-    recipient: undefined,
-  });
+  // consideration.push({
+  //   token: quoteToken,
+  //   amount: profit.toString(),
+  //   endAmount: profit.toString(),
+  //   recipient: undefined,
+  // });
   consideration.push({
     token: quoteToken,
     amount: tradingFee.toString(),
     endAmount: tradingFee.toString(),
     recipient: env.TREASURY,
   });
-  if (creator)
-    consideration.push({
-      token: quoteToken,
-      amount: creatorShare.toString(),
-      endAmount: creatorShare.toString(),
-      recipient: creator,
-    });
+  // if (creator)
+  //   consideration.push({
+  //     token: quoteToken,
+  //     amount: creatorShare.toString(),
+  //     endAmount: creatorShare.toString(),
+  //     recipient: creator,
+  //   });
+  consideration.push({
+    itemType: 2,
+    token: address,
+    identifier: tokenId,
+    amount: '1',
+  });
 
   console.log('!! offer : ', {
     offer: [
       {
-        itemType: 2, // ERC-721
-        token: address,
-        identifier: tokenId,
-        amount: '1',
+        token: quoteToken,
+        amount: price,
       },
     ],
     consideration,
-    startTime: undefined,
     endTime,
     zone: '0x0000000000000000000000000000000000000000',
     domain: undefined,
@@ -93,14 +96,11 @@ export const fixedPriceSell = async (
     {
       offer: [
         {
-          itemType: 2, // ERC-721
-          token: address,
-          identifier: tokenId,
-          amount: '1',
+          token: quoteToken,
+          amount: price,
         },
       ],
       consideration,
-      startTime: undefined,
       endTime,
       zone: '0x0000000000000000000000000000000000000000',
       domain: undefined,
