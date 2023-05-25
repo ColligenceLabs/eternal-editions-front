@@ -25,6 +25,7 @@ import { Backdrop } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 import { abcSendTx } from 'src/utils/abcTransactions';
 import { collectionAbi } from 'src/config/abi/Collection';
+import tokenAbi from 'src/config/abi/ERC20Token.json';
 import Routes from 'src/routes';
 import moment from 'moment';
 
@@ -132,19 +133,55 @@ const TicketItemModal = ({
     setOtpLoading(true);
     console.log(`abc token : ${abcToken}`); // Google OTP
 
-    // Collection
     const contract = boxContractAddress;
     const index = ticket.no - 1 ?? 0;
     const amount = quantity;
-
     const quoteToken =
       quote === 'matic'
         ? contracts.matic[chainId]
         : quote === 'usdc'
-        ? contracts.usdt[chainId]
+        ? contracts.usdc[chainId]
         : contracts.usdt[chainId];
-    const payment = parseEther(ticket?.price.toString() ?? '0').mul(amount);
 
+    let payment;
+    if (quote === 'matic') payment = parseEther(ticket?.price.toString() ?? '0').mul(amount);
+    // else if (quote === 'usdc' || quote === 'usdt')
+    else payment = parseUnits((ticket?.price * amount).toString() ?? '0', 6);
+    console.log('!! payment = ', payment.toString());
+
+    // USDC, USDT 인 경우 Approve 실행
+    if (quote !== 'matic') {
+      try {
+        const result = await abcSendTx(
+          abcToken,
+          quoteToken,
+          tokenAbi,
+          'approve',
+          [boxContractAddress, payment],
+          abcUser,
+          undefined
+        );
+
+        if (parseInt(result.status.toString(), 16) !== SUCCESS) {
+          setOpenSnackbar({
+            open: true,
+            type: 'error',
+            message: 'Purchase Approve faield!',
+          });
+          return;
+        }
+      } catch (e: any) {
+        console.log(e.message);
+        setOpenSnackbar({
+          open: true,
+          type: 'error',
+          message: 'Purchase Approve faield!',
+        });
+        return;
+      }
+    }
+
+    // NFT 구입하기
     try {
       const method = quote === 'matic' ? 'buyItemEth' : 'buyItemQuote';
       const txArgs = quote === 'matic' ? [index, amount] : [index, payment.toHexString(), amount];
@@ -158,22 +195,6 @@ const TicketItemModal = ({
         quote === 'matic' ? payment.toHexString() : undefined
       );
 
-      // TODO: Get tokenId in the receipt and save into DB drops ?
-      const events = result.logs;
-      const tokenIds = [];
-      let recipient;
-      for (let i = 0; i < amount; i++) {
-        recipient = hexToAddress(events[1 + i].topics[2]);
-        const tokenIdHex = ethers.utils.defaultAbiCoder.decode(
-          ['uint256'],
-          events[1 + i].topics[3]
-        );
-        const tokenId = parseInt(tokenIdHex.toString());
-        tokenIds.push(tokenId);
-      }
-
-      console.log('== ABC buyItem event ==>', recipient, tokenIds);
-
       if (parseInt(result.status.toString(), 16) === SUCCESS) {
         // const left = await getItemAmount(
         //   contract,
@@ -182,6 +203,23 @@ const TicketItemModal = ({
         //   account,
         //   library
         // );
+
+        // TODO: Get tokenId in the receipt and save into DB drops ?
+        const events = result.logs;
+        const tokenIds = [];
+        let recipient;
+        const startIx = quote === 'matic' ? 1 : 2; // 0x574caab053de2e7accfb088fb6c2bca3e335c4a0
+        for (let i = 0; i < amount; i++) {
+          recipient = hexToAddress(events[startIx + i].topics[2]);
+          const tokenIdHex = ethers.utils.defaultAbiCoder.decode(
+            ['uint256'],
+            events[startIx + i].topics[3]
+          );
+          const tokenId = parseInt(tokenIdHex.toString());
+          tokenIds.push(tokenId);
+        }
+
+        console.log('== ABC buyItem event ==>', recipient, tokenIds);
 
         const data = {
           mysterybox_id,
