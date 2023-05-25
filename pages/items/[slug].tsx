@@ -136,6 +136,7 @@ export default function TicketDetailPage() {
   const [team, setTeam] = useState('');
   const [isOnAuction, setIsOnAuction] = useState(false);
   const [descriptionOpen, setDescriptionOpen] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState({
     open: false,
     type: '',
@@ -249,6 +250,19 @@ export default function TicketDetailPage() {
 
     const result = await registerSellbookBuy(data, sellbookInfo?.id!);
     console.log('!! buyWithPoint result = ', result);
+    if (result.data.status === SUCCESS) {
+      setOpenSnackbar({
+        open: true,
+        type: 'success',
+        message: 'Success BUY!',
+      });
+    } else {
+      setOpenSnackbar({
+        open: true,
+        type: 'error',
+        message: 'Failed BUY!',
+      });
+    }
   };
 
   const buyWithCrypto = async () => {
@@ -262,6 +276,21 @@ export default function TicketDetailPage() {
     } else if (library) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
       result = await fullfillment(sellbookInfo?.sellInfo, account!, library);
+    }
+    // todo result 후 처리
+    console.log('result 후 처리');
+    if (result.data.status === SUCCESS) {
+      setOpenSnackbar({
+        open: true,
+        type: 'success',
+        message: 'Success BUY!',
+      });
+    } else {
+      setOpenSnackbar({
+        open: true,
+        type: 'error',
+        message: 'Failed BUY!',
+      });
     }
 
     console.log('!! fullfillment result = ', result);
@@ -279,10 +308,12 @@ export default function TicketDetailPage() {
   };
 
   const handleClickBuy = async () => {
+    setIsLoading(true);
     console.log('buy now');
     console.log(`pay type :: ${payType}`);
     if (payType === 'edcp') await buyWithPoint();
     else await buyWithCrypto();
+    setIsLoading(false);
   };
 
   const handleClickBid = async () => {
@@ -456,13 +487,27 @@ export default function TicketDetailPage() {
                               ))}
                             </RoundedSelect>
 
-                            <RoundedButton
-                              onClick={handleClickBuy}
-                              fullWidth
-                              sx={{ backgroundColor: theme.palette.primary.main }}
-                            >
-                              Buy Now
-                            </RoundedButton>
+                            {isLoading ? (
+                              <Box
+                                sx={{
+                                  // width: '100%',
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                  mt: '10px',
+                                }}
+                              >
+                                <CircularProgress size={'2rem'} />
+                              </Box>
+                            ) : (
+                              <RoundedButton
+                                onClick={handleClickBuy}
+                                fullWidth
+                                sx={{ backgroundColor: theme.palette.primary.main }}
+                              >
+                                Buy Now
+                              </RoundedButton>
+                            )}
                           </>
                         )}
                       </Stack>
