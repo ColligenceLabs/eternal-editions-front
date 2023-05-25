@@ -9,6 +9,7 @@ import { useEffect, useState } from 'react';
 import axios from 'axios';
 import NextLink from 'next/link';
 import Routes from 'src/routes';
+import { useSelector } from 'react-redux';
 
 // ----------------------------------------------------------------------
 
@@ -30,6 +31,8 @@ type Props = {
 };
 
 export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
+  const webUser = useSelector((state: any) => state.webUser);
+  console.log(sellbookItem);
   // console.log(sellbookItem);
   const router = useRouter();
   // const isMobile = useResponsive('down', 'md');
@@ -208,6 +211,28 @@ export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
                     }}
                   />
                 </Stack>
+                {webUser.user.uid === sellbookItem.uid && (
+                  <Stack
+                    sx={{
+                      p: 2,
+                      height: 1,
+                      zIndex: 9,
+                      right: 0,
+                      position: 'absolute',
+                    }}
+                  >
+                    <Chip
+                      label={'My sales'}
+                      variant="outlined"
+                      color="secondary"
+                      sx={{
+                        textTransform: 'uppercase',
+                        fontWeight: theme.typography.fontWeightBold,
+                      }}
+                    />
+                  </Stack>
+                )}
+
                 <Stack
                   sx={{
                     p: 2,
