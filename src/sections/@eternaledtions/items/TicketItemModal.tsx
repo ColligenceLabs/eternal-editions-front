@@ -89,6 +89,7 @@ const TicketItemModal = ({
   });
   const abcUser = useSelector((state: any) => state.user);
   const [abcToken, setAbcToken] = useState('');
+  const [approveOpen, setApproveOpen] = useState(false);
   const [abcOpen, setAbcOpen] = useState(false);
   const [reload, setReload] = useState(false);
   const [transactionHash, setTransactionHash] = useState('');
@@ -126,12 +127,11 @@ const TicketItemModal = ({
     return '0x' + hexVal.substr(-40);
   }
 
-  const handleAbcConfirmClick = async () => {
+  const handleApproveConfirmClick = async () => {
     setOtpLoading(true);
     console.log(`abc token : ${abcToken}`); // Google OTP
 
     const contract = boxContractAddress;
-    const index = ticket.no - 1 ?? 0;
     const amount = quantity;
     const quoteToken =
       quote === 'matic'
@@ -154,7 +154,7 @@ const TicketItemModal = ({
           quoteToken,
           tokenAbi,
           'approve',
-          [boxContractAddress, payment],
+          [contract, payment],
           abcUser,
           undefined
         );
@@ -177,6 +177,32 @@ const TicketItemModal = ({
         return;
       }
     }
+
+    setAbcToken('');
+    setApproveOpen(false);
+    setOtpLoading(false);
+    setAbcOpen(true);
+  };
+
+  const handleAbcConfirmClick = async () => {
+    setOtpLoading(true);
+    console.log(`abc token : ${abcToken}`); // Google OTP
+
+    const contract = boxContractAddress;
+    const index = ticket.no - 1 ?? 0;
+    const amount = quantity;
+    const quoteToken =
+      quote === 'matic'
+        ? contracts.matic[chainId]
+        : quote === 'usdc'
+        ? contracts.usdc[chainId]
+        : contracts.usdt[chainId];
+
+    let payment;
+    if (quote === 'matic') payment = parseEther(ticket?.price.toString() ?? '0').mul(amount);
+    // else if (quote === 'usdc' || quote === 'usdt')
+    else payment = parseUnits((ticket?.price * amount).toString() ?? '0', 6);
+    console.log('!! payment = ', payment.toString());
 
     // NFT 구입하기
     try {
@@ -347,9 +373,11 @@ const TicketItemModal = ({
   const handleBuyWithCrypto = async () => {
     const loginBy = window.localStorage.getItem('loginBy') ?? 'sns';
     if (loginBy === 'sns') {
-      setAbcOpen(true);
+      if (quote !== 'matic') setApproveOpen(true);
+      else setAbcOpen(true);
       return;
     }
+
     setIsLoading(true);
     // Collection
     const contract = boxContractAddress;
@@ -729,6 +757,69 @@ const TicketItemModal = ({
                       },
                     }}
                     onClick={handleAbcConfirmClick}
+                    loading={otpLoading}
+                    disabled={otpLoading}
+                  >
+                    확인
+                  </LoadingButton>
+                </Box>
+              </Box>
+            </Fade>
+          </Modal>
+
+          <Modal
+            aria-labelledby="transition-modal-title"
+            aria-describedby="transition-modal-description"
+            open={approveOpen}
+            onClose={handleAbcClose}
+            closeAfterTransition
+            BackdropComponent={Backdrop}
+            BackdropProps={{
+              timeout: 500,
+            }}
+          >
+            <Fade in={approveOpen}>
+              <Box sx={modalStyle}>
+                Google OTP :
+                <Typography variant="body3">
+                  Please check the 6-digit code in Google Authenticator and enter it.
+                </Typography>
+                <TextField
+                  sx={{ mt: 2 }}
+                  inputProps={{ style: { color: '#999999' } }}
+                  fullWidth
+                  variant="standard"
+                  label="Verification code"
+                  placeholder="Please Enter"
+                  value={abcToken}
+                  onChange={handleAbcTokenChange}
+                />
+                <Box sx={{ display: 'flex', justifyContent: 'center', mt: '10px' }}>
+                  <LoadingButton
+                    variant="outlined"
+                    size="medium"
+                    sx={{
+                      width: '100% !important',
+                      height: '36px',
+                      fontSize: 12,
+                      backgroundColor: '#f1f2f5',
+                      borderColor: '#f1f2f5',
+                      color: '#000000',
+                      boxShadow: 'none',
+                      '&:hover': {
+                        backgroundColor: '#08FF0C',
+                        borderColor: '#08FF0C',
+                        color: '#ffffff',
+                        boxShadow: 'none',
+                      },
+                      '&:active': {
+                        boxShadow: 'none',
+                        backgroundColor: 'background.paper',
+                        borderColor: 'background.paper',
+                        color: '#ffffff',
+                      },
+                    }}
+                    onClick={handleApproveConfirmClick}
                     loading={otpLoading}
                     disabled={otpLoading}
                   >
