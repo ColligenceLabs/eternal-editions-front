@@ -279,7 +279,7 @@ export default function TicketDetailPage() {
     }
     // todo result 후 처리
     console.log('result 후 처리');
-    if (result.data.status === SUCCESS) {
+    if (result?.status === SUCCESS) {
       setOpenSnackbar({
         open: true,
         type: 'success',
