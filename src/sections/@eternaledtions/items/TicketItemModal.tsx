@@ -282,7 +282,7 @@ const TicketItemModal = ({
         isSent: false,
         txHash: '',
         // price: ticketInfo?.price,
-        price: (((ticket?.price ?? 0) * maticPrice) / 10).toFixed(4),
+        price: ticket.price,
         itemId: ticket?.id,
         usePoint: true,
         amount: quantity,
