@@ -118,7 +118,7 @@ export default function TicketSalesInfo({
       mysteryboxItemId: sellTicketInfo.mysteryboxItem.id,
       sellInfo: order,
       tokenId: sellTicketInfo.tokenId,
-      price: quoteType === 'crypto' ? amount : parseFloat(amount) / 10, // USDC 단위로 변환
+      price: quoteType === 'crypto' ? amount : parseFloat(amount) * 10, // USDC 단위로 변환
       team: team[0].name,
       dropsId: sellTicketInfo.id,
       startDate,
