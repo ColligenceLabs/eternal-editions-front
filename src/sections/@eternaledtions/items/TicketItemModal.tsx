@@ -719,7 +719,7 @@ const TicketItemModal = ({
           >
             <Fade in={abcOpen}>
               <Box sx={modalStyle}>
-                Google OTP for Approve :
+                Google OTP for Buy NFT :
                 <Typography variant="body3">
                   Please check the 6-digit code in Google Authenticator and enter it.
                 </Typography>
@@ -782,7 +782,7 @@ const TicketItemModal = ({
           >
             <Fade in={approveOpen}>
               <Box sx={modalStyle}>
-                Google OTP for Buy NFT :
+                Google OTP for Approve :
                 <Typography variant="body3">
                   Please check the 6-digit code in Google Authenticator and enter it.
                 </Typography>
