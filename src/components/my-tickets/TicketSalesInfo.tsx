@@ -26,6 +26,12 @@ interface Props {
   isForSale: boolean;
 }
 
+enum sellType {
+  NONE,
+  FIXED,
+  AUCTION,
+}
+
 export default function TicketSalesInfo({
   sellTicketInfo,
   amount,
@@ -93,7 +99,7 @@ export default function TicketSalesInfo({
     return provider;
   };
 
-  const insertSellbook = async (order: any, type: number) => {
+  const insertSellbook = async (order: any, type: number, quoteType: string) => {
     const team = sellTicketInfo.mysteryboxItem.properties.filter(
       (property: any) => property.type === 'team'
     );
@@ -108,7 +114,7 @@ export default function TicketSalesInfo({
       mysteryboxItemId: sellTicketInfo.mysteryboxItem.id,
       sellInfo: order,
       tokenId: sellTicketInfo.tokenId,
-      price: amount,
+      price: quoteType === 'crypto' ? amount : parseFloat(amount) * 10, // USDC 단위로 변환
       team: team[0].name,
       dropsId: sellTicketInfo.id,
       startDate,
@@ -128,10 +134,10 @@ export default function TicketSalesInfo({
   const sellByPoint = async () => {
     if (typeOfSale === 'fixed') {
       console.log('click Fixed Price');
-      await insertSellbook(null, 1);
+      await insertSellbook(null, sellType.FIXED, 'point');
     } else if (typeOfSale === 'auction') {
       console.log('click English auction');
-      await insertSellbook(null, 2);
+      await insertSellbook(null, sellType.AUCTION, 'point');
     }
   };
 
@@ -176,7 +182,7 @@ export default function TicketSalesInfo({
         );
       }
 
-      await insertSellbook(order, 1);
+      await insertSellbook(order, sellType.FIXED, 'crypto');
     } else if (typeOfSale === 'auction') {
       console.log('click English auction');
 
@@ -210,7 +216,7 @@ export default function TicketSalesInfo({
         );
       }
 
-      await insertSellbook(order, 2);
+      await insertSellbook(order, sellType.AUCTION, 'crypto');
     }
   };
 
