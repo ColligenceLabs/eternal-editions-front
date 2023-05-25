@@ -224,7 +224,7 @@ export default function SaveTicketContent({ ticketInfo, onClose }: Props) {
           </Stack>
           <Stack direction="row" justifyContent="space-between">
             <Label sx={{ color: palette.dark.black.darker }}>QTY</Label>
-            <Value sx={{ color: 'red' }}> 1 </Value>
+            <Value sx={{ color: palette.dark.black.main }}> 1 </Value>
           </Stack>
         </Section>
         <Divider />

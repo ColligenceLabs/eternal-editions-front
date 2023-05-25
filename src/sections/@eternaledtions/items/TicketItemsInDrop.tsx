@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import TicketItem from './TicketItem';
 import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import { useResponsive } from 'src/hooks';
 import { TextSelect, TextSelectOption } from 'src/components/common/Select';
+import CSnackbar from 'src/components/common/CSnackbar';
 
 type Props = {
   categories?: string[];
@@ -29,6 +30,19 @@ export default function TicketItemsInDrop({
   const [filterOptionTeams, setFilterOptionTeams] = useState<string[]>([]);
   const [filterOptionDays, setFilterOptionDays] = useState<string[]>([]);
   const [ticketItems, setTicketItems] = useState<TicketItemTypes[]>([]);
+  const [openSnackbar, setOpenSnackbar] = useState({
+    open: false,
+    type: '',
+    message: '',
+  });
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar({
+      open: false,
+      type: '',
+      message: '',
+    });
+  };
 
   useEffect(() => {
     if (ticketInfo?.mysteryboxItems) {
@@ -169,6 +183,7 @@ export default function TicketItemsInDrop({
               quote={quote}
               mysterybox_id={mysterybox_id}
               ticketInfo={ticketInfo}
+              setOpenSnackbar={setOpenSnackbar}
             />
           ))}
         </Grid>
@@ -177,6 +192,12 @@ export default function TicketItemsInDrop({
           No items hav been registered.
         </Typography>
       )}
+      <CSnackbar
+        open={openSnackbar.open}
+        type={openSnackbar.type}
+        message={openSnackbar.message}
+        handleClose={handleCloseSnackbar}
+      />
     </Box>
   );
 }

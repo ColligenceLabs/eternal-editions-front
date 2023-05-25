@@ -42,6 +42,7 @@ type Props = {
   location: string;
   isLoading: boolean;
   setIsLoading: SetStateAction<any>;
+  setOpenSnackbar: SetStateAction<any>;
 };
 
 const ticketLabel = {
@@ -75,6 +76,7 @@ const TicketItemModal = ({
   location,
   isLoading,
   setIsLoading,
+  setOpenSnackbar,
 }: Props) => {
   const { price, createdAt, name, id } = ticket;
   const [quantity, setQuantity] = useState<number>(1);
@@ -82,11 +84,11 @@ const TicketItemModal = ({
   const [isCompleteModal, setIsCompleteModal] = useState<boolean>(false);
   const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
   // const [isLoading, setIsLoading] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState({
-    open: false,
-    type: '',
-    message: '',
-  });
+  // const [openSnackbar, setOpenSnackbar] = useState({
+  //   open: false,
+  //   type: '',
+  //   message: '',
+  // });
   const abcUser = useSelector((state: any) => state.user);
   const [abcToken, setAbcToken] = useState('');
   const [approveOpen, setApproveOpen] = useState(false);
@@ -350,6 +352,7 @@ const TicketItemModal = ({
           message: 'Purchase completed!',
         });
         setReload((cur) => !cur);
+        setIsTicketItemModalOpen(false);
       } else {
         console.log('Item not selected', res.data.message);
         setOpenSnackbar({
@@ -455,6 +458,7 @@ const TicketItemModal = ({
             message: 'Purchase completed!',
           });
           setReload((cur) => !cur);
+          setIsTicketItemModalOpen(false);
         }
       } else {
         setOpenSnackbar({
@@ -477,13 +481,13 @@ const TicketItemModal = ({
     }
   };
 
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar({
-      open: false,
-      type: '',
-      message: '',
-    });
-  };
+  // const handleCloseSnackbar = () => {
+  //   setOpenSnackbar({
+  //     open: false,
+  //     type: '',
+  //     message: '',
+  //   });
+  // };
 
   const fetchMintLimitCount = async () => {
     const res = await getMintLimitCount(id, user.uid);
@@ -698,7 +702,7 @@ const TicketItemModal = ({
               ) : (
                 <>
                   {ticketinfo(ticketLabel.total, fullTotalPriceString)}
-                  <RoundedButton onClick={onSubmit} disabled={perLimit === 0}>
+                  <RoundedButton onClick={onSubmit} disabled={perLimit <= 0}>
                     COMPLETE PURCHASE
                   </RoundedButton>
                 </>
@@ -832,12 +836,12 @@ const TicketItemModal = ({
             </Fade>
           </Modal>
 
-          <CSnackbar
-            open={openSnackbar.open}
-            type={openSnackbar.type}
-            message={openSnackbar.message}
-            handleClose={handleCloseSnackbar}
-          />
+          {/*<CSnackbar*/}
+          {/*  open={openSnackbar.open}*/}
+          {/*  type={openSnackbar.type}*/}
+          {/*  message={openSnackbar.message}*/}
+          {/*  handleClose={handleCloseSnackbar}*/}
+          {/*/>*/}
         </>
       )}
     </>
