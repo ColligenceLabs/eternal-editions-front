@@ -8,7 +8,7 @@ import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes'
 import { useRouter } from 'next/router';
 import RoundedButton from 'src/components/common/RoundedButton';
 import ModalCustom from 'src/components/common/ModalCustom';
-import { useEffect, useState } from 'react';
+import React, { SetStateAction, useEffect, useState } from 'react';
 import TicketItemModal from './TicketItemModal';
 
 // ----------------------------------------------------------------------
@@ -30,6 +30,7 @@ type Props = {
   quote?: string | undefined;
   mysterybox_id: number | undefined;
   ticketInfo?: TicketInfoTypes | null;
+  setOpenSnackbar: SetStateAction<any>;
 };
 
 export default function TicketItem({
@@ -39,6 +40,7 @@ export default function TicketItem({
   quote,
   mysterybox_id,
   ticketInfo,
+  setOpenSnackbar,
 }: Props) {
   const router = useRouter();
   const isMobile = useResponsive('down', 'md');
@@ -260,6 +262,7 @@ export default function TicketItem({
                 setIsTicketItemModalOpen={setIsTicketItemModalOpen}
                 isLoading={isLoading}
                 setIsLoading={setIsLoading}
+                setOpenSnackbar={setOpenSnackbar}
               />
             </ModalCustom>
           </>

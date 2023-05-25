@@ -42,6 +42,7 @@ type Props = {
   location: string;
   isLoading: boolean;
   setIsLoading: SetStateAction<any>;
+  setOpenSnackbar: SetStateAction<any>;
 };
 
 const ticketLabel = {
@@ -75,6 +76,7 @@ const TicketItemModal = ({
   location,
   isLoading,
   setIsLoading,
+  setOpenSnackbar,
 }: Props) => {
   const { price, createdAt, name, id } = ticket;
   const [quantity, setQuantity] = useState<number>(1);
@@ -82,11 +84,11 @@ const TicketItemModal = ({
   const [isCompleteModal, setIsCompleteModal] = useState<boolean>(false);
   const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
   // const [isLoading, setIsLoading] = useState(false);
-  const [openSnackbar, setOpenSnackbar] = useState({
-    open: false,
-    type: '',
-    message: '',
-  });
+  // const [openSnackbar, setOpenSnackbar] = useState({
+  //   open: false,
+  //   type: '',
+  //   message: '',
+  // });
   const abcUser = useSelector((state: any) => state.user);
   const [abcToken, setAbcToken] = useState('');
   const [abcOpen, setAbcOpen] = useState(false);
@@ -426,6 +428,7 @@ const TicketItemModal = ({
             type: 'success',
             message: 'Purchase completed!',
           });
+          close();
           setReload((cur) => !cur);
         }
       } else {
@@ -449,13 +452,13 @@ const TicketItemModal = ({
     }
   };
 
-  const handleCloseSnackbar = () => {
-    setOpenSnackbar({
-      open: false,
-      type: '',
-      message: '',
-    });
-  };
+  // const handleCloseSnackbar = () => {
+  //   setOpenSnackbar({
+  //     open: false,
+  //     type: '',
+  //     message: '',
+  //   });
+  // };
 
   const fetchMintLimitCount = async () => {
     const res = await getMintLimitCount(id, user.uid);
@@ -740,13 +743,6 @@ const TicketItemModal = ({
               </Box>
             </Fade>
           </Modal>
-
-          <CSnackbar
-            open={openSnackbar.open}
-            type={openSnackbar.type}
-            message={openSnackbar.message}
-            handleClose={handleCloseSnackbar}
-          />
         </>
       )}
     </>
