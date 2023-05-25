@@ -62,7 +62,7 @@ export default function SellbookTicketItems({ shouldHideCategories }: Props) {
   const [team, setTeam] = useState('default');
 
   const originCategories = ['All', ...Array.from(new Set(TICKET.categories))];
-  const perPage = 9;
+  const perPage = 16;
 
   const handleChangeCategory = (event: React.SyntheticEvent, newValue: string) => {
     setCategory(newValue);
