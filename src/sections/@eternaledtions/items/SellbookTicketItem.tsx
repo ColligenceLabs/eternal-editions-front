@@ -6,7 +6,6 @@ import { varHover, varTranHover } from 'src/components/animate';
 import BuyNowButton from './BuyNowButton';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import axios from 'axios';
 import NextLink from 'next/link';
 import Routes from 'src/routes';
 import { useSelector } from 'react-redux';
@@ -32,41 +31,16 @@ type Props = {
 
 export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
   const webUser = useSelector((state: any) => state.webUser);
-  console.log(sellbookItem);
-  // console.log(sellbookItem);
   const router = useRouter();
   // const isMobile = useResponsive('down', 'md');
   const { id, mysteryboxItem, sellInfo } = sellbookItem;
   let startDate = new Date();
   if (sellInfo && sellInfo.parameters) startDate = sellInfo.parameters.startDate;
-  const { name, imageLink, categoriesStr, releaseDatetime, price, properties } = mysteryboxItem;
+  const { name, imageLink, categoriesStr, properties } = mysteryboxItem;
   const [team, setTeam] = useState('');
   const [day, setDay] = useState('');
   const isOnAuction = router.query.status; // TODO: Update value
   const theme = useTheme();
-  const [dollarPrice, setDollarPrice] = useState(0);
-  const [maticPrice, setMaticPrice] = useState(0);
-  const [klayPrice, setKlayPrice] = useState(0);
-  // const [startTime, setStartTime] = useState();
-  // const [endTime, setEndTime] = useState();
-
-  const getCoinPrice = () => {
-    const url = 'https://bcn-api.talken.io/coinmarketcap/cmcQuotes?cmcIds=4256,3890';
-    try {
-      if (klayPrice === 0 || maticPrice === 0) {
-        axios(url).then((response) => {
-          const klayUsd = response.data.data[4256].quote.USD.price;
-          // const klayKrw = response.data.data[4256].quote.KRW.price;
-          const maticUsd = response.data.data[3890].quote.USD.price;
-          // const maticKrw = response.data.data[3890].quote.KRW.price;
-          setKlayPrice(parseFloat(klayUsd));
-          setMaticPrice(parseFloat(maticUsd));
-        });
-      }
-    } catch (error: any) {
-      console.log(new Error(error));
-    }
-  };
 
   useEffect(() => {
     if (properties) {
@@ -79,14 +53,6 @@ export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
       );
     }
   }, [properties]);
-
-  useEffect(() => {
-    getCoinPrice();
-  }, []);
-
-  useEffect(() => {
-    setDollarPrice((price ?? 0) * maticPrice);
-  }, [price, maticPrice]);
 
   if (!sellbookItem) {
     return null;
