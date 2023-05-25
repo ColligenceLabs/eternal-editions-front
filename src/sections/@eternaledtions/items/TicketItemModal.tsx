@@ -352,6 +352,7 @@ const TicketItemModal = ({
           message: 'Purchase completed!',
         });
         setReload((cur) => !cur);
+        setIsTicketItemModalOpen(false);
       } else {
         console.log('Item not selected', res.data.message);
         setOpenSnackbar({
@@ -456,8 +457,8 @@ const TicketItemModal = ({
             type: 'success',
             message: 'Purchase completed!',
           });
-          close();
           setReload((cur) => !cur);
+          setIsTicketItemModalOpen(false);
         }
       } else {
         setOpenSnackbar({
@@ -701,7 +702,7 @@ const TicketItemModal = ({
               ) : (
                 <>
                   {ticketinfo(ticketLabel.total, fullTotalPriceString)}
-                  <RoundedButton onClick={onSubmit} disabled={perLimit === 0}>
+                  <RoundedButton onClick={onSubmit} disabled={perLimit <= 0}>
                     COMPLETE PURCHASE
                   </RoundedButton>
                 </>
@@ -835,12 +836,12 @@ const TicketItemModal = ({
             </Fade>
           </Modal>
 
-          <CSnackbar
-            open={openSnackbar.open}
-            type={openSnackbar.type}
-            message={openSnackbar.message}
-            handleClose={handleCloseSnackbar}
-          />
+          {/*<CSnackbar*/}
+          {/*  open={openSnackbar.open}*/}
+          {/*  type={openSnackbar.type}*/}
+          {/*  message={openSnackbar.message}*/}
+          {/*  handleClose={handleCloseSnackbar}*/}
+          {/*/>*/}
         </>
       )}
     </>
