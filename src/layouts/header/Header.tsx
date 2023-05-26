@@ -45,6 +45,8 @@ import Web3Modal from '@colligence/web3modal';
 import 'src/abc/sandbox/index';
 import { approve } from 'src/utils/abcProviderTxs';
 import ModalCustom from 'src/components/common/ModalCustom';
+import { setWallet } from 'src/store/slices/wallet';
+import { setUser } from 'src/store/slices/user';
 
 const modalStyle = {
   position: 'absolute',
@@ -89,7 +91,7 @@ export default function Header({ transparent, sx }: Props) {
   const [joinOpen, setJoinOpen] = React.useState(false);
   const [abcOpen, setAbcOpen] = React.useState(false);
   const [abcToken, setAbcToken] = React.useState('');
-  const [user, setUser] = React.useState([]);
+  // const [user, setUser] = React.useState([]); // TODO : redux 와 중복... 쓰는 곳이 없어서...
   const [temp, setTemp] = React.useState(false);
   const [intervalTime, setIntervalTime] = React.useState(1000);
 
@@ -118,13 +120,16 @@ export default function Header({ transparent, sx }: Props) {
       secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
 
       const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
-      setUser(user);
+      // setUser(user); // TODO : redux 와 중복... 쓰는 곳이 없어서...
 
       if (user && user?.twoFactorEnabled) {
         await accountController.recoverShare(
           { password: '!owdin001', user, wallets, keepDB: false },
           dispatch
         );
+      } else {
+        await dispatch(setUser(user));
+        await dispatch(setWallet(wallets));
       }
 
       const rlt = await getSession();
