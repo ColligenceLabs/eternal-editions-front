@@ -25,7 +25,14 @@ import CheckboxIndeterminateFillIcon from 'src/assets/icons/checkboxIndeterminat
 import CheckIcon from 'src/assets/icons/check';
 import CheckFillIcon from 'src/assets/icons/checkFill';
 import { Input } from '@mui/material';
-import { abcJoin, abcLogin, getSession, userRegister } from 'src/services/services';
+import {
+  abcJoin,
+  abcLogin,
+  getSession,
+  getUser,
+  removeUser,
+  userRegister,
+} from 'src/services/services';
 import { accountRestApi, controllers } from 'src/abc/background/init';
 import { AbcLoginResult, AbcSnsAddUserDto } from 'src/abc/main/abc/interface';
 import { AbcLoginResponse } from 'src/abc/schema/account';
@@ -37,6 +44,9 @@ import countryList from 'react-select-country-list';
 import { SUCCESS } from 'src/config';
 import { useRouter } from 'next/router';
 import CSnackbar from 'src/components/common/CSnackbar';
+import env from 'src/env';
+import { delUser, initUser } from 'src/store/slices/user';
+import { initWebUser, setWebUser } from 'src/store/slices/webUser';
 
 const StyledInput = styled(Input)(({}) => ({
   [`.${inputBaseClasses.input}::placeholder`]: {
@@ -132,7 +142,7 @@ export const termsABC: Term[] = [
   },
 ];
 const defaultValues = {
-  birthDate: new Date('12/31/2000'),
+  birthDate: new Date('1/1/2000'),
   gender: 'male',
   country: 'KR',
   agreeEternal: false,
@@ -342,7 +352,6 @@ const GoogleFullSignUp = () => {
       );
 
       abcWallet = user.accounts[0].ethAddress;
-      console.log('!! Register a new ABC wallet user ... done !!');
 
       // ABC 신규 기압자 DB 등록
       const rltDB = await userRegister({
@@ -352,7 +361,7 @@ const GoogleFullSignUp = () => {
         gender: values.gender,
         phone: values.phoneNumber,
       });
-      console.log('!! Register a new ABC wallet user into DB : ', rltDB);
+
       if (rltDB.data.status === SUCCESS) {
         setOpenSnackbar({
           open: true,
@@ -366,8 +375,18 @@ const GoogleFullSignUp = () => {
           message: 'Failed Register!',
         });
       }
+
+      const userRes = await getUser();
+      console.log('!! Register a new ABC wallet user ... done : ', userRes);
+      if (userRes.status === 200 && userRes.data.status != 0)
+        dispatch(setWebUser(userRes.data.user));
+      else {
+        dispatch(initWebUser());
+        dispatch(delUser());
+      }
+
       setIsLoading(false);
-      router.push('/');
+      await router.push('/');
     }
   };
   const onChangeAgreeEternal = (e: ChangeEvent<HTMLInputElement>) => {
@@ -780,7 +799,7 @@ const GoogleFullSignUp = () => {
           !wasClickedVerify
         }
       >
-        {isLoading ? <CircularProgress size={25} color="secondary" /> : 'Continue'}
+        {isLoading ? <CircularProgress size={15} color="secondary" /> : 'Continue'}
       </RoundedButton>
 
       <CSnackbar
