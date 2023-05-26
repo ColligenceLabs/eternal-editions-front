@@ -10,6 +10,7 @@ import {
   buttonBaseClasses,
   InputAdornment,
   TextField,
+  CircularProgress,
 } from '@mui/material';
 import { Controller, useForm } from 'react-hook-form';
 import { Label, Section } from '../my-tickets/StyledComponents';
@@ -160,6 +161,7 @@ const GoogleFullSignUp = () => {
     type: '',
     message: '',
   });
+  const [isLoading, setIsLoading] = useState(false);
   const {
     control,
     getValues,
@@ -206,6 +208,7 @@ const GoogleFullSignUp = () => {
 
   const onSubmit = async (values: GoogleAccountData) => {
     console.log('submit', values);
+    setIsLoading(true);
     // setForm(WALLET_FORM);
 
     // DB users 에 입략받은 추가 정보 저장
@@ -363,6 +366,7 @@ const GoogleFullSignUp = () => {
           message: 'Failed Register!',
         });
       }
+      setIsLoading(false);
       router.push('/');
     }
   };
@@ -776,7 +780,7 @@ const GoogleFullSignUp = () => {
           !wasClickedVerify
         }
       >
-        Continue
+        {isLoading ? <CircularProgress size={25} color="secondary" /> : 'Continue'}
       </RoundedButton>
 
       <CSnackbar
