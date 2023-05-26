@@ -603,20 +603,14 @@ Type: Address verification`;
                         gap: 0.25,
                       }}
                     >
-                      {user.abc_address ? null : (
-                        <CButton
-                          onClick={() =>
-                            abcUser.twoFactorEnabled
-                              ? setIsOpenCreateWalletForm(true)
-                              : setIsOpenCreateWalletForm(true)
-                          }
-                        >
-                          CREATE
+                      {abcUser.twoFactorEnabled ? null : (
+                        <CButton onClick={() => setIsOpenCreateWalletForm(true)}>
+                          Generate OTP
                         </CButton>
                       )}
 
                       {user.eth_address ? (
-                        <CButton onClick={handleDeleteAddressClick}>DELETE</CButton>
+                        <CButton onClick={handleDeleteAddressClick}>DELETE External Wallet</CButton>
                       ) : (
                         <CButton
                           onClick={() => {
@@ -624,7 +618,7 @@ Type: Address verification`;
                             setOpenSignUp(true);
                           }}
                         >
-                          ADD
+                          ADD External Wallet
                         </CButton>
                       )}
 
