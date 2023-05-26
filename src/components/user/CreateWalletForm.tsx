@@ -18,10 +18,13 @@ import QRCode from 'react-qr-code';
 import React, { useEffect, useState } from 'react';
 import { getSession, updateAbcAddress, userRegister } from 'src/services/services';
 import { useDispatch, useSelector } from 'react-redux';
-import { controllers } from 'src/abc/background/init';
+import { accountRestApi, controllers } from 'src/abc/background/init';
 import { ClipboardCopy } from 'src/utils/wallet';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import { setTwoFa } from 'src/store/slices/twoFa';
+import { setUser } from 'src/store/slices/user';
+import { setWallet } from 'src/store/slices/wallet';
+import secureLocalStorage from 'react-secure-storage';
 
 // ----------------------------------------------------------------------
 
@@ -78,6 +81,12 @@ export default function CreateWalletForm({ onClose }: Props) {
     if (twofaResetCode) {
       dispatch(setTwoFa({ secret: qrSecret, reset: twofaResetCode }));
       setResetCode(twofaResetCode);
+
+      const abcAuth = JSON.parse(secureLocalStorage.getItem('abcAuth') as string);
+      const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
+      console.log('!! user =', user);
+      await dispatch(setUser(user));
+      await dispatch(setWallet(wallets));
 
       alert('등록이 완료되었습니다.');
       onClose();
