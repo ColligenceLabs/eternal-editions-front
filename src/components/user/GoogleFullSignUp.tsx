@@ -24,7 +24,7 @@ import CheckboxIndeterminateFillIcon from 'src/assets/icons/checkboxIndeterminat
 import CheckIcon from 'src/assets/icons/check';
 import CheckFillIcon from 'src/assets/icons/checkFill';
 import { Input } from '@mui/material';
-import { abcLogin, getSession, userRegister } from 'src/services/services';
+import { abcJoin, abcLogin, getSession, userRegister } from 'src/services/services';
 import { accountRestApi, controllers } from 'src/abc/background/init';
 import { AbcLoginResult, AbcSnsAddUserDto } from 'src/abc/main/abc/interface';
 import { AbcLoginResponse } from 'src/abc/schema/account';
@@ -33,6 +33,9 @@ import { useDispatch } from 'react-redux';
 import { setAbcAuth } from 'src/store/slices/abcAuth';
 import { RoundedSelectOption, MenuProps } from '../common/Select';
 import countryList from 'react-select-country-list';
+import { SUCCESS } from 'src/config';
+import { useRouter } from 'next/router';
+import CSnackbar from 'src/components/common/CSnackbar';
 
 const StyledInput = styled(Input)(({}) => ({
   [`.${inputBaseClasses.input}::placeholder`]: {
@@ -144,6 +147,7 @@ const defaultValues = {
   abcMarketing: false,
 };
 const GoogleFullSignUp = () => {
+  const router = useRouter();
   const [accountData, setAccountData] = useState<Partial<GoogleAccountData>>({});
   const dispatch = useDispatch();
   const { abcController, accountController } = controllers;
@@ -151,6 +155,11 @@ const GoogleFullSignUp = () => {
   const [service, setService] = useState('');
   const [wasClickedVerify, setWasClickedVerify] = useState<boolean>(false);
   const [showVerifyCode, setShowVerifyCode] = useState<boolean>(false);
+  const [openSnackbar, setOpenSnackbar] = useState({
+    open: false,
+    type: '',
+    message: '',
+  });
   const {
     control,
     getValues,
@@ -170,6 +179,14 @@ const GoogleFullSignUp = () => {
   });
 
   const countryOptions = useMemo(() => countryList().getData(), []);
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar({
+      open: false,
+      type: '',
+      message: '',
+    });
+  };
 
   useEffect(() => {
     const fetchSession = async () => {
@@ -229,7 +246,7 @@ const GoogleFullSignUp = () => {
 
         // 토큰 저장
         await dispatch(setAbcAuth(abcAuth));
-        await secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
+        secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
 
         // 지갑 복구
         const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
@@ -286,52 +303,67 @@ const GoogleFullSignUp = () => {
         advertise: values.abcMarketing ? 1 : 0,
       };
 
-      // try {
-      //   const newAccount = await abcJoin(dto);
-      //   console.log('!! created account =', newAccount);
-      // } catch (e) {
-      //   console.log('!! snsAddUser Error =', e);
-      // }
-      //
-      // // 신규 가입 후 ABC 로그인
-      // console.log('!! start to abc sns login !!');
-      // abcAuth = await abcController.snsLogin(idToken, service);
-      // console.log('!! abc sns login result =', abcAuth);
-      //
-      // // 토큰 저장
-      // await dispatch(setAbcAuth(abcAuth));
-      // await secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
-      //
-      // // MPC 지갑 생성
-      // await accountController.createMpcBaseAccount(
-      //   {
-      //     accountName: values.email,
-      //     password: '!owdin001',
-      //     email: values.email,
-      //   },
-      //   dispatch
-      // );
-      //
-      // // 생성된 MPC 지갑 정보 조회
-      // const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
-      // console.log('!! user =', user);
-      //
-      // await accountController.recoverShare(
-      //   { password: '!owdin001', user, wallets, keepDB: false },
-      //   dispatch
-      // );
-      //
-      // abcWallet = user.accounts[0].ethAddress;
+      try {
+        const newAccount = await abcJoin(dto);
+        console.log('!! created account =', newAccount);
+      } catch (e) {
+        console.log('!! snsAddUser Error =', e);
+      }
+
+      // 신규 가입 후 ABC 로그인
+      console.log('!! start to abc sns login !!');
+      abcAuth = await abcController.snsLogin(idToken, service);
+      console.log('!! abc sns login result =', abcAuth);
+
+      // 토큰 저장
+      await dispatch(setAbcAuth(abcAuth));
+      secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
+
+      // MPC 지갑 생성
+      await accountController.createMpcBaseAccount(
+        {
+          accountName: values.email,
+          password: '!owdin001',
+          email: values.email,
+        },
+        dispatch
+      );
+
+      // 생성된 MPC 지갑 정보 조회
+      const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
+      console.log('!! user =', user);
+
+      await accountController.recoverShare(
+        { password: '!owdin001', user, wallets, keepDB: false },
+        dispatch
+      );
+
+      abcWallet = user.accounts[0].ethAddress;
       console.log('!! Register a new ABC wallet user ... done !!');
 
       // ABC 신규 기압자 DB 등록
-      await userRegister({
+      const rltDB = await userRegister({
         abc_address: abcWallet,
         country: values.country,
         birthday: values.birthDate,
         gender: values.gender,
         phone: values.phoneNumber,
       });
+      console.log('!! Register a new ABC wallet user into DB : ', rltDB);
+      if (rltDB.data.status === SUCCESS) {
+        setOpenSnackbar({
+          open: true,
+          type: 'success',
+          message: 'Success Register!',
+        });
+      } else {
+        setOpenSnackbar({
+          open: true,
+          type: 'error',
+          message: 'Failed Register!',
+        });
+      }
+      router.push('/');
     }
   };
   const onChangeAgreeEternal = (e: ChangeEvent<HTMLInputElement>) => {
@@ -746,6 +778,13 @@ const GoogleFullSignUp = () => {
       >
         Continue
       </RoundedButton>
+
+      <CSnackbar
+        open={openSnackbar.open}
+        type={openSnackbar.type}
+        message={openSnackbar.message}
+        handleClose={handleCloseSnackbar}
+      />
     </Stack>
   );
 };
