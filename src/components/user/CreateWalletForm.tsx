@@ -108,25 +108,26 @@ export default function CreateWalletForm({ onClose }: Props) {
         <Stack alignItems="center">
           {/*<QRCode value={qrCode} size={160} />*/}
           <img className="QRCode" src={qrCode} alt="qrapp" />
-          {/* TODO : 나란히 배치할 것...*/}
-          <Typography noWrap={true} sx={{ fontSize: '10px' }}>
-            {qrSecret}
-          </Typography>
-          <Box
-            sx={{
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: '50%',
-              backgroundColor: '#F5F5F5',
-              width: '32px',
-              height: '32px',
-              cursor: 'pointer',
-            }}
-            onClick={() => ClipboardCopy(qrSecret ?? '', '복사되었습니다.')}
-          >
-            <ContentCopyOutlinedIcon sx={{ fontSize: '14px', m: 0, p: 0 }} />
-          </Box>
+          <Stack direction="row" justifyContent="center" alignItems="center">
+            <Typography noWrap={true} sx={{ fontSize: '10px' }}>
+              {qrSecret}
+            </Typography>
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                borderRadius: '50%',
+                backgroundColor: '#F5F5F5',
+                width: '32px',
+                height: '32px',
+                cursor: 'pointer',
+              }}
+              onClick={() => ClipboardCopy(qrSecret ?? '', '복사되었습니다.')}
+            >
+              <ContentCopyOutlinedIcon sx={{ fontSize: '14px', m: 0, p: 0 }} />
+            </Box>
+          </Stack>
         </Stack>
 
         <Section>
