@@ -125,6 +125,7 @@ export default function MyAccountPage() {
   const [isConfirmDeactivate, setIsConfirmDeactivate] = useState(false);
   const [isOpenCreateWalletForm, setIsOpenCreateWalletForm] = useState<boolean>(false);
 
+  // console.log(abcUser.twoFactorEnabled);
   const onCloseDeactivateModal = () => {
     deactivate();
     setOpenDeactivateModal(false);
@@ -603,7 +604,7 @@ Type: Address verification`;
                         gap: 0.25,
                       }}
                     >
-                      {abcUser.twoFactorEnabled ? null : (
+                      {abcUser.twoFactorEnabled && (
                         <CButton onClick={() => setIsOpenCreateWalletForm(true)}>
                           Generate OTP
                         </CButton>
