@@ -45,7 +45,7 @@ import { SUCCESS } from 'src/config';
 import { useRouter } from 'next/router';
 import CSnackbar from 'src/components/common/CSnackbar';
 import env from 'src/env';
-import { delUser, initUser } from 'src/store/slices/user';
+import { delUser } from 'src/store/slices/user';
 import { initWebUser, setWebUser } from 'src/store/slices/webUser';
 
 const StyledInput = styled(Input)(({}) => ({
