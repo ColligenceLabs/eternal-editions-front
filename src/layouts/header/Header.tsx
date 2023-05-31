@@ -217,8 +217,9 @@ export default function Header({ transparent, sx }: Props) {
       console.log('------------ setLogin false --------------');
     } catch (err) {
       console.log('!! header abcSnsLogin 실패 ', err);
+    } finally {
+      await dispatch(setOnLogin(false));
     }
-    await dispatch(setOnLogin(false));
   };
 
   useEffect(() => {
