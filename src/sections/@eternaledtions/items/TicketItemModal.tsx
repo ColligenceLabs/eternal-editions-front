@@ -548,7 +548,12 @@ const TicketItemModal = ({
             >
               This is an unauthorized wallet address.
             </Typography>
-            <RoundedButton onClick={onComplete}>COMPLETE PURCHASE</RoundedButton>
+            <RoundedButton
+              disabled={method === methodType.usdc && !abcUser.twoFactorEnabled}
+              onClick={onComplete}
+            >
+              COMPLETE PURCHASE
+            </RoundedButton>
           </Stack>
         </>
       ) : (
@@ -702,7 +707,12 @@ const TicketItemModal = ({
               ) : (
                 <>
                   {ticketinfo(ticketLabel.total, fullTotalPriceString)}
-                  <RoundedButton onClick={onSubmit} disabled={perLimit <= 0}>
+                  <RoundedButton
+                    onClick={onSubmit}
+                    disabled={
+                      perLimit <= 0 || (method === methodType.usdc && !abcUser.twoFactorEnabled)
+                    }
+                  >
                     COMPLETE PURCHASE
                   </RoundedButton>
                 </>
