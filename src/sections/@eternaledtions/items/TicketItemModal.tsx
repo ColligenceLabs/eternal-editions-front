@@ -707,6 +707,7 @@ const TicketItemModal = ({
               ) : (
                 <>
                   {ticketinfo(ticketLabel.total, fullTotalPriceString)}
+
                   <RoundedButton
                     onClick={onSubmit}
                     disabled={
@@ -715,6 +716,34 @@ const TicketItemModal = ({
                   >
                     COMPLETE PURCHASE
                   </RoundedButton>
+                  {perLimit <= 0 && (
+                    <Box
+                      sx={{
+                        textAlign: 'center',
+                        fontSize: '12px',
+                        fontWeight: '700',
+                        color: 'red',
+                        mt: '-20px',
+                        mb: '-5px',
+                      }}
+                    >
+                      Exceeding holding limit per account.
+                    </Box>
+                  )}
+                  {method === methodType.usdc && !abcUser.twoFactorEnabled && (
+                    <Box
+                      sx={{
+                        textAlign: 'center',
+                        fontSize: '12px',
+                        fontWeight: '700',
+                        color: 'red',
+                        mt: '-20px',
+                        mb: '-5px',
+                      }}
+                    >
+                      Generate OTP on the Profile menu at first.
+                    </Box>
+                  )}
                 </>
               )}
             </Stack>
