@@ -123,18 +123,8 @@ export default function Header({ transparent, sx }: Props) {
       console.log('=== header ====> ', user, wallets);
       // setUser(user); // TODO : redux 와 중복... 쓰는 곳이 없어서...
 
-      if (user) {
-        if (user?.twoFactorEnabled) {
-          await accountController.recoverShare(
-            { password: '!owdin001', user, wallets, keepDB: false },
-            dispatch
-          );
-        } else {
-          await dispatch(setUser(user));
-          await dispatch(setWallet(wallets));
-        }
-      } else {
-        // TODO : ABC 가입은 되었으나 MPC 지갑이 만들어 지지 않은 경우...
+      if (user === null) {
+        // TODO : 특이 케이스. ABC 가입은 되었으나 MPC 지갑이 만들어 지지 않은 경우...
         const rlt = await getSession();
         if (rlt.data?.providerAuthInfo) {
           // TODO: abc-web3-provider 초기화
@@ -149,15 +139,18 @@ export default function Header({ transparent, sx }: Props) {
             },
             dispatch
           );
+        }
+      }
 
-          // 생성된 MPC 지갑 정보 조회
-          const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
-          console.log('!! user 2 =', user);
-
+      if (user) {
+        if (user?.twoFactorEnabled) {
           await accountController.recoverShare(
             { password: '!owdin001', user, wallets, keepDB: false },
             dispatch
           );
+        } else {
+          await dispatch(setUser(user));
+          await dispatch(setWallet(wallets));
         }
       }
 
