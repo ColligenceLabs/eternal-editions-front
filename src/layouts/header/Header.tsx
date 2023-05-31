@@ -100,7 +100,7 @@ export default function Header({ transparent, sx }: Props) {
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const abcSnsLogin = async () => {
-    console.log('------------ setLogin true --------------');
+    console.log('------------ setLogin true --------------', process.env.NODE_ENV);
     await dispatch(setOnLogin(true));
     try {
       console.log('!! start sns login !!');
