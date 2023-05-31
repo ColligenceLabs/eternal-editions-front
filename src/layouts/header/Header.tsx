@@ -224,7 +224,11 @@ export default function Header({ transparent, sx }: Props) {
       temp
     ) {
       if (_.isEmpty(abcUser) || abcUser.uid === '') {
-        abcSnsLogin();
+        try {
+          abcSnsLogin();
+        } catch (err) {
+          console.log('!! header abcSnsLogin error = ', err);
+        }
       }
     }
   }, [webUser, temp, abcUser]);
