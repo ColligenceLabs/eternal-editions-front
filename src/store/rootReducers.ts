@@ -16,7 +16,7 @@ const persistConfig = {
   // storage,
   storage: storageSession,
   // auth, board, studio 3개의 reducer 중에 auth reducer만 localstorage에 저장합니다.
-  whitelist: ['user', 'abcAuth', 'wallet', 'webUser', 'twoFa', 'onLogin'],
+  whitelist: ['user', 'abcAuth', 'wallet', 'webUser', 'twoFa'],
   // blacklist -> 그것만 제외합니다
 };
 
