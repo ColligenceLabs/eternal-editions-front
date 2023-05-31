@@ -198,6 +198,12 @@ export default function WalletPopover({}) {
                       {balance.toFixed(5)} MATIC
                     </Typography>
                   </Stack>
+                  <Stack direction="row">
+                    <Box sx={{ width: 20, mr: 1 }}>
+                      <Image src="/assets/img/usdc-token-icon.png" sx={{ width: '100%' }} />
+                    </Box>
+                    <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>{'0'} USDC</Typography>
+                  </Stack>
                 </Stack>
                 <NextLink href={Routes.eternalEditions.payment.point} passHref>
                   <Button variant="outlined" color={'black'}>
