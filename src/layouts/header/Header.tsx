@@ -101,8 +101,8 @@ export default function Header({ transparent, sx }: Props) {
 
   const abcSnsLogin = async () => {
     console.log('------------ setLogin true --------------');
+    await dispatch(setOnLogin(true));
     try {
-      await dispatch(setOnLogin(true));
       console.log('!! start sns login !!');
       const res = await abcLogin({
         token: webUser?.user?.session?.providerAuthInfo?.provider_token,
