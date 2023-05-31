@@ -26,7 +26,8 @@ const Routes = {
     },
     faq: '/faq',
     notice: '/notice',
-    registerGoogle: '/register-google',
+    register: 'register',
+    identity: '/identity'
   },
   // Marketing
   marketing: {
