@@ -35,7 +35,7 @@ import wallet from './slices/wallet';
 const makeConfiguredStore = (reducer: any) =>
   configureStore({
     reducer: reducer,
-    devTools: process.env.NODE_ENV !== 'production',
+    devTools: process.env.NEXT_PUBLIC_APP_PHASE !== 'production',
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware({
         serializableCheck: {
@@ -58,5 +58,5 @@ const makeStore = () => {
 
 // wrapper 로 감싸기
 export const wrapper = createWrapper(makeStore, {
-  debug: process.env.NODE_ENV !== 'production',
+  debug: process.env.NEXT_PUBLIC_APP_PHASE !== 'production',
 });

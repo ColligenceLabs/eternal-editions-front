@@ -85,7 +85,9 @@ export default function PaymentPoint() {
 
   useEffect(() => {
     const getUSDExchange = async () => {
-      setExchange(process.env.NODE_ENV === 'development' ? 100 : (await getExchange()).data);
+      setExchange(
+        process.env.NEXT_PUBLIC_APP_PHASE === 'development' ? 100 : (await getExchange()).data
+      );
     };
     if (exchange === 0) getUSDExchange();
   }, []);
