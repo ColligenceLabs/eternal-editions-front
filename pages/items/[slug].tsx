@@ -1,4 +1,4 @@
-import React, { ChangeEvent, PropsWithChildren, ReactElement, useEffect, useState } from 'react';
+import React, { PropsWithChildren, ReactElement, useEffect, useState } from 'react';
 // @mui
 import { styled } from '@mui/material/styles';
 import {
@@ -11,7 +11,6 @@ import {
   Grid,
   TextField,
   Modal,
-  SelectChangeEvent,
   Stack,
   Typography,
   Accordion,
@@ -21,22 +20,15 @@ import {
   useTheme,
   outlinedInputClasses,
 } from '@mui/material';
-// config
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT, SUCCESS } from 'src/config';
-// @types
-import { BigNumber, ethers } from 'ethers';
-// layouts
+import { ethers } from 'ethers';
 import Layout from 'src/layouts';
-// components
 import { Page, TextIconLabel, Scrollbar } from 'src/components';
-// sections
-import { useRouter } from 'next/router';
 import { getSellbookInfoByID, getSession, registerSellbookBuy } from 'src/services/services';
 import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import { useResponsive } from 'src/hooks';
-
+import { useRouter } from 'next/router';
 import CSnackbar from 'src/components/common/CSnackbar';
-
 import { useSelector } from 'react-redux';
 import { LoadingButton } from '@mui/lab';
 import CompanyInfo from 'src/components/ticket/CompanyInfo';
@@ -51,7 +43,6 @@ import RoundedButton from 'src/components/common/RoundedButton';
 import { ArrowDropDown } from '@mui/icons-material';
 import moment from 'moment';
 import FixedBackground from 'src/components/common/FixedBackground';
-import { useWeb3React } from '@web3-react/core';
 import useAccount from 'src/hooks/useAccount';
 import { AbcWeb3Provider } from '@colligence/klip-web3-provider';
 import Web3Modal from '@colligence/web3modal';
@@ -125,7 +116,6 @@ export default function TicketDetailPage() {
   const router = useRouter();
   const { slug } = router.query;
   const isMobile = useResponsive('down', 'md');
-  const abcUser = useSelector((state: any) => state.user);
   const [payType, setPayType] = useState('default');
   const [abcToken, setAbcToken] = useState('');
   const [abcOpen, setAbcOpen] = useState(false);
@@ -145,7 +135,6 @@ export default function TicketDetailPage() {
   const webUser = useSelector((state: any) => state.webUser);
   const { library, chainId } = useActiveWeb3React();
   const { account } = useAccount();
-
   const handleCloseSnackbar = () => {
     setOpenSnackbar({
       open: false,
@@ -255,6 +244,7 @@ export default function TicketDetailPage() {
         type: 'success',
         message: 'Success BUY!',
       });
+      router.push('/my/tickets');
     } else {
       setOpenSnackbar({
         open: true,
@@ -284,6 +274,7 @@ export default function TicketDetailPage() {
         type: 'success',
         message: 'Success BUY!',
       });
+      router.push('/my/tickets');
     } else {
       setOpenSnackbar({
         open: true,
