@@ -281,6 +281,15 @@ const GoogleFullSignUp = () => {
           gender: values.gender,
           phone: values.phoneNumber,
         });
+
+        const userRes = await getUser();
+        console.log('!! Register an old ABC wallet user ... done : ', userRes);
+        if (userRes.status === 200 && userRes.data.status != 0)
+          dispatch(setWebUser(userRes.data.user));
+        else {
+          dispatch(initWebUser());
+          dispatch(delUser());
+        }
       } else {
         console.log('!! ABC Wallet SNS login ... failed !!');
       }
@@ -385,10 +394,10 @@ const GoogleFullSignUp = () => {
         dispatch(initWebUser());
         dispatch(delUser());
       }
-
-      setIsLoading(false);
-      await router.push('/');
     }
+
+    setIsLoading(false);
+    await router.push('/');
   };
   const onChangeAgreeEternal = (e: ChangeEvent<HTMLInputElement>) => {
     const checked = e.target.checked;
