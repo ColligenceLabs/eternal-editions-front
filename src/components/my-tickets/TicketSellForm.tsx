@@ -130,6 +130,8 @@ export default function TicketSellForm({
   if (isSubmitting) {
     return (
       <TicketSalesInfo
+        day={day}
+        team={team}
         sellTicketInfo={sellTicketInfo}
         amount={amount}
         typeOfSale={typeOfSale}
