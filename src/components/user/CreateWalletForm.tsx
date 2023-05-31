@@ -85,8 +85,13 @@ export default function CreateWalletForm({ onClose }: Props) {
       const abcAuth = JSON.parse(secureLocalStorage.getItem('abcAuth') as string);
       const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
       console.log('!! user =', user);
-      await dispatch(setUser(user));
-      await dispatch(setWallet(wallets));
+
+      await accountController.recoverShare(
+        { password: '!owdin001', user, wallets, keepDB: false },
+        dispatch
+      );
+      // await dispatch(setUser(user));
+      // await dispatch(setWallet(wallets));
 
       alert('등록이 완료되었습니다.');
       onClose();
