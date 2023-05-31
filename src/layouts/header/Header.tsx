@@ -93,14 +93,14 @@ export default function Header({ transparent, sx }: Props) {
   const [abcToken, setAbcToken] = React.useState('');
   // const [user, setUser] = React.useState([]); // TODO : redux 와 중복... 쓰는 곳이 없어서...
   const [temp, setTemp] = React.useState(false);
-  const [intervalTime, setIntervalTime] = React.useState(500);
+  const [intervalTime, setIntervalTime] = React.useState(200);
 
   const abcUser = useSelector((state: any) => state.user);
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const abcSnsLogin = async () => {
-    console.log('------------ setLogin true --------------');
+    // console.log('------------ setLogin true --------------');
     await dispatch(setOnLogin(true));
     try {
       console.log('!! start sns login !!');
@@ -215,7 +215,7 @@ export default function Header({ transparent, sx }: Props) {
         //   }
         // }
       }
-      console.log('------------ setLogin false --------------');
+      // console.log('------------ setLogin false --------------');
     } catch (err) {
       console.log('!! header abcSnsLogin 실패 ', err);
     } finally {
@@ -226,7 +226,6 @@ export default function Header({ transparent, sx }: Props) {
   useEffect(() => {
     const loginBy = localStorage.getItem('loginBy');
     console.log('!! login type = ', loginBy);
-    console.log('------------------------', temp);
     if (
       loginBy !== 'password' &&
       webUser?.user?.session?.providerAuthInfo?.provider_token !== '' &&
@@ -245,8 +244,8 @@ export default function Header({ transparent, sx }: Props) {
   useEffect(() => {
     const timer = setInterval(() => {
       if (!temp) {
-        console.log('!! check WASM .....');
         const result = checkWasm();
+        console.log('!! check WASM .....', result);
         setTemp(result);
         if (result) setIntervalTime(86400000);
       }
