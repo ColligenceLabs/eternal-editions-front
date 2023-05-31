@@ -25,7 +25,8 @@ interface Props {
   startDate: Date;
   endDate: Date;
   isForSale: boolean;
-
+  team: string;
+  day: string;
   setOpenSnackbar: SetStateAction<any>;
 }
 
@@ -37,6 +38,8 @@ enum sellType {
 
 export default function TicketSalesInfo({
   sellTicketInfo,
+  day,
+  team,
   amount,
   typeOfSale,
   creatorEarnings,
@@ -271,11 +274,11 @@ export default function TicketSalesInfo({
         <Stack gap={{ xs: 2, md: '7px' }}>
           <Row>
             <Label>Day</Label>
-            <Value>Wednesday (November 11,2023)</Value>
+            <Value>{day}</Value>
           </Row>
           <Row>
             <Label>Team</Label>
-            <Value>Team Yellow</Value>
+            <Value>{`Team ${team}`}</Value>
           </Row>
         </Stack>
         <Hr />
