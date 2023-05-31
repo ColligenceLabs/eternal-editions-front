@@ -8,7 +8,6 @@ import MenuPopover from './MenuPopover';
 import { ClipboardCopy, getIconByType, getShotAddress } from '../utils/wallet';
 import Image from './Image';
 import Routes from '../routes';
-import { useWeb3React } from '@web3-react/core';
 import { WALLET_ABC, WALLET_METAMASK, WALLET_WALLECTCONNECT } from '../config';
 import { useDispatch, useSelector } from 'react-redux';
 import useAccount from '../hooks/useAccount';
@@ -19,6 +18,9 @@ import palette from '../theme/palette';
 import getBalances from '../utils/getBalances';
 // import { isMobile } from 'react-device-detect';
 import { useResponsive } from '../hooks';
+import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
+import { getErc20BalanceNoSigner } from 'src/utils/transactions';
+import contracts from 'src/config/constants/contracts';
 
 // ----------------------------------------------------------------------
 WalletPopover.propTypes = {};
@@ -37,7 +39,7 @@ export default function WalletPopover({}) {
   const { user } = useSelector((state: any) => state.webUser);
   const dispatch = useDispatch();
   const { account } = useAccount();
-  const { deactivate, chainId, library } = useWeb3React();
+  const { deactivate, chainId, library } = useActiveWeb3React();
   const logInBy = window.localStorage.getItem('loginBy');
   const [accountShot, setAccountShot] = useState('');
   const [type, setType] = useState('');
@@ -45,6 +47,7 @@ export default function WalletPopover({}) {
   const isMobile = useResponsive('down', 'sm');
 
   const balance = getBalances(account, library);
+  const [usdcBalance, setUsdcBalance] = useState('0');
 
   useEffect(() => {
     if (account) {
@@ -58,6 +61,17 @@ export default function WalletPopover({}) {
     }
   }, [account, library]);
   // const {enqueueSnackbar} = useSnackbar();
+
+  const fetchUsdcBalance = async () => {
+    const ret = await getErc20BalanceNoSigner(contracts.usdc[chainId], account, chainId);
+    setUsdcBalance(ret);
+  };
+
+  useEffect(() => {
+    if (account) {
+      fetchUsdcBalance();
+    }
+  }, [account]);
 
   const [open, setOpen] = useState<HTMLElement | null>(null);
 
@@ -202,7 +216,9 @@ export default function WalletPopover({}) {
                     <Box sx={{ width: 20, mr: 1 }}>
                       <Image src="/assets/img/usdc-token-icon.png" sx={{ width: '100%' }} />
                     </Box>
-                    <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>{'0'} USDC</Typography>
+                    <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
+                      {usdcBalance} USDC
+                    </Typography>
                   </Stack>
                 </Stack>
                 <NextLink href={Routes.eternalEditions.payment.point} passHref>

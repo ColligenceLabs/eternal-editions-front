@@ -1042,6 +1042,27 @@ export async function getWhlBalanceNoSigner(
   return balance;
 }
 
+export async function getErc20BalanceNoSigner(
+  address: string,
+  account: string | undefined | null,
+  chainId: number
+): Promise<number> {
+  const provider = ethers.getDefaultProvider(getSelectedNodeUrl(chainId));
+  const contract = new ethers.Contract(address, tokenAbi, provider);
+
+  if (account === undefined) return 0;
+
+  let balance = 0;
+  try {
+    const result: BigNumber = await contract.balanceOf(account);
+    balance = result.toNumber();
+  } catch (e) {
+    console.log('#####', address);
+    console.log('getErc20BalanceNoSigner Error : ', e);
+  }
+  return balance;
+}
+
 export async function approveKIP7(
   address: string,
   spender: string,
