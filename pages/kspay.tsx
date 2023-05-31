@@ -195,7 +195,7 @@ export default function KSPay() {
       // sndReply는 kspay_wh_rcv.php (결제승인 후 결과값들을 본창의 KSPayWeb Form에 넘겨주는 페이지)의 절대경로를 넣어줍니다.
       //_frm.target = '_blank';
       target.action =
-        process.env.NEXT_PUBLIC_APP_PHASE !== 'development'
+        process.env.NEXT_PUBLIC_APP_PHASE === 'production'
           ? 'https://kspay.ksnet.to/store/KSPayMobileV1.4/KSPayPWeb.jsp'
           : 'http://210.181.28.134/store/KSPayMobileV1.4/KSPayPWeb.jsp';
 
