@@ -122,14 +122,16 @@ export default function Header({ transparent, sx }: Props) {
       const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
       // setUser(user); // TODO : redux 와 중복... 쓰는 곳이 없어서...
 
-      if (user && user?.twoFactorEnabled) {
-        await accountController.recoverShare(
-          { password: '!owdin001', user, wallets, keepDB: false },
-          dispatch
-        );
-      } else {
-        await dispatch(setUser(user));
-        await dispatch(setWallet(wallets));
+      if (user) {
+        if (user?.twoFactorEnabled) {
+          await accountController.recoverShare(
+            { password: '!owdin001', user, wallets, keepDB: false },
+            dispatch
+          );
+        } else {
+          await dispatch(setUser(user));
+          await dispatch(setWallet(wallets));
+        }
       }
 
       const rlt = await getSession();

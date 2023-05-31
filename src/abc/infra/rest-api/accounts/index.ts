@@ -395,7 +395,7 @@ export class AccountRestApi extends EventEmitter {
       return res.data;
     } catch (error: any) {
       console.log(error);
-      throw new CustomError(DekeyError.getWallets(error.message));
+      throw new CustomError(DekeyError.getWallets(error?.message));
     }
   };
 

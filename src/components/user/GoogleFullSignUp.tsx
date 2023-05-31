@@ -247,6 +247,7 @@ const GoogleFullSignUp = () => {
         service,
         audience: 'https://mw.myabcwallet.com',
       });
+      console.log('!! abcLogin result =', result);
 
       if (result.data.data !== null) {
         const resData = AbcLoginResponse.parse(result.data);
