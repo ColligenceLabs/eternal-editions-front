@@ -156,63 +156,64 @@ export default function Header({ transparent, sx }: Props) {
           }
         }
 
-        const rlt = await getSession();
-        if (rlt.data?.providerAuthInfo) {
-          // TODO: abc-web3-provider 초기화
-          const id_token = rlt.data?.providerAuthInfo?.provider_token;
-          const service = rlt.data?.providerAuthInfo?.provider;
-          const data = JSON.parse(rlt.data?.providerAuthInfo?.provider_data);
-          const email = data.email;
-          console.log(service, id_token, data.email);
-
-          try {
-            const providerOptions = {
-              abc: {
-                package: AbcWeb3Provider, //required
-                options: {
-                  bappName: 'web3Modal Example App', //required
-                  chainId: '0x13881',
-                  rpcUrl: 'https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78', //required
-                  email,
-                  id_token,
-                  serv: service,
-                },
-              },
-            };
-            const web3Modal = new Web3Modal({
-              providerOptions: providerOptions, //required
-            });
-
-            // Connect Wallet
-            const instance = await web3Modal.connect();
-
-            if (instance) {
-              const abcUser = JSON.parse(secureLocalStorage.getItem('abcUser') as string);
-              console.log('==========================', abcUser);
-              console.log(
-                '=============>',
-                abcUser && abcUser?.accounts ? abcUser?.accounts[0].ethAddress : 'No ethAddress'
-              );
-
-              const provider = new ethers.providers.Web3Provider(instance);
-              // // await provider.enable();
-              // const signer = provider.getSigner();
-              // console.log('=============>', signer);
-              //
-              // const rltApprove = await approve(
-              //     '0xae16Dd27539a255A43596481d0F0824ceD8170e1', // Test USDT
-              //     '0x2BD1F8FF37A69937fDF6272504668F750008376B',
-              //     '0.1',
-              //     '0x574caab053de2e7accfb088fb6c2bca3e335c4a0',
-              //     signer
-              // );
-              // if (rltApprove === 1) alert('Approve ... Success');
-              // else alert('Approve ... Failed');
-            }
-          } catch (err) {
-            console.log('!! AbcWeb3Provider 초기화 실패');
-          }
-        }
+        // TODO : abc-web3-provider 초기화는 TX 실행 직전에 하는 것으로...
+        // const rlt = await getSession();
+        // if (rlt.data?.providerAuthInfo) {
+        //   // TODO: abc-web3-provider 초기화
+        //   const id_token = rlt.data?.providerAuthInfo?.provider_token;
+        //   const service = rlt.data?.providerAuthInfo?.provider;
+        //   const data = JSON.parse(rlt.data?.providerAuthInfo?.provider_data);
+        //   const email = data.email;
+        //   console.log(service, id_token, data.email);
+        //
+        //   try {
+        //     const providerOptions = {
+        //       abc: {
+        //         package: AbcWeb3Provider, //required
+        //         options: {
+        //           bappName: 'web3Modal Example App', //required
+        //           chainId: '0x13881',
+        //           rpcUrl: 'https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78', //required
+        //           email,
+        //           id_token,
+        //           serv: service,
+        //         },
+        //       },
+        //     };
+        //     const web3Modal = new Web3Modal({
+        //       providerOptions: providerOptions, //required
+        //     });
+        //
+        //     // Connect Wallet
+        //     const instance = await web3Modal.connect();
+        //
+        //     if (instance) {
+        //       const abcUser = JSON.parse(secureLocalStorage.getItem('abcUser') as string);
+        //       console.log('==========================', abcUser);
+        //       console.log(
+        //         '=============>',
+        //         abcUser && abcUser?.accounts ? abcUser?.accounts[0].ethAddress : 'No ethAddress'
+        //       );
+        //
+        //       const provider = new ethers.providers.Web3Provider(instance);
+        //       // // await provider.enable();
+        //       // const signer = provider.getSigner();
+        //       // console.log('=============>', signer);
+        //       //
+        //       // const rltApprove = await approve(
+        //       //     '0xae16Dd27539a255A43596481d0F0824ceD8170e1', // Test USDT
+        //       //     '0x2BD1F8FF37A69937fDF6272504668F750008376B',
+        //       //     '0.1',
+        //       //     '0x574caab053de2e7accfb088fb6c2bca3e335c4a0',
+        //       //     signer
+        //       // );
+        //       // if (rltApprove === 1) alert('Approve ... Success');
+        //       // else alert('Approve ... Failed');
+        //     }
+        //   } catch (err) {
+        //     console.log('!! AbcWeb3Provider 초기화 실패');
+        //   }
+        // }
       }
       console.log('------------ setLogin false --------------');
     } catch (err) {
