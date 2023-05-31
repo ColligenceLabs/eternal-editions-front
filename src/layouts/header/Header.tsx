@@ -120,6 +120,7 @@ export default function Header({ transparent, sx }: Props) {
       secureLocalStorage.setItem('abcAuth', JSON.stringify(abcAuth));
 
       const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
+      console.log('=== header ====> ', user, wallets);
       // setUser(user); // TODO : redux 와 중복... 쓰는 곳이 없어서...
 
       if (user) {
@@ -132,6 +133,32 @@ export default function Header({ transparent, sx }: Props) {
           await dispatch(setUser(user));
           await dispatch(setWallet(wallets));
         }
+      } else {
+        // TODO : ABC 가입은 되었으나 MPC 지갑이 만들어 지지 않은 경우...
+        const rlt = await getSession();
+        if (rlt.data?.providerAuthInfo) {
+          // TODO: abc-web3-provider 초기화
+          const data = JSON.parse(rlt.data?.providerAuthInfo?.provider_data);
+          const email = data.email;
+          // MPC 지갑 생성
+          await accountController.createMpcBaseAccount(
+            {
+              accountName: email,
+              password: '!owdin001',
+              email: email,
+            },
+            dispatch
+          );
+
+          // 생성된 MPC 지갑 정보 조회
+          const { user, wallets } = await accountRestApi.getWalletsAndUserByAbcUid(abcAuth);
+          console.log('!! user 2 =', user);
+
+          await accountController.recoverShare(
+            { password: '!owdin001', user, wallets, keepDB: false },
+            dispatch
+          );
+        }
       }
 
       const rlt = await getSession();
@@ -143,48 +170,52 @@ export default function Header({ transparent, sx }: Props) {
         const email = data.email;
         console.log(service, id_token, data.email);
 
-        const providerOptions = {
-          abc: {
-            package: AbcWeb3Provider, //required
-            options: {
-              bappName: 'web3Modal Example App', //required
-              chainId: '0x13881',
-              rpcUrl: 'https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78', //required
-              email,
-              id_token,
-              serv: service,
+        try {
+          const providerOptions = {
+            abc: {
+              package: AbcWeb3Provider, //required
+              options: {
+                bappName: 'web3Modal Example App', //required
+                chainId: '0x13881',
+                rpcUrl: 'https://polygon-mumbai.infura.io/v3/4458cf4d1689497b9a38b1d6bbf05e78', //required
+                email,
+                id_token,
+                serv: service,
+              },
             },
-          },
-        };
-        const web3Modal = new Web3Modal({
-          providerOptions: providerOptions, //required
-        });
+          };
+          const web3Modal = new Web3Modal({
+            providerOptions: providerOptions, //required
+          });
 
-        // Connect Wallet
-        const instance = await web3Modal.connect();
+          // Connect Wallet
+          const instance = await web3Modal.connect();
 
-        if (instance) {
-          const abcUser = JSON.parse(secureLocalStorage.getItem('abcUser') as string);
-          console.log('==========================', abcUser);
-          console.log(
-            '=============>',
-            abcUser && abcUser?.accounts ? abcUser?.accounts[0].ethAddress : 'No ethAddress'
-          );
+          if (instance) {
+            const abcUser = JSON.parse(secureLocalStorage.getItem('abcUser') as string);
+            console.log('==========================', abcUser);
+            console.log(
+              '=============>',
+              abcUser && abcUser?.accounts ? abcUser?.accounts[0].ethAddress : 'No ethAddress'
+            );
 
-          const provider = new ethers.providers.Web3Provider(instance);
-          // // await provider.enable();
-          // const signer = provider.getSigner();
-          // console.log('=============>', signer);
-          //
-          // const rltApprove = await approve(
-          //     '0xae16Dd27539a255A43596481d0F0824ceD8170e1', // Test USDT
-          //     '0x2BD1F8FF37A69937fDF6272504668F750008376B',
-          //     '0.1',
-          //     '0x574caab053de2e7accfb088fb6c2bca3e335c4a0',
-          //     signer
-          // );
-          // if (rltApprove === 1) alert('Approve ... Success');
-          // else alert('Approve ... Failed');
+            const provider = new ethers.providers.Web3Provider(instance);
+            // // await provider.enable();
+            // const signer = provider.getSigner();
+            // console.log('=============>', signer);
+            //
+            // const rltApprove = await approve(
+            //     '0xae16Dd27539a255A43596481d0F0824ceD8170e1', // Test USDT
+            //     '0x2BD1F8FF37A69937fDF6272504668F750008376B',
+            //     '0.1',
+            //     '0x574caab053de2e7accfb088fb6c2bca3e335c4a0',
+            //     signer
+            // );
+            // if (rltApprove === 1) alert('Approve ... Success');
+            // else alert('Approve ... Failed');
+          }
+        } catch (err) {
+          console.log('!! AbcWeb3Provider 초기화 실패');
         }
       }
     }
