@@ -93,7 +93,7 @@ export default function Header({ transparent, sx }: Props) {
   const [abcToken, setAbcToken] = React.useState('');
   // const [user, setUser] = React.useState([]); // TODO : redux 와 중복... 쓰는 곳이 없어서...
   const [temp, setTemp] = React.useState(false);
-  const [intervalTime, setIntervalTime] = React.useState(1000);
+  const [intervalTime, setIntervalTime] = React.useState(500);
 
   const abcUser = useSelector((state: any) => state.user);
 
@@ -226,6 +226,7 @@ export default function Header({ transparent, sx }: Props) {
   useEffect(() => {
     const loginBy = localStorage.getItem('loginBy');
     console.log('!! login type = ', loginBy);
+    console.log('------------------------', temp);
     if (
       loginBy !== 'password' &&
       webUser?.user?.session?.providerAuthInfo?.provider_token !== '' &&
@@ -244,9 +245,10 @@ export default function Header({ transparent, sx }: Props) {
   useEffect(() => {
     const timer = setInterval(() => {
       if (!temp) {
+        console.log('!! check WASM .....');
         const result = checkWasm();
         setTemp(result);
-        setIntervalTime(86400000);
+        if (result) setIntervalTime(86400000);
       }
     }, intervalTime);
 
