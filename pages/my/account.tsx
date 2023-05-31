@@ -521,24 +521,6 @@ Type: Address verification`;
                     <form>
                       <Stack gap="12px" sx={{ mt: '12px' }}>
                         {user.abc_address && (
-                          // <Radio
-                          //   checked={selectedAccount === user.abc_address}
-                          //   value={user.abc_address}
-                          //   name="wallet-address"
-                          //   label={
-                          //     <Stack direction="row" alignItems="center" gap="4px">
-                          //       <Image
-                          //         alt="abc-logo"
-                          //         src="/assets/icons/abc-logo.png"
-                          //         sx={{ width: '24px' }}
-                          //       />
-                          //       <SectionText flex={1} sx={{ wordBreak: 'break-word' }}>
-                          //         {user.abc_address}
-                          //       </SectionText>
-                          //     </Stack>
-                          //   }
-                          //   onClick={() => setSelectedAccount(user.abc_address)}
-                          // />
                           <Stack direction="row" alignItems="center" gap="4px">
                             <Image
                               alt="abc-logo"
@@ -552,44 +534,16 @@ Type: Address verification`;
                         )}
 
                         {user.eth_address && (
-                          // <Radio
-                          //   checked={selectedAccount === user.eth_address}
-                          //   value={user.eth_address}
-                          //   name="wallet-address"
-                          //   label={
-                          //     <Box
-                          //       sx={{
-                          //         display: 'flex',
-                          //         alignItems: 'center',
-                          //         gap: '4px',
-                          //         mt: '14px',
-                          //       }}
-                          //     >
-                          //       <Image
-                          //         alt="metamask-logo"
-                          //         src="/assets/icons/metamask-logo.png"
-                          //         sx={{ width: '24px' }}
-                          //       />
-                          //       <SectionText>{user.eth_address}</SectionText>
-                          //     </Box>
-                          //   }
-                          //   onClick={() => setSelectedAccount(user.eth_address || '')}
-                          // />
-                          <Box
-                            sx={{
-                              display: 'flex',
-                              alignItems: 'center',
-                              gap: '4px',
-                              mt: '14px',
-                            }}
-                          >
+                          <Stack direction="row" alignItems="center" gap="4px">
                             <Image
                               alt="metamask-logo"
                               src="/assets/icons/metamask-logo.png"
                               sx={{ width: '24px' }}
                             />
-                            <SectionText>{user.eth_address}</SectionText>
-                          </Box>
+                            <SectionText flex={1} sx={{ wordBreak: 'break-word' }}>
+                              {user.eth_address}
+                            </SectionText>
+                          </Stack>
                         )}
                       </Stack>
                     </form>
@@ -603,7 +557,7 @@ Type: Address verification`;
                         gap: 0.25,
                       }}
                     >
-                      {abcUser.twoFactorEnabled ? null : (
+                      {abcUser.twoFactorEnabled && (
                         <CButton onClick={() => setIsOpenCreateWalletForm(true)}>
                           Generate OTP
                         </CButton>
