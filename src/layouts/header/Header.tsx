@@ -237,8 +237,8 @@ export default function Header({ transparent, sx }: Props) {
         } catch (err) {
           console.log('!! header abcSnsLogin error = ', err);
         }
-      }
-    }
+      } else console.log('!! header abcSnsLogin no abcUser info !!');
+    } else console.log('!! header no abc sns login !!');
   }, [webUser, temp, abcUser]);
 
   useEffect(() => {
