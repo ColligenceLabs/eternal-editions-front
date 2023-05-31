@@ -557,7 +557,7 @@ Type: Address verification`;
                         gap: 0.25,
                       }}
                     >
-                      {abcUser.twoFactorEnabled && (
+                      {!abcUser.twoFactorEnabled && (
                         <CButton onClick={() => setIsOpenCreateWalletForm(true)}>
                           Generate OTP
                         </CButton>
