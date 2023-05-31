@@ -100,6 +100,7 @@ export default function Header({ transparent, sx }: Props) {
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
   const abcSnsLogin = async () => {
+    console.log('------------ setLogin true --------------');
     try {
       await dispatch(setOnLogin(true));
       console.log('!! start sns login !!');
@@ -213,12 +214,11 @@ export default function Header({ transparent, sx }: Props) {
           }
         }
       }
-    } catch (e) {
-      console.log('------------------------');
-      console.log(e);
-    } finally {
-      await dispatch(setOnLogin(false));
+      console.log('------------ setLogin false --------------');
+    } catch (err) {
+      console.log('!! header abcSnsLogin 실패 ', err);
     }
+    await dispatch(setOnLogin(false));
   };
 
   useEffect(() => {
