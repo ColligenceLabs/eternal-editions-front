@@ -92,7 +92,7 @@ export default function Header({ transparent, sx }: Props) {
   const [abcOpen, setAbcOpen] = React.useState(false);
   const [abcToken, setAbcToken] = React.useState('');
   // const [user, setUser] = React.useState([]); // TODO : redux 와 중복... 쓰는 곳이 없어서...
-  const [temp, setTemp] = React.useState(false);
+  const [stWasm, setStWasm] = React.useState(false);
   const [intervalTime, setIntervalTime] = React.useState(200);
 
   const abcUser = useSelector((state: any) => state.user);
@@ -229,7 +229,7 @@ export default function Header({ transparent, sx }: Props) {
     if (
       loginBy !== 'password' &&
       webUser?.user?.session?.providerAuthInfo?.provider_token !== '' &&
-      temp
+      stWasm
     ) {
       if (_.isEmpty(abcUser) || abcUser.uid === '') {
         try {
@@ -239,14 +239,14 @@ export default function Header({ transparent, sx }: Props) {
         }
       } else console.log('!! header abcSnsLogin no abcUser info !!');
     } else console.log('!! header no abc sns login !!');
-  }, [webUser, temp, abcUser]);
+  }, [webUser, stWasm, abcUser]);
 
   useEffect(() => {
     const timer = setInterval(() => {
-      if (!temp) {
+      if (!stWasm) {
         const result = checkWasm();
         console.log('!! check WASM .....', result);
-        setTemp(result);
+        setStWasm(result);
         if (result) setIntervalTime(86400000);
       }
     }, intervalTime);
