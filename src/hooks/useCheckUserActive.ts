@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-const TIME_LIMIT = 10000;
+const TIME_LIMIT = 1000 * 60 * 30; // 30분
 export default function useCheckUserActive() {
   const [userActive, setUserActive] = useState(true);
 
