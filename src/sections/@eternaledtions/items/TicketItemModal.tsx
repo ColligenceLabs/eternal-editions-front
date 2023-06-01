@@ -161,12 +161,16 @@ const TicketItemModal = ({
           undefined
         );
 
+        console.log('!! Approve result = ', result);
         if (parseInt(result.status.toString(), 16) !== SUCCESS) {
           setOpenSnackbar({
             open: true,
             type: 'error',
-            message: 'Purchase Approve faield!',
+            message: 'Purchase Approve failed!',
           });
+          setAbcToken('');
+          setApproveOpen(false);
+          setOtpLoading(false);
           return;
         }
       } catch (e: any) {
@@ -174,8 +178,11 @@ const TicketItemModal = ({
         setOpenSnackbar({
           open: true,
           type: 'error',
-          message: 'Purchase Approve faield!',
+          message: `Purchase Approve failed : ${e?.message}`,
         });
+        setAbcToken('');
+        setApproveOpen(false);
+        setOtpLoading(false);
         return;
       }
     }
@@ -399,19 +406,19 @@ const TicketItemModal = ({
     else payment = parseUnits((ticket?.price * amount).toString() ?? '0', 6);
     console.log('!! payment = ', payment.toString());
 
-    if (quote !== 'matic') {
-      const result = await approveKIP7(
-        quoteToken,
-        contract,
-        payment.toString(),
-        account,
-        library,
-        false
-      );
-      console.log('=== approve result ===', result);
-    }
-
     try {
+      if (quote !== 'matic') {
+        const result = await approveKIP7(
+          quoteToken,
+          contract,
+          payment.toString(),
+          account,
+          library,
+          false
+        );
+        console.log('=== approve result ===', result);
+      }
+
       const result = await buyItem(
         contract,
         index,
@@ -474,7 +481,7 @@ const TicketItemModal = ({
       setOpenSnackbar({
         open: true,
         type: 'error',
-        message: 'Purchase faield!',
+        message: 'Purchase failed!',
       });
     } finally {
       setIsLoading(false);
