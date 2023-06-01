@@ -161,6 +161,7 @@ const TicketItemModal = ({
           undefined
         );
 
+        console.log('!! Approve result = ', result);
         if (parseInt(result.status.toString(), 16) !== SUCCESS) {
           setOpenSnackbar({
             open: true,
