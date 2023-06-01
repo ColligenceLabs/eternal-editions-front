@@ -178,7 +178,7 @@ const TicketItemModal = ({
         setOpenSnackbar({
           open: true,
           type: 'error',
-          message: 'Purchase Approve failed!',
+          message: `Purchase Approve failed : ${e?.message}`,
         });
         setAbcToken('');
         setApproveOpen(false);
