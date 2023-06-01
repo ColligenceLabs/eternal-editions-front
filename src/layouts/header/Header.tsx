@@ -9,6 +9,7 @@ import {
   Input,
   Modal,
   Stack,
+  Typography,
 } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { ethers } from 'ethers';
@@ -46,7 +47,10 @@ import 'src/abc/sandbox/index';
 import { approve } from 'src/utils/abcProviderTxs';
 import ModalCustom from 'src/components/common/ModalCustom';
 import { setWallet } from 'src/store/slices/wallet';
-import { setUser } from 'src/store/slices/user';
+import { delUser, setUser } from 'src/store/slices/user';
+import useCheckUserActive from 'src/hooks/useCheckUserActive';
+import env from 'src/env';
+import RoundedButton from 'src/components/common/RoundedButton';
 
 const modalStyle = {
   position: 'absolute',
@@ -71,6 +75,7 @@ type Props = {
 export default function Header({ transparent, sx }: Props) {
   const { abcController, accountController } = controllers;
   const { mpcService, providerService, providerConnManager } = services;
+  const { userActive } = useCheckUserActive();
   const { account } = useAccount();
   const { library, deactivate } = useActiveWeb3React();
   const dispatch = useDispatch();
@@ -94,7 +99,7 @@ export default function Header({ transparent, sx }: Props) {
   // const [user, setUser] = React.useState([]); // TODO : redux 와 중복... 쓰는 곳이 없어서...
   const [stWasm, setStWasm] = React.useState(false);
   const [intervalTime, setIntervalTime] = React.useState(200);
-
+  const [logoutAlertOpen, setLogoutAlertOpen] = React.useState(false);
   const abcUser = useSelector((state: any) => state.user);
 
   const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
@@ -293,6 +298,35 @@ export default function Header({ transparent, sx }: Props) {
   const isLight = theme.palette.mode === 'light';
   const isScrolling = useOffSetTop(HEADER_DESKTOP_HEIGHT);
 
+  const disconnect = async () => {
+    try {
+      await deactivate();
+      window.localStorage.setItem('walletStatus', 'disconnected');
+      window.localStorage.removeItem('jwtToken');
+      window.localStorage.removeItem('loginBy');
+      window.localStorage.removeItem('loginType');
+      window.location.href = `${env.REACT_APP_API_URL}/auth/logout`;
+      dispatch(delUser());
+    } catch (e) {
+      console.log(e);
+      alert(e);
+    }
+  };
+
+  const handleLogoutClose = () => {
+    setLogoutAlertOpen(false);
+    disconnect();
+  };
+
+  useEffect(() => {
+    if (account && !userActive) {
+      setLogoutAlertOpen(true);
+      // disconnect();
+      console.log('------- log out ---------');
+    }
+    console.log(`user active : ${userActive}`);
+  }, [userActive, account]);
+
   return (
     <AppBar sx={{ boxShadow: 0, backgroundColor: 'transparent', ...sx }}>
       <ToolbarStyle disableGutters transparent={transparent} scrolling={isScrolling}>
@@ -471,6 +505,39 @@ export default function Header({ transparent, sx }: Props) {
           </Box>
         </Fade>
       </Modal>
+
+      <ModalCustom
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        open={logoutAlertOpen}
+        onClose={handleLogoutClose}
+      >
+        <Fade in={logoutAlertOpen}>
+          <Stack>
+            <Typography
+              sx={{
+                fontSize: { xs: '24px', md: '32px' },
+                fontWeight: 'bold',
+                lineHeight: { xs: '28px', md: '36px' },
+                mb: { xs: '9px', md: '16px' },
+              }}
+            >
+              !
+            </Typography>
+            <Typography
+              sx={{
+                fontSize: { xs: '16px', md: '24px' },
+                fontWeight: 'bold',
+                lineHeight: { xs: '24px', md: '28px' },
+                mb: { xs: '24px', md: '55px' },
+              }}
+            >
+              message.........
+            </Typography>
+            <RoundedButton onClick={handleLogoutClose}>Confirm</RoundedButton>
+          </Stack>
+        </Fade>
+      </ModalCustom>
     </AppBar>
   );
 }
