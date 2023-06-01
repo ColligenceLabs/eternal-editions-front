@@ -307,7 +307,7 @@ const TicketItemModal = ({
       setOpenSnackbar({
         open: true,
         type: 'error',
-        message: 'Purchase faield!',
+        message: `Purchase failed : ${e?.message}`,
       });
     }
 
