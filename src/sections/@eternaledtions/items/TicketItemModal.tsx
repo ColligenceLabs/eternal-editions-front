@@ -165,8 +165,11 @@ const TicketItemModal = ({
           setOpenSnackbar({
             open: true,
             type: 'error',
-            message: 'Purchase Approve faield!',
+            message: 'Purchase Approve failed!',
           });
+          setAbcToken('');
+          setApproveOpen(false);
+          setOtpLoading(false);
           return;
         }
       } catch (e: any) {
@@ -174,8 +177,11 @@ const TicketItemModal = ({
         setOpenSnackbar({
           open: true,
           type: 'error',
-          message: 'Purchase Approve faield!',
+          message: 'Purchase Approve failed!',
         });
+        setAbcToken('');
+        setApproveOpen(false);
+        setOtpLoading(false);
         return;
       }
     }
@@ -474,7 +480,7 @@ const TicketItemModal = ({
       setOpenSnackbar({
         open: true,
         type: 'error',
-        message: 'Purchase faield!',
+        message: 'Purchase failed!',
       });
     } finally {
       setIsLoading(false);
