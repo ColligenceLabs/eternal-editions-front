@@ -532,7 +532,7 @@ export default function Header({ transparent, sx }: Props) {
                 mb: { xs: '24px', md: '55px' },
               }}
             >
-              message.........
+              Session time out. Login again…
             </Typography>
             <RoundedButton onClick={handleLogoutClose}>Confirm</RoundedButton>
           </Stack>
