@@ -399,19 +399,19 @@ const TicketItemModal = ({
     else payment = parseUnits((ticket?.price * amount).toString() ?? '0', 6);
     console.log('!! payment = ', payment.toString());
 
-    if (quote !== 'matic') {
-      const result = await approveKIP7(
-        quoteToken,
-        contract,
-        payment.toString(),
-        account,
-        library,
-        false
-      );
-      console.log('=== approve result ===', result);
-    }
-
     try {
+      if (quote !== 'matic') {
+        const result = await approveKIP7(
+          quoteToken,
+          contract,
+          payment.toString(),
+          account,
+          library,
+          false
+        );
+        console.log('=== approve result ===', result);
+      }
+
       const result = await buyItem(
         contract,
         index,
