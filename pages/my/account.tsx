@@ -48,6 +48,8 @@ import { FormControlLabel } from '@mui/material';
 import RoundedButton from 'src/components/common/RoundedButton';
 import CreateWalletForm from 'src/components/user/CreateWalletForm';
 import moment from 'moment';
+import { getErc20BalanceNoSigner } from 'src/utils/transactions';
+import contracts from 'src/config/constants/contracts';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
@@ -121,6 +123,7 @@ export default function MyAccountPage() {
   const [selectedAccount, setSelectedAccount] = useState(
     user.abc_address || user.eth_address || ''
   );
+  const [usdcBalance, setUsdcBalance] = useState('0');
   const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
   const [isConfirmDeactivate, setIsConfirmDeactivate] = useState(false);
   const [isOpenCreateWalletForm, setIsOpenCreateWalletForm] = useState<boolean>(false);
@@ -246,6 +249,17 @@ Type: Address verification`;
     }
     saveAddress();
   }, [library]);
+
+  const fetchUsdcBalance = async () => {
+    const ret = await getErc20BalanceNoSigner(contracts.usdc[chainId], account, chainId);
+    setUsdcBalance(ret);
+  };
+
+  useEffect(() => {
+    if (account) {
+      fetchUsdcBalance();
+    }
+  }, [account]);
 
   return (
     <Page title="Account">
@@ -386,21 +400,50 @@ Type: Address verification`;
                               {balance.toFixed(5)} MATIC
                             </Typography>
                           </Box>
-                          <Box
-                            sx={{
-                              backgroundColor: '#F5F5F5',
-                              textAlign: 'center',
-                              borderRadius: '40px',
-                              cursor: 'pointer',
-                              padding: '5px 15px',
-                            }}
-                          >
-                            <Typography
-                              sx={{ fontSize: '13px', fontWeight: '700', color: '#999999' }}
-                            >
-                              BUY
+                          {/*<Box*/}
+                          {/*  sx={{*/}
+                          {/*    backgroundColor: '#F5F5F5',*/}
+                          {/*    textAlign: 'center',*/}
+                          {/*    borderRadius: '40px',*/}
+                          {/*    cursor: 'pointer',*/}
+                          {/*    padding: '5px 15px',*/}
+                          {/*  }}*/}
+                          {/*>*/}
+                          {/*  <Typography*/}
+                          {/*    sx={{ fontSize: '13px', fontWeight: '700', color: '#999999' }}*/}
+                          {/*  >*/}
+                          {/*    BUY*/}
+                          {/*  </Typography>*/}
+                          {/*</Box>*/}
+                        </Box>
+                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                          <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                            <Box sx={{ width: '20px' }}>
+                              <Image
+                                alt="matic-token-icon"
+                                src="/assets/img/usdc-token-icon.png"
+                                sx={{ width: '100%' }}
+                              />
+                            </Box>
+                            <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
+                              {usdcBalance} USDC
                             </Typography>
                           </Box>
+                          {/*<Box*/}
+                          {/*  sx={{*/}
+                          {/*    backgroundColor: '#F5F5F5',*/}
+                          {/*    textAlign: 'center',*/}
+                          {/*    borderRadius: '40px',*/}
+                          {/*    cursor: 'pointer',*/}
+                          {/*    padding: '5px 15px',*/}
+                          {/*  }}*/}
+                          {/*>*/}
+                          {/*  <Typography*/}
+                          {/*    sx={{ fontSize: '13px', fontWeight: '700', color: '#999999' }}*/}
+                          {/*  >*/}
+                          {/*    BUY*/}
+                          {/*  </Typography>*/}
+                          {/*</Box>*/}
                         </Box>
                       </Stack>
                     </Box>
