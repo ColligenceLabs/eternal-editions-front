@@ -17,7 +17,7 @@
   },
   "dependencies": {
     "@alch/alchemy-web3": "^1.4.7",
-    "@colligence/klip-web3-provider": "^1.0.186",
+    "@colligence/klip-web3-provider": "^1.0.188",
     "@colligence/seaport-js": "^1.2.1",
     "@colligence/web3modal": "^1.1.15",
     "@emotion/cache": "^11.9.3",
