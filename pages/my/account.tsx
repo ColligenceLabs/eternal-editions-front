@@ -559,7 +559,7 @@ Type: Address verification`;
                     >
                       {!abcUser.twoFactorEnabled && (
                         <CButton onClick={() => setIsOpenCreateWalletForm(true)}>
-                          Generate OTP
+                          Activate Wallet
                         </CButton>
                       )}
 

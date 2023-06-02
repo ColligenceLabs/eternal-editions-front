@@ -748,7 +748,7 @@ const TicketItemModal = ({
                         mb: '-5px',
                       }}
                     >
-                      Generate OTP on the Profile menu at first.
+                      Activate Wallet on the Profile menu at first.
                     </Box>
                   )}
                 </>
