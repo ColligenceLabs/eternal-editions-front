@@ -1,11 +1,12 @@
 // icons
 import closeIcon from '@iconify/icons-carbon/close';
-import { Backdrop, Box, Fade, Modal, ModalProps, styled } from '@mui/material';
+import { Backdrop, Box, Modal, ModalProps, SxProps, styled } from '@mui/material';
 import React from 'react';
 import { IconButtonAnimate } from '../animate';
 import Iconify from '../Iconify';
 
-export interface Props extends ModalProps {
+export interface ModalCustomProps extends ModalProps {
+  containerStyles?: SxProps;
   onClose?: VoidFunction;
 }
 
@@ -40,7 +41,13 @@ const Content = styled(Box)(({ theme }) => ({
   },
 }));
 
-export default function ModalCustom({ open, children, onClose, ...props }: Props) {
+export default function ModalCustom({
+  open,
+  children,
+  containerStyles,
+  onClose,
+  ...props
+}: ModalCustomProps) {
   return (
     <Modal
       open={open}
@@ -55,7 +62,7 @@ export default function ModalCustom({ open, children, onClose, ...props }: Props
       {...props}
     >
       {/* <Fade in={open}> */}
-      <Container sx={{ width: 'min(100%, 400px)' }}>
+      <Container sx={{ width: 'min(100%, 400px)', ...containerStyles }}>
         <Box
           sx={{
             position: 'absolute',

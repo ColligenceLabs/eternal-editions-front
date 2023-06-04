@@ -145,6 +145,7 @@ export default function CreateWalletForm({ onClose }: Props) {
             render={({ field, fieldState: { error } }) => (
               <StyledInput
                 {...field}
+                sx={{ borderBottom: '1px solid rgba(0, 0, 0, 0.24)' }}
                 placeholder="Please enter verification code."
                 size={'small'}
                 type="string"

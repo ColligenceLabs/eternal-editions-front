@@ -16,6 +16,7 @@ import { fDate } from 'src/utils/formatTime';
 import { englishAuctionSell } from 'src/seaport/englishAuction';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import CSnackbar from 'src/components/common/CSnackbar';
+import OffersModal from './offers';
 
 interface Props {
   sellTicketInfo: MyTicketTypes;
@@ -28,6 +29,7 @@ interface Props {
   team: string;
   day: string;
   setOpenSnackbar: SetStateAction<any>;
+  onCancel: () => void;
 }
 
 enum sellType {
@@ -47,6 +49,7 @@ export default function TicketSalesInfo({
   endDate,
   isForSale,
   setOpenSnackbar,
+  onCancel,
 }: Props) {
   const isAuction = typeOfSale === 'auction';
   const webUser = useSelector((state: any) => state.webUser);
@@ -55,6 +58,9 @@ export default function TicketSalesInfo({
 
   const [isLoading, setIsLoading] = useState(false);
   const [endSubmit, setEndSubmit] = useState(false);
+
+  const [openOffersModal, setOpenOffersModal] = useState(false);
+
   console.log(sellTicketInfo);
   const getAbcWeb3Provider = async () => {
     console.log('!!!!!!!!!! USE ABC-WEB3-PROVIDER !!!!!!!!!!');
@@ -359,13 +365,22 @@ export default function TicketSalesInfo({
             >
               <CircularProgress size={'2rem'} />
             </Box>
-          ) : endSubmit ? null : (
+          ) : endSubmit ? (
+            <Stack gap={0.25}>
+              <RoundedButton onClick={onCancel} variant="withImage">
+                CANCEL SALES
+              </RoundedButton>
+              <RoundedButton onClick={() => setOpenOffersModal(true)}>CHECK OFFERS</RoundedButton>
+            </Stack>
+          ) : (
             <RoundedButton variant="withImage" onClick={handleClickConfirm}>
               CONFIRM
             </RoundedButton>
           )}
         </>
       )}
+
+      <OffersModal open={openOffersModal} onClose={() => setOpenOffersModal(false)} />
 
       {/*{isAuction ? <RoundedButton variant="withImage">CONFIRM</RoundedButton> : null}*/}
     </Stack>

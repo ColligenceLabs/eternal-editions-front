@@ -36,9 +36,11 @@ export default function MyTicketSellPage() {
   const fetchSellItemInfo = async (id: string) => {
     const res = await getSellItemInfo(id);
     if (res.data.status === SUCCESS) {
-      setIsForSale(!!res.data.data.sellbook);
+      setIsForSale(!!res.data.data?.sellbook);
       setSellTicketInfo(res.data.data);
-      const { properties } = res.data.data.mysteryboxItem;
+
+      const { properties } = res.data.data?.mysteryboxItem || {};
+
       if (properties) {
         properties.map((property: any) =>
           property.type === 'team'

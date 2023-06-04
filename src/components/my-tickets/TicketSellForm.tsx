@@ -140,6 +140,7 @@ export default function TicketSellForm({
         endDate={endDate}
         isForSale={isForSale}
         setOpenSnackbar={setOpenSnackbar}
+        onCancel={() => alert('Cancel clicked')}
       />
     );
   }
