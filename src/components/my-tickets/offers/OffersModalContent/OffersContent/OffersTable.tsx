@@ -9,14 +9,7 @@ import { useSelector } from 'react-redux';
 import { BodyTableCell, BodyTableRow, HeaderTableCell, Table } from './StyledTable';
 import { getShotAddress } from 'src/utils/wallet';
 import RoundedButton from 'src/components/common/RoundedButton';
-
-export interface OfferType {
-  price: string;
-  usdPrice: string;
-  floorDifference: string;
-  expiration: string;
-  address: string;
-}
+import { OfferType } from './OffersContent';
 
 const offers = [
   {
@@ -75,7 +68,6 @@ interface Props {
 }
 
 export default function OffersTable({ onClickItem }: Props) {
-  const theme = useTheme();
   const { user } = useSelector((state: any) => state.webUser);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
