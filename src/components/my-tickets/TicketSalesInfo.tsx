@@ -274,6 +274,7 @@ export default function TicketSalesInfo({
 
     setIsLoading(false);
   };
+
   return (
     <Stack gap="24px" justifyContent="space-between" sx={{ height: '100%' }} position={'relative'}>
       <Stack gap="12px">
@@ -348,7 +349,7 @@ export default function TicketSalesInfo({
         </Row>
       </Stack>
 
-      {!isForSale && (
+      {!isForSale ? (
         <>
           {isLoading ? (
             <Box
@@ -365,19 +366,19 @@ export default function TicketSalesInfo({
             >
               <CircularProgress size={'2rem'} />
             </Box>
-          ) : endSubmit ? (
-            <Stack gap={0.25}>
-              <RoundedButton onClick={onCancel} variant="withImage">
-                CANCEL SALES
-              </RoundedButton>
-              <RoundedButton onClick={() => setOpenOffersModal(true)}>CHECK OFFERS</RoundedButton>
-            </Stack>
-          ) : (
+          ) : endSubmit ? null : (
             <RoundedButton variant="withImage" onClick={handleClickConfirm}>
               CONFIRM
             </RoundedButton>
           )}
         </>
+      ) : (
+        <Stack gap={0.25}>
+          <RoundedButton onClick={onCancel} variant="withImage">
+            CANCEL SALES
+          </RoundedButton>
+          <RoundedButton onClick={() => setOpenOffersModal(true)}>CHECK OFFERS</RoundedButton>
+        </Stack>
       )}
 
       <OffersModal open={openOffersModal} onClose={() => setOpenOffersModal(false)} />
