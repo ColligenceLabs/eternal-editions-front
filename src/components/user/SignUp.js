@@ -233,7 +233,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
   return (
     <Stack {...other}>
       {openIDPWD ? (
-        <EmailLoginForm />
+        <EmailLoginForm onClose={onClose} />
       ) : (
         <>
           <Typography id="transition-modal-title" variant="h4" component="h2" sx={{ mb: 2 }}>

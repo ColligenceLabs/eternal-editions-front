@@ -54,10 +54,11 @@ export default function EmailLoginForm({ onClose }: Props) {
         pathname: '/register',
         query: { eternal: Base64.encode(password) },
       });
+
+      onClose();
     } else {
       alert('로그인에 실패했습니다.');
     }
-    onClose();
   };
 
   return (
@@ -126,7 +127,9 @@ export default function EmailLoginForm({ onClose }: Props) {
         />
       </Section>
 
-      <RoundedButton disabled={!isValid}>Login</RoundedButton>
+      <RoundedButton type="submit" disabled={!isValid}>
+        Login
+      </RoundedButton>
     </Stack>
   );
 }
