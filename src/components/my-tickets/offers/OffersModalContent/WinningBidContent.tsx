@@ -40,6 +40,10 @@ function WinningBidContent({ offer, ...props }: Props) {
     }
   };
 
+  const handleWinningBid = async () => {
+    console.log('!! handleWinningBid : offer = ', offer);
+  };
+
   if (openTransfer) {
     return (
       <TransferContent open={props.open} onClose={onClose} onSubmitSuccess={onTransferSuccess} />
@@ -83,7 +87,8 @@ function WinningBidContent({ offer, ...props }: Props) {
       {isVerifided ? (
         <RoundedButton onClick={onConfirm}>confirm</RoundedButton>
       ) : (
-        <RoundedButton onClick={() => setOpenTransfer(true)}>winning bid</RoundedButton>
+        // <RoundedButton onClick={() => setOpenTransfer(true)}>winning bid</RoundedButton>
+        <RoundedButton onClick={handleWinningBid}>winning bid</RoundedButton>
       )}
     </Stack>
   );
