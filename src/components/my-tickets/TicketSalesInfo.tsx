@@ -211,6 +211,7 @@ export default function TicketSalesInfo({
         }
       } catch (err) {
         console.log('!! fixedPriceSell error = ', err);
+        return;
       }
 
       await insertSellbook(order, sellType.FIXED, 'crypto');
@@ -218,33 +219,38 @@ export default function TicketSalesInfo({
       console.log('click English auction');
 
       console.log('=== account, library ===', account, library);
-      if (!library) {
-        const provider = await getAbcWeb3Provider();
+      try {
+        if (!library) {
+          const provider = await getAbcWeb3Provider();
 
-        // TODO : CreatorFee 를 어떻게 처리할 것인지 확인이 필요함.
-        order = await englishAuctionSell(
-          sellTicketInfo.mysteryboxInfo?.boxContractAddress,
-          sellTicketInfo.tokenId.toString(),
-          price,
-          sellTicketInfo.mysteryboxInfo?.quote,
-          chainId,
-          endTime.toString(),
-          sellTicketInfo.mysteryboxInfo?.creatorAddress,
-          account,
-          provider
-        );
-      } else if (library) {
-        order = await englishAuctionSell(
-          sellTicketInfo.mysteryboxInfo?.boxContractAddress,
-          sellTicketInfo.tokenId.toString(),
-          price,
-          sellTicketInfo.mysteryboxInfo?.quote,
-          chainId,
-          endTime.toString(),
-          sellTicketInfo.mysteryboxInfo?.creatorAddress,
-          account,
-          library
-        );
+          // TODO : CreatorFee 를 어떻게 처리할 것인지 확인이 필요함.
+          order = await englishAuctionSell(
+            sellTicketInfo.mysteryboxInfo?.boxContractAddress,
+            sellTicketInfo.tokenId.toString(),
+            price,
+            sellTicketInfo.mysteryboxInfo?.quote,
+            chainId,
+            endTime.toString(),
+            sellTicketInfo.mysteryboxInfo?.creatorAddress,
+            account,
+            provider
+          );
+        } else if (library) {
+          order = await englishAuctionSell(
+            sellTicketInfo.mysteryboxInfo?.boxContractAddress,
+            sellTicketInfo.tokenId.toString(),
+            price,
+            sellTicketInfo.mysteryboxInfo?.quote,
+            chainId,
+            endTime.toString(),
+            sellTicketInfo.mysteryboxInfo?.creatorAddress,
+            account,
+            library
+          );
+        }
+      } catch (err) {
+        console.log('!! englishAuctionSell error = ', err);
+        return;
       }
 
       await insertSellbook(order, sellType.AUCTION, 'crypto');
