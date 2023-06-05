@@ -6,7 +6,7 @@ import OffersContent, { OfferType } from './OffersModalContent/OffersContent';
 
 type Props = Omit<ModalCustomProps, 'children'>;
 
-function OffersModal({ sellbookId, ...props }) {
+function OffersModal(props: Props) {
   const theme = useTheme();
   const [openWinningBid, setOpenWinningBid] = useState(false);
   const [activeOffer, setActiveOffer] = useState<OfferType>();
@@ -43,9 +43,9 @@ function OffersModal({ sellbookId, ...props }) {
   };
 
   useEffect(() => {
-    console.log('!! check offers : selBook id = ', sellbookId); // sellBookID
+    console.log('!! check offers : selBook id = '); // sellbookID
     fetchOffers();
-  }, [sellbookId]);
+  }, []); //  sellbookID
 
   return (
     <ModalCustom

@@ -391,7 +391,7 @@ export default function TicketSalesInfo({
       <OffersModal
         open={openOffersModal}
         onClose={() => setOpenOffersModal(false)}
-        sellbookId={sellTicketInfo?.sellbook?.id}
+        // TODO : sellTicketInfo?.sellbook?.id 전달
       />
 
       {/*{isAuction ? <RoundedButton variant="withImage">CONFIRM</RoundedButton> : null}*/}
