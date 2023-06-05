@@ -260,6 +260,11 @@ export default function TicketDetailPage() {
   };
 
   const offerWithPoint = async () => {
+    if (parseFloat(offer) <= sellbookInfo?.price) {
+      alert('Input bigger price than current price');
+      return;
+    }
+
     // TODO : Banckend API 호출 (English Auction Offer)
     const data = {
       buyer: webUser.user.uid,
@@ -331,6 +336,11 @@ export default function TicketDetailPage() {
   };
 
   const offerWithCrypto = async () => {
+    if (parseFloat(offer) <= sellbookInfo?.price) {
+      alert('Input bigger price than current price');
+      return;
+    }
+
     // TODO : Seaport 호출
     let order;
 
@@ -398,14 +408,15 @@ export default function TicketDetailPage() {
     setIsLoading(false);
   };
 
-  const handleInputOffer = async (e) => {
-    setOffer(e.target.value);
+  const handleInputOffer = async (event: any) => {
+    setOffer(event.target.value);
   };
 
   useEffect(() => {
     if (slug) fetchSellbookInfo();
   }, [slug]);
 
+  console.log('------------------------', sellbookInfo);
   return (
     <Page title={`${slug} - Ticket`}>
       {/* background */}
