@@ -61,6 +61,8 @@ export default function TicketSalesInfo({
 
   const [openOffersModal, setOpenOffersModal] = useState(false);
 
+  const typeOfSell = sellTicketInfo?.sellbook?.type;
+
   console.log(sellTicketInfo);
   const getAbcWeb3Provider = async () => {
     console.log('!!!!!!!!!! USE ABC-WEB3-PROVIDER !!!!!!!!!!');
@@ -378,7 +380,11 @@ export default function TicketSalesInfo({
           <RoundedButton onClick={onCancel} variant="withImage">
             CANCEL SALES
           </RoundedButton>
-          <RoundedButton onClick={() => setOpenOffersModal(true)}>CHECK OFFERS</RoundedButton>
+          {typeOfSell === sellType.AUCTION ? (
+            <RoundedButton onClick={() => setOpenOffersModal(true)}>CHECK OFFERS</RoundedButton>
+          ) : (
+            ''
+          )}
         </Stack>
       )}
 
