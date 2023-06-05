@@ -388,7 +388,11 @@ export default function TicketSalesInfo({
         </Stack>
       )}
 
-      <OffersModal open={openOffersModal} onClose={() => setOpenOffersModal(false)} />
+      <OffersModal
+        open={openOffersModal}
+        onClose={() => setOpenOffersModal(false)}
+        sellbookId={sellTicketInfo?.sellbook?.id}
+      />
 
       {/*{isAuction ? <RoundedButton variant="withImage">CONFIRM</RoundedButton> : null}*/}
     </Stack>

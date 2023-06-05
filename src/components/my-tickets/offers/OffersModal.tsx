@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ModalCustom, { ModalCustomProps } from '../../common/ModalCustom';
 import { useTheme } from '@mui/material';
 import WinningBidContent from './OffersModalContent/WinningBidContent';
@@ -6,7 +6,7 @@ import OffersContent, { OfferType } from './OffersModalContent/OffersContent';
 
 type Props = Omit<ModalCustomProps, 'children'>;
 
-function OffersModal(props: Props) {
+function OffersModal({ sellbookId, ...props }) {
   const theme = useTheme();
   const [openWinningBid, setOpenWinningBid] = useState(false);
   const [activeOffer, setActiveOffer] = useState<OfferType>();
@@ -35,6 +35,11 @@ function OffersModal(props: Props) {
 
     return <OffersContent onClickItem={onClickItem} />;
   };
+
+  useEffect(() => {
+    // TODO : DB 에서 해당 sellBook 건과 관련된 auction bid 정보 가져오기...
+    console.log('!! check offers : selBook id = ', sellbookId); // sellBookID
+  }, []);
 
   return (
     <ModalCustom
