@@ -4,13 +4,15 @@ import { useTheme } from '@mui/material';
 import WinningBidContent from './OffersModalContent/WinningBidContent';
 import OffersContent, { OfferType } from './OffersModalContent/OffersContent';
 
-type Props = Omit<ModalCustomProps, 'children'>;
+interface Props extends Omit<ModalCustomProps, 'children'> {
+  sellbookId: number;
+}
 
-function OffersModal(props: Props) {
+function OffersModal({ sellbookId, ...props }: Props) {
   const theme = useTheme();
   const [openWinningBid, setOpenWinningBid] = useState(false);
   const [activeOffer, setActiveOffer] = useState<OfferType>();
-  const [offers, setOffers] = useState([]);
+  const [bids, setBids] = useState([]);
 
   const resetOfferSelection = () => {
     setOpenWinningBid(false);
@@ -37,15 +39,15 @@ function OffersModal(props: Props) {
     return <OffersContent onClickItem={onClickItem} />;
   };
 
-  const fetchOffers = async () => {
+  const fetchBids = async () => {
+    console.log('!! check offers : selBook id = ', sellbookId);
     // TODO : // TODO : DB 에서 해당 sellBook 건과 관련된 auction bid 정보 가져오기...
-    setOffers([]);
+    setBids([]);
   };
 
   useEffect(() => {
-    console.log('!! check offers : selBook id = '); // sellbookID
-    fetchOffers();
-  }, []); //  sellbookID
+    fetchBids();
+  }, []);
 
   return (
     <ModalCustom
