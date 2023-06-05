@@ -173,6 +173,7 @@ export default function TicketSalesInfo({
       price = utils.parseEther((amount ?? '0.0').toString()).toString();
     else price = utils.parseUnits(amount ?? '0.0', 6).toString();
 
+    console.log('!! sellByCrypto typeOfSell = ', typeOfSale);
     if (typeOfSale === 'fixed') {
       console.log('click Fixed Price');
 
