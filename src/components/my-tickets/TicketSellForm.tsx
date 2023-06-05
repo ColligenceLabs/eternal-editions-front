@@ -127,6 +127,12 @@ export default function TicketSellForm({
     ]);
   }, []);
 
+  const onCancelSales = async () => {
+    console.log('!! Cancel Sales ... Clicked : ', sellTicketInfo);
+
+    // TODO : DB 에서 Sell 관련 정보 전체 삭제 API 호출
+  };
+
   if (isSubmitting) {
     return (
       <TicketSalesInfo
@@ -140,7 +146,7 @@ export default function TicketSellForm({
         endDate={endDate}
         isForSale={isForSale}
         setOpenSnackbar={setOpenSnackbar}
-        onCancel={() => alert('Cancel clicked')}
+        onCancel={onCancelSales}
       />
     );
   }
