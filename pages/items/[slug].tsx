@@ -51,6 +51,8 @@ import { fullfillment } from 'src/seaport/fullfillment';
 import CloseIcon from 'src/assets/icons/close';
 import { IconButtonAnimate } from 'src/components/animate';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
+import { bidOffer } from 'src/seaport/bidOffer';
+import { fixedPriceSell } from 'src/seaport/fixedPriceSell';
 
 const PAY_TYPE = [
   {
@@ -76,6 +78,7 @@ type SellBookTypes = {
   price: number;
   createdAt: Date;
   updatedAt: Date;
+  tokenId: number;
 };
 
 // ----------------------------------------------------------------------
@@ -116,6 +119,7 @@ export default function TicketDetailPage() {
   const router = useRouter();
   const { slug } = router.query;
   const isMobile = useResponsive('down', 'md');
+  const [offer, setOffer] = useState('');
   const [payType, setPayType] = useState('default');
   const [abcToken, setAbcToken] = useState('');
   const [abcOpen, setAbcOpen] = useState(false);
@@ -254,6 +258,34 @@ export default function TicketDetailPage() {
     }
   };
 
+  const offerWithPoint = async () => {
+    // TODO : Banckend API 호출 (English Auction Offer)
+    const data = {
+      buyer: webUser.user.uid,
+      buyerAddress: account,
+      price: offer,
+      txHash: null,
+    };
+    console.log('!! offerWithPoint data = ', data);
+
+    // const result = await registerSellbookOffer(data, sellbookInfo?.id!);
+    // console.log('!! offerWithPoint result = ', result);
+    // if (result.data.status === SUCCESS) {
+    //   setOpenSnackbar({
+    //     open: true,
+    //     type: 'success',
+    //     message: 'Success OFFER!',
+    //   });
+    //   router.push('/my/tickets');
+    // } else {
+    //   setOpenSnackbar({
+    //     open: true,
+    //     type: 'error',
+    //     message: 'Failed OFFER!',
+    //   });
+    // }
+  };
+
   const buyWithCrypto = async () => {
     // TODO : Seaport 호출
     let result;
@@ -297,6 +329,54 @@ export default function TicketDetailPage() {
     }
   };
 
+  const offerWithCrypto = async () => {
+    // TODO : Seaport 호출
+    let order;
+
+    const endTime = Math.round(endDate.getTime() / 1000);
+    if (!library) {
+      const provider = await getAbcWeb3Provider();
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      order = await bidOffer(
+        sellbookInfo?.mysteryboxInfo?.boxContractAddress,
+        sellbookInfo?.tokenId ? sellbookInfo?.tokenId.toString() : '',
+        offer,
+        sellbookInfo?.mysteryboxInfo?.quote,
+        chainId,
+        endTime.toString(),
+        sellbookInfo?.mysteryboxInfo?.creatorAddress,
+        account,
+        provider
+      );
+    } else if (library) {
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      order = await bidOffer(
+        sellbookInfo?.mysteryboxInfo?.boxContractAddress,
+        sellbookInfo?.tokenId ? sellbookInfo?.tokenId.toString() : '',
+        offer,
+        sellbookInfo?.mysteryboxInfo?.quote,
+        chainId,
+        endTime.toString(),
+        sellbookInfo?.mysteryboxInfo?.creatorAddress,
+        account,
+        library
+      );
+    }
+
+    console.log('!! offer result = ', order);
+
+    // if (result) {
+    //   const data = {
+    //     buyer: webUser.user.uid,
+    //     buyerAddress: account,
+    //     price: sellbookInfo?.price,
+    //     txHash: result?.transactionHash,
+    //   };
+    //
+    //   await registerSellbookOffer(data, sellbookInfo?.id!);
+    // }
+  };
+
   const handleClickBuy = async () => {
     setIsLoading(true);
     console.log('buy now');
@@ -307,7 +387,17 @@ export default function TicketDetailPage() {
   };
 
   const handleClickBid = async () => {
-    console.log('click bid');
+    console.log('click bid', offer);
+    setIsLoading(true);
+    console.log('offer now');
+    console.log(`pay type :: ${payType}`);
+    if (payType === 'edcp') await offerWithPoint();
+    else await offerWithCrypto();
+    setIsLoading(false);
+  };
+
+  const handleInputOffer = async (e) => {
+    setOffer(e.target.value);
   };
 
   useEffect(() => {
@@ -441,6 +531,8 @@ export default function TicketDetailPage() {
                             <TextField
                               variant="outlined"
                               placeholder="Please enter your offer"
+                              value={offer}
+                              onChange={handleInputOffer}
                               sx={{
                                 [`.${outlinedInputClasses.notchedOutline}`]: {
                                   borderRadius: '60px',
