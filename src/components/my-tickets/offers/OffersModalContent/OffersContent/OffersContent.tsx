@@ -1,10 +1,11 @@
 import { Typography } from '@mui/material';
 import { Stack } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import OffersTable from './OffersTable';
 
 type Props = {
   onClickItem: (offer: OfferType) => void;
+  sellbookId: number;
 };
 
 export interface OfferType {
@@ -15,7 +16,7 @@ export interface OfferType {
   address: string;
 }
 
-function OffersContent({ onClickItem }: Props) {
+function OffersContent({ sellbookId, onClickItem }: Props) {
   return (
     <Stack gap={3} sx={{ maxHeight: '374px' }}>
       <Typography variant="h3">OFFERS</Typography>
@@ -34,7 +35,7 @@ function OffersContent({ onClickItem }: Props) {
           },
         }}
       >
-        <OffersTable onClickItem={onClickItem} />
+        <OffersTable onClickItem={onClickItem} sellbookId={sellbookId} />
       </Stack>
     </Stack>
   );

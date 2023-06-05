@@ -4,7 +4,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Stack, TableBody, useTheme } from '@mui/material';
-import { ChangeEvent, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BodyTableCell, BodyTableRow, HeaderTableCell, Table } from './StyledTable';
 import { getShotAddress } from 'src/utils/wallet';
@@ -65,9 +65,10 @@ const offers = [
 
 interface Props {
   onClickItem?: (offer: OfferType) => void;
+  sellbookId: number;
 }
 
-export default function OffersTable({ onClickItem }: Props) {
+export default function OffersTable({ sellbookId, onClickItem }: Props) {
   const { user } = useSelector((state: any) => state.webUser);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
@@ -75,6 +76,18 @@ export default function OffersTable({ onClickItem }: Props) {
   const handlePageChange = (event: ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
+
+  const [bids, setBids] = useState([]);
+
+  const fetchBids = async () => {
+    console.log('!! check offers : selBook id = ', sellbookId);
+    // TODO : // TODO : DB 에서 해당 sellBook 건과 관련된 auction bid 정보 가져오기...
+    setBids([]);
+  };
+
+  useEffect(() => {
+    fetchBids();
+  }, [sellbookId]);
 
   return (
     <>

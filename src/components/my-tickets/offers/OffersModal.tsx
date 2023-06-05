@@ -12,7 +12,6 @@ function OffersModal({ sellbookId, ...props }: Props) {
   const theme = useTheme();
   const [openWinningBid, setOpenWinningBid] = useState(false);
   const [activeOffer, setActiveOffer] = useState<OfferType>();
-  const [bids, setBids] = useState([]);
 
   const resetOfferSelection = () => {
     setOpenWinningBid(false);
@@ -36,18 +35,8 @@ function OffersModal({ sellbookId, ...props }: Props) {
       );
     }
 
-    return <OffersContent onClickItem={onClickItem} />;
+    return <OffersContent onClickItem={onClickItem} sellbookId={sellbookId} />;
   };
-
-  const fetchBids = async () => {
-    console.log('!! check offers : selBook id = ', sellbookId);
-    // TODO : // TODO : DB 에서 해당 sellBook 건과 관련된 auction bid 정보 가져오기...
-    setBids([]);
-  };
-
-  useEffect(() => {
-    fetchBids();
-  }, []);
 
   return (
     <ModalCustom
