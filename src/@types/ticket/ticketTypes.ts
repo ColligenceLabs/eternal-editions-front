@@ -44,6 +44,7 @@ export type TicketInfoTypes = {
   // mysteryboxItems?: MBoxItemTypes[] | null;
   soldAmount: number;
   whitelists: any[];
+  creatorAddress: string;
 };
 
 export type TicketItemTypes = {

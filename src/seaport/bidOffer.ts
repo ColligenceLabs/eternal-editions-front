@@ -7,7 +7,7 @@ export const bidOffer = async (
   address: string,
   tokenId: string,
   price: string,
-  quote: string,
+  quote: string | undefined,
   chainId: number,
   endTime: string,
   creator: string | null | undefined,
