@@ -79,6 +79,7 @@ type SellBookTypes = {
   createdAt: Date;
   updatedAt: Date;
   tokenId: number;
+  endDate: string;
 };
 
 // ----------------------------------------------------------------------
@@ -333,7 +334,8 @@ export default function TicketDetailPage() {
     // TODO : Seaport 호출
     let order;
 
-    const endTime = Math.round(endDate.getTime() / 1000);
+    console.log('!! offerWithCrypto : sellbookInfo =', sellbookInfo);
+    const endTime = Math.round(new Date(sellbookInfo?.endDate).getTime() / 1000);
     if (!library) {
       const provider = await getAbcWeb3Provider();
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -363,7 +365,7 @@ export default function TicketDetailPage() {
       );
     }
 
-    console.log('!! offer result = ', order);
+    console.log('!! auction offer result = ', order);
 
     // if (result) {
     //   const data = {
