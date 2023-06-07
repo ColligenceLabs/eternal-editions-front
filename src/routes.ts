@@ -7,6 +7,8 @@ const Routes = {
     contact: '/contact-us',
     tickets: '/tickets',
     ticket: (slug: string) => `/tickets/${slug}`,
+    projects: '/projects',
+    project: (slug: string) => `/projects/${slug}`,
     items: '/items',
     item: (slug: string) => `/items/${slug}`,
     help: '/support',
@@ -27,7 +29,7 @@ const Routes = {
     faq: '/faq',
     notice: '/notice',
     register: 'register',
-    identity: '/identity'
+    identity: '/identity',
   },
   // Marketing
   marketing: {

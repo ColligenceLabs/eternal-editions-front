@@ -169,3 +169,19 @@ export const getMintLimitCount = async (itemId: number, uid: string) => {
 };
 
 export const removeUser = async () => await apiAuthAxios.delete('/api/users');
+
+export const getProjectCountByCategory = async () =>
+  customAxios.get(`/api/service/project/category/count`);
+
+export const getProjectList = async (page: number, perPage: number, category: string) => {
+  console.log(category);
+  let url = `/api/service/project?page=${page}&limit=${
+    perPage ? perPage : 5
+  }&sortBy=createdAt:DESC`;
+
+  if (category && category.toLowerCase() !== 'all') url = `${url}&category=${category}`;
+
+  console.log(url);
+  return customAxios.get(url);
+};
+export const getProjectInfo = async (id: string) => customAxios.get(`/api/service/project/${id}`);
