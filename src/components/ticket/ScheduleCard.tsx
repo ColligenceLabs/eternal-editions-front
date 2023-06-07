@@ -60,49 +60,49 @@ export default function ScheduleCard({ date, title, status }: Props) {
               {StatusText[status].replace('{{date}}', moment(date).format('MMM DD'))}
             </SmallText>
 
-            {status !== 'ended' ? (
-              <>
-                <Circle
-                  sx={{
-                    color: palette.dark.black.lighter,
-                    fontSize: '3px',
-                    marginLeft: '21px',
-                    marginRight: '6px',
-                  }}
-                />
-                <SmallText sx={{ color: '#222222' }}>4:00pm</SmallText>
-              </>
-            ) : null}
+            {/*{status !== 'ended' ? (*/}
+            {/*  <>*/}
+            {/*    <Circle*/}
+            {/*      sx={{*/}
+            {/*        color: palette.dark.black.lighter,*/}
+            {/*        fontSize: '3px',*/}
+            {/*        marginLeft: '21px',*/}
+            {/*        marginRight: '6px',*/}
+            {/*      }}*/}
+            {/*    />*/}
+            {/*    <SmallText sx={{ color: '#222222' }}>4:00pm</SmallText>*/}
+            {/*  </>*/}
+            {/*) : null}*/}
           </Stack>
         </Stack>
       </Stack>
 
-      {status === 'minting' ? (
-        <>
-          <Divider sx={{ mt: '12px', mb: '16px' }} />
+      {/*{status === 'minting' ? (*/}
+      {/*  <>*/}
+      {/*    <Divider sx={{ mt: '12px', mb: '16px' }} />*/}
 
-          <Stack direction="row" alignItems="center" gap={1}>
-            <Stack direction="row">
-              <Avatar
-                // account={account}
-                // image={image}
-                nickname={'by @iloveseoul'}
-              />
-              <Avatar
-                // account={account}
-                // image={image}
-                nickname={'by @iloveseoul'}
-                sx={{}}
-              />
-            </Stack>
-            <SmallText>
-              {truncate('Strange Parades, Superchief NFT x funticon', {
-                length: 41,
-              })}
-            </SmallText>
-          </Stack>
-        </>
-      ) : null}
+      {/*    <Stack direction="row" alignItems="center" gap={1}>*/}
+      {/*      <Stack direction="row">*/}
+      {/*        <Avatar*/}
+      {/*          // account={account}*/}
+      {/*          // image={image}*/}
+      {/*          nickname={'by @iloveseoul'}*/}
+      {/*        />*/}
+      {/*        <Avatar*/}
+      {/*          // account={account}*/}
+      {/*          // image={image}*/}
+      {/*          nickname={'by @iloveseoul'}*/}
+      {/*          sx={{}}*/}
+      {/*        />*/}
+      {/*      </Stack>*/}
+      {/*      <SmallText>*/}
+      {/*        {truncate('Strange Parades, Superchief NFT x funticon', {*/}
+      {/*          length: 41,*/}
+      {/*        })}*/}
+      {/*      </SmallText>*/}
+      {/*    </Stack>*/}
+      {/*  </>*/}
+      {/*) : null}*/}
     </Stack>
   );
 }

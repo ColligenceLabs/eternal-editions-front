@@ -23,8 +23,9 @@ export default function ProjectPostItemContent({ project, shouldHideDetail, sx }
     return null;
   }
 
-  const { title, image, categoriesStr, featured, curCollectionName } = project;
+  const { title, thumbnail, categoriesStr, featured, curCollectionName } = project;
 
+  console.log(thumbnail);
   return (
     <Stack
       component={m.div}
@@ -48,7 +49,7 @@ export default function ProjectPostItemContent({ project, shouldHideDetail, sx }
         transition={varTranHover()}
         sx={{ position: 'relative' }}
       >
-        <Image src={image} alt={title} ratio="3/4" sx={{ minHeight: 280 }} />
+        <Image src={thumbnail} alt={title} ratio="3/4" sx={{ minHeight: 280 }} />
         <Box
           sx={{
             position: 'absolute',

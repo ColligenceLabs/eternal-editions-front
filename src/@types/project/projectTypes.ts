@@ -21,6 +21,7 @@ export type ProjectTypes = {
   };
   projectItems: ProjectItemTypes[];
   curCollectionName?: string;
+  curCollectionId?: number;
 };
 
 export type ProjectItemTypes = {

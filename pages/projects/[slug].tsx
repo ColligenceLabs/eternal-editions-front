@@ -4,7 +4,7 @@ import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT, SUCCESS } from 'src/config
 import Layout from 'src/layouts';
 import { IconButtonAnimate, Page, Scrollbar } from 'src/components';
 import { useRouter } from 'next/router';
-import { getTicketInfoService } from 'src/services/services';
+import { getProjectInfo, getTicketInfoService } from 'src/services/services';
 import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import useAccount from 'src/hooks/useAccount';
@@ -17,6 +17,8 @@ import ScheduleCard from 'src/components/ticket/ScheduleCard';
 import TicketItemsInDrop from 'src/sections/@eternaledtions/items/TicketItemsInDrop';
 import RoundedButton from 'src/components/common/RoundedButton';
 import CloseIcon from 'src/assets/icons/close';
+import { ProjectItemTypes, ProjectTypes } from 'src/@types/project/projectTypes';
+import ProjectPostItemContent from 'src/sections/@eternaledtions/projects/ProjectPostItemContent';
 
 const RootStyle = styled('div')(({ theme }) => ({
   paddingTop: HEADER_MOBILE_HEIGHT,
@@ -81,6 +83,7 @@ export default function ProjectDetailPage() {
   const [curCollection, setCurCollection] = useState<number | null>(null);
   const [descriptionOpen, setDescriptionOpen] = useState(false);
   const [ticketInfo, setTicketInfo] = useState<TicketInfoTypes | null>(null);
+  const [projectInfo, setProjectInfo] = useState<ProjectTypes | null>(null);
   const [openSnackbar, setOpenSnackbar] = useState({
     open: false,
     type: '',
@@ -151,34 +154,34 @@ export default function ProjectDetailPage() {
     }
   };
 
+  const fetchProjectInfo = async () => {
+    if (slug && typeof slug === 'string') {
+      console.log(slug);
+
+      const res = await getProjectInfo(slug);
+      if (res.data.status === SUCCESS) {
+        console.log(res.data);
+        setProjectInfo({
+          ...res.data.data.detail,
+          curCollectionId: res.data.data.items ? res.data.data.items[0].infoId : '',
+        });
+      }
+    }
+  };
+
+  const getStatus = (projectItem: ProjectItemTypes) => {
+    if (projectItem.infoId === projectInfo?.curCollectionId) return 'minting';
+    else if (projectItem.startDate < new Date()) return 'ended';
+    else return 'upcoming';
+  };
+
   useEffect(() => {
-    fetchTicketInfo();
+    fetchProjectInfo();
   }, [slug, account]);
 
   useEffect(() => {
-    const today = new Date(); // Get today's date
-    const filteredData = data.filter((item) => {
-      const startDate = new Date(item.startDate);
-      return startDate >= today;
-    });
-
-    if (filteredData.length > 0) {
-      const closestData = filteredData.reduce((closest, current) => {
-        const closestDate = new Date(closest.startDate);
-        const currentDate = new Date(current.startDate);
-        return currentDate < closestDate ? current : closest;
-      });
-
-      setCurCollection(closestData.id);
-      console.log(closestData.id);
-    }
-  }, [data]);
-
-  useEffect(() => {
-    return () => {
-      console.log(curCollection);
-    };
-  }, [curCollection]);
+    console.log(projectInfo);
+  }, [projectInfo]);
 
   return (
     <Page title={`${slug} - Ticket`}>
@@ -186,7 +189,7 @@ export default function ProjectDetailPage() {
         <Container>
           <Grid container spacing={5} direction="row">
             <Grid item xs={12} md={5} lg={6}>
-              <TicketPostItemContent ticket={ticketInfo} shouldHideDetail />
+              <ProjectPostItemContent project={projectInfo} shouldHideDetail />
             </Grid>
 
             <Grid
@@ -204,7 +207,7 @@ export default function ProjectDetailPage() {
                   textTransform: 'uppercase',
                 }}
               >
-                {title?.en}
+                {projectInfo?.title}
               </Typography>
 
               <Grid container>
@@ -213,8 +216,8 @@ export default function ProjectDetailPage() {
                     <Label>Minted by</Label>
                     <CompanyInfo
                       account={'0x8B7B2b4F7A391b6f14A81221AE0920a9735B67Fc'}
-                      image={featured?.company.image}
-                      label={`@${featured?.company.name.en || ''}`}
+                      image={projectInfo?.featured?.company.image}
+                      label={`@${projectInfo?.featured?.company.name.en || ''}`}
                       sx={{ opacity: 1 }}
                     />
                   </Section>
@@ -223,7 +226,7 @@ export default function ProjectDetailPage() {
 
               <Section>
                 <Label>Description</Label>
-                {ticketInfo && <Value>{ticketInfo.introduction.en}</Value>}
+                <Value>{projectInfo?.description}</Value>
               </Section>
 
               <Section>
@@ -236,21 +239,14 @@ export default function ProjectDetailPage() {
                 <Label>Mint Schedule</Label>
 
                 <Stack gap={0.25}>
-                  <ScheduleCard
-                    title="Whitelist Mint"
-                    status="ended"
-                    date={new Date('02,22,2023')}
-                  />
-                  <ScheduleCard
-                    title="Exclusive Access #1"
-                    status="minting"
-                    date={new Date('02,22,2023')}
-                  />
-                  <ScheduleCard
-                    title="Public Sale"
-                    status="upcoming"
-                    date={new Date('02,22,2023')}
-                  />
+                  {projectInfo?.projectItems.map((project: ProjectItemTypes, index) => (
+                    <ScheduleCard
+                      key={index}
+                      title={project.title}
+                      status={getStatus(project)}
+                      date={project.startDate}
+                    />
+                  ))}
                 </Stack>
               </Section>
             </Grid>
@@ -327,7 +323,8 @@ export default function ProjectDetailPage() {
             }}
           >
             <Scrollbar sx={{ py: { xs: 3, md: 0 } }}>
-              {ticketInfo?.bannerImage && <img src={ticketInfo?.bannerImage} alt="description" />}
+              <img src={projectInfo?.image} alt="description" />
+              {/*{ticketInfo?.bannerImage && <img src={ticketInfo?.bannerImage} alt="description" />}*/}
               {/*{ticketInfo.bannerImage && <img src={ticketInfo.bannerImage} alt="description" />}*/}
             </Scrollbar>
           </Box>
