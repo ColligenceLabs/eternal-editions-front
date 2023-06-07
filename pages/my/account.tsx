@@ -50,6 +50,7 @@ import CreateWalletForm from 'src/components/user/CreateWalletForm';
 import moment from 'moment';
 import { getErc20BalanceNoSigner } from 'src/utils/transactions';
 import contracts from 'src/config/constants/contracts';
+import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
@@ -113,7 +114,7 @@ export default function MyAccountPage() {
   const { account } = useAccount();
   const { user }: { user: User } = useSelector((state: any) => state.webUser);
   const abcUser = useSelector((state: any) => state.user);
-  const context = useWeb3React();
+  const context = useActiveWeb3React();
   const { activate, chainId, deactivate, library } = context;
   const dispatch = useDispatch();
   const [doAddWallet, setDoAddWallet] = useState(false);
@@ -252,7 +253,7 @@ Type: Address verification`;
 
   const fetchUsdcBalance = async () => {
     const ret = await getErc20BalanceNoSigner(contracts.usdc[chainId], account, chainId);
-    setUsdcBalance(ret);
+    setUsdcBalance(ret.toString());
   };
 
   useEffect(() => {
