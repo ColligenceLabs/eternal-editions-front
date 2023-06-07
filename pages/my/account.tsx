@@ -51,6 +51,7 @@ import moment from 'moment';
 import { getErc20BalanceNoSigner } from 'src/utils/transactions';
 import contracts from 'src/config/constants/contracts';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
+import RegisterAccount from 'src/components/user/RegisterAccount';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
@@ -665,7 +666,9 @@ Type: Address verification`;
         >
           <CreateWalletForm onClose={() => setIsOpenCreateWalletForm(false)} />
         </ModalCustom>
-
+        <ModalCustom open={false}>
+          <RegisterAccount />
+        </ModalCustom>
         <ModalCustom
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"
