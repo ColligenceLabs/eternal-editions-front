@@ -596,13 +596,28 @@ export default function TicketDetailPage() {
                               }}
                             />
                             {/*TODO : Display valueError here*/}
-                            <RoundedButton
-                              onClick={handleClickBid}
-                              fullWidth
-                              variant={isMobile ? 'inactive' : 'default'}
-                            >
-                              PLACE BID
-                            </RoundedButton>
+                            {priceError !== '' ? <>{priceError}</> : null}
+                            {isLoading ? (
+                              <Box
+                                sx={{
+                                  // width: '100%',
+                                  display: 'flex',
+                                  justifyContent: 'center',
+                                  alignItems: 'center',
+                                  mt: '10px',
+                                }}
+                              >
+                                <CircularProgress size={'2rem'} />
+                              </Box>
+                            ) : (
+                              <RoundedButton
+                                onClick={handleClickBid}
+                                fullWidth
+                                variant={isMobile ? 'inactive' : 'default'}
+                              >
+                                PLACE BID
+                              </RoundedButton>
+                            )}
                           </>
                         ) : (
                           <>
