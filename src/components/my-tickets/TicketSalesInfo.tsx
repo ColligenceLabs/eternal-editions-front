@@ -57,7 +57,7 @@ export default function TicketSalesInfo({
   const webUser = useSelector((state: any) => state.webUser);
   const { library, chainId } = useActiveWeb3React();
   const { account } = useAccount();
-
+  console.log(sellTicketInfo);
   const [isLoading, setIsLoading] = useState(false);
   const [endSubmit, setEndSubmit] = useState(false);
 
@@ -309,11 +309,9 @@ export default function TicketSalesInfo({
           <Row>
             <Label>Reserve Price</Label>
             {sellTicketInfo.usePoint ? (
-              <Value>{`${sellTicketInfo.mysteryboxItem.price / 10} EDCP ($ ${
-                sellTicketInfo.mysteryboxItem.price
-              })`}</Value>
+              <Value>{`${sellTicketInfo.price / 10} EDCP ($ ${sellTicketInfo.price})`}</Value>
             ) : (
-              <Value>{`${sellTicketInfo.mysteryboxItem.price} USDC ($ ${sellTicketInfo.mysteryboxItem.price})`}</Value>
+              <Value>{`${sellTicketInfo.price} USDC ($ ${sellTicketInfo.price})`}</Value>
             )}
           </Row>
           {isAuction ? (
