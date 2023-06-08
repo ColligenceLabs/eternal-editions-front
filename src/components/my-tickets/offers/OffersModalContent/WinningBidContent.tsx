@@ -1,4 +1,4 @@
-import { Stack, Typography, styled } from '@mui/material';
+import { Stack, Typography, styled, CircularProgress, Box } from '@mui/material';
 import React, { useState } from 'react';
 import { ModalCustomProps } from 'src/components/common/ModalCustom';
 import { Label, Section, Value } from '../../StyledComponents';
@@ -7,7 +7,6 @@ import palette from 'src/theme/palette';
 import TransferContent from './TransferContent';
 import HyperlinkButton from 'src/components/ticket/HyperlinkButton';
 import { getShotAddress } from 'src/utils/wallet';
-import { OfferType } from './OffersContent';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import useAccount from 'src/hooks/useAccount';
 import { getSession, registerSellbookBuy } from 'src/services/services';
@@ -57,7 +56,7 @@ function WinningBidContent({ offer, reservePrice, ...props }: Props) {
   const [openTransfer, setOpenTransfer] = useState(false);
   const [isVerifided, setIsVerified] = useState(false);
   const [txid, setTxid] = useState('');
-
+  const [isLoading, setIsLoading] = useState(false);
   if (!offer) {
     return null;
   }
@@ -132,6 +131,7 @@ function WinningBidContent({ offer, reservePrice, ...props }: Props) {
   };
 
   const handleWinningBid = async () => {
+    setIsLoading(true);
     console.log('!! handleWinningBid : offer = ', offer);
 
     // Deaport Fulfillment
@@ -175,6 +175,7 @@ function WinningBidContent({ offer, reservePrice, ...props }: Props) {
 
       await registerSellbookBuy(data, offer.sellbookId);
     }
+    setIsLoading(false);
   };
 
   if (openTransfer) {
@@ -221,7 +222,23 @@ function WinningBidContent({ offer, reservePrice, ...props }: Props) {
         <RoundedButton onClick={onConfirm}>confirm</RoundedButton>
       ) : (
         // <RoundedButton onClick={() => setOpenTransfer(true)}>winning bid</RoundedButton>
-        <RoundedButton onClick={handleWinningBid}>winning bid</RoundedButton>
+        <>
+          {isLoading ? (
+            <Box
+              sx={{
+                // width: '100%',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                mt: '10px',
+              }}
+            >
+              <CircularProgress size={'2rem'} />
+            </Box>
+          ) : (
+            <RoundedButton onClick={handleWinningBid}>winning bid</RoundedButton>
+          )}
+        </>
       )}
 
       <CSnackbar
