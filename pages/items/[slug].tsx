@@ -425,7 +425,7 @@ export default function TicketDetailPage() {
 
     if (parseFloat(offer) < currentPrice + sellbookInfo?.minInc) {
       // alert(`offer should be greater than ${sellbookInfo?.price + sellbookInfo?.minInc}`);
-      setPriceError(`offer should be greater than ${currentPrice + sellbookInfo?.minInc}`);
+      setPriceError(`Offer should be greater than ${currentPrice + sellbookInfo?.minInc}`);
       return;
     }
 
@@ -445,7 +445,7 @@ export default function TicketDetailPage() {
     const res = await getBidListBySellbookId(id);
     console.log(res);
     if (res.data.status === SUCCESS) {
-      const highestPriceItem = res.data.data.reduce((prev, current) =>
+      const highestPriceItem = res.data.data.reduce((prev: any, current: any) =>
         prev.price > current.price ? prev : current
       );
 
@@ -631,7 +631,20 @@ export default function TicketDetailPage() {
                               }}
                             />
                             {/*TODO : Display valueError here*/}
-                            {priceError !== '' ? <>{priceError}</> : null}
+                            {priceError !== '' ? (
+                              <Box
+                                sx={{
+                                  fontSize: '12px',
+                                  color: 'red',
+                                  display: 'flex',
+                                  justifyContent: 'flex-start',
+                                  alignItems: 'center',
+                                }}
+                              >
+                                <Box>*</Box>
+                                <Typography>{priceError}</Typography>
+                              </Box>
+                            ) : null}
                             {isLoading ? (
                               <Box
                                 sx={{
