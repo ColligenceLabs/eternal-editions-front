@@ -77,6 +77,7 @@ export default function TicketSellForm({
   ]);
   const [duration, setDuration] = useState(durations[0].value);
   const [potentialEarning, setPotentialEarning] = useState(0);
+  const [minInc, setMinInc] = useState('');
 
   const onSubmit = () => {
     setIsSubmitting(true);
@@ -133,6 +134,10 @@ export default function TicketSellForm({
     // TODO : DB 에서 Sell 관련 정보 전체 삭제 API 호출
   };
 
+  const onChangeMinInc = (e) => {
+    setMinInc(e.target.value);
+  };
+
   if (isSubmitting) {
     return (
       <TicketSalesInfo
@@ -144,6 +149,7 @@ export default function TicketSellForm({
         creatorEarnings={creatorEarnings}
         startDate={startDate}
         endDate={endDate}
+        minInc={minInc}
         isForSale={isForSale}
         setOpenSnackbar={setOpenSnackbar}
         onCancel={onCancelSales}
@@ -223,17 +229,17 @@ export default function TicketSellForm({
 
       {typeOfSale === 'auction' ? (
         <>
-          <Stack>
-            <Label>MAXIMUM BID QUANTITIES</Label>
-            <FormControl variant="standard" fullWidth>
-              <StyledInput placeholder="Amount" />
-            </FormControl>
-          </Stack>
+          {/*<Stack>*/}
+          {/*  <Label>MAXIMUM BID QUANTITIES</Label>*/}
+          {/*  <FormControl variant="standard" fullWidth>*/}
+          {/*    <StyledInput placeholder="Amount" />*/}
+          {/*  </FormControl>*/}
+          {/*</Stack>*/}
 
           <Stack>
             <Label>MINIMUM BID INCREMENTS</Label>
             <FormControl variant="standard" fullWidth>
-              <StyledInput placeholder="Amount" />
+              <StyledInput placeholder="Amount" value={minInc} onChange={onChangeMinInc} />
             </FormControl>
           </Stack>
         </>

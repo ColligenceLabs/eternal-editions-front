@@ -25,6 +25,7 @@ interface Props {
   creatorEarnings: string;
   startDate: Date;
   endDate: Date;
+  minInc: string;
   isForSale: boolean;
   team: string;
   day: string;
@@ -47,6 +48,7 @@ export default function TicketSalesInfo({
   creatorEarnings,
   startDate,
   endDate,
+  minInc,
   isForSale,
   setOpenSnackbar,
   onCancel,
@@ -135,6 +137,7 @@ export default function TicketSalesInfo({
       dropsId: sellTicketInfo.id,
       startDate,
       endDate,
+      minInc,
       creatorFee: creatorEarnings,
     };
     console.log('!! sellOrder for DB = ', sellOrder);
