@@ -78,6 +78,7 @@ export default function TicketSellForm({
   const [duration, setDuration] = useState(durations[0].value);
   const [potentialEarning, setPotentialEarning] = useState(0);
   const [minInc, setMinInc] = useState('');
+  const [payType, setPayType] = useState(sellTicketInfo.usePoint ? 'edcp' : 'usdc');
 
   const onSubmit = () => {
     setIsSubmitting(true);
@@ -135,7 +136,13 @@ export default function TicketSellForm({
   };
 
   const onChangeMinInc = (e) => {
-    setMinInc(e.target.value);
+    if (payType === 'edcp') setMinInc((parseFloat(e.target.value) * 10).toString());
+    else setMinInc(e.target.value);
+  };
+
+  const onChangePrice = (e) => {
+    if (payType === 'edcp') setAmount((parseFloat(e.target.value) * 10).toString());
+    else setAmount(e.target.value);
   };
 
   if (isSubmitting) {
@@ -191,7 +198,7 @@ export default function TicketSellForm({
         <FormControl variant="standard" fullWidth>
           <StyledInput
             value={amount}
-            onChange={({ target }) => setAmount(target.value)}
+            onChange={onChangePrice}
             placeholder="Amount"
             endAdornment={
               <InputAdornment position="end">
