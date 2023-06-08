@@ -12,6 +12,7 @@ import { ProjectTypes } from 'src/@types/project/projectTypes';
 type Props = {
   project: ProjectTypes | null;
   shouldHideDetail?: boolean;
+  shouldHideCategory?: boolean;
   sx?: SxProps;
 };
 
@@ -25,7 +26,6 @@ export default function ProjectPostItemContent({ project, shouldHideDetail, sx }
 
   const { title, thumbnail, categoriesStr, featured, curCollectionName } = project;
 
-  console.log(thumbnail);
   return (
     <Stack
       component={m.div}

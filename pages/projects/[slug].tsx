@@ -4,13 +4,12 @@ import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT, SUCCESS } from 'src/config
 import Layout from 'src/layouts';
 import { IconButtonAnimate, Page, Scrollbar } from 'src/components';
 import { useRouter } from 'next/router';
-import { getProjectInfo, getTicketInfoService } from 'src/services/services';
+import { getProjectInfo } from 'src/services/services';
 import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import useAccount from 'src/hooks/useAccount';
 import { getItemSold, getWhlBalanceNoSigner } from 'src/utils/transactions';
 import CSnackbar from 'src/components/common/CSnackbar';
-import TicketPostItemContent from 'src/sections/@eternaledtions/tickets/TicketPostItemContent';
 import { Label, Section, Value } from 'src/components/my-tickets/StyledComponents';
 import CompanyInfo from 'src/components/ticket/CompanyInfo';
 import ScheduleCard from 'src/components/ticket/ScheduleCard';
@@ -47,40 +46,12 @@ const modalStyle = {
   pr: 3,
 };
 
-const data = [
-  {
-    collectionId: 6,
-    description: '1111',
-    id: 640,
-    projectImage: 'asdf',
-    startDate: '2023-06-01T03:13:12.299Z',
-    title: 'TEST1-1',
-  },
-  {
-    collectionId: 6,
-    description: '1111',
-    id: 642,
-    projectImage: 'asdf',
-    startDate: '2023-06-02T03:13:12.299Z',
-    title: 'TEST1-1',
-  },
-  {
-    collectionId: 6,
-    description: '1111',
-    id: 647,
-    projectImage: 'asdf',
-    startDate: '2023-06-03T03:13:12.299Z',
-    title: 'TEST1-1',
-  },
-];
-
 export default function ProjectDetailPage() {
   const router = useRouter();
   const theme = useTheme();
   const { chainId } = useActiveWeb3React();
   const { account } = useAccount();
   const { slug } = router.query;
-  const [curCollection, setCurCollection] = useState<number | null>(null);
   const [descriptionOpen, setDescriptionOpen] = useState(false);
   const [ticketInfo, setTicketInfo] = useState<TicketInfoTypes | null>(null);
   const [projectInfo, setProjectInfo] = useState<ProjectTypes | null>(null);
@@ -89,10 +60,7 @@ export default function ProjectDetailPage() {
     type: '',
     message: '',
   });
-
-  const [day, setDay] = useState('');
-  const [location, setLocation] = useState('');
-  const { id, title, featured, mysteryboxItems, boxContractAddress, quote } = ticketInfo || {};
+  const { id, mysteryboxItems, boxContractAddress, quote } = ticketInfo || {};
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar({
@@ -102,75 +70,59 @@ export default function ProjectDetailPage() {
     });
   };
 
-  const fetchTicketInfo = async () => {
-    if (slug && typeof slug === 'string') {
-      const ticketInfoRes = await getTicketInfoService(slug);
-      const contract = ticketInfoRes.data.data?.boxContractAddress;
-      const whitelist = ticketInfoRes.data.data?.whitelistNftId;
-      const whitelistAddress = ticketInfoRes.data.data?.whitelistNftContractAddress ?? '';
-      const temp =
-        ticketInfoRes.data.data &&
-        (await Promise.all(
-          ticketInfoRes.data.data.mysteryboxItems?.map(async (item: TicketItemTypes) => {
-            // todo getRemain
-            const sold = await getItemSold(contract, item.no - 1, chainId);
-            let whlBalance = 0;
-            let whlBool = false;
-            if (whitelist !== null && whitelist > 0 && account !== null) {
-              whlBalance = await getWhlBalanceNoSigner(whitelistAddress, account, chainId);
-              console.log('!! get whitelist balance =', account, whlBalance);
-              whlBool = true;
-              if (whlBool && whlBalance === 0) {
-                setOpenSnackbar({
-                  open: true,
-                  type: 'error',
-                  message: 'Not in the whitelist or a wallet is not connected !!',
-                });
-              }
-            }
-            const { properties } = item;
-
-            // if (properties) {
-            //   properties.map((property) =>
-            //     property.type === 'day'
-            //       ? setDay(property.name)
-            //       : property.type === 'location'
-            //       ? setLocation(property.name)
-            //       : null
-            //   );
-            // }
-            return {
-              ...item,
-              remain: item.issueAmount - sold,
-              whlBool,
-              whlBalance,
-            };
-          })
-        ));
-
-      if (ticketInfoRes.data.status === SUCCESS) {
-        setTicketInfo({ ...ticketInfoRes.data.data, mysteryboxItems: temp });
-      }
-    }
-  };
-
   const fetchProjectInfo = async () => {
     if (slug && typeof slug === 'string') {
-      console.log(slug);
-
       const res = await getProjectInfo(slug);
       if (res.data.status === SUCCESS) {
-        console.log(res.data);
+        const curCollectionId = res.data.data.info.id;
+        const curCollectionName = res.data.data.detail.projectItems.find(
+          (project: ProjectItemTypes) => project.infoId === curCollectionId
+        ).title;
         setProjectInfo({
           ...res.data.data.detail,
-          curCollectionId: res.data.data.items ? res.data.data.items[0].infoId : '',
+          curCollectionId: curCollectionId,
+          curCollectionName: curCollectionName,
         });
+        const ticketInfo = res.data.data.info;
+        const contract = ticketInfo.boxContractAddress;
+        const whitelist = ticketInfo.whitelistNftId;
+        const whitelistAddress = ticketInfo.whitelistNftContractAddress ?? '';
+        const temp =
+          ticketInfo &&
+          (await Promise.all(
+            ticketInfo.mysteryboxItems?.map(async (item: TicketItemTypes) => {
+              // todo getRemain
+              const sold = await getItemSold(contract, item.no - 1, chainId);
+              let whlBalance = 0;
+              let whlBool = false;
+              if (whitelist !== null && whitelist > 0 && account !== null) {
+                whlBalance = await getWhlBalanceNoSigner(whitelistAddress, account, chainId);
+                console.log('!! get whitelist balance =', account, whlBalance);
+                whlBool = true;
+                if (whlBool && whlBalance === 0) {
+                  setOpenSnackbar({
+                    open: true,
+                    type: 'error',
+                    message: 'Not in the whitelist or a wallet is not connected !!',
+                  });
+                }
+              }
+              return {
+                ...item,
+                remain: item.issueAmount - sold,
+                whlBool,
+                whlBalance,
+              };
+            })
+          ));
+
+        setTicketInfo({ ...ticketInfo, mysteryboxItems: temp });
       }
     }
   };
 
   const getStatus = (projectItem: ProjectItemTypes) => {
-    if (projectItem.infoId === projectInfo?.curCollectionId) return 'minting';
+    if (projectItem.infoId === ticketInfo?.id) return 'minting';
     else if (projectItem.startDate < new Date()) return 'ended';
     else return 'upcoming';
   };
@@ -179,12 +131,8 @@ export default function ProjectDetailPage() {
     fetchProjectInfo();
   }, [slug, account]);
 
-  useEffect(() => {
-    console.log(projectInfo);
-  }, [projectInfo]);
-
   return (
-    <Page title={`${slug} - Ticket`}>
+    <Page title={`${projectInfo?.title.toUpperCase()} - Ticket`}>
       <RootStyle>
         <Container>
           <Grid container spacing={5} direction="row">
@@ -324,8 +272,6 @@ export default function ProjectDetailPage() {
           >
             <Scrollbar sx={{ py: { xs: 3, md: 0 } }}>
               <img src={projectInfo?.image} alt="description" />
-              {/*{ticketInfo?.bannerImage && <img src={ticketInfo?.bannerImage} alt="description" />}*/}
-              {/*{ticketInfo.bannerImage && <img src={ticketInfo.bannerImage} alt="description" />}*/}
             </Scrollbar>
           </Box>
         </Box>
