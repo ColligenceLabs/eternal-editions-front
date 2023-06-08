@@ -136,13 +136,11 @@ export default function TicketSellForm({
   };
 
   const onChangeMinInc = (e: ChangeEvent<HTMLInputElement>) => {
-    if (payType === 'edcp') setMinInc((parseFloat(e.target.value) * 10).toString());
-    else setMinInc(e.target.value);
+    setMinInc(e.target.value);
   };
 
   const onChangePrice = (e: ChangeEvent<HTMLInputElement>) => {
-    if (payType === 'edcp') setAmount((parseFloat(e.target.value) * 10).toString());
-    else setAmount(e.target.value);
+    setAmount(e.target.value);
   };
 
   if (isSubmitting) {

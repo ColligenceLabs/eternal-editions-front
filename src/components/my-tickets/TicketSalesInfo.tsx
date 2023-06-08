@@ -137,7 +137,7 @@ export default function TicketSalesInfo({
       dropsId: sellTicketInfo.id,
       startDate,
       endDate,
-      minInc,
+      minInc: quoteType === 'crypto' ? minInc : parseFloat(minInc) * 10, // USDC 단위로 변환
       creatorFee: creatorEarnings,
     };
     console.log('!! sellOrder for DB = ', sellOrder);
