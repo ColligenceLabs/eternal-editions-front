@@ -3,90 +3,55 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Stack, TableBody, useTheme } from '@mui/material';
+import { Stack, TableBody } from '@mui/material';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { BodyTableCell, BodyTableRow, HeaderTableCell, Table } from './StyledTable';
 import { getShotAddress } from 'src/utils/wallet';
 import RoundedButton from 'src/components/common/RoundedButton';
-import { OfferType } from './OffersContent';
+import { getBidListBySellbookId } from 'src/services/services';
+import { SUCCESS } from 'src/config';
 
-const offers = [
-  {
-    price: '12.4134 MATIC',
-    usdPrice: '$ 37.45',
-    floorDifference: '17% above',
-    expiration: 'in 2 days',
-    address: '0x033c5e2f3059b57b6a91de1cb5ad0697023ea83a',
-  },
-  {
-    price: '12.4134 MATIC',
-    usdPrice: '$ 37.45',
-    floorDifference: '16% above',
-    expiration: 'in 3 hours',
-    address: '0x033c5e2f3059b57b6a91de1cb5ad0697023ea83a',
-  },
-  {
-    price: '12.4134 MATIC',
-    usdPrice: '$ 37.45',
-    floorDifference: '16% above',
-    expiration: 'in 3 hours',
-    address: '0x033c5e2f3059b57b6a91de1cb5ad0697023ea83a',
-  },
-  {
-    price: '12.4134 MATIC',
-    usdPrice: '$ 37.45',
-    floorDifference: '16% above',
-    expiration: 'in 3 hours',
-    address: '0x033c5e2f3059b57b6a91de1cb5ad0697023ea83a',
-  },
-  {
-    price: '12.4134 MATIC',
-    usdPrice: '$ 37.45',
-    floorDifference: '16% above',
-    expiration: 'in 3 hours',
-    address: '0x033c5e2f3059b57b6a91de1cb5ad0697023ea83a',
-  },
-  {
-    price: '12.4134 MATIC',
-    usdPrice: '$ 37.45',
-    floorDifference: '16% above',
-    expiration: 'in 3 hours',
-    address: '0x033c5e2f3059b57b6a91de1cb5ad0697023ea83a',
-  },
-  {
-    price: '12.4134 MATIC',
-    usdPrice: '$ 37.45',
-    floorDifference: '16% above',
-    expiration: 'in 3 hours',
-    address: '0x033c5e2f3059b57b6a91de1cb5ad0697023ea83a',
-  },
-];
+type BidTypes = {
+  id: number;
+  price: number;
+  sellbookId: number;
+  uid: string;
+  wallet: string;
+  bidInfo: any;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 interface Props {
-  onClickItem?: (offer: OfferType) => void;
-  sellbookId: number;
+  onClickItem?: (offer: BidTypes) => void;
+  sellbookId: number | undefined;
+  reservePrice: number;
 }
 
-export default function OffersTable({ sellbookId, onClickItem }: Props) {
+export default function OffersTable({ sellbookId, reservePrice, onClickItem }: Props) {
   const { user } = useSelector((state: any) => state.webUser);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
+  const [bids, setBids] = useState<BidTypes[]>([]);
 
   const handlePageChange = (event: ChangeEvent<unknown>, value: number) => {
     setPage(value);
   };
 
-  const [bids, setBids] = useState([]);
-
-  const fetchBids = async () => {
-    console.log('!! check offers : selBook id = ', sellbookId);
-    // TODO : // TODO : DB 에서 해당 sellBook 건과 관련된 auction bid 정보 가져오기...
-    setBids([]);
+  const fetchBids = async (id: number) => {
+    console.log('!! check offers : selBook id = ', id);
+    const res = await getBidListBySellbookId(id.toString());
+    console.log(res.data);
+    if (res.data.status === SUCCESS) {
+      console.log(res.data);
+      // TODO : // TODO : DB 에서 해당 sellBook 건과 관련된 auction bid 정보 가져오기...
+      setBids(res.data.data);
+    }
   };
 
   useEffect(() => {
-    fetchBids();
+    if (sellbookId) fetchBids(sellbookId);
   }, [sellbookId]);
 
   return (
@@ -103,22 +68,28 @@ export default function OffersTable({ sellbookId, onClickItem }: Props) {
                   <HeaderTableCell>PRICE</HeaderTableCell>
                   <HeaderTableCell>USD PRICE</HeaderTableCell>
                   <HeaderTableCell>Floor Difference</HeaderTableCell>
-                  <HeaderTableCell>EXPIRATION</HeaderTableCell>
+                  {/*<HeaderTableCell>EXPIRATION</HeaderTableCell>*/}
                   <HeaderTableCell>FROM</HeaderTableCell>
                   <HeaderTableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
-                {offers &&
-                  offers.map((row, index) => (
-                    <BodyTableRow key={index} onClick={() => onClickItem && onClickItem(row)}>
-                      <BodyTableCell>{row.price}</BodyTableCell>
-                      <BodyTableCell>{row.usdPrice}</BodyTableCell>
-                      <BodyTableCell>{row.floorDifference}</BodyTableCell>
-                      <BodyTableCell>{row.expiration}</BodyTableCell>
-                      <BodyTableCell>{getShotAddress(row.address)}</BodyTableCell>
+                {bids &&
+                  bids.map((bid, index) => (
+                    <BodyTableRow key={index}>
+                      <BodyTableCell>{bid.price} USDC</BodyTableCell>
+                      <BodyTableCell>$ {bid.price}</BodyTableCell>
                       <BodyTableCell>
-                        <RoundedButton variant="inactive" sx={{ padding: '11px 16px' }}>
+                        {((reservePrice / bid.price) * 100).toFixed(0)}&
+                      </BodyTableCell>
+                      {/*<BodyTableCell>{bid.expiration}</BodyTableCell>*/}
+                      <BodyTableCell>{getShotAddress(bid.wallet)}</BodyTableCell>
+                      <BodyTableCell>
+                        <RoundedButton
+                          variant="inactive"
+                          sx={{ padding: '11px 16px' }}
+                          onClick={() => onClickItem && onClickItem(bid)}
+                        >
                           Winning Bid
                         </RoundedButton>
                       </BodyTableCell>

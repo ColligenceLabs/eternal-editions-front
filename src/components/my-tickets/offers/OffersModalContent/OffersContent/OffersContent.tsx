@@ -4,19 +4,23 @@ import React, { useEffect, useState } from 'react';
 import OffersTable from './OffersTable';
 
 type Props = {
-  onClickItem: (offer: OfferType) => void;
-  sellbookId: number;
+  onClickItem: (offer: BidTypes) => void;
+  sellbookId: number | undefined;
+  reservePrice: number;
 };
 
-export interface OfferType {
-  price: string;
-  usdPrice: string;
-  floorDifference: string;
-  expiration: string;
-  address: string;
-}
+type BidTypes = {
+  id: number;
+  price: number;
+  sellbookId: number;
+  uid: string;
+  wallet: string;
+  bidInfo: any;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
-function OffersContent({ sellbookId, onClickItem }: Props) {
+function OffersContent({ sellbookId, onClickItem, reservePrice }: Props) {
   return (
     <Stack gap={3}>
       <Typography variant="h3">OFFERS</Typography>
@@ -35,7 +39,11 @@ function OffersContent({ sellbookId, onClickItem }: Props) {
           },
         }}
       >
-        <OffersTable onClickItem={onClickItem} sellbookId={sellbookId} />
+        <OffersTable
+          onClickItem={onClickItem}
+          sellbookId={sellbookId}
+          reservePrice={reservePrice}
+        />
       </Stack>
     </Stack>
   );

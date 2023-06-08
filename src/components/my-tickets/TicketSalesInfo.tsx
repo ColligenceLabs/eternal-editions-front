@@ -401,6 +401,7 @@ export default function TicketSalesInfo({
         open={openOffersModal}
         onClose={() => setOpenOffersModal(false)}
         sellbookId={sellTicketInfo?.sellbook?.id}
+        reservePrice={sellTicketInfo.price}
       />
 
       {/*{isAuction ? <RoundedButton variant="withImage">CONFIRM</RoundedButton> : null}*/}
