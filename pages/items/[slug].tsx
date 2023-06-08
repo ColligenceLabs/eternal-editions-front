@@ -434,7 +434,8 @@ export default function TicketDetailPage() {
 
   const handleInputOffer = async (event: any) => {
     setPriceError('');
-    setOffer(event.target.value);
+    if (payType === 'edcp') setOffer((parseFloat(event.target.value) * 10).toString());
+    else setOffer(event.target.value);
   };
 
   useEffect(() => {
