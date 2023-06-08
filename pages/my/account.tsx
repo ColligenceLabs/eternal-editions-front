@@ -129,6 +129,8 @@ export default function MyAccountPage() {
   const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
   const [isConfirmDeactivate, setIsConfirmDeactivate] = useState(false);
   const [isOpenCreateWalletForm, setIsOpenCreateWalletForm] = useState<boolean>(false);
+  const [bankAccount, setBankAccount] = useState('');
+  const [isOpenBankAccountForm, setIsOpenBankAccountForm] = useState(false);
 
   const onCloseDeactivateModal = () => {
     deactivate();
@@ -560,6 +562,22 @@ Type: Address verification`;
 
                   <Divider />
 
+                  <Stack gap="12px">
+                    <SectionHeader>bank Account</SectionHeader>
+                    {bankAccount ? <SectionText>{bankAccount}</SectionText> : null}
+                    <Stack flexDirection="row">
+                      <CButton
+                        onClick={() => {
+                          setIsOpenBankAccountForm(true);
+                        }}
+                      >
+                        {bankAccount ? 'Change Account' : 'ADD'}
+                      </CButton>
+                    </Stack>
+                  </Stack>
+
+                  <Divider />
+
                   <Box>
                     <SectionHeader>WALLET ADDRESS</SectionHeader>
 
@@ -666,8 +684,8 @@ Type: Address verification`;
         >
           <CreateWalletForm onClose={() => setIsOpenCreateWalletForm(false)} />
         </ModalCustom>
-        <ModalCustom open={false}>
-          <RegisterAccount />
+        <ModalCustom open={isOpenBankAccountForm} onClose={() => setIsOpenBankAccountForm(false)}>
+          <RegisterAccount hasBankAccount={!!bankAccount} />
         </ModalCustom>
         <ModalCustom
           aria-labelledby="transition-modal-title"

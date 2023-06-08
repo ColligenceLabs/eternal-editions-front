@@ -11,17 +11,23 @@ import RoundedButton from '../common/RoundedButton';
 
 const FormSchema = Yup.object().shape({
   accountHolder: Yup.string().required('Account holder is required'),
-  bank: Yup.string().required('Bank is required'),
+  bank: Yup.string().required('Bank is required').not(['default']),
   accountNumber: Yup.string().required('Account number is required'),
 });
+
+interface Props {
+  hasBankAccount: boolean;
+}
 
 type Account = {
   accountHolder: string;
   bank: string;
   accountNumber: string;
 };
+
 const bankOptions = [{ value: 'TCB', label: 'TCB' }];
-const RegisterAccount = () => {
+
+const RegisterAccount = ({ hasBankAccount }: Props) => {
   const {
     control,
     handleSubmit,
@@ -29,14 +35,18 @@ const RegisterAccount = () => {
   } = useForm<Account>({
     mode: 'onTouched',
     resolver: yupResolver(FormSchema),
+    defaultValues: {
+      bank: 'default',
+    },
   });
+
   const onSubmit = async (values: Account) => {
     console.log('values: ', values);
   };
 
   return (
     <Stack gap={2} component="form" onSubmit={handleSubmit(onSubmit)}>
-      <Header>Register Account</Header>
+      <Header>{hasBankAccount ? 'Change Account' : 'Register Account'}</Header>
       <SectionText>
         You can only enter an account number in your own name, and you cannot verify with an account
         registered by someone else. The account information you provide will be stored as your basic
@@ -75,7 +85,20 @@ const RegisterAccount = () => {
           name="bank"
           control={control}
           render={({ field }) => (
-            <Select {...field} variant="standard" sx={{ color: '#000' }} MenuProps={MenuProps}>
+            <Select
+              {...field}
+              variant="standard"
+              sx={{
+                color: field.value === 'default' ? '#BBBBBB' : '#000',
+                fontSize: '14px',
+                lineHeight: '20px',
+              }}
+              MenuProps={MenuProps}
+              placeholder="Please select a bank"
+            >
+              <RoundedSelectOption value="default" hidden sx={{ display: 'none' }}>
+                Please select a bank
+              </RoundedSelectOption>
               {bankOptions.map(({ value, label }: { value: string; label: string }) => (
                 <RoundedSelectOption value={value} key={value}>
                   {label}
@@ -112,13 +135,15 @@ const RegisterAccount = () => {
       <Stack
         mt={2}
         direction={{ xs: 'column', sm: 'row' }}
-        spacing={2}
+        spacing={{
+          md: 2,
+        }}
         justifyContent="space-between"
       >
         <RoundedButton fullWidth type="submit" variant="inactive">
           cancel
         </RoundedButton>
-        <RoundedButton fullWidth type="submit">
+        <RoundedButton fullWidth type="submit" disabled={!isValid}>
           Register
         </RoundedButton>
       </Stack>
