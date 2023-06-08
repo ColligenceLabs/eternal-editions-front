@@ -1,6 +1,6 @@
 import { Seaport } from '@colligence/seaport-js';
 import env from '../env';
-import { BigNumber, ethers } from 'ethers';
+import { utils } from 'ethers';
 import contracts from 'src/config/constants/contracts';
 
 export const bidOffer = async (
@@ -31,7 +31,7 @@ export const bidOffer = async (
     seaportVersion: '1.4',
   });
 
-  const priceBN = BigNumber.from(price);
+  const priceBN = utils.parseUnits(price, 6);
   const tradingFee = priceBN.mul(env.TRADING_FEE).div(1000);
   // const creatorShare = priceBN.mul(env.CREATOR_FEE).div(1000);
   // const profit = priceBN.sub(tradingFee).sub(creatorShare);
@@ -81,7 +81,7 @@ export const bidOffer = async (
     offer: [
       {
         token: quoteToken,
-        amount: price,
+        amount: priceBN.toString(),
       },
     ],
     consideration,
@@ -97,7 +97,7 @@ export const bidOffer = async (
       offer: [
         {
           token: quoteToken,
-          amount: price,
+          amount: priceBN.toString(),
         },
       ],
       consideration,

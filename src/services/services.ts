@@ -185,3 +185,7 @@ export const getProjectList = async (page: number, perPage: number, category: st
   return customAxios.get(url);
 };
 export const getProjectInfo = async (id: string) => customAxios.get(`/api/service/project/${id}`);
+
+export const registerBidOffer = async (data: any) => {
+  return await apiAuthAxios.post('/api/service/bid', data);
+};

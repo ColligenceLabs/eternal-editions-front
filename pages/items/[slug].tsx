@@ -24,7 +24,12 @@ import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT, SUCCESS } from 'src/config
 import { ethers } from 'ethers';
 import Layout from 'src/layouts';
 import { Page, TextIconLabel, Scrollbar } from 'src/components';
-import { getSellbookInfoByID, getSession, registerSellbookBuy } from 'src/services/services';
+import {
+  getSellbookInfoByID,
+  getSession,
+  registerBidOffer,
+  registerSellbookBuy,
+} from 'src/services/services';
 import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import { useResponsive } from 'src/hooks';
 import { useRouter } from 'next/router';
@@ -76,6 +81,7 @@ type SellBookTypes = {
   wallet: string;
   sellInfo: any;
   price: number;
+  minInc: number;
   createdAt: Date;
   updatedAt: Date;
   tokenId: number;
@@ -130,12 +136,14 @@ export default function TicketDetailPage() {
   const [team, setTeam] = useState('');
   const [isOnAuction, setIsOnAuction] = useState(false);
   const [descriptionOpen, setDescriptionOpen] = useState(false);
+  // TODO : isLoading true 이면, "PLACE BID" circular progress 처리
   const [isLoading, setIsLoading] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState({
     open: false,
     type: '',
     message: '',
   });
+  const [priceError, setPriceError] = useState('');
 
   const webUser = useSelector((state: any) => state.webUser);
   const { library, chainId } = useActiveWeb3React();
@@ -260,36 +268,31 @@ export default function TicketDetailPage() {
   };
 
   const offerWithPoint = async () => {
-    if (parseFloat(offer) <= sellbookInfo?.price) {
-      alert('Input bigger price than current price');
-      return;
-    }
-
-    // TODO : Banckend API 호출 (English Auction Offer)
     const data = {
-      buyer: webUser.user.uid,
-      buyerAddress: account,
-      price: offer,
-      txHash: null,
+      uid: webUser.user.uid,
+      wallet: account,
+      sellbookId: sellbookInfo?.id,
+      bidInfo: null,
+      price: parseFloat(offer),
     };
     console.log('!! offerWithPoint data = ', data);
 
-    // const result = await registerSellbookOffer(data, sellbookInfo?.id!);
-    // console.log('!! offerWithPoint result = ', result);
-    // if (result.data.status === SUCCESS) {
-    //   setOpenSnackbar({
-    //     open: true,
-    //     type: 'success',
-    //     message: 'Success OFFER!',
-    //   });
-    //   router.push('/my/tickets');
-    // } else {
-    //   setOpenSnackbar({
-    //     open: true,
-    //     type: 'error',
-    //     message: 'Failed OFFER!',
-    //   });
-    // }
+    const result = await registerBidOffer(data);
+    console.log('!! offerWithPoint result = ', result);
+    if (result.data.status === SUCCESS) {
+      setOpenSnackbar({
+        open: true,
+        type: 'success',
+        message: 'Success OFFER!',
+      });
+      router.push('/my/tickets');
+    } else {
+      setOpenSnackbar({
+        open: true,
+        type: 'error',
+        message: 'Failed OFFER!',
+      });
+    }
   };
 
   const buyWithCrypto = async () => {
@@ -336,57 +339,71 @@ export default function TicketDetailPage() {
   };
 
   const offerWithCrypto = async () => {
-    if (parseFloat(offer) <= sellbookInfo?.price) {
-      alert('Input bigger price than current price');
-      return;
-    }
-
     // TODO : Seaport 호출
-    let order;
+    let order: any;
 
     console.log('!! offerWithCrypto : sellbookInfo =', sellbookInfo);
-    const endTime = Math.round(new Date(sellbookInfo?.endDate).getTime() / 1000);
-    if (!library) {
-      const provider = await getAbcWeb3Provider();
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      order = await bidOffer(
-        sellbookInfo?.mysteryboxInfo?.boxContractAddress,
-        sellbookInfo?.tokenId ? sellbookInfo?.tokenId.toString() : '',
-        offer,
-        sellbookInfo?.mysteryboxInfo?.quote,
-        chainId,
-        endTime.toString(),
-        sellbookInfo?.mysteryboxInfo?.creatorAddress,
-        account,
-        provider
-      );
-    } else if (library) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      order = await bidOffer(
-        sellbookInfo?.mysteryboxInfo?.boxContractAddress,
-        sellbookInfo?.tokenId ? sellbookInfo?.tokenId.toString() : '',
-        offer,
-        sellbookInfo?.mysteryboxInfo?.quote,
-        chainId,
-        endTime.toString(),
-        sellbookInfo?.mysteryboxInfo?.creatorAddress,
-        account,
-        library
-      );
+    try {
+      const endTime = Math.round(new Date(sellbookInfo?.endDate).getTime() / 1000);
+      if (!library) {
+        const provider = await getAbcWeb3Provider();
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        order = await bidOffer(
+          sellbookInfo?.mysteryboxInfo?.boxContractAddress,
+          sellbookInfo?.tokenId ? sellbookInfo?.tokenId.toString() : '',
+          offer,
+          sellbookInfo?.mysteryboxInfo?.quote,
+          chainId,
+          endTime.toString(),
+          sellbookInfo?.mysteryboxInfo?.creatorAddress,
+          account,
+          provider
+        );
+      } else if (library) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        order = await bidOffer(
+          sellbookInfo?.mysteryboxInfo?.boxContractAddress,
+          sellbookInfo?.tokenId ? sellbookInfo?.tokenId.toString() : '',
+          offer,
+          sellbookInfo?.mysteryboxInfo?.quote,
+          chainId,
+          endTime.toString(),
+          sellbookInfo?.mysteryboxInfo?.creatorAddress,
+          account,
+          library
+        );
+      }
+    } catch (err) {
+      console.log('!! bidOffer error = ', err);
     }
-
     console.log('!! auction offer result = ', order);
 
-    // if (result) {
-    //   const data = {
-    //     buyer: webUser.user.uid,
-    //     buyerAddress: account,
-    //     price: sellbookInfo?.price,
-    //     txHash: result?.transactionHash,
-    //   };
-    //
-    //   await registerSellbookOffer(data, sellbookInfo?.id!);
-    // }
+    if (order) {
+      const data = {
+        uid: webUser.user.uid,
+        wallet: account,
+        sellbookId: sellbookInfo?.id,
+        bidInfo: order,
+        price: parseFloat(offer),
+      };
+
+      const result = await registerBidOffer(data);
+      console.log('!! offerWithCrypto result = ', result);
+      if (result.data.status === SUCCESS) {
+        setOpenSnackbar({
+          open: true,
+          type: 'success',
+          message: 'Success OFFER!',
+        });
+        router.push('/my/tickets');
+      } else {
+        setOpenSnackbar({
+          open: true,
+          type: 'error',
+          message: 'Failed OFFER!',
+        });
+      }
+    }
   };
 
   const handleClickBuy = async () => {
@@ -403,6 +420,13 @@ export default function TicketDetailPage() {
     setIsLoading(true);
     console.log('offer now');
     console.log(`pay type :: ${payType}`);
+
+    if (parseFloat(offer) < sellbookInfo?.price + sellbookInfo?.minInc) {
+      alert(`offer should be greater than ${sellbookInfo?.price + sellbookInfo?.minInc}`);
+      setPriceError(`offer should be greater than ${sellbookInfo?.price + sellbookInfo?.minInc}`);
+      return;
+    }
+
     if (payType === 'edcp') await offerWithPoint();
     else await offerWithCrypto();
     setIsLoading(false);
@@ -571,6 +595,7 @@ export default function TicketDetailPage() {
                                 },
                               }}
                             />
+                            {/*TODO : Display valueError here*/}
                             <RoundedButton
                               onClick={handleClickBid}
                               fullWidth
