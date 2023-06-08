@@ -95,10 +95,10 @@ export default function OffersTable({ sellbookId, onClickItem }: Props) {
         <Stack>
           <TableContainer
             component={Paper}
-            sx={{ width: '100%', height: '100%', background: 'transparent' }}
+            sx={{ width: '100%', maxHeight: '374px', background: 'transparent' }}
           >
-            <Table aria-label="simple table">
-              <TableHead sx={{ background: 'transparent' }}>
+            <Table aria-label="simple table" stickyHeader>
+              <TableHead>
                 <TableRow>
                   <HeaderTableCell>PRICE</HeaderTableCell>
                   <HeaderTableCell>USD PRICE</HeaderTableCell>

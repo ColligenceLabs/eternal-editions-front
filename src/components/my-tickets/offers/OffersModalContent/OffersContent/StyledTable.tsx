@@ -21,7 +21,7 @@ export const HeaderTableCell = styled((props: TableCellProps) => <TableCell {...
     lineHeight: 17 / 12,
     textTransform: 'uppercase',
     color: palette.dark.black.lighter,
-    background: 'transparent',
+    background: 'white',
     textAlign: 'left',
     padding: '8px 0 8px 24px',
 

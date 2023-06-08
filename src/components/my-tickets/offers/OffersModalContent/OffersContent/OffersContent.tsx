@@ -18,7 +18,7 @@ export interface OfferType {
 
 function OffersContent({ sellbookId, onClickItem }: Props) {
   return (
-    <Stack gap={3} sx={{ maxHeight: '374px' }}>
+    <Stack gap={3}>
       <Typography variant="h3">OFFERS</Typography>
       <Stack
         sx={{
