@@ -138,29 +138,46 @@ function WinningBidContent({ offer, reservePrice, ...props }: Props) {
     // TODO : Seaport 호출
     let result;
 
-    if (!library) {
-      const provider = await getAbcWeb3Provider();
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      result = await fullfillment(offer?.bidInfo, account!, provider);
-    } else if (library) {
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      result = await fullfillment(offer?.bidInfo, account!, library);
-    }
-    // todo result 후 처리
-    console.log('result 후 처리');
-    if (result?.status === SUCCESS) {
-      setOpenSnackbar({
-        open: true,
-        type: 'success',
-        message: 'Success Winning Bid!',
-      });
-      router.push('/my/tickets');
-    } else {
-      setOpenSnackbar({
-        open: true,
-        type: 'error',
-        message: 'Failed Winning Bid!',
-      });
+    try {
+      if (!library) {
+        const provider = await getAbcWeb3Provider();
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        result = await fullfillment(offer?.bidInfo, account!, provider);
+      } else if (library) {
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        result = await fullfillment(offer?.bidInfo, account!, library);
+      }
+      // todo result 후 처리
+      console.log('result 후 처리');
+      if (result?.status === SUCCESS) {
+        setOpenSnackbar({
+          open: true,
+          type: 'success',
+          message: 'Success Winning Bid!',
+        });
+        router.push('/my/tickets');
+      } else {
+        setOpenSnackbar({
+          open: true,
+          type: 'error',
+          message: 'Failed Winning Bid!',
+        });
+      }
+    } catch (err) {
+      // console.log(err.message);
+      if (err.message.includes('user rejected transaction'))
+        setOpenSnackbar({
+          open: true,
+          type: 'error',
+          message: 'Rejected Winning Bid!',
+        });
+      else
+        setOpenSnackbar({
+          open: true,
+          type: 'error',
+          message: 'Failed Winning Bid!',
+        });
+      setIsLoading(false);
     }
 
     console.log('!! Winning bid fulfillment result = ', result);
