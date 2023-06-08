@@ -64,7 +64,7 @@ export default function WalletPopover({}) {
 
   const fetchUsdcBalance = async () => {
     const ret = await getErc20BalanceNoSigner(contracts.usdc[chainId], account, chainId);
-    setUsdcBalance(ret);
+    setUsdcBalance(ret.substring(0, ret.indexOf('.') + 5));
   };
 
   useEffect(() => {

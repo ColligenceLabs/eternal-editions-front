@@ -256,7 +256,7 @@ Type: Address verification`;
 
   const fetchUsdcBalance = async () => {
     const ret = await getErc20BalanceNoSigner(contracts.usdc[chainId], account, chainId);
-    setUsdcBalance(ret.toString());
+    setUsdcBalance(ret);
   };
 
   useEffect(() => {

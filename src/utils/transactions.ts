@@ -1,4 +1,4 @@
-import { BigNumber, ethers } from 'ethers';
+import { BigNumber, ethers, utils } from 'ethers';
 import { mysteryBoxAbi } from '../config/abi/MysteryBox';
 import { erc721Abi } from '../config/abi/ERC721Token';
 import { whiteListAbi } from '../config/abi/WhiteListNFT';
@@ -1046,16 +1046,16 @@ export async function getErc20BalanceNoSigner(
   address: string,
   account: string | undefined | null,
   chainId: number
-): Promise<number> {
+): Promise<string> {
   const provider = ethers.getDefaultProvider(getSelectedNodeUrl(chainId));
   const contract = new ethers.Contract(address, tokenAbi, provider);
 
   if (account === undefined) return 0;
 
-  let balance = 0;
+  let balance = '0';
   try {
     const result: BigNumber = await contract.balanceOf(account);
-    balance = result.toNumber();
+    balance = utils.formatEther(result);
   } catch (e) {
     console.log('#####', address);
     console.log('getErc20BalanceNoSigner Error : ', e);
