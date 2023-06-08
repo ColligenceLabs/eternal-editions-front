@@ -122,8 +122,10 @@ export default function ProjectDetailPage() {
   };
 
   const getStatus = (projectItem: ProjectItemTypes) => {
+    const today = new Date();
+    const startDate = new Date(projectItem.startDate);
     if (projectItem.infoId === ticketInfo?.id) return 'minting';
-    else if (projectItem.startDate < new Date()) return 'ended';
+    else if (startDate < today) return 'ended';
     else return 'upcoming';
   };
 
