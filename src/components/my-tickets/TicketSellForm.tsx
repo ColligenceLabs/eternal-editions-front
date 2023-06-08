@@ -7,7 +7,7 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import React, { SetStateAction, useEffect, useState } from 'react';
+import React, { ChangeEvent, SetStateAction, useEffect, useState } from 'react';
 import {
   FootText,
   Hr,
@@ -135,12 +135,12 @@ export default function TicketSellForm({
     // TODO : DB 에서 Sell 관련 정보 전체 삭제 API 호출
   };
 
-  const onChangeMinInc = (e) => {
+  const onChangeMinInc = (e: ChangeEvent<HTMLInputElement>) => {
     if (payType === 'edcp') setMinInc((parseFloat(e.target.value) * 10).toString());
     else setMinInc(e.target.value);
   };
 
-  const onChangePrice = (e) => {
+  const onChangePrice = (e: ChangeEvent<HTMLInputElement>) => {
     if (payType === 'edcp') setAmount((parseFloat(e.target.value) * 10).toString());
     else setAmount(e.target.value);
   };
