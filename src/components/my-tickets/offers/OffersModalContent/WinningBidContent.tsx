@@ -1,5 +1,5 @@
 import { Stack, Typography, styled } from '@mui/material';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { ModalCustomProps } from 'src/components/common/ModalCustom';
 import { Label, Section, Value } from '../../StyledComponents';
 import RoundedButton from 'src/components/common/RoundedButton';
@@ -10,13 +10,15 @@ import { getShotAddress } from 'src/utils/wallet';
 import { OfferType } from './OffersContent';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import useAccount from 'src/hooks/useAccount';
-import { getSession } from 'src/services/services';
+import { getSession, registerSellbookBuy } from 'src/services/services';
 import { AbcWeb3Provider } from '@colligence/klip-web3-provider';
 import Web3Modal from '@colligence/web3modal';
 import secureLocalStorage from 'react-secure-storage';
 import { ethers } from 'ethers';
 import { fullfillment } from 'src/seaport/fullfillment';
 import { useRouter } from 'next/router';
+import { SUCCESS } from 'src/config';
+import CSnackbar from 'src/components/common/CSnackbar';
 
 type BidTypes = {
   id: number;
@@ -38,6 +40,19 @@ function WinningBidContent({ offer, reservePrice, ...props }: Props) {
   const { library, chainId } = useActiveWeb3React();
   const { account } = useAccount();
   const router = useRouter();
+
+  const [openSnackbar, setOpenSnackbar] = useState({
+    open: false,
+    type: '',
+    message: '',
+  });
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar({
+      open: false,
+      type: '',
+      message: '',
+    });
+  };
 
   const [openTransfer, setOpenTransfer] = useState(false);
   const [isVerifided, setIsVerified] = useState(false);
@@ -126,40 +141,40 @@ function WinningBidContent({ offer, reservePrice, ...props }: Props) {
     if (!library) {
       const provider = await getAbcWeb3Provider();
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      result = await fullfillment(offer?.sellInfo, account!, provider);
+      result = await fullfillment(offer?.bidInfo, account!, provider);
     } else if (library) {
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      result = await fullfillment(offer?.sellInfo, account!, library);
+      result = await fullfillment(offer?.bidInfo, account!, library);
     }
     // todo result 후 처리
     console.log('result 후 처리');
     if (result?.status === SUCCESS) {
-      // setOpenSnackbar({
-      //   open: true,
-      //   type: 'success',
-      //   message: 'Success BUY!',
-      // });
+      setOpenSnackbar({
+        open: true,
+        type: 'success',
+        message: 'Success Winning Bid!',
+      });
       router.push('/my/tickets');
     } else {
-      // setOpenSnackbar({
-      //   open: true,
-      //   type: 'error',
-      //   message: 'Failed BUY!',
-      // });
+      setOpenSnackbar({
+        open: true,
+        type: 'error',
+        message: 'Failed Winning Bid!',
+      });
     }
 
-    console.log('!! fullfillment result = ', result);
+    console.log('!! Winning bid fulfillment result = ', result);
 
-    // if (result) {
-    //   const data = {
-    //     buyer: webUser.user.uid,
-    //     buyerAddress: account,
-    //     price: sellbookInfo?.price,
-    //     txHash: result?.transactionHash,
-    //   };
-    //
-    //   await registerSellbookBuy(data, sellbookInfo?.id!);
-    // }
+    if (result) {
+      const data = {
+        buyer: offer.uid,
+        buyerAddress: offer.wallet,
+        price: offer.price,
+        txHash: result?.transactionHash,
+      };
+
+      await registerSellbookBuy(data, offer.sellbookId);
+    }
   };
 
   if (openTransfer) {
@@ -208,6 +223,13 @@ function WinningBidContent({ offer, reservePrice, ...props }: Props) {
         // <RoundedButton onClick={() => setOpenTransfer(true)}>winning bid</RoundedButton>
         <RoundedButton onClick={handleWinningBid}>winning bid</RoundedButton>
       )}
+
+      <CSnackbar
+        open={openSnackbar.open}
+        type={openSnackbar.type}
+        message={openSnackbar.message}
+        handleClose={handleCloseSnackbar}
+      />
     </Stack>
   );
 }
