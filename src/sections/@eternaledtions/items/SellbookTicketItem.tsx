@@ -39,7 +39,6 @@ export default function SellbookTicketItem({ sellbookItem, isInDrop }: Props) {
   const { name, imageLink, categoriesStr, properties } = mysteryboxItem;
   const [team, setTeam] = useState('');
   const [day, setDay] = useState('');
-  console.log(sellbookItem);
   const isOnAuction = sellbookItem.type === 2; // TODO: Update value
   const theme = useTheme();
 
