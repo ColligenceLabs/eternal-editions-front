@@ -444,7 +444,7 @@ export default function TicketDetailPage() {
   const fetchBidList = async (id: string) => {
     const res = await getBidListBySellbookId(id);
     console.log(res);
-    if (res.data.status === SUCCESS) {
+    if (res.data.status === SUCCESS && res.data.data.length > 0) {
       const highestPriceItem = res.data.data.reduce((prev: any, current: any) =>
         prev.price > current.price ? prev : current
       );
@@ -460,7 +460,7 @@ export default function TicketDetailPage() {
   }, [currentPrice, highestPrice]);
 
   useEffect(() => {
-    if (slug) {
+    if (slug && typeof slug === 'string') {
       fetchSellbookInfo();
       fetchBidList(slug);
     }
