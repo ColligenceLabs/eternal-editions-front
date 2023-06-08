@@ -112,7 +112,6 @@ function NavItemDesktop({ item, isScrolling, isTransparent }: NavItemDesktopProp
   const { pathname } = useRouter();
   // const {asPath} = useRouter()
   const [open, setOpen] = useState(false);
-
   const isActiveRoot = path === pathname;
   // const isActiveRoot = path === pathname || (path !== '/' && asPath.includes(path));
 
