@@ -156,7 +156,7 @@ export const PageLinks_old = [
 export const navConfig = [
   // { title: 'Home', path: '/' },
   { title: 'ABOUT', path: Routes.eternalEditions.about },
-  { title: 'DROPS', path: Routes.eternalEditions.tickets },
+  { title: 'DROPS', path: Routes.eternalEditions.projects },
   { title: 'ITEMS', path: Routes.eternalEditions.items },
   // { title: 'HELP', path: Routes.eternalEditions.help },
   // { title: 'Components', path: Routes.componentsUI },
