@@ -7,13 +7,24 @@ import palette from 'src/theme/palette';
 import TransferContent from './TransferContent';
 import HyperlinkButton from 'src/components/ticket/HyperlinkButton';
 import { getShotAddress } from 'src/utils/wallet';
-import { OfferType } from './OffersContent';
+
+type BidTypes = {
+  id: number;
+  price: number;
+  sellbookId: number;
+  uid: string;
+  wallet: string;
+  bidInfo: any;
+  createdAt: Date;
+  updatedAt: Date;
+};
 
 interface Props extends Omit<ModalCustomProps, 'children'> {
-  offer: OfferType | undefined;
+  offer: BidTypes | undefined;
+  reservePrice: number;
 }
 
-function WinningBidContent({ offer, ...props }: Props) {
+function WinningBidContent({ offer, reservePrice, ...props }: Props) {
   const [openTransfer, setOpenTransfer] = useState(false);
   const [isVerifided, setIsVerified] = useState(false);
   const [txid, setTxid] = useState('');
@@ -56,29 +67,29 @@ function WinningBidContent({ offer, ...props }: Props) {
 
       <Section>
         <StyledLabel>PRICE</StyledLabel>
-        <StyledValue>{offer.price}</StyledValue>
+        <StyledValue>{offer.price} USDC</StyledValue>
       </Section>
 
       <Section>
         <StyledLabel>USD PRICE</StyledLabel>
-        <StyledValue>{offer.usdPrice}</StyledValue>
+        <StyledValue>${offer.price}</StyledValue>
       </Section>
 
       <Section>
         <StyledLabel>FLOOR DIFFERENCE</StyledLabel>
-        <StyledValue>{offer.floorDifference}</StyledValue>
+        <StyledValue>{((reservePrice / offer.price) * 100).toFixed(0)}%</StyledValue>
       </Section>
 
       <Section>
         <StyledLabel>FROM</StyledLabel>
-        <StyledValue>홍길동</StyledValue>
+        <StyledValue>{offer.wallet}</StyledValue>
       </Section>
 
       {txid ? (
         <Section>
           <StyledLabel>TXID</StyledLabel>
           <Stack flexDirection="row" alignItems="center" gap="12px">
-            <StyledValue>{getShotAddress(offer.address)}</StyledValue>
+            <StyledValue>{getShotAddress(offer.wallet)}</StyledValue>
             <HyperlinkButton href={''} styles={{ backgroundColor: '#F5F5F5' }} />
           </Stack>
         </Section>

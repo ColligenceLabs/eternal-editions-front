@@ -43,7 +43,12 @@ function OffersModal({ sellbookId, reservePrice, ...props }: Props) {
   const getModalContent = () => {
     if (openWinningBid) {
       return (
-        <WinningBidContent offer={activeOffer} open={props.open} onClose={resetOfferSelection} />
+        <WinningBidContent
+          offer={activeOffer}
+          open={props.open}
+          onClose={resetOfferSelection}
+          reservePrice={reservePrice}
+        />
       );
     }
 

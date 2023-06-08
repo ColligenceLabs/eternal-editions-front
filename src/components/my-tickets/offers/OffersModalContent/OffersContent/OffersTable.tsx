@@ -80,7 +80,7 @@ export default function OffersTable({ sellbookId, reservePrice, onClickItem }: P
                       <BodyTableCell>{bid.price} USDC</BodyTableCell>
                       <BodyTableCell>$ {bid.price}</BodyTableCell>
                       <BodyTableCell>
-                        {((reservePrice / bid.price) * 100).toFixed(0)}&
+                        {((reservePrice / bid.price) * 100).toFixed(0)}%
                       </BodyTableCell>
                       {/*<BodyTableCell>{bid.expiration}</BodyTableCell>*/}
                       <BodyTableCell>{getShotAddress(bid.wallet)}</BodyTableCell>
