@@ -25,6 +25,7 @@ import { ethers } from 'ethers';
 import Layout from 'src/layouts';
 import { Page, TextIconLabel, Scrollbar } from 'src/components';
 import {
+  getBidListBySellbookId,
   getSellbookInfoByID,
   getSession,
   registerBidOffer,
@@ -144,7 +145,8 @@ export default function TicketDetailPage() {
     message: '',
   });
   const [priceError, setPriceError] = useState('');
-
+  const [highestPrice, setHighestPrice] = useState(0);
+  const [currentPrice, setCurrentPrice] = useState(0);
   const webUser = useSelector((state: any) => state.webUser);
   const { library, chainId } = useActiveWeb3React();
   const { account } = useAccount();
@@ -166,6 +168,7 @@ export default function TicketDetailPage() {
       const res = await getSellbookInfoByID(slug);
       console.log(res);
       setSellbookInfo(res.data.data.sellbook);
+      setCurrentPrice(res.data.data.sellbook.price);
       if (res.data.data.sellbook.type === 1) setIsOnAuction(false);
       else setIsOnAuction(true);
       if (
@@ -420,9 +423,9 @@ export default function TicketDetailPage() {
     console.log('offer now');
     console.log(`pay type :: ${payType}`);
 
-    if (parseFloat(offer) < sellbookInfo?.price + sellbookInfo?.minInc) {
+    if (parseFloat(offer) < currentPrice + sellbookInfo?.minInc) {
       // alert(`offer should be greater than ${sellbookInfo?.price + sellbookInfo?.minInc}`);
-      setPriceError(`offer should be greater than ${sellbookInfo?.price + sellbookInfo?.minInc}`);
+      setPriceError(`offer should be greater than ${currentPrice + sellbookInfo?.minInc}`);
       return;
     }
 
@@ -438,8 +441,29 @@ export default function TicketDetailPage() {
     else setOffer(event.target.value);
   };
 
+  const fetchBidList = async (id: string) => {
+    const res = await getBidListBySellbookId(id);
+    console.log(res);
+    if (res.data.status === SUCCESS) {
+      const highestPriceItem = res.data.data.reduce((prev, current) =>
+        prev.price > current.price ? prev : current
+      );
+
+      const result = highestPriceItem ? highestPriceItem.price : null;
+
+      setHighestPrice(result);
+    }
+  };
+
   useEffect(() => {
-    if (slug) fetchSellbookInfo();
+    if (currentPrice < highestPrice) setCurrentPrice(highestPrice);
+  }, [currentPrice, highestPrice]);
+
+  useEffect(() => {
+    if (slug) {
+      fetchSellbookInfo();
+      fetchBidList(slug);
+    }
   }, [slug]);
 
   console.log('------------------------', sellbookInfo);
@@ -531,9 +555,11 @@ export default function TicketDetailPage() {
                               {/*  sx={{ opacity: 0.6 }}*/}
                               {/*>{`(~$${sellbookInfo.price})`}</TotalValue>*/}
                               <TotalValue>{`${
-                                sellbookInfo.price
+                                sellbookInfo?.price
                               } ${payType.toUpperCase()}`}</TotalValue>
-                              <TotalValue sx={{ opacity: 0.6 }}>{`(~$${'0'})`}</TotalValue>
+                              <TotalValue
+                                sx={{ opacity: 0.6 }}
+                              >{`(~$${sellbookInfo?.price})`}</TotalValue>
                             </Stack>
                           </Row>
                         ) : null}
@@ -544,19 +570,17 @@ export default function TicketDetailPage() {
                             {payType === 'edcp' ? (
                               <>
                                 <TotalValue>{`${
-                                  sellbookInfo.price / 10
+                                  currentPrice / 10
                                 } ${payType.toUpperCase()}`}</TotalValue>
                                 <TotalValue
                                   sx={{ opacity: 0.6 }}
-                                >{`(~$${sellbookInfo.price})`}</TotalValue>
+                                >{`(~$${currentPrice})`}</TotalValue>
                               </>
                             ) : (
                               <>
-                                <TotalValue>{`${
-                                  sellbookInfo.price
-                                } ${payType.toUpperCase()}`}</TotalValue>
+                                <TotalValue>{`${currentPrice} ${payType.toUpperCase()}`}</TotalValue>
                                 <TotalValue sx={{ opacity: 0.6 }}>{`(~$${
-                                  payType === 'edcp' ? sellbookInfo.price / 10 : sellbookInfo.price
+                                  payType === 'edcp' ? currentPrice / 10 : currentPrice
                                 })`}</TotalValue>
                               </>
                             )}
