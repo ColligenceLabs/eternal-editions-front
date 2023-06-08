@@ -114,6 +114,8 @@ const TicketItemModal = ({
       : `${totalPriceUSDC.toFixed(4)} USDC`;
   const fullTotalPriceString = `${totalPriceString} (~$${totalPriceUSDC.toFixed(4)})`;
 
+  const loginBy = window.localStorage.getItem('loginBy') ?? 'sns';
+
   const handleAbcClose = () => {
     setAbcToken('');
     setAbcOpen(false);
@@ -718,7 +720,10 @@ const TicketItemModal = ({
                   <RoundedButton
                     onClick={onSubmit}
                     disabled={
-                      perLimit <= 0 || (method === methodType.usdc && !abcUser.twoFactorEnabled)
+                      perLimit <= 0 ||
+                      (loginBy !== 'wallet' &&
+                        method === methodType.usdc &&
+                        !abcUser.twoFactorEnabled)
                     }
                   >
                     COMPLETE PURCHASE
@@ -737,20 +742,22 @@ const TicketItemModal = ({
                       Exceeding holding limit per account.
                     </Box>
                   )}
-                  {method === methodType.usdc && !abcUser.twoFactorEnabled && (
-                    <Box
-                      sx={{
-                        textAlign: 'center',
-                        fontSize: '12px',
-                        fontWeight: '700',
-                        color: 'red',
-                        mt: '-20px',
-                        mb: '-5px',
-                      }}
-                    >
-                      Activate Wallet on the Profile menu at first.
-                    </Box>
-                  )}
+                  {loginBy !== 'wallet' &&
+                    method === methodType.usdc &&
+                    !abcUser.twoFactorEnabled && (
+                      <Box
+                        sx={{
+                          textAlign: 'center',
+                          fontSize: '12px',
+                          fontWeight: '700',
+                          color: 'red',
+                          mt: '-20px',
+                          mb: '-5px',
+                        }}
+                      >
+                        Activate Wallet on the Profile menu at first.
+                      </Box>
+                    )}
                 </>
               )}
             </Stack>
