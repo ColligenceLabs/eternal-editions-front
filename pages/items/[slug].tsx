@@ -417,22 +417,23 @@ export default function TicketDetailPage() {
 
   const handleClickBid = async () => {
     console.log('click bid', offer);
-    setIsLoading(true);
     console.log('offer now');
     console.log(`pay type :: ${payType}`);
 
     if (parseFloat(offer) < sellbookInfo?.price + sellbookInfo?.minInc) {
-      alert(`offer should be greater than ${sellbookInfo?.price + sellbookInfo?.minInc}`);
+      // alert(`offer should be greater than ${sellbookInfo?.price + sellbookInfo?.minInc}`);
       setPriceError(`offer should be greater than ${sellbookInfo?.price + sellbookInfo?.minInc}`);
       return;
     }
 
+    setIsLoading(true);
     if (payType === 'edcp') await offerWithPoint();
     else await offerWithCrypto();
     setIsLoading(false);
   };
 
   const handleInputOffer = async (event: any) => {
+    setPriceError('');
     setOffer(event.target.value);
   };
 
