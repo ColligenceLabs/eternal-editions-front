@@ -561,6 +561,15 @@ export default function TicketDetailPage() {
                             )}
                           </Stack>
                         </Row>
+
+                        <Row>
+                          <Label>Minimum Increment</Label>
+                          <Stack flexDirection="row" gap={0.5}>
+                            <TotalValue>{`${
+                              sellbookInfo.minInc
+                            } ${payType.toUpperCase()}`}</TotalValue>
+                          </Stack>
+                        </Row>
                       </Stack>
 
                       <Stack gap={0.25} mt={{ xs: 0, md: '142px' }}>
