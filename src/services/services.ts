@@ -193,3 +193,5 @@ export const registerBidOffer = async (data: any) => {
 export const getBidListBySellbookId = async (id: string) => {
   return await customAxios.get(`/api/service/bid/${id}`);
 };
+
+export const getCertifications = async (impUid: any) => await customAxios.get(`/api/users/certifications/${impUid}`);

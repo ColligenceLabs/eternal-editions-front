@@ -27,7 +27,7 @@ import CheckFillIcon from 'src/assets/icons/checkFill';
 import { Input } from '@mui/material';
 import {
   abcJoin,
-  abcLogin,
+  abcLogin, getCertifications,
   getSession,
   getUser,
   removeUser,
@@ -213,7 +213,30 @@ const GoogleFullSignUp = () => {
         reset({ ...defaultValues, email: info.email, name: info.name });
       }
     };
-    fetchSession();
+    const fetchCertifications = async (impUid: any) => {
+      const res = await getCertifications(impUid);
+
+      if (res.data?.status === 1) {
+        // todo 본인인증 정보를 입력란에 채워준다.
+
+      } else {
+        // todo 본인인증 정보 에러 처리.
+        alert(res.data.message.message);
+      }
+    }
+    const imp_uid = router.query['imp_uid'];
+    const success = router.query['success'];
+    if (success !== 'true' || !imp_uid) {
+      // todo 본인 인증정보 없거나 실패인 경우 어떻게 처리할 지...메인화면으로 이동??
+      if (success === 'false')
+        alert('본인인증정보 없음.');
+      router.push('/');
+      return;
+    } else {
+      // 본인인증정보 조회함수 호출
+      fetchCertifications(imp_uid);
+      fetchSession();
+    }
   }, []);
 
   const onSubmit = async (values: GoogleAccountData) => {
