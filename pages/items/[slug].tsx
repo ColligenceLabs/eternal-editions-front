@@ -425,7 +425,12 @@ export default function TicketDetailPage() {
 
     if (parseFloat(offer) < currentPrice + sellbookInfo?.minInc) {
       // alert(`offer should be greater than ${sellbookInfo?.price + sellbookInfo?.minInc}`);
-      setPriceError(`Offer should be greater than ${currentPrice + sellbookInfo?.minInc}`);
+
+      if (payType === 'edcp')
+        setPriceError(
+          `Offer should be greater than ${currentPrice / 10 + sellbookInfo?.minInc / 10}`
+        );
+      else setPriceError(`Offer should be greater than ${currentPrice + sellbookInfo?.minInc}`);
       return;
     }
 
@@ -437,8 +442,7 @@ export default function TicketDetailPage() {
 
   const handleInputOffer = async (event: any) => {
     setPriceError('');
-    if (payType === 'edcp') setOffer((parseFloat(event.target.value) * 10).toString());
-    else setOffer(event.target.value);
+    setOffer(event.target.value);
   };
 
   const fetchBidList = async (id: string) => {
@@ -555,7 +559,7 @@ export default function TicketDetailPage() {
                               {/*  sx={{ opacity: 0.6 }}*/}
                               {/*>{`(~$${sellbookInfo.price})`}</TotalValue>*/}
                               <TotalValue>{`${
-                                sellbookInfo?.price
+                                payType === 'edcp' ? sellbookInfo?.price / 10 : sellbookInfo?.price
                               } ${payType.toUpperCase()}`}</TotalValue>
                               <TotalValue
                                 sx={{ opacity: 0.6 }}
@@ -591,7 +595,7 @@ export default function TicketDetailPage() {
                           <Label>Minimum Increment</Label>
                           <Stack flexDirection="row" gap={0.5}>
                             <TotalValue>{`${
-                              sellbookInfo.minInc
+                              payType === 'edcp' ? sellbookInfo.minInc / 10 : sellbookInfo.minInc
                             } ${payType.toUpperCase()}`}</TotalValue>
                           </Stack>
                         </Row>
