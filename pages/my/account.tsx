@@ -52,6 +52,7 @@ import { getErc20BalanceNoSigner } from 'src/utils/transactions';
 import contracts from 'src/config/constants/contracts';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import RegisterAccount from 'src/components/user/RegisterAccount';
+import ImportEETickets from 'src/components/user/ImportEETickets';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
@@ -77,7 +78,7 @@ const CButton = styled('div')(({ theme }) => ({
   fontWeight: 700,
 }));
 
-const ProfileTextAction = styled(Button)(({ theme }) => ({
+const ProfileTextAction = styled(Box)(({ theme }) => ({
   fontWeight: 700,
   fontSize: 12,
   lineHeight: 13 / 12,
@@ -85,6 +86,8 @@ const ProfileTextAction = styled(Button)(({ theme }) => ({
   textTransform: 'uppercase',
   color: palette.dark.black.lighter,
   padding: '6px',
+  textAlign: 'left',
+  cursor: 'pointer',
 }));
 
 const SectionHeader = styled(Typography)(({ theme }) => ({
@@ -131,7 +134,7 @@ export default function MyAccountPage() {
   const [isOpenCreateWalletForm, setIsOpenCreateWalletForm] = useState<boolean>(false);
   const [bankAccount, setBankAccount] = useState('');
   const [isOpenBankAccountForm, setIsOpenBankAccountForm] = useState(false);
-
+  const [isOpenImportAccountForm, setIsOpenImportAccountForm] = useState(false);
   const onCloseDeactivateModal = () => {
     deactivate();
     setOpenDeactivateModal(false);
@@ -454,29 +457,16 @@ Type: Address verification`;
 
                     {isDesktop ? (
                       <Stack mt={{ md: '205px' }}>
-                        <ProfileTextAction>Edit Profile</ProfileTextAction>
-                        <ProfileTextAction>Change Password</ProfileTextAction>
+                        <ProfileTextAction onClick={() => setIsOpenImportAccountForm(true)}>
+                          Get Existing Account (EE Market)
+                        </ProfileTextAction>
+                        <ProfileTextAction onClick={() => setOpenDeactivateModal(true)}>
+                          Deactivate Account
+                        </ProfileTextAction>
                         <ProfileTextAction onClick={logout}>Logout</ProfileTextAction>
                       </Stack>
                     ) : null}
                   </Box>
-
-                  <Stack
-                    gap="16px"
-                    sx={{
-                      display: {
-                        xs: 'none',
-                        md: 'flex',
-                      },
-                    }}
-                  >
-                    <Divider />
-                    <Box padding={{ xs: '16px 0 0', md: '32px' }} textAlign="center">
-                      <ProfileTextAction onClick={() => setOpenDeactivateModal(true)}>
-                        Deactivate Account
-                      </ProfileTextAction>
-                    </Box>
-                  </Stack>
                 </Stack>
               </Grid>
               <Grid
@@ -684,9 +674,18 @@ Type: Address verification`;
         >
           <CreateWalletForm onClose={() => setIsOpenCreateWalletForm(false)} />
         </ModalCustom>
+
         <ModalCustom open={isOpenBankAccountForm} onClose={() => setIsOpenBankAccountForm(false)}>
           <RegisterAccount hasBankAccount={!!bankAccount} />
         </ModalCustom>
+
+        <ModalCustom
+          open={isOpenImportAccountForm}
+          onClose={() => setIsOpenImportAccountForm(false)}
+        >
+          <ImportEETickets />
+        </ModalCustom>
+
         <ModalCustom
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"

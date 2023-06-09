@@ -1,6 +1,6 @@
 import axios from 'axios';
 import env from '../env';
-import { apiAuthAxios, customAxios } from './customAxios';
+import { apiAuthAxios, customAxios, eeApiAxios } from './customAxios';
 import { AbcAddUserDto, AbcInitPasswordDto, AbcSnsAddUserDto } from '../abc/main/abc/interface';
 import { services } from 'src/abc/background/init';
 import queryString from 'query-string';
@@ -192,4 +192,30 @@ export const registerBidOffer = async (data: any) => {
 
 export const getBidListBySellbookId = async (id: string) => {
   return await customAxios.get(`/api/service/bid/${id}`);
+};
+
+//--------------------------- ee Api
+
+export const eeLogin = async (data: any) => {
+  return await eeApiAxios.post('/api/v1/migrate/login', data, {
+    headers: { migratekey: 'TGXngkkYJ4' },
+  });
+};
+
+export const getEEMyTicket = async () => {
+  const token = window.localStorage.getItem('eeAccessToken');
+  return await eeApiAxios.get('/api/v1/migrate/my-ticket', {
+    headers: { Authorization: `Bearer ${token}`, migratekey: 'TGXngkkYJ4' },
+  });
+};
+
+export const migrateTicket = async (code: string, migrateId: number) => {
+  const token = window.localStorage.getItem('eeAccessToken');
+  return await eeApiAxios.post(
+    `/api/v1/migrate/claim-ticket/${code}`,
+    { migrateId: migrateId },
+    {
+      headers: { Authorization: `Bearer ${token}`, migratekey: 'TGXngkkYJ4' },
+    }
+  );
 };
