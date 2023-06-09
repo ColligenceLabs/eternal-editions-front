@@ -140,6 +140,8 @@ function WinningBidContent({ offer, reservePrice, ...props }: Props) {
     setIsLoading(false);
   };
 
+  const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
   const winBidWithPoint = async () => {
     const data = {
       buyer: offer.uid,
@@ -156,7 +158,8 @@ function WinningBidContent({ offer, reservePrice, ...props }: Props) {
         type: 'success',
         message: 'Success Winning Bid!',
       });
-      // router.push('/my/tickets');
+      sleep(500);
+      router.push('/my/tickets');
     } else {
       setOpenSnackbar({
         open: true,
