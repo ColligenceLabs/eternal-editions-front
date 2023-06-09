@@ -1044,18 +1044,19 @@ export async function getWhlBalanceNoSigner(
 
 export async function getErc20BalanceNoSigner(
   address: string,
+  decimal: number,
   account: string | undefined | null,
   chainId: number
 ): Promise<string> {
   const provider = ethers.getDefaultProvider(getSelectedNodeUrl(chainId));
   const contract = new ethers.Contract(address, tokenAbi, provider);
 
-  if (account === undefined) return 0;
+  if (account === undefined) return '0';
 
   let balance = '0';
   try {
     const result: BigNumber = await contract.balanceOf(account);
-    balance = utils.formatEther(result);
+    balance = utils.formatUnits(result, decimal);
   } catch (e) {
     console.log('#####', address);
     console.log('getErc20BalanceNoSigner Error : ', e);

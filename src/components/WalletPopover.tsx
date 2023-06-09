@@ -66,7 +66,7 @@ export default function WalletPopover({}) {
   // const {enqueueSnackbar} = useSnackbar();
 
   const fetchUsdcBalance = async () => {
-    const ret = await getErc20BalanceNoSigner(contracts.usdc[chainId], account, chainId);
+    const ret = await getErc20BalanceNoSigner(contracts.usdc[chainId], 6, account, chainId);
     setUsdcBalance(ret.substring(0, ret.indexOf('.') + 5));
   };
 
