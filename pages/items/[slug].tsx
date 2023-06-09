@@ -288,7 +288,7 @@ export default function TicketDetailPage() {
         type: 'success',
         message: 'Success OFFER!',
       });
-      router.push('/my/tickets');
+      // router.push('/my/tickets');
     } else {
       setOpenSnackbar({
         open: true,
@@ -398,7 +398,7 @@ export default function TicketDetailPage() {
           type: 'success',
           message: 'Success OFFER!',
         });
-        router.push('/my/tickets');
+        // router.push('/my/tickets');
       } else {
         setOpenSnackbar({
           open: true,
