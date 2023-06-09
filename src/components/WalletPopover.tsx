@@ -21,6 +21,8 @@ import { useResponsive } from '../hooks';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import { getErc20BalanceNoSigner } from 'src/utils/transactions';
 import contracts from 'src/config/constants/contracts';
+import { getSession } from 'src/services/services';
+import useEDCP from 'src/hooks/useEDCP';
 
 // ----------------------------------------------------------------------
 WalletPopover.propTypes = {};
@@ -37,6 +39,7 @@ export default function WalletPopover({}) {
   // const {account, accountShot, type, disconnect, switchChainNetwork, chainId, balance} = useWallets();
   // const abcAccount = useSelector((state: any) => state.user);
   const { user } = useSelector((state: any) => state.webUser);
+  const { edcpPoint } = useEDCP();
   const dispatch = useDispatch();
   const { account } = useAccount();
   const { deactivate, chainId, library } = useActiveWeb3React();
@@ -201,7 +204,7 @@ export default function WalletPopover({}) {
                       <Image src="/assets/img/ee-logo.svg" />
                     </Box>
                     <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
-                      {user.point ? user.point : 0} EDCP
+                      {edcpPoint ? edcpPoint : 0} EDCP
                     </Typography>
                   </Stack>
                   <Stack direction="row">
