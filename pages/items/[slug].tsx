@@ -276,7 +276,7 @@ export default function TicketDetailPage() {
       wallet: account,
       sellbookId: sellbookInfo?.id,
       bidInfo: null,
-      price: parseFloat(offer),
+      price: parseFloat(offer * 10),
     };
     console.log('!! offerWithPoint data = ', data);
 
@@ -423,7 +423,12 @@ export default function TicketDetailPage() {
     console.log('offer now');
     console.log(`pay type :: ${payType}`);
 
-    if (parseFloat(offer) < currentPrice + sellbookInfo?.minInc) {
+    let minOffer;
+
+    if (payType === 'edcp') minOffer = currentPrice / 10 + sellbookInfo?.minInc / 10;
+    else minOffer = currentPrice + sellbookInfo?.minInc;
+
+    if (parseFloat(offer) < minOffer) {
       // alert(`offer should be greater than ${sellbookInfo?.price + sellbookInfo?.minInc}`);
 
       if (payType === 'edcp')
