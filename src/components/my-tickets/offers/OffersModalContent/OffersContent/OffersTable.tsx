@@ -75,26 +75,31 @@ export default function OffersTable({ sellbookId, reservePrice, onClickItem }: P
               </TableHead>
               <TableBody>
                 {bids &&
-                  bids.map((bid, index) => (
-                    <BodyTableRow key={index}>
-                      <BodyTableCell>{bid.price} USDC</BodyTableCell>
-                      <BodyTableCell>$ {bid.price}</BodyTableCell>
-                      <BodyTableCell>
-                        {((reservePrice / bid.price) * 100).toFixed(0)}%
-                      </BodyTableCell>
-                      {/*<BodyTableCell>{bid.expiration}</BodyTableCell>*/}
-                      <BodyTableCell>{getShotAddress(bid.wallet)}</BodyTableCell>
-                      <BodyTableCell>
-                        <RoundedButton
-                          variant="inactive"
-                          sx={{ padding: '11px 16px' }}
-                          onClick={() => onClickItem && onClickItem(bid)}
-                        >
-                          Winning Bid
-                        </RoundedButton>
-                      </BodyTableCell>
-                    </BodyTableRow>
-                  ))}
+                  bids.map((bid, index) => {
+                    const quote = bid.bidInfo === null ? 'EDCP' : 'USDC';
+                    const price = bid.bidInfo === null ? bid.price / 10 : bid.price;
+
+                    return (
+                      <BodyTableRow key={index}>
+                        <BodyTableCell>{`${price} ${quote}`}</BodyTableCell>
+                        <BodyTableCell>$ {bid.price}</BodyTableCell>
+                        <BodyTableCell>
+                          {((reservePrice / bid.price) * 100).toFixed(0)}%
+                        </BodyTableCell>
+                        {/*<BodyTableCell>{bid.expiration}</BodyTableCell>*/}
+                        <BodyTableCell>{getShotAddress(bid.wallet)}</BodyTableCell>
+                        <BodyTableCell>
+                          <RoundedButton
+                            variant="inactive"
+                            sx={{ padding: '11px 16px' }}
+                            onClick={() => onClickItem && onClickItem(bid)}
+                          >
+                            Winning Bid
+                          </RoundedButton>
+                        </BodyTableCell>
+                      </BodyTableRow>
+                    );
+                  })}
               </TableBody>
             </Table>
           </TableContainer>
