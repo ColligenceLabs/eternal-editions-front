@@ -817,7 +817,9 @@ const TicketItemModal = ({
                     }}
                     onClick={handleAbcConfirmClick}
                     loading={otpLoading}
-                    disabled={otpLoading}
+                    disabled={
+                      otpLoading || abcToken === undefined || abcToken === '' || abcToken === null
+                    }
                   >
                     확인
                   </LoadingButton>
@@ -880,7 +882,9 @@ const TicketItemModal = ({
                     }}
                     onClick={handleApproveConfirmClick}
                     loading={otpLoading}
-                    disabled={otpLoading}
+                    disabled={
+                      otpLoading || abcToken === undefined || abcToken === '' || abcToken === null
+                    }
                   >
                     확인
                   </LoadingButton>
