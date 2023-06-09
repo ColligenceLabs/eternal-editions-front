@@ -7,8 +7,6 @@ import RoundedButton from 'src/components/common/RoundedButton';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import * as Yup from 'yup';
 import { styled } from '@mui/material/styles';
-import axios from 'axios';
-import { eeApiAxios } from 'src/services/customAxios';
 import { eeLogin, getEEMyTicket, migrateTicket } from 'src/services/services';
 
 type EETicketTypes = {
@@ -67,12 +65,12 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 }));
 
 const FormSchema = Yup.object().shape({
-  id: Yup.string().required('ID is required'),
+  email: Yup.string().required('ID is required'),
   password: Yup.string().required('Password is required'),
 });
 
 type Account = {
-  id: string;
+  email: string;
   password: string;
 };
 
@@ -140,7 +138,7 @@ const ImportEETickets = () => {
             </Label>
 
             <Controller
-              name="id"
+              name="email"
               control={control}
               render={({ field, fieldState: { error } }) => (
                 <StyledTextField
@@ -210,17 +208,13 @@ const ImportEETickets = () => {
             <Box key={ticket.id}>
               <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                 <Box>
-                  {/*<Stack>*/}
                   <Typography sx={{ fontSize: '12px', color: '#999999', lineHeight: '16.52px' }}>
                     {`NO ${ticket.code}`}
                   </Typography>
-                  {/*</Stack>*/}
-                  {/*<Stack>*/}
                   <Typography sx={{ fontSize: '14px' }}>{ticket.showName}</Typography>
                   <Typography sx={{ fontSize: '12px' }}>
                     {`${ticket.ticketName} - ${ticket.ticketInfoName}`}
                   </Typography>
-                  {/*</Stack>*/}
                 </Box>
                 <RoundedButton onClick={() => handleClickImport(ticket)}>Import</RoundedButton>
               </Box>
