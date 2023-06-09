@@ -27,7 +27,8 @@ import CheckFillIcon from 'src/assets/icons/checkFill';
 import { Input } from '@mui/material';
 import {
   abcJoin,
-  abcLogin, getCertifications,
+  abcLogin,
+  getCertifications,
   getSession,
   getUser,
   removeUser,
@@ -212,29 +213,53 @@ const GoogleFullSignUp = () => {
         setService(res.data?.providerAuthInfo.provider);
         reset({ ...defaultValues, email: info.email, name: info.name });
       }
+
+      await fetchCertifications(imp_uid);
     };
     const fetchCertifications = async (impUid: any) => {
       const res = await getCertifications(impUid);
 
       if (res.data?.status === 1) {
         // todo 본인인증 정보를 입력란에 채워준다.
-
+        // res.data values
+        // data: {
+        //         "birth": 246639600,
+        //         "birthday": "1977-10-26",
+        //         "certified": true,
+        //         "certified_at": 1686296885,
+        //         "foreigner": false,
+        //         "foreigner_v2": null,
+        //         "gender": null,
+        //         "imp_uid": "imp_089849965949",
+        //         "merchant_uid": "mid_1686296848907",
+        //         "name": "김성진",
+        //         "origin": "http://localhost:8888/identity/",
+        //         "pg_provider": "inicis_unified",
+        //         "pg_tid": "INISA_MIIiasTest202306091647300301631523",
+        //         "phone": "01099900199",
+        //         "unique_in_site": null,
+        //         "unique_key": ""
+        //     }
+        console.log('!! 본인 인증 데이터 : ', res.data);
+        reset({
+          birthDate: new Date(res.data.data.birthday),
+          name: res.data.data.name,
+          phoneNumber: res.data.data.phone,
+        });
       } else {
         // todo 본인인증 정보 에러 처리.
         alert(res.data.message.message);
       }
-    }
+    };
     const imp_uid = router.query['imp_uid'];
     const success = router.query['success'];
     if (success !== 'true' || !imp_uid) {
       // todo 본인 인증정보 없거나 실패인 경우 어떻게 처리할 지...메인화면으로 이동??
-      if (success === 'false')
-        alert('본인인증정보 없음.');
+      if (success === 'false') alert('본인인증정보 없음.');
       router.push('/');
       return;
     } else {
       // 본인인증정보 조회함수 호출
-      fetchCertifications(imp_uid);
       fetchSession();
     }
   }, []);
@@ -526,6 +551,7 @@ const GoogleFullSignUp = () => {
                 style: { color: palette.dark.common.black, fontSize: 14, lineHeight: 20 / 14 },
               }}
               fullWidth
+              disabled={true}
               error={Boolean(error)}
               helperText={error?.message}
             />
@@ -609,29 +635,30 @@ const GoogleFullSignUp = () => {
                   style: { color: palette.dark.common.black, fontSize: 14, lineHeight: 20 / 14 },
                 }}
                 fullWidth
+                disabled={true}
                 error={Boolean(error)}
-                endAdornment={
-                  <InputAdornment position="end">
-                    <RoundedButton
-                      variant="inactive"
-                      disabled={!watch('phoneNumber')}
-                      onClick={() => setShowVerifyCode(true)}
-                      sx={{
-                        padding: '10px 16px',
-                        marginBottom: '24px',
-                        color: !!watch('phoneNumber')
-                          ? palette.dark.common.black
-                          : palette.dark.black.lighter,
-                        [`&.${buttonBaseClasses.root}`]: {
-                          fontSize: 12,
-                          lineHeight: 13 / 12,
-                        },
-                      }}
-                    >
-                      {'SEND CODE'}
-                    </RoundedButton>
-                  </InputAdornment>
-                }
+                // endAdornment={
+                //   <InputAdornment position="end">
+                //     <RoundedButton
+                //       variant="inactive"
+                //       disabled={!watch('phoneNumber')}
+                //       onClick={() => setShowVerifyCode(true)}
+                //       sx={{
+                //         padding: '10px 16px',
+                //         marginBottom: '24px',
+                //         color: !!watch('phoneNumber')
+                //           ? palette.dark.common.black
+                //           : palette.dark.black.lighter,
+                //         [`&.${buttonBaseClasses.root}`]: {
+                //           fontSize: 12,
+                //           lineHeight: 13 / 12,
+                //         },
+                //       }}
+                //     >
+                //       {'SEND CODE'}
+                //     </RoundedButton>
+                //   </InputAdornment>
+                // }
               />
               {error?.message && (
                 <Typography variant="caption" color={'error'}>
@@ -828,8 +855,8 @@ const GoogleFullSignUp = () => {
           !watch('abcTerms') ||
           !watch('abcPrivate') ||
           !watch('abcThirdParty') ||
-          Object.keys(errors).length > 0 ||
-          !wasClickedVerify
+          Object.keys(errors).length > 0 // ||
+          // !wasClickedVerify
         }
       >
         {isLoading ? <CircularProgress size={15} color="secondary" /> : 'Continue'}
