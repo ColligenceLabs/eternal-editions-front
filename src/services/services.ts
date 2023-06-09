@@ -194,6 +194,8 @@ export const getBidListBySellbookId = async (id: string) => {
   return await customAxios.get(`/api/service/bid/${id}`);
 };
 
+export const getCertifications = async (impUid: any) => await customAxios.get(`/api/users/certifications/${impUid}`);
+
 //--------------------------- ee Api
 
 export const eeLogin = async (data: any) => {

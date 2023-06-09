@@ -53,6 +53,8 @@ export default class MyDocument extends Document {
             type="text/javascript"
             src="https://kspay.ksnet.to/store/KSPayWebV1.4/js/kspay_web_ssl.js"
           />
+          <script type="text/javascript" src="https://code.jquery.com/jquery-1.12.4.min.js" ></script>
+          <script type="text/javascript" src="https://cdn.iamport.kr/js/iamport.payment-1.1.8.js"></script>
         </Head>
         <body>
           <Main />
