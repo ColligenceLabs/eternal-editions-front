@@ -131,9 +131,42 @@ function WinningBidContent({ offer, reservePrice, ...props }: Props) {
   };
 
   const handleWinningBid = async () => {
-    setIsLoading(true);
     console.log('!! handleWinningBid : offer = ', offer);
+    setIsLoading(true);
 
+    if (offer.bidInfo !== null) await winBidWithCrypto();
+    else await winBidWithPoint();
+
+    setIsLoading(false);
+  };
+
+  const winBidWithPoint = async () => {
+    const data = {
+      buyer: offer.uid,
+      buyerAddress: offer.wallet,
+      price: offer.price,
+      txHash: null,
+    };
+
+    const result = await registerSellbookBuy(data, offer.sellbookId);
+    console.log('!! winBidWithPoint result = ', result);
+    if (result.data.status === SUCCESS) {
+      setOpenSnackbar({
+        open: true,
+        type: 'success',
+        message: 'Success Winning Bid!',
+      });
+      // router.push('/my/tickets');
+    } else {
+      setOpenSnackbar({
+        open: true,
+        type: 'error',
+        message: 'Failed Winning Bid!',
+      });
+    }
+  };
+
+  const winBidWithCrypto = async () => {
     // Deaport Fulfillment
     // TODO : Seaport 호출
     let result;
@@ -163,7 +196,7 @@ function WinningBidContent({ offer, reservePrice, ...props }: Props) {
           message: 'Failed Winning Bid!',
         });
       }
-    } catch (err) {
+    } catch (err: any) {
       // console.log(err.message);
       if (err.message.includes('user rejected transaction'))
         setOpenSnackbar({
@@ -177,7 +210,6 @@ function WinningBidContent({ offer, reservePrice, ...props }: Props) {
           type: 'error',
           message: 'Failed Winning Bid!',
         });
-      setIsLoading(false);
     }
 
     console.log('!! Winning bid fulfillment result = ', result);
@@ -192,7 +224,6 @@ function WinningBidContent({ offer, reservePrice, ...props }: Props) {
 
       await registerSellbookBuy(data, offer.sellbookId);
     }
-    setIsLoading(false);
   };
 
   if (openTransfer) {
