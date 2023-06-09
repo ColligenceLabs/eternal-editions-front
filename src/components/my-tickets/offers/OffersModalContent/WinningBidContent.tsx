@@ -159,7 +159,8 @@ function WinningBidContent({ offer, reservePrice, ...props }: Props) {
         message: 'Success Winning Bid!',
       });
       sleep(500);
-      router.push('/my/tickets');
+      // router.push('/my/tickets');
+      location.replace('/my/tickets');
     } else {
       setOpenSnackbar({
         open: true,
@@ -191,7 +192,8 @@ function WinningBidContent({ offer, reservePrice, ...props }: Props) {
           type: 'success',
           message: 'Success Winning Bid!',
         });
-        router.push('/my/tickets');
+        // router.push('/my/tickets');
+        location.replace('/my/tickets');
       } else {
         setOpenSnackbar({
           open: true,
