@@ -4,7 +4,7 @@ import palette from 'src/theme/palette';
 import { Controller, useForm } from 'react-hook-form';
 import { Box, Divider, inputBaseClasses, Stack, TextField, Typography } from '@mui/material';
 import RoundedButton from 'src/components/common/RoundedButton';
-import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
+import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { styled } from '@mui/material/styles';
 import {
@@ -16,6 +16,8 @@ import {
 } from 'src/services/services';
 import { useSelector } from 'react-redux';
 import { SUCCESS } from 'src/config';
+import { useRouter } from 'next/router';
+import Link from 'next/link';
 
 type EETicketTypes = {
   id: number;
@@ -84,8 +86,10 @@ type Account = {
 };
 
 const ImportEETickets = () => {
+  const router = useRouter();
   const webUser = useSelector((state: any) => state.webUser);
   const [isLogin, setIsLogin] = useState(false);
+  const [loginError, setLoginError] = useState(false);
   const [refetch, setRefetch] = useState(false);
   const [myEETickets, setMyEETickets] = useState<EETicketTypes[]>([]);
   const {
@@ -97,20 +101,22 @@ const ImportEETickets = () => {
     resolver: yupResolver(FormSchema),
   });
 
-  console.log(webUser);
-
   const onSubmit = async (values: Account) => {
     try {
       const res = await eeLogin({
         email: 'develop@eternaleditions.io',
         password: 'EEmm1010!',
       });
+      console.log(res);
       if (res.status === 200) {
         localStorage.setItem('eeAccessToken', res.data.access_token);
         setIsLogin(true);
+      } else {
+        console.log('asdf');
       }
     } catch (e) {
       console.log(e);
+      setLoginError(true);
     }
   };
 
@@ -206,6 +212,29 @@ const ImportEETickets = () => {
               )}
             />
           </Section>
+          {loginError && (
+            <Stack
+              mt={2}
+              direction={{ xs: 'column', sm: 'row' }}
+              spacing={{
+                md: 2,
+              }}
+              justifyContent="space-between"
+            >
+              <SectionText sx={{ color: 'red' }}>ID and password do not match.</SectionText>
+
+              <SectionText
+                sx={{ cursor: 'pointer' }}
+                onClick={() =>
+                  window.open(
+                    'https://market.eternaleditions.io/account/login?rp=%2Fmypage%3Flang%3Dko-KR&lang=ko-KR'
+                  )
+                }
+              >
+                Check ID/Password
+              </SectionText>
+            </Stack>
+          )}
           <Stack
             mt={2}
             direction={{ xs: 'column', sm: 'row' }}
