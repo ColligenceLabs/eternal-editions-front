@@ -26,6 +26,9 @@ type Props = {
     updatedAt: Date;
     status: string;
     code: string;
+    location: string;
+    team: string;
+    day: string;
   };
 };
 
@@ -102,7 +105,7 @@ export default function OldTicketItem({ ticket }: Props) {
                   {'November 11 - 13, 2022'}
                 </TextMaxLine>
                 <TextMaxLine variant="body2" sx={{ color: 'red' }}>
-                  seoul
+                  {ticket.location}
                 </TextMaxLine>
               </Stack>
               {/* </Stack> */}
@@ -121,11 +124,13 @@ export default function OldTicketItem({ ticket }: Props) {
             >
               <Stack flexDirection="row" justifyContent="space-between">
                 <Stack gap="12px">
-                  <LineItem label="Day" mock value={fDate(new Date(), 'EEEE (MMMM dd, yyyy)')} />
+                  <LineItem
+                    label="Day"
+                    mock
+                    value={fDate(new Date(ticket.day), 'EEEE (MMMM dd, yyyy)')}
+                  />
                   <LineItem label="Team" mock value={'red'} />
-                  {ticket.status.toUpperCase() !== 'MARKET' && (
-                    <LineItem mock label="QTY" value={'1'} />
-                  )}
+                  {ticket.status.toUpperCase() !== 'MARKET' && <LineItem label="QTY" value={'1'} />}
                   {ticket.status === 'MARKET' && (
                     <>
                       <LineItem mock label="CURRENT PRICE" value={'1,200 EDCP (~$1,200)'} />

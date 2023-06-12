@@ -194,8 +194,11 @@ export const getBidListBySellbookId = async (id: string) => {
   return await customAxios.get(`/api/service/bid/${id}`);
 };
 
-export const getCertifications = async (impUid: any) => await customAxios.get(`/api/users/certifications/${impUid}`);
+export const getCertifications = async (impUid: any) =>
+  await customAxios.get(`/api/users/certifications/${impUid}`);
 
+export const importEETicket = async (data: any) =>
+  await customAxios.post(`/api/users/ticket/import`, data);
 //--------------------------- ee Api
 
 export const eeLogin = async (data: any) => {
@@ -215,6 +218,17 @@ export const migrateTicket = async (code: string, migrateId: number) => {
   const token = window.localStorage.getItem('eeAccessToken');
   return await eeApiAxios.post(
     `/api/v1/migrate/claim-ticket/${code}`,
+    { migrateId: migrateId },
+    {
+      headers: { Authorization: `Bearer ${token}`, migratekey: 'TGXngkkYJ4' },
+    }
+  );
+};
+
+export const cancelMigrateTicket = async (code: string, migrateId: number) => {
+  const token = window.localStorage.getItem('eeAccessToken');
+  return await eeApiAxios.post(
+    `/api/v1/migrate/cancel-ticket/${code}`,
     { migrateId: migrateId },
     {
       headers: { Authorization: `Bearer ${token}`, migratekey: 'TGXngkkYJ4' },

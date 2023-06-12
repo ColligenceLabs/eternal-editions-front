@@ -7,13 +7,25 @@ import RoundedButton from 'src/components/common/RoundedButton';
 import { yupResolver } from '@hookform/resolvers/yup/dist/yup';
 import * as Yup from 'yup';
 import { styled } from '@mui/material/styles';
-import { eeLogin, getEEMyTicket, migrateTicket } from 'src/services/services';
+import {
+  cancelMigrateTicket,
+  eeLogin,
+  getEEMyTicket,
+  importEETicket,
+  migrateTicket,
+} from 'src/services/services';
+import { useSelector } from 'react-redux';
+import { SUCCESS } from 'src/config';
 
 type EETicketTypes = {
   id: number;
+  image: string;
   code: string;
   status: string;
   price: number;
+  location1: string;
+  location2: string;
+  location3: string;
   usedTime: Date | null;
   used: boolean;
   onSale: boolean;
@@ -23,9 +35,6 @@ type EETicketTypes = {
   showLocation: string;
   ticketInfoName: string;
   ticketName: string;
-  location1: string;
-  location2: string;
-  location3: string;
   nftContractAddress: string;
   nftTokenID: any;
   nftBuyerWalletAddress: string;
@@ -75,6 +84,7 @@ type Account = {
 };
 
 const ImportEETickets = () => {
+  const webUser = useSelector((state: any) => state.webUser);
   const [isLogin, setIsLogin] = useState(false);
   const [refetch, setRefetch] = useState(false);
   const [myEETickets, setMyEETickets] = useState<EETicketTypes[]>([]);
@@ -87,13 +97,14 @@ const ImportEETickets = () => {
     resolver: yupResolver(FormSchema),
   });
 
+  console.log(webUser);
+
   const onSubmit = async (values: Account) => {
     try {
       const res = await eeLogin({
         email: 'develop@eternaleditions.io',
         password: 'EEmm1010!',
       });
-      console.log(res);
       if (res.status === 200) {
         localStorage.setItem('eeAccessToken', res.data.access_token);
         setIsLogin(true);
@@ -106,6 +117,16 @@ const ImportEETickets = () => {
   const handleClickImport = async (ticket: EETicketTypes) => {
     const res = await migrateTicket(ticket.code, ticket.id);
     if (res.status === 200) {
+      console.log(res.data);
+      const data = {
+        uid: webUser.user.uid,
+        ticketInfo: res.data,
+      };
+      const importRes = await importEETicket(data);
+      if (importRes.data.status !== SUCCESS) {
+        const cancelRes = await cancelMigrateTicket(ticket.code, ticket.id);
+        console.log(cancelRes);
+      }
       setRefetch(true);
     }
   };
@@ -213,7 +234,7 @@ const ImportEETickets = () => {
                   </Typography>
                   <Typography sx={{ fontSize: '14px' }}>{ticket.showName}</Typography>
                   <Typography sx={{ fontSize: '12px' }}>
-                    {`${ticket.ticketName} - ${ticket.ticketInfoName}`}
+                    {`${ticket.ticketName} - ${ticket.location1}`}
                   </Typography>
                 </Box>
                 <RoundedButton onClick={() => handleClickImport(ticket)}>Import</RoundedButton>

@@ -17,6 +17,9 @@ type OldTicketTypes = {
   updatedAt: Date;
   status: string;
   code: string;
+  location: string;
+  team: string;
+  day: string;
 };
 
 export default function MyOldTicketList({ loading }: Props) {
@@ -32,15 +35,19 @@ export default function MyOldTicketList({ loading }: Props) {
     if (result.data && result.data.data?.length > 0) {
       const temp = result.data.data.map((ticket: any) => {
         const time = new Date().setMinutes(new Date().getMinutes() + 5);
+        console.log(ticket);
         return {
           id: ticket.id,
-          name: ticket.name,
-          thumbnail: ticket.thumbnail,
-          qrcode: `https://entrance.eternaleditions.io/admin-e-ticket/${ticket.code}?expireTime=${time}`,
+          name: ticket.ticketInfo.ticketName,
+          thumbnail: ticket.ticketInfo.image,
+          qrcode: `https://entrance.eternaleditions.io/admin-e-ticket/${ticket.ticketInfo.code}?expireTime=${time}`,
           createdAt: ticket.createdAt,
           updatedAt: ticket.updatedAt,
           status: ticket.status,
-          code: ticket.code,
+          location: ticket.ticketInfo.location1,
+          code: ticket.ticketInfo.code,
+          team: ticket.ticketInfo.ticketInfoName,
+          day: ticket.ticketInfo.showStartTime,
         };
       });
       setOldTicket(temp);
