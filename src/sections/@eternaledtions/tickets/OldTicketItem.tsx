@@ -1,4 +1,4 @@
-import { Box, Grid, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Grid, Stack } from '@mui/material';
 import { m } from 'framer-motion';
 import { Image, TextMaxLine, varHover, varTranHover } from 'src/components';
 import React, { useState } from 'react';
@@ -6,48 +6,12 @@ import RoundedButton from 'src/components/common/RoundedButton';
 import ModalCustom from 'src/components/common/ModalCustom';
 import { useResponsive } from 'src/hooks';
 import SaveOldTicketContent from 'src/sections/@eternaledtions/tickets/SaveOldTicketContent';
+import { OldTicketTypes } from 'src/@types/my/myOldTIcketTypes';
 
 // ----------------------------------------------------------------------
 
 type Props = {
-  ticket?: {
-    id: number;
-    qrcode: string;
-    createdAt: Date;
-    updatedAt: Date;
-    status: string;
-    ticketInfo: {
-      id: number;
-      image: string;
-      code: string;
-      status: string;
-      price: number;
-      location1: string;
-      location2: string;
-      location3: string;
-      usedTime: Date | null;
-      used: boolean;
-      onSale: boolean;
-      onGift: boolean;
-      idShow: number;
-      showName: string;
-      showLocation: string;
-      ticketInfoName: string;
-      ticketName: string;
-      nftContractAddress: string;
-      nftTokenID: any;
-      nftBuyerWalletAddress: string;
-      migrate: {
-        migrateId: any;
-        migrateTime: Date;
-        migrate: boolean;
-      };
-      showStartTime: Date;
-      txHistory: boolean;
-      nft333: boolean;
-      earlyBird2023: boolean;
-    };
-  };
+  ticket?: OldTicketTypes;
 };
 
 export default function OldTicketItem({ ticket }: Props) {

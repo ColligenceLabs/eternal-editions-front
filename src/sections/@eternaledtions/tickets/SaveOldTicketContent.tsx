@@ -2,49 +2,10 @@ import { Box, Divider, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import QRCode from 'react-qr-code';
+import { OldTicketTypes } from 'src/@types/my/myOldTIcketTypes';
 import { Label, Section, Value } from 'src/components/my-tickets/StyledComponents';
-import { useResponsive } from 'src/hooks';
 import palette from 'src/theme/palette';
 import { fDate } from 'src/utils/formatTime';
-
-type OldTicketTypes = {
-  id: number;
-  qrcode: string;
-  createdAt: Date;
-  updatedAt: Date;
-  status: string;
-  ticketInfo: {
-    id: number;
-    image: string;
-    code: string;
-    status: string;
-    price: number;
-    location1: string;
-    location2: string;
-    location3: string;
-    usedTime: Date | null;
-    used: boolean;
-    onSale: boolean;
-    onGift: boolean;
-    idShow: number;
-    showName: string;
-    showLocation: string;
-    ticketInfoName: string;
-    ticketName: string;
-    nftContractAddress: string;
-    nftTokenID: any;
-    nftBuyerWalletAddress: string;
-    migrate: {
-      migrateId: any;
-      migrateTime: Date;
-      migrate: boolean;
-    };
-    showStartTime: Date;
-    txHistory: boolean;
-    nft333: boolean;
-    earlyBird2023: boolean;
-  };
-};
 
 interface Props {
   ticketInfo: OldTicketTypes;
