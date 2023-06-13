@@ -4,6 +4,7 @@ export type OldTicketTypes = {
   createdAt: Date;
   updatedAt: Date;
   status: string;
+  useDate: Date | null;
   ticketInfo: {
     id: number;
     image: string;

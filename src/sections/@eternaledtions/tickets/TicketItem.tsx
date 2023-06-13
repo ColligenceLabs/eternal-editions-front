@@ -10,6 +10,7 @@ import Link from 'next/link';
 import SaveTicketContent from './SaveTicketContent';
 import { MyTicketTypes } from 'src/@types/my/myTicket';
 import useCountdown from 'src/hooks/useCountdown';
+import { fDate } from 'src/utils/formatTime';
 
 type PropertiesType = {
   type: string;
@@ -191,8 +192,18 @@ export default function TicketItem({ ticket }: any) {
                       />
                     </>
                   )}
+                  {ticketInfo.status === 'USED' && (
+                    <LineItem
+                      label="DATE OF USE"
+                      value={fDate(
+                        ticketInfo.useDate ? ticketInfo.useDate : new Date(),
+                        'EEEE (MMMM dd, yyyy)'
+                      )}
+                    />
+                  )}
                 </Stack>
                 {ticketInfo.status === 'MARKET' && <Badge label="For sale" />}
+                {ticketInfo.status === 'USED' && <Badge label="Used Up" disabled={true} />}
               </Stack>
               <Box sx={{ flexGrow: 1 }} />
               {ticketInfo.status === 'TICKET' && (
@@ -221,6 +232,7 @@ export default function TicketItem({ ticket }: any) {
                   </Link>
                 </Stack>
               )}
+
               {ticketInfo.status === 'MARKET' && (
                 <Stack sx={{ mt: 1 }} direction="row" spacing={2} justifyContent={'flex-end'}>
                   <Link

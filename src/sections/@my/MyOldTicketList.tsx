@@ -1,7 +1,7 @@
 import { Stack } from '@mui/material';
 import { JobItemSkeleton } from 'src/components';
 import { useEffect, useState } from 'react';
-import { getOldMyTicket, getOldMyTicketByUid } from '../../services/services';
+import { getOldMyTicket, getOldMyTicketByUid } from 'src/services/services';
 import OldTicketItem from '../@eternaledtions/tickets/OldTicketItem';
 import { useSelector } from 'react-redux';
 import { OldTicketTypes } from 'src/@types/my/myOldTIcketTypes';
@@ -28,6 +28,7 @@ export default function MyOldTicketList({ loading }: Props) {
           status: ticket.status,
           code: ticket.code,
           ticketInfo: ticket.ticketInfo,
+          useDate: ticket.useDate,
         };
       });
       setOldTicket(temp);

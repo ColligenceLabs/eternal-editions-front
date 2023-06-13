@@ -1,14 +1,14 @@
-import { Box, Grid, Stack } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import { m } from 'framer-motion';
 import { Image, TextMaxLine, varHover, varTranHover } from 'src/components';
-import React, { useState } from 'react';
+import React, { ReactElement, useState } from 'react';
 import RoundedButton from 'src/components/common/RoundedButton';
 import ModalCustom from 'src/components/common/ModalCustom';
 import { useResponsive } from 'src/hooks';
 import SaveOldTicketContent from 'src/sections/@eternaledtions/tickets/SaveOldTicketContent';
 import { OldTicketTypes } from 'src/@types/my/myOldTIcketTypes';
-
-// ----------------------------------------------------------------------
+import { fDate } from 'src/utils/formatTime';
+import Badge from 'src/components/ticket/Badge';
 
 type Props = {
   ticket?: OldTicketTypes;
@@ -40,7 +40,7 @@ export default function OldTicketItem({ ticket }: Props) {
               padding: '1.5rem',
               bgcolor: 'rgba(0,0,0,.3)',
             }}
-            alignItems={isMobile ? 'initial' : 'end'}
+            alignItems={isMobile ? 'initial' : ticket.status === 'USED' ? 'space-between' : 'end'}
             justifyContent={'space-between'}
             // 반응형
             direction={isMobile ? 'column' : 'row'}
@@ -86,6 +86,19 @@ export default function OldTicketItem({ ticket }: Props) {
                 flexDirection: 'row',
               }}
             >
+              {ticket.status === 'USED' && (
+                <Stack direction="row" justifyContent="space-between" sx={{ flex: 1 }}>
+                  <LineItem
+                    label="DATE OF USE"
+                    value={fDate(
+                      ticket.useDate ? ticket.useDate : new Date(),
+                      'EEEE (MMMM dd, yyyy)'
+                    )}
+                  />
+                  <Badge label="Used Up" disabled={true} />
+                </Stack>
+              )}
+
               {ticket.status.toUpperCase() === 'TICKET' && (
                 <Stack
                   sx={{
@@ -113,5 +126,39 @@ export default function OldTicketItem({ ticket }: Props) {
         </Grid>
       ) : null}
     </>
+  );
+}
+
+type LineItemProps = {
+  icon?: ReactElement;
+  label: string;
+  value: any;
+  mock?: boolean;
+};
+
+function LineItem({ mock, label, value }: LineItemProps) {
+  const isMobile = useResponsive('down', 'md');
+  return (
+    <Stack direction={'column'} gap="2px">
+      <Typography
+        sx={{
+          fontSize: '12px',
+          marginRight: isMobile ? '10px' : '0px',
+          color: 'rgba(255, 255, 255, 0.6)',
+          textTransform: 'uppercase',
+        }}
+      >
+        {label}
+      </Typography>
+      <Typography
+        sx={{
+          color: mock ? 'red' : 'common.white',
+          fontSize: isMobile ? '12px' : '14px',
+          lineHeight: 20 / 14,
+        }}
+      >
+        {value}
+      </Typography>
+    </Stack>
   );
 }
