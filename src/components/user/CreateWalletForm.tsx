@@ -192,7 +192,7 @@ export default function CreateWalletForm({ onClose }: Props) {
               alignItems: 'center',
             }}
           >
-            <CircularProgress size={'2rem'} />
+            <CircularProgress size={'1rem'} />
           </Box>
         ) : (
           'Complete'
