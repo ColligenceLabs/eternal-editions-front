@@ -20,6 +20,37 @@ type OldTicketTypes = {
   location: string;
   team: string;
   day: string;
+  ticketInfo: {
+    id: number;
+    image: string;
+    code: string;
+    status: string;
+    price: number;
+    location1: string;
+    location2: string;
+    location3: string;
+    usedTime: Date | null;
+    used: boolean;
+    onSale: boolean;
+    onGift: boolean;
+    idShow: number;
+    showName: string;
+    showLocation: string;
+    ticketInfoName: string;
+    ticketName: string;
+    nftContractAddress: string;
+    nftTokenID: any;
+    nftBuyerWalletAddress: string;
+    migrate: {
+      migrateId: any;
+      migrateTime: Date;
+      migrate: boolean;
+    };
+    showStartTime: Date;
+    txHistory: boolean;
+    nft333: boolean;
+    earlyBird2023: boolean;
+  };
 };
 
 export default function MyOldTicketList({ loading }: Props) {
@@ -35,19 +66,14 @@ export default function MyOldTicketList({ loading }: Props) {
     if (result.data && result.data.data?.length > 0) {
       const temp = result.data.data.map((ticket: any) => {
         const time = new Date().setMinutes(new Date().getMinutes() + 5);
-        console.log(ticket);
         return {
           id: ticket.id,
-          name: ticket.ticketInfo.ticketName,
-          thumbnail: ticket.ticketInfo.image,
           qrcode: `https://entrance.eternaleditions.io/admin-e-ticket/${ticket.ticketInfo.code}?expireTime=${time}`,
           createdAt: ticket.createdAt,
           updatedAt: ticket.updatedAt,
           status: ticket.status,
-          location: ticket.ticketInfo.location1,
-          code: ticket.ticketInfo.code,
-          team: ticket.ticketInfo.ticketInfoName,
-          day: ticket.ticketInfo.showStartTime,
+          code: ticket.code,
+          ticketInfo: ticket.ticketInfo,
         };
       });
       setOldTicket(temp);

@@ -76,6 +76,8 @@ export default function MyTicketList({ loading }: Props) {
   const [myTicketList, setMyTicketList] = useState([]);
   const getMyTicketList = async () => {
     const res = await getMyTickets(user.uid);
+    console.log(res);
+
     if (res.data.status === SUCCESS) {
       setMyTicketList(res.data.data);
     }

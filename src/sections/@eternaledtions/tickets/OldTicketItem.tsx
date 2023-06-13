@@ -19,25 +19,50 @@ import SaveOldTicketContent from 'src/sections/@eternaledtions/tickets/SaveOldTi
 type Props = {
   ticket?: {
     id: number;
-    name: string;
-    thumbnail: string;
     qrcode: string;
     createdAt: Date;
     updatedAt: Date;
     status: string;
-    code: string;
-    location: string;
-    team: string;
-    day: string;
+    ticketInfo: {
+      id: number;
+      image: string;
+      code: string;
+      status: string;
+      price: number;
+      location1: string;
+      location2: string;
+      location3: string;
+      usedTime: Date | null;
+      used: boolean;
+      onSale: boolean;
+      onGift: boolean;
+      idShow: number;
+      showName: string;
+      showLocation: string;
+      ticketInfoName: string;
+      ticketName: string;
+      nftContractAddress: string;
+      nftTokenID: any;
+      nftBuyerWalletAddress: string;
+      migrate: {
+        migrateId: any;
+        migrateTime: Date;
+        migrate: boolean;
+      };
+      showStartTime: Date;
+      txHistory: boolean;
+      nft333: boolean;
+      earlyBird2023: boolean;
+    };
   };
 };
 
 export default function OldTicketItem({ ticket }: Props) {
   const theme = useTheme();
-  console.log(ticket);
   const [open, setOpen] = useState<boolean>(false);
   const isXs = useResponsive('down', 'sm');
   const isMobile = useResponsive('down', 'md');
+  console.log(ticket);
   const checkTicketId = (id: number) => {
     if (id >= 5758 && id <= 7787) return '2023';
     else return '2022';
@@ -64,7 +89,7 @@ export default function OldTicketItem({ ticket }: Props) {
               padding: '1.5rem',
               bgcolor: 'rgba(0,0,0,.3)',
             }}
-            alignItems={isMobile ? 'initial' : 'flex-start'}
+            alignItems={isMobile ? 'initial' : 'end'}
             justifyContent={'space-between'}
             // 반응형
             direction={isMobile ? 'column' : 'row'}
@@ -72,8 +97,8 @@ export default function OldTicketItem({ ticket }: Props) {
             <Box sx={{ position: 'relative', flex: 1 }}>
               <Box sx={{ width: { md: 'calc(100%)' }, mr: { xs: 0, md: '3rem' } }}>
                 <Image
-                  src={ticket.thumbnail}
-                  alt={ticket.name}
+                  src={ticket.ticketInfo.image}
+                  alt={ticket.ticketInfo.showName}
                   ratio={isXs ? '3/4' : '16/9'}
                   sx={{ borderRadius: 2, height: '100%' }}
                 />
@@ -98,15 +123,8 @@ export default function OldTicketItem({ ticket }: Props) {
                   py: isMobile ? 2 : 3,
                 }}
               >
-                <TextMaxLine variant="body2" sx={{ color: 'red' }}>{`#1`}</TextMaxLine>
-
-                <TextMaxLine variant="h3">{ticket.name}</TextMaxLine>
-                <TextMaxLine variant="body2" sx={{ color: 'red' }}>
-                  {'November 11 - 13, 2022'}
-                </TextMaxLine>
-                <TextMaxLine variant="body2" sx={{ color: 'red' }}>
-                  {ticket.location}
-                </TextMaxLine>
+                <TextMaxLine variant="body2">{ticket.ticketInfo.showName}</TextMaxLine>
+                <TextMaxLine variant="h3">{ticket.ticketInfo.ticketName}</TextMaxLine>
               </Stack>
               {/* </Stack> */}
             </Box>
@@ -119,44 +137,43 @@ export default function OldTicketItem({ ticket }: Props) {
                 px: isMobile ? 1 : 2,
                 zIndex: 1000,
                 justifyContent: 'space-between',
-                height: '100%',
+                flexDirection: 'row',
               }}
             >
-              <Stack flexDirection="row" justifyContent="space-between">
-                <Stack gap="12px">
-                  <LineItem
-                    label="Day"
-                    mock
-                    value={fDate(new Date(ticket.day), 'EEEE (MMMM dd, yyyy)')}
-                  />
-                  <LineItem label="Team" mock value={'red'} />
-                  {ticket.status.toUpperCase() !== 'MARKET' && <LineItem label="QTY" value={'1'} />}
-                  {ticket.status === 'MARKET' && (
-                    <>
-                      <LineItem mock label="CURRENT PRICE" value={'1,200 EDCP (~$1,200)'} />
-                      <LineItem mock label="AUCTION ENDS IN" value={'01:12:32:11'} />
-                    </>
-                  )}
-                </Stack>
-                {ticket.status.toUpperCase() === 'TICKET' && (
-                  <HyperlinkButton
-                    href={''}
-                    styles={{
-                      backgroundColor: '#222222',
-                      [theme.breakpoints.down('md')]: {
-                        position: 'absolute',
-                        top: '36px',
-                        right: '36px',
-                      },
-                    }}
-                  />
-                )}
-                {ticket.status.toUpperCase() === 'MARKET' && <Badge label="For sale" />}
-              </Stack>
-              <Box sx={{ flexGrow: 1 }} />
+              {/*<Stack flexDirection="row" justifyContent="space-between">*/}
+              {/*  <Stack gap="12px">*/}
+              {/*    <LineItem label=" " value={' '} />*/}
+              {/*    <LineItem label=" " value={' '} />*/}
+              {/*    {ticket.status.toUpperCase() !== 'MARKET' && <LineItem label="QTY" value={'1'} />}*/}
+              {/*    {ticket.status === 'MARKET' && (*/}
+              {/*      <>*/}
+              {/*        <LineItem mock label="CURRENT PRICE" value={'1,200 EDCP (~$1,200)'} />*/}
+              {/*        <LineItem mock label="AUCTION ENDS IN" value={'01:12:32:11'} />*/}
+              {/*      </>*/}
+              {/*    )}*/}
+              {/*  </Stack>*/}
+              {/*  {ticket.status.toUpperCase() === 'TICKET' && (*/}
+              {/*    <HyperlinkButton*/}
+              {/*      href={''}*/}
+              {/*      styles={{*/}
+              {/*        backgroundColor: '#222222',*/}
+              {/*        [theme.breakpoints.down('md')]: {*/}
+              {/*          position: 'absolute',*/}
+              {/*          top: '36px',*/}
+              {/*          right: '36px',*/}
+              {/*        },*/}
+              {/*      }}*/}
+              {/*    />*/}
+              {/*  )}*/}
+              {/*  {ticket.status.toUpperCase() === 'MARKET' && <Badge label="For sale" />}*/}
+              {/*</Stack>*/}
+              {/*<Box className="asdf" sx={{ flexGrow: 1, height: '20px', backgroundColor: 'red' }} />*/}
               {ticket.status.toUpperCase() === 'TICKET' && (
                 <Stack
-                  sx={{ mt: isMobile ? '24px' : 0 }}
+                  sx={{
+                    mt: isMobile ? '24px' : 0,
+                    flexGrow: 1,
+                  }}
                   direction={isMobile ? 'column' : 'row'}
                   spacing={isMobile ? '2px' : '10px'}
                 >
@@ -167,33 +184,6 @@ export default function OldTicketItem({ ticket }: Props) {
                     onClick={() => setOpen(true)}
                   >
                     TO ENTER
-                  </RoundedButton>
-                  <Link
-                    href={{
-                      pathname: `/my/tickets/${ticket.id}/`,
-                      // query: {
-                      //   // ticketInfo: JSON.stringify(ticketInfo),
-                      //   event: ticketInfo.mysteryboxInfo.id,
-                      //   ticket: ticketInfo.mysteryboxItem.id,
-                      // },
-                    }}
-                    passHref
-                  >
-                    <RoundedButton variant="default" size={isMobile ? 'small' : 'large'} fullWidth>
-                      SELL
-                    </RoundedButton>
-                  </Link>
-                </Stack>
-              )}
-              {ticket.status.toUpperCase() === 'MARKET' && (
-                <Stack sx={{ mt: 1 }} direction="row" spacing={2} justifyContent={'flex-end'}>
-                  <RoundedButton
-                    sx={{ flexBasis: '50%' }}
-                    variant="withImage"
-                    size={isMobile ? 'small' : 'large'}
-                    fullWidth
-                  >
-                    SALE INFO
                   </RoundedButton>
                 </Stack>
               )}

@@ -8,16 +8,45 @@ import { Label, Section, Value } from 'src/components/my-tickets/StyledComponent
 import { useResponsive } from 'src/hooks';
 // theme
 import palette from 'src/theme/palette';
+import { fDate } from 'src/utils/formatTime';
 
 type OldTicketTypes = {
   id: number;
-  name: string;
-  thumbnail: string;
   qrcode: string;
   createdAt: Date;
   updatedAt: Date;
   status: string;
-  code: string;
+  ticketInfo: {
+    id: number;
+    image: string;
+    code: string;
+    status: string;
+    price: number;
+    location1: string;
+    location2: string;
+    location3: string;
+    usedTime: Date | null;
+    used: boolean;
+    onSale: boolean;
+    onGift: boolean;
+    idShow: number;
+    showName: string;
+    showLocation: string;
+    ticketInfoName: string;
+    ticketName: string;
+    nftContractAddress: string;
+    nftTokenID: any;
+    nftBuyerWalletAddress: string;
+    migrate: {
+      migrateId: any;
+      migrateTime: Date;
+      migrate: boolean;
+    };
+    showStartTime: Date;
+    txHistory: boolean;
+    nft333: boolean;
+    earlyBird2023: boolean;
+  };
 };
 
 interface Props {
@@ -54,7 +83,7 @@ export default function SaveOldTicketContent({ ticketInfo, onClose }: Props) {
       <Box sx={{ textAlign: 'center' }}>
         <QRCode
           style={{}}
-          value={`https://entrance.eternaleditions.io/admin-e-ticket?type=1&code=${ticketInfo.code}&expireTime=${qrTimestamp}`}
+          value={`https://entrance.eternaleditions.io/admin-e-ticket?type=1&code=${ticketInfo.ticketInfo.code}&expireTime=${qrTimestamp}`}
           size={160}
         />
       </Box>
@@ -66,25 +95,26 @@ export default function SaveOldTicketContent({ ticketInfo, onClose }: Props) {
               lineHeight: 28 / 24,
             }}
           >
-            Kansas City, KS Silver Editio
+            {ticketInfo.ticketInfo.ticketName}
           </Typography>
 
           <Stack>
-            <Typography variant="body2">November 11 - 13, 2022</Typography>
-            <Typography variant="body2" sx={{ color: 'red' }}>
-              boxContractAddress
-            </Typography>
+            <Typography variant="body2">{ticketInfo.ticketInfo.showName}</Typography>
+            <Typography variant="body2">{ticketInfo.ticketInfo.location1}</Typography>
           </Stack>
         </Stack>
         <Divider />
         <Section>
           <Stack direction="row" justifyContent="space-between">
-            <Label sx={{ color: palette.dark.black.darker }}>DAY</Label>
-            <Value sx={{ color: palette.dark.black.main }}> Saturday </Value>
+            <Label sx={{ color: palette.dark.black.darker }}>Time</Label>
+            <Value sx={{ color: palette.dark.black.main }}>
+              {ticketInfo.ticketInfo.showStartTime &&
+                fDate(new Date(ticketInfo.ticketInfo.showStartTime), 'EEEE (MMMM dd, yyyy)')}
+            </Value>
           </Stack>
           <Stack direction="row" justifyContent="space-between">
             <Label sx={{ color: palette.dark.black.darker }}>TEAM</Label>
-            <Label sx={{ color: palette.dark.black.main }}> Team Yellow </Label>
+            <Label sx={{ color: palette.dark.black.main }}> </Label>
           </Stack>
           <Stack direction="row" justifyContent="space-between">
             <Label sx={{ color: palette.dark.black.darker }}>QTY</Label>
@@ -97,40 +127,40 @@ export default function SaveOldTicketContent({ ticketInfo, onClose }: Props) {
         </Typography>
       </Stack>
 
-      {isSaved && (
-        <>
-          <FormControl variant="standard" fullWidth>
-            <Label sx={{ color: palette.dark.black.darker, mb: '12px' }}>PAYMENT AMOUNT</Label>
-            <Input
-              placeholder="e.g. 1234..."
-              inputProps={{
-                style: {
-                  color: 'black',
-                },
-              }}
-              sx={{
-                fontSize: 14,
-                lineHeight: 20 / 14,
-                [`.${inputClasses.input}::placeholder`]: {
-                  color: '#BBBBBB',
-                },
-              }}
-            />
-          </FormControl>
-          <Typography variant="body2" sx={{ textAlign: 'center', paddingY: 3 }}>
-            Kansas City, KS Silver Editio will be transferred to...
-          </Typography>
-        </>
-      )}
+      {/*{isSaved && (*/}
+      {/*  <>*/}
+      {/*    <FormControl variant="standard" fullWidth>*/}
+      {/*      <Label sx={{ color: palette.dark.black.darker, mb: '12px' }}>PAYMENT AMOUNT</Label>*/}
+      {/*      <Input*/}
+      {/*        placeholder="e.g. 1234..."*/}
+      {/*        inputProps={{*/}
+      {/*          style: {*/}
+      {/*            color: 'black',*/}
+      {/*          },*/}
+      {/*        }}*/}
+      {/*        sx={{*/}
+      {/*          fontSize: 14,*/}
+      {/*          lineHeight: 20 / 14,*/}
+      {/*          [`.${inputClasses.input}::placeholder`]: {*/}
+      {/*            color: '#BBBBBB',*/}
+      {/*          },*/}
+      {/*        }}*/}
+      {/*      />*/}
+      {/*    </FormControl>*/}
+      {/*    <Typography variant="body2" sx={{ textAlign: 'center', paddingY: 3 }}>*/}
+      {/*      Kansas City, KS Silver Editio will be transferred to...*/}
+      {/*    </Typography>*/}
+      {/*  </>*/}
+      {/*)}*/}
 
-      <RoundedButton
-        variant="default"
-        size={isMobile ? 'small' : 'large'}
-        fullWidth
-        onClick={isSaved ? transfer : saveTicket}
-      >
-        {isSaved ? 'Transfer' : 'Save the ticket'}
-      </RoundedButton>
+      {/*<RoundedButton*/}
+      {/*  variant="default"*/}
+      {/*  size={isMobile ? 'small' : 'large'}*/}
+      {/*  fullWidth*/}
+      {/*  onClick={isSaved ? transfer : saveTicket}*/}
+      {/*>*/}
+      {/*  {isSaved ? 'Transfer' : 'Save the ticket'}*/}
+      {/*</RoundedButton>*/}
     </Box>
   );
 }
