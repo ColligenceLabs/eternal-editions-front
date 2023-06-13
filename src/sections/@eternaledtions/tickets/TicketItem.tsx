@@ -90,16 +90,17 @@ export default function TicketItem({ ticket }: any) {
                 position: 'absolute',
               }}
             >
-              {ticket.mysteryboxInfo.projectItems[0].title && (
-                <Chip
-                  label={ticket.mysteryboxInfo.projectItems[0].title}
-                  variant="outlined"
-                  color="primary"
-                  sx={{
-                    fontWeight: theme.typography.fontWeightBold,
-                  }}
-                />
-              )}
+              {ticket.mysteryboxInfo?.projectItems &&
+                ticket.mysteryboxInfo?.projectItems[0].title && (
+                  <Chip
+                    label={ticket.mysteryboxInfo.projectItems[0].title}
+                    variant="outlined"
+                    color="primary"
+                    sx={{
+                      fontWeight: theme.typography.fontWeightBold,
+                    }}
+                  />
+                )}
             </Stack>
             {/*<Stack*/}
             {/*  sx={{*/}
@@ -153,7 +154,7 @@ export default function TicketItem({ ticket }: any) {
                   py: isMobile ? 2 : 3,
                 }}
               >
-                <TextMaxLine variant="body2">{ticketInfo.mysteryboxInfo.title.en}</TextMaxLine>
+                <TextMaxLine variant="body2">{ticketInfo.mysteryboxInfo?.title?.en}</TextMaxLine>
                 <TextMaxLine variant="h3">{ticketInfo.mysteryboxItem.name}</TextMaxLine>
               </Stack>
             </Box>
