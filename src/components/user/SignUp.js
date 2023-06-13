@@ -242,7 +242,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
           <Stack sx={{ mt: 4 }}>
             <Stack spacing={1}>
               {!hideSns && (
-                <Stack direction={'row'} justifyContent={'space-between'}>
+                <Stack direction={'row'} justifyContent={'space-around'}>
                   <CustomIconButton onClick={() => handleSnsLogin('apple')}>
                     <Image alt="apple icon" src={getIconByType(APPLE_ICON)} sx={{ height: 32 }} />
                   </CustomIconButton>
