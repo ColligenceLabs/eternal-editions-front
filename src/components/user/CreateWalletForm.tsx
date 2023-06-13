@@ -7,6 +7,7 @@ import {
   InputAdornment,
   buttonBaseClasses,
   Box,
+  CircularProgress,
 } from '@mui/material';
 import { Label, Section } from '../my-tickets/StyledComponents';
 import palette from 'src/theme/palette';
@@ -60,6 +61,7 @@ export default function CreateWalletForm({ onClose }: Props) {
   const [qrCode, setQrCode] = useState('');
   const [qrSecret, setQrSecret] = useState('');
   const [resetCode, setResetCode] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     const getQrCode = async () => {
@@ -72,6 +74,7 @@ export default function CreateWalletForm({ onClose }: Props) {
   }, []);
 
   const onSubmit = async ({ verificationCode }: FormValuesProps) => {
+    setIsLoading(true);
     console.log('!! verificationCode = ', verificationCode);
 
     // optToken : 입력 받은 OTP 값을 입력 받은 후 아래 코드 실행
@@ -98,6 +101,7 @@ export default function CreateWalletForm({ onClose }: Props) {
     } else {
       alert('인증 코드 오류입니다.');
     }
+    setIsLoading(false);
   };
 
   return (
@@ -179,7 +183,20 @@ export default function CreateWalletForm({ onClose }: Props) {
       </Stack>
 
       <RoundedButton disabled={!isValid} type="submit">
-        Complete
+        {isLoading ? (
+          <Box
+            sx={{
+              width: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <CircularProgress size={'2rem'} />
+          </Box>
+        ) : (
+          'Complete'
+        )}
       </RoundedButton>
     </Stack>
   );
