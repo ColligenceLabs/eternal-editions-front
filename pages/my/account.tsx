@@ -3,7 +3,6 @@ import Layout from 'src/layouts';
 import { Page } from 'src/components';
 import {
   Box,
-  Button,
   Checkbox,
   Divider,
   Grid,
@@ -31,7 +30,6 @@ import Routes from 'src/routes';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteAddress, removeUser, updateAddress } from 'src/services/services';
 import { setWebUser } from 'src/store/slices/webUser';
-import { useWeb3React } from '@web3-react/core';
 import env from 'src/env';
 import { setupNetwork } from 'src/utils/network';
 import { injected, walletconnect } from 'src/hooks/connectors';
@@ -48,11 +46,11 @@ import { FormControlLabel } from '@mui/material';
 import RoundedButton from 'src/components/common/RoundedButton';
 import CreateWalletForm from 'src/components/user/CreateWalletForm';
 import moment from 'moment';
-import { getErc20BalanceNoSigner } from 'src/utils/transactions';
-import contracts from 'src/config/constants/contracts';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import RegisterAccount from 'src/components/user/RegisterAccount';
 import ImportEETickets from 'src/components/user/ImportEETickets';
+import useUSDC from 'src/hooks/useUSDC';
+import useEDCP from 'src/hooks/useEDCP';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
@@ -113,6 +111,8 @@ const Icon = styled(Box)(({ theme }) => ({
 }));
 
 export default function MyAccountPage() {
+  const { usdcBalance } = useUSDC();
+  const { edcpPoint } = useEDCP();
   const router = useRouter();
   const isDesktop = useResponsive('up', 'md');
   const { account } = useAccount();
@@ -128,7 +128,6 @@ export default function MyAccountPage() {
   const [selectedAccount, setSelectedAccount] = useState(
     user.abc_address || user.eth_address || ''
   );
-  const [usdcBalance, setUsdcBalance] = useState('0');
   const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
   const [isConfirmDeactivate, setIsConfirmDeactivate] = useState(false);
   const [isOpenCreateWalletForm, setIsOpenCreateWalletForm] = useState<boolean>(false);
@@ -257,17 +256,6 @@ Type: Address verification`;
     saveAddress();
   }, [library]);
 
-  const fetchUsdcBalance = async () => {
-    const ret = await getErc20BalanceNoSigner(contracts.usdc[chainId], 6, account, chainId);
-    setUsdcBalance(ret);
-  };
-
-  useEffect(() => {
-    if (account) {
-      fetchUsdcBalance();
-    }
-  }, [account]);
-
   return (
     <Page title="Account">
       <RootStyle>
@@ -373,7 +361,7 @@ Type: Address verification`;
                               />
                             </Box>
                             <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
-                              {user.point ? user.point : 0} EDCP
+                              {edcpPoint} EDCP
                             </Typography>
                           </Box>
                           <Box
