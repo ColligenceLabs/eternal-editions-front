@@ -158,7 +158,7 @@ function WinningBidContent({ offer, reservePrice, ...props }: Props) {
         type: 'success',
         message: 'Success Winning Bid!',
       });
-      sleep(500);
+      sleep(1000);
       // router.push('/my/tickets');
       location.replace('/my/tickets');
     } else {
