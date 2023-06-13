@@ -243,11 +243,7 @@ export default function SignUp({ onClose, hideSns, ...other }) {
             <Stack spacing={1}>
               {!hideSns && (
                 <Stack direction={'row'} justifyContent={'space-between'}>
-                  <CustomIconButton
-                    onClick={() => {
-                      setOpenIDPWD(true);
-                    }}
-                  >
+                  <CustomIconButton onClick={() => handleSnsLogin('apple')}>
                     <Image alt="apple icon" src={getIconByType(APPLE_ICON)} sx={{ height: 32 }} />
                   </CustomIconButton>
                   <CustomIconButton onClick={() => handleSnsLogin('google')}>
@@ -273,13 +269,13 @@ export default function SignUp({ onClose, hideSns, ...other }) {
                       sx={{ width: 32, height: 32 }}
                     />
                   </CustomIconButton>
-                  <CustomIconButton onClick={() => setOpenIDPWD(true)}>
-                    <Image
-                      alt="mail icon"
-                      src={getIconByType(MAIL_ICON)}
-                      sx={{ width: 30, pt: '2px' }}
-                    />
-                  </CustomIconButton>
+                  {/*<CustomIconButton onClick={() => setOpenIDPWD(true)}>*/}
+                  {/*  <Image*/}
+                  {/*    alt="mail icon"*/}
+                  {/*    src={getIconByType(MAIL_ICON)}*/}
+                  {/*    sx={{ width: 30, pt: '2px' }}*/}
+                  {/*  />*/}
+                  {/*</CustomIconButton>*/}
                 </Stack>
               )}
             </Stack>
