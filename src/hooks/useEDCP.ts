@@ -1,7 +1,5 @@
-import useActiveWeb3React from './useActiveWeb3React';
-import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { getSession, getUser } from 'src/services/services';
+import { getUser } from 'src/services/services';
 import useAccount from 'src/hooks/useAccount';
 
 export default function useEDCP() {

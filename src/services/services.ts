@@ -129,9 +129,6 @@ export const getSellBooks = async (
   type?: string,
   team?: string
 ) => {
-  console.log(category);
-  console.log(type);
-  console.log(team);
   let url = `/api/service/sellbook?page=${page}&limit=${
     perPage ? perPage : 5
   }&sortBy=createdAt:DESC`;
@@ -140,7 +137,6 @@ export const getSellBooks = async (
   if (type && type !== '0') url = `${url}&type=${type}`;
   if (team && team.toLowerCase() !== 'default') url = `${url}&team=${team}`;
 
-  console.log(url);
   return await customAxios.get(url);
 };
 

@@ -1,10 +1,9 @@
-import { Box, Stack, Grid, Typography, useTheme } from '@mui/material';
+import { Box, Stack, Grid, Typography, useTheme, Chip } from '@mui/material';
 import { m } from 'framer-motion';
 import { Image, TextMaxLine, varHover, varTranHover } from 'src/components';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useResponsive } from 'src/hooks';
 import RoundedButton from 'src/components/common/RoundedButton';
-import HyperlinkButton from 'src/components/ticket/HyperlinkButton';
 import Badge from 'src/components/ticket/Badge';
 import ModalCustom from 'src/components/common/ModalCustom';
 import Link from 'next/link';
@@ -82,6 +81,52 @@ export default function TicketItem({ ticket }: any) {
             // 반응형
             direction={isMobile ? 'column' : 'row'}
           >
+            <Stack
+              sx={{
+                p: isMobile ? 2 : 1,
+                height: 1,
+                zIndex: 9,
+                left: 25,
+                position: 'absolute',
+              }}
+            >
+              {ticket.mysteryboxInfo.projectItems[0].title && (
+                <Chip
+                  label={ticket.mysteryboxInfo.projectItems[0].title}
+                  variant="outlined"
+                  color="primary"
+                  sx={{
+                    fontWeight: theme.typography.fontWeightBold,
+                  }}
+                />
+              )}
+            </Stack>
+            {/*<Stack*/}
+            {/*  sx={{*/}
+            {/*    p: isMobile ? 2 : 3,*/}
+            {/*    height: 1,*/}
+            {/*    zIndex: 9,*/}
+            {/*    right: 0,*/}
+            {/*    position: 'absolute',*/}
+            {/*    display: 'flex',*/}
+            {/*    flexDirection: 'row',*/}
+            {/*    gap: 1,*/}
+            {/*  }}*/}
+            {/*>*/}
+            {/*  {categoriesStr && categoriesStr.split(',').length > 0*/}
+            {/*    ? categoriesStr.split(',').map((category: string, index) => (*/}
+            {/*      <Chip*/}
+            {/*        key={index}*/}
+            {/*        label={category.toUpperCase()}*/}
+            {/*        variant="outlined"*/}
+            {/*        sx={{*/}
+            {/*          fontWeight: theme.typography.fontWeightBold,*/}
+            {/*          color: theme.palette.common.white,*/}
+            {/*        }}*/}
+            {/*      />*/}
+            {/*    ))*/}
+            {/*    : null}*/}
+            {/*</Stack>*/}
             <Box sx={{ position: 'relative', flex: 1 }}>
               <Box sx={{ width: { md: 'calc(100%)' }, mr: { xs: 0, md: '3rem' } }}>
                 <Image
@@ -99,30 +144,23 @@ export default function TicketItem({ ticket }: any) {
                 alignItems="flex-start"
                 sx={{
                   typography: 'caption',
-                  // m: 3,
                   height: '100%',
                   position: 'absolute',
                   left: 0,
                   right: 0,
                   top: 0,
-                  // bottom: 0,
-                  // backgroundColor: 'green',
                   px: isMobile ? 2 : 3,
                   py: isMobile ? 2 : 3,
                 }}
               >
-                <TextMaxLine variant="body2">{`#${ticketInfo.tokenId}`}</TextMaxLine>
+                <TextMaxLine variant="body2">{ticketInfo.mysteryboxInfo.title.en}</TextMaxLine>
                 <TextMaxLine variant="h3">{ticketInfo.mysteryboxItem.name}</TextMaxLine>
-                <TextMaxLine variant="body2">{ticketInfo.duration}</TextMaxLine>
-                <TextMaxLine variant="body2">{ticketInfo.location}</TextMaxLine>
               </Stack>
-              {/* </Stack> */}
             </Box>
 
             <Stack
               sx={{
                 flex: 1,
-                // overflow: 'hidden',
                 mt: isMobile ? 2 : 0,
                 px: isMobile ? 1 : 2,
                 zIndex: 1000,
@@ -132,9 +170,6 @@ export default function TicketItem({ ticket }: any) {
             >
               <Stack flexDirection="row" justifyContent="space-between">
                 <Stack gap="12px">
-                  <LineItem label="Day" value={ticketInfo.day} />
-                  <LineItem label="Team" value={ticketInfo.team} />
-                  {ticketInfo.status !== 'MARKET' && <LineItem label="QTY" value={'1'} />}
                   {ticketInfo.status === 'MARKET' && ticketInfo.sellbook && (
                     <>
                       <LineItem
@@ -154,19 +189,6 @@ export default function TicketItem({ ticket }: any) {
                     </>
                   )}
                 </Stack>
-                {ticketInfo.status === 'TICKET' && (
-                  <HyperlinkButton
-                    href={''}
-                    styles={{
-                      backgroundColor: '#222222',
-                      [theme.breakpoints.down('md')]: {
-                        position: 'absolute',
-                        top: '36px',
-                        right: '36px',
-                      },
-                    }}
-                  />
-                )}
                 {ticketInfo.status === 'MARKET' && <Badge label="For sale" />}
               </Stack>
               <Box sx={{ flexGrow: 1 }} />
