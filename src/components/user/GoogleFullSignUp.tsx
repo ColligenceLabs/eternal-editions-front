@@ -97,9 +97,9 @@ const FormSchema = Yup.object().shape({
   phoneNumber: Yup.string()
     .matches(phoneRegExp, 'Phone number is not valid')
     .required('Phone number is required'),
-  verificationCode: Yup.string()
-    .required('Verification Code  is required')
-    .length(verifyCodeLength, 'Verification Code must be exactly 6 characters'),
+  // verificationCode: Yup.string()
+  //   .required('Verification Code  is required')
+  //   .length(verifyCodeLength, 'Verification Code must be exactly 6 characters'),
 });
 
 type Term = {
@@ -241,11 +241,14 @@ const GoogleFullSignUp = () => {
         //         "unique_key": ""
         //     }
         console.log('!! 본인 인증 데이터 : ', res.data);
-        reset({
-          birthDate: new Date(res.data.data.birthday),
-          name: res.data.data.name,
-          phoneNumber: res.data.data.phone,
-        });
+        // reset({
+        //   birthDate: new Date(res.data.data.birthday),
+        //   name: res.data.data.name,
+        //   phoneNumber: res.data.data.phone,
+        // });
+        setValue('name', res.data.data.name);
+        setValue('phoneNumber', res.data.data.phone);
+        setValue('birthDate', new Date(res.data.data.birthday));
       } else {
         // todo 본인인증 정보 에러 처리.
         alert(res.data.message.message);
@@ -733,12 +736,12 @@ const GoogleFullSignUp = () => {
         </Section>
       )}
 
-      <Typography variant={'caption'} sx={{ lineHeight: 16 / 12 }}>
-        Lost your code?{' '}
-        <Typography variant={'caption'} color={'#00BA03'} sx={{ cursor: 'pointer' }}>
-          Resend Code
-        </Typography>
-      </Typography>
+      {/*<Typography variant={'caption'} sx={{ lineHeight: 16 / 12 }}>*/}
+      {/*  Lost your code?{' '}*/}
+      {/*  <Typography variant={'caption'} color={'#00BA03'} sx={{ cursor: 'pointer' }}>*/}
+      {/*    Resend Code*/}
+      {/*  </Typography>*/}
+      {/*</Typography>*/}
       <Stack gap={0}>
         <Controller
           name="agreeEternal"
