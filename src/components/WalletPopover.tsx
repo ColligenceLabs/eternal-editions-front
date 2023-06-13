@@ -14,15 +14,11 @@ import useAccount from '../hooks/useAccount';
 import env from '../env';
 import { delUser } from '../store/slices/user';
 import { styled } from '@mui/material/styles';
-import palette from '../theme/palette';
 import getBalances from '../utils/getBalances';
-// import { isMobile } from 'react-device-detect';
 import { useResponsive } from '../hooks';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
-import { getErc20BalanceNoSigner } from 'src/utils/transactions';
-import contracts from 'src/config/constants/contracts';
-import { getSession } from 'src/services/services';
 import useEDCP from 'src/hooks/useEDCP';
+import useUSDC from 'src/hooks/useUSDC';
 
 // ----------------------------------------------------------------------
 WalletPopover.propTypes = {};
@@ -39,44 +35,20 @@ export default function WalletPopover({}) {
   // const {account, accountShot, type, disconnect, switchChainNetwork, chainId, balance} = useWallets();
   // const abcAccount = useSelector((state: any) => state.user);
   const { user } = useSelector((state: any) => state.webUser);
-  const { edcpPoint } = useEDCP();
+  const { edcpPoint, fetchPoint } = useEDCP();
+  const { usdcBalance, fetchUsdcBalance } = useUSDC();
   const dispatch = useDispatch();
   const { account } = useAccount();
-  const { deactivate, chainId, library } = useActiveWeb3React();
+  const { deactivate, library } = useActiveWeb3React();
   const logInBy = window.localStorage.getItem('loginBy');
   const [accountShot, setAccountShot] = useState('');
   const [type, setType] = useState('');
+  const [open, setOpen] = useState<HTMLElement | null>(null);
   const router = useRouter();
   const isMobile = useResponsive('down', 'sm');
 
   const balance = getBalances(account, library);
-  const [usdcBalance, setUsdcBalance] = useState('0');
-
-  useEffect(() => {
-    if (account) {
-      setAccountShot(getShotAddress(account));
-      if (logInBy == 'wallet') {
-        if (library?.connection.url === 'metamask') setType(WALLET_METAMASK);
-        else if (library?.connection.url === 'eip-1193:') setType(WALLET_WALLECTCONNECT);
-      } else {
-        setType(WALLET_ABC);
-      }
-    }
-  }, [account, library]);
-  // const {enqueueSnackbar} = useSnackbar();
-
-  const fetchUsdcBalance = async () => {
-    const ret = await getErc20BalanceNoSigner(contracts.usdc[chainId], 6, account, chainId);
-    setUsdcBalance(ret.substring(0, ret.indexOf('.') + 5));
-  };
-
-  useEffect(() => {
-    if (account) {
-      fetchUsdcBalance();
-    }
-  }, [account]);
-
-  const [open, setOpen] = useState<HTMLElement | null>(null);
+  // const [usdcBalance, setUsdcBalance] = useState('0');
 
   const handleOpen = (event: React.MouseEvent<HTMLElement>) => {
     setOpen(event.currentTarget);
@@ -104,6 +76,23 @@ export default function WalletPopover({}) {
   useEffect(() => {
     handleClose();
   }, [router]);
+
+  useEffect(() => {
+    fetchUsdcBalance();
+    fetchPoint();
+  }, [open]);
+
+  useEffect(() => {
+    if (account) {
+      setAccountShot(getShotAddress(account));
+      if (logInBy == 'wallet') {
+        if (library?.connection.url === 'metamask') setType(WALLET_METAMASK);
+        else if (library?.connection.url === 'eip-1193:') setType(WALLET_WALLECTCONNECT);
+      } else {
+        setType(WALLET_ABC);
+      }
+    }
+  }, [account, library]);
 
   return (
     <>

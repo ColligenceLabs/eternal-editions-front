@@ -14,5 +14,5 @@ export default function useEDCP() {
     if (account) fetchPoint();
   }, [account]);
 
-  return { edcpPoint };
+  return { edcpPoint, fetchPoint };
 }

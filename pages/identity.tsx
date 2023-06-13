@@ -1,9 +1,8 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { Page } from 'src/components';
-import { Box, styled, Typography } from '@mui/material';
+import { Box, CircularProgress, styled, Typography } from '@mui/material';
 import { HEADER_DESKTOP_HEIGHT, HEADER_MOBILE_HEIGHT } from 'src/config';
 import Layout from 'src/layouts';
-import NextLink from 'next/link';
 import Routes from 'src/routes';
 import { useRouter } from 'next/router';
 import RoundedButton from 'src/components/common/RoundedButton';
@@ -45,30 +44,48 @@ const Content = styled(Box)(({ theme }) => ({
   },
 }));
 
-export default function Identity(effect: React.EffectCallback, deps?: React.DependencyList) {
+export default function Identity() {
   const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
   const clickHandler = async () => {
     try {
+      setIsLoading((cur) => !cur);
       // @ts-ignore
       const IMP = window.IMP; // 생략 가능
       IMP.init('imp65486314');
-      IMP.certification({ // param
-        // pg:'store-f6fdb096-d201-4df1-948e-a37ee76bb26f',//본인인증 설정이 2개이상 되어 있는 경우 필수
-        merchant_uid: `mid_${new Date().getTime()}`, // 주문 번호
-        m_redirect_url : Routes.eternalEditions.register, // 모바일환경에서 popup:false(기본값) 인 경우 필수, 예: https://www.myservice.com/payments/complete/mobile
-        popup : false // PC환경에서는 popup 파라미터가 무시되고 항상 true 로 적용됨
-      }, function (rsp: any) { // callback
-        if (rsp.success) {
-          console.log('success', rsp);
-          router.push(`/register?imp_uid=${rsp.imp_uid}&merchant_uid=${rsp.merchant_uid}&success=${rsp.success}`);
-        } else {
-          console.log('fail', rsp);
+      IMP.certification(
+        {
+          // param
+          // pg:'store-f6fdb096-d201-4df1-948e-a37ee76bb26f',//본인인증 설정이 2개이상 되어 있는 경우 필수
+          merchant_uid: `mid_${new Date().getTime()}`, // 주문 번호
+          m_redirect_url: Routes.eternalEditions.register, // 모바일환경에서 popup:false(기본값) 인 경우 필수, 예: https://www.myservice.com/payments/complete/mobile
+          popup: false, // PC환경에서는 popup 파라미터가 무시되고 항상 true 로 적용됨
+        },
+        function (rsp: any) {
+          // callback
+          if (rsp.success) {
+            console.log('success', rsp);
+            router.push(
+              `/register?imp_uid=${rsp.imp_uid}&merchant_uid=${rsp.merchant_uid}&success=${rsp.success}`
+            );
+          } else {
+            console.log('fail', rsp);
+            setIsLoading(false);
+          }
         }
-      });
+      );
     } catch (e) {
       console.log(e);
+    } finally {
+      console.log('finally');
+      // setIsLoading(false);
     }
-  }
+  };
+
+  useEffect(() => {
+    console.log(isLoading);
+  }, [isLoading]);
+
   return (
     <Page title="Identity">
       <RootStyle>
@@ -89,7 +106,25 @@ export default function Identity(effect: React.EffectCallback, deps?: React.Depe
             {/*  as={Routes.eternalEditions.register}*/}
             {/*  href={Routes.eternalEditions.register}*/}
             {/*>*/}
-              <RoundedButton onClick={clickHandler} fullWidth>본인 인증</RoundedButton>
+            {isLoading ? (
+              <Box
+                sx={{
+                  // width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  mt: '10px',
+                  mb: '20px',
+                }}
+              >
+                <CircularProgress size={'2rem'} />
+              </Box>
+            ) : (
+              <RoundedButton onClick={clickHandler} fullWidth>
+                본인 인증
+              </RoundedButton>
+            )}
+
             {/*</NextLink>*/}
             <Typography
               sx={{

@@ -10,6 +10,7 @@ import Link from 'next/link';
 import SaveTicketContent from './SaveTicketContent';
 import { MyTicketTypes } from 'src/@types/my/myTicket';
 import useCountdown from 'src/hooks/useCountdown';
+import { fDate } from 'src/utils/formatTime';
 
 type PropertiesType = {
   type: string;
@@ -81,17 +82,17 @@ export default function TicketItem({ ticket }: any) {
             // 반응형
             direction={isMobile ? 'column' : 'row'}
           >
-            <Stack
-              sx={{
-                p: isMobile ? 2 : 1,
-                height: 1,
-                zIndex: 9,
-                left: 25,
-                position: 'absolute',
-              }}
-            >
-              {ticket.mysteryboxInfo?.projectItems &&
-                ticket.mysteryboxInfo?.projectItems[0].title && (
+            <Box sx={{ position: 'relative', flex: 1 }}>
+              <Stack
+                sx={{
+                  pt: 1,
+                  height: 1,
+                  zIndex: 9,
+                  left: 25,
+                  position: 'absolute',
+                }}
+              >
+                {ticket.mysteryboxInfo?.projectItems && ticket.mysteryboxInfo?.projectItems[0].title && (
                   <Chip
                     label={ticket.mysteryboxInfo.projectItems[0].title}
                     variant="outlined"
@@ -101,34 +102,36 @@ export default function TicketItem({ ticket }: any) {
                     }}
                   />
                 )}
-            </Stack>
-            {/*<Stack*/}
-            {/*  sx={{*/}
-            {/*    p: isMobile ? 2 : 3,*/}
-            {/*    height: 1,*/}
-            {/*    zIndex: 9,*/}
-            {/*    right: 0,*/}
-            {/*    position: 'absolute',*/}
-            {/*    display: 'flex',*/}
-            {/*    flexDirection: 'row',*/}
-            {/*    gap: 1,*/}
-            {/*  }}*/}
-            {/*>*/}
-            {/*  {categoriesStr && categoriesStr.split(',').length > 0*/}
-            {/*    ? categoriesStr.split(',').map((category: string, index) => (*/}
-            {/*      <Chip*/}
-            {/*        key={index}*/}
-            {/*        label={category.toUpperCase()}*/}
-            {/*        variant="outlined"*/}
-            {/*        sx={{*/}
-            {/*          fontWeight: theme.typography.fontWeightBold,*/}
-            {/*          color: theme.palette.common.white,*/}
-            {/*        }}*/}
-            {/*      />*/}
-            {/*    ))*/}
-            {/*    : null}*/}
-            {/*</Stack>*/}
-            <Box sx={{ position: 'relative', flex: 1 }}>
+              </Stack>
+              <Stack
+                sx={{
+                  pt: 1,
+                  height: 1,
+                  zIndex: 9,
+                  right: 25,
+                  position: 'absolute',
+                  display: 'flex',
+                  flexDirection: 'row',
+                  gap: 1,
+                }}
+              >
+                {ticketInfo.mysteryboxInfo.categoriesStr &&
+                ticketInfo.mysteryboxInfo.categoriesStr.split(',').length > 0
+                  ? ticketInfo.mysteryboxInfo.categoriesStr
+                      .split(',')
+                      .map((category: string, index: number) => (
+                        <Chip
+                          key={index}
+                          label={category.toUpperCase()}
+                          variant="outlined"
+                          sx={{
+                            fontWeight: theme.typography.fontWeightBold,
+                            color: theme.palette.common.white,
+                          }}
+                        />
+                      ))
+                  : null}
+              </Stack>
               <Box sx={{ width: { md: 'calc(100%)' }, mr: { xs: 0, md: '3rem' } }}>
                 <Image
                   src={ticketInfo.mysteryboxItem.itemImage}
@@ -189,8 +192,18 @@ export default function TicketItem({ ticket }: any) {
                       />
                     </>
                   )}
+                  {ticketInfo.status === 'USED' && (
+                    <LineItem
+                      label="DATE OF USE"
+                      value={fDate(
+                        ticketInfo.useDate ? ticketInfo.useDate : new Date(),
+                        'EEEE (MMMM dd, yyyy)'
+                      )}
+                    />
+                  )}
                 </Stack>
                 {ticketInfo.status === 'MARKET' && <Badge label="For sale" />}
+                {ticketInfo.status === 'USED' && <Badge label="Used Up" disabled={true} />}
               </Stack>
               <Box sx={{ flexGrow: 1 }} />
               {ticketInfo.status === 'TICKET' && (
@@ -219,6 +232,7 @@ export default function TicketItem({ ticket }: any) {
                   </Link>
                 </Stack>
               )}
+
               {ticketInfo.status === 'MARKET' && (
                 <Stack sx={{ mt: 1 }} direction="row" spacing={2} justifyContent={'flex-end'}>
                   <Link

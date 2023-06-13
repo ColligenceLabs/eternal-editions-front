@@ -2,17 +2,14 @@ import { Stack, Typography, Divider, CircularProgress, Fade, TextField } from '@
 import React, { ChangeEvent, SetStateAction, useEffect, useState } from 'react';
 import { TicketInfoTypes, TicketItemTypes } from 'src/@types/ticket/ticketTypes';
 import RoundedButton from 'src/components/common/RoundedButton';
-import { fDate } from 'src/utils/formatTime';
 import QuantityControl from './QuantityControl';
 import Radio from 'src/components/common/Radio';
 import palette from 'src/theme/palette';
-import axios from 'axios';
 import { Box } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import CSnackbar from 'src/components/common/CSnackbar';
 import { getMintLimitCount, getSession, getUser, registerBuy } from 'src/services/services';
 import { SUCCESS } from 'src/config';
-import { BigNumber, ethers } from 'ethers';
+import { ethers } from 'ethers';
 import contracts from 'src/config/constants/contracts';
 import { parseEther, parseUnits } from 'ethers/lib/utils';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
@@ -83,19 +80,11 @@ const TicketItemModal = ({
   const [method, setMethod] = useState<string>(methodType.edcp);
   const [isCompleteModal, setIsCompleteModal] = useState<boolean>(false);
   const [isUnauthorized, setIsUnauthorized] = useState<boolean>(false);
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [openSnackbar, setOpenSnackbar] = useState({
-  //   open: false,
-  //   type: '',
-  //   message: '',
-  // });
   const abcUser = useSelector((state: any) => state.user);
   const [abcToken, setAbcToken] = useState('');
   const [approveOpen, setApproveOpen] = useState(false);
   const [abcOpen, setAbcOpen] = useState(false);
-  const [reload, setReload] = useState(false);
   const [transactionHash, setTransactionHash] = useState('');
-  const [buyerAddress, setBuyerAddress] = useState('');
   const [paymentDate, setPaymentDate] = useState<Date | undefined>();
   const [otpLoading, setOtpLoading] = useState(false);
   const [perLimit, setPerLimit] = useState(5);
@@ -202,12 +191,6 @@ const TicketItemModal = ({
     const contract = boxContractAddress;
     const index = ticket.no - 1 ?? 0;
     const amount = quantity;
-    const quoteToken =
-      quote === 'matic'
-        ? contracts.matic[chainId]
-        : quote === 'usdc'
-        ? contracts.usdc[chainId]
-        : contracts.usdt[chainId];
 
     let payment;
     if (quote === 'matic') payment = parseEther(ticket?.price.toString() ?? '0').mul(amount);
@@ -268,7 +251,6 @@ const TicketItemModal = ({
         };
 
         setTransactionHash(result?.transactionHash);
-        setBuyerAddress(abcUser.accounts[0].ethAddress);
 
         const res = await registerBuy(data);
         console.log('== call backend : registerBuy ==>', res.data);
@@ -360,7 +342,6 @@ const TicketItemModal = ({
           type: 'success',
           message: 'Purchase completed!',
         });
-        setReload((cur) => !cur);
         setIsTicketItemModalOpen(false);
       } else {
         console.log('Item not selected', res.data.message);
@@ -466,7 +447,6 @@ const TicketItemModal = ({
             type: 'success',
             message: 'Purchase completed!',
           });
-          setReload((cur) => !cur);
           setIsTicketItemModalOpen(false);
         }
       } else {
@@ -528,7 +508,8 @@ const TicketItemModal = ({
     router.push(Routes.eternalEditions.my.tickets);
   };
 
-  const onComplete = () => {
+  const onComplete = async () => {
+    console.log('asdfasdfj;alskdjfasdf');
     setIsTicketItemModalOpen(false);
   };
 

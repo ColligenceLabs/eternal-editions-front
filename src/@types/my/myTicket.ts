@@ -16,6 +16,7 @@ export type MyTicketTypes = {
   tokenId: number;
   txHash: string;
   updatedAt: Date;
+  useDate: Date | null;
   usePoint: any | null;
   day?: string;
   location?: string;
