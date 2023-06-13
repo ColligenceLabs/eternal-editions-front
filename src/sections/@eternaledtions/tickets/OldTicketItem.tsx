@@ -1,16 +1,9 @@
-// @mui
-import { Box, Button, Grid, Stack, Typography, useTheme } from '@mui/material';
+import { Box, Grid, Stack, Typography, useTheme } from '@mui/material';
 import { m } from 'framer-motion';
-import { Image, TextIconLabel, TextMaxLine, varHover, varTranHover } from 'src/components';
-import React, { ReactElement, useState } from 'react';
-import { fDate } from '../../../utils/formatTime';
-import QRCode from 'react-qr-code';
-import HyperlinkButton from 'src/components/ticket/HyperlinkButton';
-import Badge from 'src/components/ticket/Badge';
+import { Image, TextMaxLine, varHover, varTranHover } from 'src/components';
+import React, { useState } from 'react';
 import RoundedButton from 'src/components/common/RoundedButton';
-import Link from 'next/link';
 import ModalCustom from 'src/components/common/ModalCustom';
-import SaveTicketContent from 'src/sections/@eternaledtions/tickets/SaveTicketContent';
 import { useResponsive } from 'src/hooks';
 import SaveOldTicketContent from 'src/sections/@eternaledtions/tickets/SaveOldTicketContent';
 
@@ -58,15 +51,9 @@ type Props = {
 };
 
 export default function OldTicketItem({ ticket }: Props) {
-  const theme = useTheme();
   const [open, setOpen] = useState<boolean>(false);
   const isXs = useResponsive('down', 'sm');
   const isMobile = useResponsive('down', 'md');
-  console.log(ticket);
-  const checkTicketId = (id: number) => {
-    if (id >= 5758 && id <= 7787) return '2023';
-    else return '2022';
-  };
 
   return (
     <>
@@ -111,14 +98,11 @@ export default function OldTicketItem({ ticket }: Props) {
                 alignItems="flex-start"
                 sx={{
                   typography: 'caption',
-                  // m: 3,
                   height: '100%',
                   position: 'absolute',
                   left: 0,
                   right: 0,
                   top: 0,
-                  // bottom: 0,
-                  // backgroundColor: 'green',
                   px: isMobile ? 2 : 3,
                   py: isMobile ? 2 : 3,
                 }}
@@ -126,13 +110,11 @@ export default function OldTicketItem({ ticket }: Props) {
                 <TextMaxLine variant="body2">{ticket.ticketInfo.showName}</TextMaxLine>
                 <TextMaxLine variant="h3">{ticket.ticketInfo.ticketName}</TextMaxLine>
               </Stack>
-              {/* </Stack> */}
             </Box>
 
             <Stack
               sx={{
                 flex: 1,
-                // overflow: 'hidden',
                 mt: isMobile ? 2 : 0,
                 px: isMobile ? 1 : 2,
                 zIndex: 1000,
@@ -140,34 +122,6 @@ export default function OldTicketItem({ ticket }: Props) {
                 flexDirection: 'row',
               }}
             >
-              {/*<Stack flexDirection="row" justifyContent="space-between">*/}
-              {/*  <Stack gap="12px">*/}
-              {/*    <LineItem label=" " value={' '} />*/}
-              {/*    <LineItem label=" " value={' '} />*/}
-              {/*    {ticket.status.toUpperCase() !== 'MARKET' && <LineItem label="QTY" value={'1'} />}*/}
-              {/*    {ticket.status === 'MARKET' && (*/}
-              {/*      <>*/}
-              {/*        <LineItem mock label="CURRENT PRICE" value={'1,200 EDCP (~$1,200)'} />*/}
-              {/*        <LineItem mock label="AUCTION ENDS IN" value={'01:12:32:11'} />*/}
-              {/*      </>*/}
-              {/*    )}*/}
-              {/*  </Stack>*/}
-              {/*  {ticket.status.toUpperCase() === 'TICKET' && (*/}
-              {/*    <HyperlinkButton*/}
-              {/*      href={''}*/}
-              {/*      styles={{*/}
-              {/*        backgroundColor: '#222222',*/}
-              {/*        [theme.breakpoints.down('md')]: {*/}
-              {/*          position: 'absolute',*/}
-              {/*          top: '36px',*/}
-              {/*          right: '36px',*/}
-              {/*        },*/}
-              {/*      }}*/}
-              {/*    />*/}
-              {/*  )}*/}
-              {/*  {ticket.status.toUpperCase() === 'MARKET' && <Badge label="For sale" />}*/}
-              {/*</Stack>*/}
-              {/*<Box className="asdf" sx={{ flexGrow: 1, height: '20px', backgroundColor: 'red' }} />*/}
               {ticket.status.toUpperCase() === 'TICKET' && (
                 <Stack
                   sx={{
@@ -195,38 +149,5 @@ export default function OldTicketItem({ ticket }: Props) {
         </Grid>
       ) : null}
     </>
-  );
-}
-
-type LineItemProps = {
-  label: string;
-  value: any;
-  mock?: boolean;
-};
-
-function LineItem({ label, value, mock }: LineItemProps) {
-  const isMobile = useResponsive('down', 'md');
-  return (
-    <Stack direction={'column'} gap="2px">
-      <Typography
-        sx={{
-          fontSize: '12px',
-          marginRight: isMobile ? '10px' : '0px',
-          color: 'rgba(255, 255, 255, 0.6)',
-          textTransform: 'uppercase',
-        }}
-      >
-        {label}
-      </Typography>
-      <Typography
-        sx={{
-          color: mock ? 'red' : 'common.white',
-          fontSize: isMobile ? '12px' : '14px',
-          lineHeight: 20 / 14,
-        }}
-      >
-        {value}
-      </Typography>
-    </Stack>
   );
 }
