@@ -128,16 +128,41 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
   });
 
   const onSubmit = async (value: TransferData) => {
+    const loginBy = window.localStorage.getItem('loginBy') ?? 'sns';
+
     console.log(value);
     console.log(step);
     if (step === StepStatus.step1) {
       setTransferData(value);
-      setStep(StepStatus.step2);
+      if (loginBy === 'sns') setStep(StepStatus.step2);
+      else {
+        setIsLoading(true);
+        let result: any;
+        if (value.token === 'usdc') {
+          result = await erc20Transfer(
+            contracts.usdc[chainId],
+            value.address,
+            ethers.utils.parseUnits(value.amount, 6).toString(),
+            account!,
+            library,
+            false
+          );
+        } else {
+          result = await ethTransfer(
+            value.address,
+            ethers.utils.parseEther(value.amount).toString(),
+            account!,
+            library,
+            false
+          );
+        }
+        console.log('== tx result ==', result.status);
+        setIsLoading(false);
+        setStep(StepStatus.step3);
+      }
     } else if (step === StepStatus.step2) {
       console.log(value.twofacode);
-      setStep(StepStatus.step3);
-
-      const loginBy = window.localStorage.getItem('loginBy') ?? 'sns';
+      setIsLoading(true);
       if (loginBy === 'sns') {
         if (value.token === 'usdc') {
           const to = contracts.usdc[chainId]; // USDC Smart Contract
@@ -164,28 +189,9 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
           );
           console.log('== tx result ==', result.status);
         }
-      } else {
-        let result: any;
-        if (value.token === 'usdc') {
-          result = await erc20Transfer(
-            contracts.usdc[chainId],
-            value.address,
-            ethers.utils.parseUnits(value.amount, 6).toString(),
-            account!,
-            library,
-            false
-          );
-        } else {
-          result = await ethTransfer(
-            value.address,
-            ethers.utils.parseEther(value.amount).toString(),
-            account!,
-            library,
-            false
-          );
-        }
-        console.log('== tx result ==', result.status);
       }
+      setIsLoading(false);
+      setStep(StepStatus.step3);
     } else {
       console.log(step);
       onClose();

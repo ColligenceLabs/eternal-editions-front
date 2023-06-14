@@ -1700,23 +1700,39 @@ export async function ethTransfer(
   rawTx = { ...rawTx, from: account, gasPrice };
 
   // registerItems 요청
+  let tx;
   let receipt;
   try {
     if (isKaikas) {
       // @ts-ignore : In case of Klaytn Kaikas Wallet
       const caver = new Caver(window.klaytn);
 
-      receipt = await caver.klay.sendTransaction(rawTx).catch(async (err: any) => {
-        return FAILURE;
-      });
+      caver.klay
+        .sendTransaction(rawTx)
+        .once('transactionHash', (transactionHash) => {
+          console.log('txHash', transactionHash);
+        })
+        .once('receipt', (r) => {
+          console.log('receipt', r);
+          receipt = r;
+        })
+        .once('error', (error) => {
+          console.log('error', error);
+        });
 
       // @ts-ignore
       if (receipt?.status) {
         return SUCCESS;
       } else return FAILURE;
     } else {
-      receipt = await library?.getSigner().sendTransaction(rawTx);
+      tx = await library?.getSigner().sendTransaction(rawTx);
 
+      // receipt 대기
+      try {
+        receipt = await tx.wait();
+      } catch (e) {
+        return FAILURE;
+      }
       if (receipt.status === 1) {
         return SUCCESS;
       } else return FAILURE;
