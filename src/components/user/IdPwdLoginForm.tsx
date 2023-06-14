@@ -1,12 +1,9 @@
 import { Box, Stack, TextField } from '@mui/material';
-// @mui
 import { styled } from '@mui/material/styles';
 import { Button } from '@mui/material';
-// import useWallets from '../../hooks/useWallets';
-import { SUCCESS } from '../../config';
-import { useWeb3React } from '@web3-react/core';
+import { SUCCESS } from 'src/config';
 import { ChangeEvent, useState } from 'react';
-import { eternalLogin } from '../../services/services';
+import { eternalLogin } from 'src/services/services';
 import { Base64 } from 'js-base64';
 import Router from 'next/router';
 
@@ -15,9 +12,6 @@ type Props = {
 };
 
 export default function IdPwdSignUpForm({ onClose }: Props) {
-  const context = useWeb3React();
-  const { activate, chainId, deactivate, library } = context;
-  const [doSign, setDoSign] = useState(false);
   const [openIDPWD, setOpenIDPWD] = useState(false);
   const [userId, setUserId] = useState('');
   const [userPWD, setUserPWD] = useState('');
