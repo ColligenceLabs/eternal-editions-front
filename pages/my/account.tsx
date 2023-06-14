@@ -29,7 +29,13 @@ import Image from 'src/components/Image';
 import NextLink from 'next/link';
 import Routes from 'src/routes';
 import { useDispatch, useSelector } from 'react-redux';
-import { deleteAddress, removeUser, updateAddress } from 'src/services/services';
+import {
+  deleteAddress,
+  getCertifications,
+  removeUser,
+  savePhoneNumber,
+  updateAddress,
+} from 'src/services/services';
 import { setWebUser } from 'src/store/slices/webUser';
 import env from 'src/env';
 import { setupNetwork } from 'src/utils/network';
@@ -206,7 +212,32 @@ export default function MyAccountPage() {
   };
 
   const handleClickChangePhonenumber = () => {
-    console.log('handleClickChangePhonenumber');
+    try {
+      const IMP = window.IMP; // 생략 가능
+      IMP.init('imp65486314');
+      IMP.certification(
+        {
+          // param
+          // pg:'store-f6fdb096-d201-4df1-948e-a37ee76bb26f',//본인인증 설정이 2개이상 되어 있는 경우 필수
+          merchant_uid: `mid_${new Date().getTime()}`, // 주문 번호
+          m_redirect_url: Routes.eternalEditions.register, // 모바일환경에서 popup:false(기본값) 인 경우 필수, 예: https://www.myservice.com/payments/complete/mobile
+          popup: false, // PC환경에서는 popup 파라미터가 무시되고 항상 true 로 적용됨
+        },
+        function (rsp: any) {
+          // callback
+          if (rsp.success) {
+            console.log('success', rsp);
+            router.push(
+              `/my/account?imp_uid=${rsp.imp_uid}&merchant_uid=${rsp.merchant_uid}&success=${rsp.success}`
+            );
+          } else {
+            console.log('fail', rsp);
+          }
+        }
+      );
+    } catch (e) {
+      console.log(e);
+    }
   };
 
   const connectWallet = async (id: any) => {
@@ -245,6 +276,31 @@ export default function MyAccountPage() {
   const handleClickReceive = (token: string) => {
     console.log(`handle click ${token} receive.`);
   };
+  useEffect(() => {
+    if (!router.isReady) return;
+    const changePhoneNumber = async (impUid: any) => {
+      // 본인인증 정보 조회
+      const res = await getCertifications(impUid);
+      console.log(res);
+      if (res.data?.status === SUCCESS) {
+        // save phone number
+        const rst = await savePhoneNumber({ uid: user.uid, phone: res.data.data.phone });
+        if (rst.data?.status === SUCCESS) {
+          await dispatch(setWebUser(rst.data.data));
+        } else {
+          alert('핸드폰 번호 변경에 실패하였습니다.');
+        }
+      } else {
+        alert('인증정보가 존재하지 않습니다.');
+        await router.push('/my/account');
+      }
+    };
+    const impUid = router.query['imp_uid'];
+    const success = router.query['success'];
+    if (user.uid && success === 'true' && impUid) {
+      changePhoneNumber(impUid);
+    }
+  }, [router.isReady]);
 
   useEffect(() => {
     const saveAddress = async () => {

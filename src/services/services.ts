@@ -231,3 +231,7 @@ export const cancelMigrateTicket = async (code: string, migrateId: number) => {
     }
   );
 };
+
+export const savePhoneNumber = async (data: any) => {
+  return await apiAuthAxios.post('/api/users/phone', data);
+};
