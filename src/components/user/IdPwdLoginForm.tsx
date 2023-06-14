@@ -5,7 +5,7 @@ import { Button } from '@mui/material';
 // import useWallets from '../../hooks/useWallets';
 import { SUCCESS } from '../../config';
 import { useWeb3React } from '@web3-react/core';
-import { useState } from 'react';
+import { ChangeEvent, useState } from 'react';
 import { eternalLogin } from '../../services/services';
 import { Base64 } from 'js-base64';
 import Router from 'next/router';
@@ -22,11 +22,11 @@ export default function IdPwdSignUpForm({ onClose }: Props) {
   const [userId, setUserId] = useState('');
   const [userPWD, setUserPWD] = useState('');
 
-  const handleChangeUserId = (event) => {
+  const handleChangeUserId = (event: ChangeEvent<HTMLInputElement>) => {
     setUserId(event.target.value);
   };
 
-  const handleChangeUserPWD = (event) => {
+  const handleChangeUserPWD = (event: ChangeEvent<HTMLInputElement>) => {
     setUserPWD(event.target.value);
   };
 
