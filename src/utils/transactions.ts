@@ -41,7 +41,7 @@ export async function registerItems(
   account: string | undefined | null,
   library: any
 ): Promise<number> {
-  let gasPrice;
+  const gasPrice = await getGasPriceFromAPI();
   const isKaikas =
     library.provider.bridge !== 'https://bridge.walletconnect.org' &&
     (library.connection.url !== 'metamask' || library.connection.url === 'eip-1193:');
@@ -51,7 +51,6 @@ export async function registerItems(
   if (isKaikas) {
     // @ts-ignore : In case of Klaytn Kaikas Wallet
     const caver = new Caver(window.klaytn);
-    gasPrice = await caver.rpc.klay.getGasPrice();
     const boxAbi: AbiItem[] = mysteryBoxAbi as AbiItem[];
     contract = new caver.klay.Contract(boxAbi, address);
   } else {
@@ -116,7 +115,7 @@ export async function batchMint(
   account: string | undefined | null,
   library: any
 ): Promise<number> {
-  let gasPrice;
+  const gasPrice = await getGasPriceFromAPI();
   const isKaikas =
     library.provider.bridge !== 'https://bridge.walletconnect.org' &&
     (library.connection.url !== 'metamask' || library.connection.url === 'eip-1193:');
@@ -124,7 +123,6 @@ export async function batchMint(
   if (isKaikas) {
     // @ts-ignore : In case of Klaytn Kaikas Wallet
     const caver = new Caver(window.klaytn);
-    gasPrice = await caver.rpc.klay.getGasPrice();
     const keyAbi: AbiItem[] = erc721Abi as AbiItem[];
     contract = new caver.klay.Contract(keyAbi, address);
   } else {
@@ -187,7 +185,7 @@ export async function setHardCap(
   account: string | undefined | null,
   library: any
 ): Promise<number> {
-  let gasPrice;
+  const gasPrice = await getGasPriceFromAPI();
   const isKaikas =
     library.provider.bridge !== 'https://bridge.walletconnect.org' &&
     (library.connection.url !== 'metamask' || library.connection.url === 'eip-1193:');
@@ -195,7 +193,6 @@ export async function setHardCap(
   if (isKaikas) {
     // @ts-ignore : In case of Klaytn Kaikas Wallet
     const caver = new Caver(window.klaytn);
-    gasPrice = await caver.rpc.klay.getGasPrice();
     const keyAbi: AbiItem[] = erc721Abi as AbiItem[];
     contract = new caver.klay.Contract(keyAbi, address);
   } else {
@@ -257,7 +254,7 @@ export async function setMysteryBox(
   account: string | undefined | null,
   library: any
 ): Promise<number> {
-  let gasPrice;
+  const gasPrice = await getGasPriceFromAPI();
   const isKaikas =
     library.provider.bridge !== 'https://bridge.walletconnect.org' &&
     (library.connection.url !== 'metamask' || library.connection.url === 'eip-1193:');
@@ -265,7 +262,6 @@ export async function setMysteryBox(
   if (isKaikas) {
     // @ts-ignore : In case of Klaytn Kaikas Wallet
     const caver = new Caver(window.klaytn);
-    gasPrice = await caver.rpc.klay.getGasPrice();
     const keyAbi: AbiItem[] = erc721Abi as AbiItem[];
     contract = new caver.klay.Contract(keyAbi, address);
   } else {
@@ -328,12 +324,11 @@ export async function setApproveForAll(
   library: any,
   isKaikas: boolean
 ): Promise<number> {
-  let gasPrice;
+  const gasPrice = await getGasPriceFromAPI();
   let contract: any;
   if (isKaikas) {
     // @ts-ignore : In case of Klaytn Kaikas Wallet
     const caver = new Caver(window.klaytn);
-    gasPrice = await caver.rpc.klay.getGasPrice();
     const keyAbi: AbiItem[] = erc721Abi as AbiItem[];
     contract = new caver.klay.Contract(keyAbi, address);
   } else {
@@ -396,7 +391,7 @@ export async function requestRandomNumber(
   library: any,
   mechanism?: number | undefined
 ): Promise<number> {
-  let gasPrice;
+  const gasPrice = await getGasPriceFromAPI();
   const isKaikas =
     library.provider.bridge !== 'https://bridge.walletconnect.org' &&
     (library.connection.url !== 'metamask' || library.connection.url === 'eip-1193:');
@@ -405,7 +400,6 @@ export async function requestRandomNumber(
   if (isKaikas) {
     // @ts-ignore : In case of Klaytn Kaikas Wallet
     const caver = new Caver(window.klaytn);
-    gasPrice = await caver.rpc.klay.getGasPrice();
     const contractAbi: AbiItem[] =
       mechanism === undefined
         ? (mysteryBoxAbi as AbiItem[])
@@ -484,7 +478,7 @@ export async function addWhitelist(
   account: string | undefined | null,
   library: any
 ): Promise<number> {
-  let gasPrice;
+  const gasPrice = await getGasPriceFromAPI();
   const isKaikas =
     library.provider.bridge !== 'https://bridge.walletconnect.org' &&
     (library.connection.url !== 'metamask' || library.connection.url === 'eip-1193:');
@@ -492,7 +486,6 @@ export async function addWhitelist(
   if (isKaikas) {
     // @ts-ignore : In case of Klaytn Kaikas Wallet
     const caver = new Caver(window.klaytn);
-    gasPrice = await caver.rpc.klay.getGasPrice();
     const whitelistAbi: AbiItem[] = whiteListAbi as AbiItem[];
     contract = new caver.klay.Contract(whitelistAbi, address);
   } else {
@@ -556,7 +549,7 @@ export async function safeBatchMintToWhitelist(
   account: string | undefined | null,
   library: any
 ): Promise<number> {
-  let gasPrice;
+  const gasPrice = await getGasPriceFromAPI();
   const isKaikas =
     library.provider.bridge !== 'https://bridge.walletconnect.org' &&
     (library.connection.url !== 'metamask' || library.connection.url === 'eip-1193:');
@@ -564,7 +557,6 @@ export async function safeBatchMintToWhitelist(
   if (isKaikas) {
     // @ts-ignore : In case of Klaytn Kaikas Wallet
     const caver = new Caver(window.klaytn);
-    gasPrice = await caver.rpc.klay.getGasPrice();
     const whitelistAbi: AbiItem[] = whiteListAbi as AbiItem[];
     contract = new caver.klay.Contract(whitelistAbi, address);
   } else {
@@ -628,7 +620,7 @@ export async function setSubscription(
   account: string | undefined | null,
   library: any
 ): Promise<number> {
-  let gasPrice;
+  const gasPrice = await getGasPriceFromAPI();
   const isKaikas =
     library.provider.bridge !== 'https://bridge.walletconnect.org' &&
     (library.connection.url !== 'metamask' || library.connection.url === 'eip-1193:');
@@ -637,7 +629,6 @@ export async function setSubscription(
   if (isKaikas) {
     // @ts-ignore : In case of Klaytn Kaikas Wallet
     const caver = new Caver(window.klaytn);
-    gasPrice = await caver.rpc.klay.getGasPrice();
     const boxAbi: AbiItem[] = mysteryBoxAbi as AbiItem[];
     contract = new caver.klay.Contract(boxAbi, mysteryBox);
   } else {
@@ -703,7 +694,7 @@ export async function setLaunch(
   account: string | undefined | null,
   library: any
 ): Promise<number> {
-  let gasPrice;
+  const gasPrice = await getGasPriceFromAPI();
   const isKaikas =
     library.provider.bridge !== 'https://bridge.walletconnect.org' &&
     (library.connection.url !== 'metamask' || library.connection.url === 'eip-1193:');
@@ -712,7 +703,6 @@ export async function setLaunch(
   if (isKaikas) {
     // @ts-ignore : In case of Klaytn Kaikas Wallet
     const caver = new Caver(window.klaytn);
-    gasPrice = await caver.rpc.klay.getGasPrice();
     const boxAbi: AbiItem[] = mysteryBoxAbi as AbiItem[];
     contract = new caver.klay.Contract(boxAbi, mysteryBox);
   } else {
@@ -774,7 +764,7 @@ export async function allocation(
   account: string | undefined | null,
   library: any
 ): Promise<number> {
-  let gasPrice;
+  const gasPrice = await getGasPriceFromAPI();
   const isKaikas =
     library.provider.bridge !== 'https://bridge.walletconnect.org' &&
     (library.connection.url !== 'metamask' || library.connection.url === 'eip-1193:');
@@ -783,7 +773,6 @@ export async function allocation(
   if (isKaikas) {
     // @ts-ignore : In case of Klaytn Kaikas Wallet
     const caver = new Caver(window.klaytn);
-    gasPrice = await caver.rpc.klay.getGasPrice();
     const subAbi: AbiItem[] = subscriptionAbi as AbiItem[];
     contract = new caver.klay.Contract(subAbi, address);
   } else {
@@ -847,7 +836,7 @@ export async function setStaking(
   account: string | undefined | null,
   library: any
 ): Promise<number> {
-  let gasPrice;
+  const gasPrice = await getGasPriceFromAPI();
   const isKaikas =
     library.provider.bridge !== 'https://bridge.walletconnect.org' &&
     (library.connection.url !== 'metamask' || library.connection.url === 'eip-1193:');
@@ -855,7 +844,6 @@ export async function setStaking(
   if (isKaikas) {
     // @ts-ignore : In case of Klaytn Kaikas Wallet
     const caver = new Caver(window.klaytn);
-    gasPrice = await caver.rpc.klay.getGasPrice();
     const whitelistAbi: AbiItem[] = whiteListAbi as AbiItem[];
     contract = new caver.klay.Contract(whitelistAbi, address);
   } else {
@@ -917,7 +905,7 @@ export async function estimateRandomizeFee(
   library: any,
   mechanism?: number | undefined
 ): Promise<string> {
-  let gasPrice;
+  const gasPrice = await getGasPriceFromAPI();
   const isKaikas =
     library.provider.bridge !== 'https://bridge.walletconnect.org' &&
     (library.connection.url !== 'metamask' || library.connection.url === 'eip-1193:');
@@ -926,7 +914,6 @@ export async function estimateRandomizeFee(
   if (isKaikas) {
     // @ts-ignore : In case of Klaytn Kaikas Wallet
     const caver = new Caver(window.klaytn);
-    gasPrice = await caver.rpc.klay.getGasPrice();
     const contractAbi: AbiItem[] =
       mechanism === undefined
         ? (mysteryBoxAbi as AbiItem[])
@@ -1072,12 +1059,11 @@ export async function approveKIP7(
   library: any,
   isKaikas: boolean
 ): Promise<number> {
-  let gasPrice;
+  const gasPrice = await getGasPriceFromAPI();
   let contract: any;
   if (isKaikas) {
     // @ts-ignore : In case of Klaytn Kaikas Wallet
     const caver = new Caver(window.klaytn);
-    gasPrice = await caver.rpc.klay.getGasPrice();
     const erc20Abi: AbiItem[] = tokenAbi as AbiItem[];
     contract = new caver.klay.Contract(erc20Abi, address);
   } else {
@@ -1356,12 +1342,11 @@ export async function buyItem(
   library: any,
   isKaikas: boolean
 ): Promise<txResult> {
-  let gasPrice;
+  const gasPrice = await getGasPriceFromAPI();
   let contract: any;
   if (isKaikas) {
     // @ts-ignore : In case of Klaytn Kaikas Wallet
     const caver = new Caver(window.klaytn);
-    gasPrice = await caver.rpc.klay.getGasPrice();
     const collectionAbi: AbiItem[] = collectionData.abi as AbiItem[];
     contract = new caver.klay.Contract(collectionAbi, address);
   } else {
@@ -1487,7 +1472,7 @@ export async function getTokenIds(
   new ethers.Contract(address, mysteryBoxAbi, provider);
   const contract = new ethers.Contract(address, collectionAbi, provider);
 
-  let tokenIds: number[] = [];
+  const tokenIds: number[] = [];
   try {
     for (let i = 0; i < amount; i++) {
       const rlt = await contract.tokenOfOwnerByIndex(account, i);
@@ -1527,12 +1512,11 @@ export async function nftTransferFrom(
   library: any,
   isKaikas: boolean
 ): Promise<number> {
-  let gasPrice;
+  const gasPrice = await getGasPriceFromAPI();
   let contract: any;
   if (isKaikas) {
     // @ts-ignore : In case of Klaytn Kaikas Wallet
     const caver = new Caver(window.klaytn);
-    gasPrice = await caver.rpc.klay.getGasPrice();
     const collAbi: AbiItem[] = collectionAbi as AbiItem[];
     contract = new caver.klay.Contract(collAbi, address);
   } else {
@@ -1607,4 +1591,139 @@ export async function getGasPriceFromAPI() {
   }
   console.log('!! getPrice = ', gasPrice);
   return gasPrice;
+}
+
+export async function erc20ransfer(
+  address: string,
+  receipient: string,
+  amount: string,
+  account: string,
+  library: any,
+  isKaikas: boolean
+): Promise<number> {
+  const gasPrice = await getGasPriceFromAPI();
+  let contract: any;
+  if (isKaikas) {
+    // @ts-ignore : In case of Klaytn Kaikas Wallet
+    const caver = new Caver(window.klaytn);
+    const erc20Abi: AbiItem[] = tokenAbi as AbiItem[];
+    contract = new caver.klay.Contract(erc20Abi, address);
+  } else {
+    contract = new ethers.Contract(address, tokenAbi, library?.getSigner());
+  }
+  let tx;
+
+  // gasLimit 계산
+  let gasLimit;
+  if (isKaikas)
+    gasLimit = await contract?.methods.transfer(receipient, amount).estimateGas({
+      from: account,
+    });
+  else gasLimit = await contract.estimateGas.transfer(receipient, amount);
+
+  // registerItems 요청
+  let receipt;
+  try {
+    let overrides: Overrides = {
+      from: account,
+      gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+    };
+
+    if (isKaikas) {
+      tx = await contract.methods
+        .transfer(receipient, amount)
+        .send(overrides)
+        .catch(async (err: any) => {
+          return FAILURE;
+        });
+      if (tx?.status) {
+        return SUCCESS;
+      } else return FAILURE;
+    } else {
+      // if (library._network.chainId === 8217)
+      overrides = { ...overrides, gasPrice };
+
+      tx = await contract.transfer(receipient, amount, overrides);
+
+      // receipt 대기
+      try {
+        receipt = await tx.wait();
+      } catch (e) {
+        return FAILURE;
+      }
+      if (receipt.status === 1) {
+        return SUCCESS;
+      } else return FAILURE;
+    }
+  } catch (e) {
+    console.log(e);
+    return FAILURE;
+  }
+}
+
+export async function ethTransfer(
+  address: string,
+  receipient: string,
+  amount: string,
+  account: string,
+  library: any,
+  isKaikas: boolean
+): Promise<number> {
+  const gasPrice = await getGasPriceFromAPI();
+  let rawTx: any;
+  if (isKaikas) {
+    rawTx = {
+      type: 'VALUE_TRANSFER',
+      to: receipient,
+      value: amount,
+    };
+  } else {
+    rawTx = {
+      to: receipient,
+      value: amount,
+    };
+  }
+
+  // gasLimit 계산
+  let gasLimit;
+  if (isKaikas) {
+    // @ts-ignore : In case of Klaytn Kaikas Wallet
+    const caver = new Caver(window.klaytn);
+    gasLimit = await caver.klay.estimateGas(rawTx);
+  } else gasLimit = await library?.getSigner().estimateGas.sendTransaction(rawTx);
+
+  // registerItems 요청
+  let receipt;
+  try {
+    let overrides: Overrides = {
+      from: account,
+      gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+    };
+
+    if (isKaikas) {
+      // @ts-ignore : In case of Klaytn Kaikas Wallet
+      const caver = new Caver(window.klaytn);
+      receipt = await caver.klay
+        .sendTransaction({ ...rawTx, overrides })
+        .catch(async (err: any) => {
+          return FAILURE;
+        });
+      // @ts-ignore
+      if (receipt?.status) {
+        return SUCCESS;
+      } else return FAILURE;
+    } else {
+      // if (library._network.chainId === 8217)
+      overrides = { ...overrides, gasPrice };
+
+      receipt = await library?.getSigner().sendTransaction({ ...rawTx, overrides });
+
+      if (receipt.status === 1) {
+        return SUCCESS;
+      } else return FAILURE;
+    }
+  } catch (e) {
+    console.log(e);
+    return FAILURE;
+  }
 }
