@@ -53,8 +53,8 @@ type EETicketTypes = {
 
 const Header = styled(Typography)(({ theme }) => ({
   fontWeight: 700,
-  fontSize: '16px',
-  lineHeight: 24 / 16,
+  fontSize: '32px',
+  lineHeight: '36px',
   color: theme.palette.common.black,
 
   [theme.breakpoints.up('md')]: {
@@ -76,7 +76,7 @@ const StyledTextField = styled(TextField)(({ theme }) => ({
 }));
 
 const FormSchema = Yup.object().shape({
-  email: Yup.string().required('ID is required'),
+  email: Yup.string().email().required('Email is required'),
   password: Yup.string().required('Password is required'),
 });
 
@@ -151,7 +151,7 @@ const ImportEETickets = () => {
   }, [isLogin, refetch]);
 
   return (
-    <Stack gap={2} component="form" onSubmit={handleSubmit(onSubmit)}>
+    <Stack gap={2} component="form" onSubmit={handleSubmit(onSubmit)} p={'10px'}>
       <Header>{isLogin ? 'Ticket List' : 'Login'}</Header>
       {!isLogin ? (
         <>
@@ -161,7 +161,7 @@ const ImportEETickets = () => {
           </SectionText>
           <Section>
             <Label as="label" sx={{ color: palette.dark.black.lighter }}>
-              ID
+              eMAIL (ee market)
             </Label>
 
             <Controller
@@ -171,7 +171,7 @@ const ImportEETickets = () => {
                 <StyledTextField
                   {...field}
                   autoComplete="off"
-                  placeholder="Please enter account holder"
+                  placeholder="Please enter your email"
                   variant="standard"
                   size={'small'}
                   inputProps={{
@@ -198,7 +198,7 @@ const ImportEETickets = () => {
                   {...field}
                   autoComplete="off"
                   type="password"
-                  placeholder="Please enter account number"
+                  placeholder="Please enter password"
                   variant="standard"
                   size={'small'}
                   inputProps={{
@@ -221,7 +221,7 @@ const ImportEETickets = () => {
               }}
               justifyContent="space-between"
             >
-              <SectionText sx={{ color: 'red' }}>ID and password do not match.</SectionText>
+              <SectionText sx={{ color: 'red' }}>Email and password do not match.</SectionText>
 
               <SectionText
                 sx={{ cursor: 'pointer' }}
@@ -266,7 +266,19 @@ const ImportEETickets = () => {
                     {`${ticket.ticketName} - ${ticket.location1}`}
                   </Typography>
                 </Box>
-                <RoundedButton onClick={() => handleClickImport(ticket)}>Import</RoundedButton>
+                {ticket.id ? (
+                  <RoundedButton
+                    sx={{ padding: '10px 16px' }}
+                    size="small"
+                    onClick={() => handleClickImport(ticket)}
+                  >
+                    Import
+                  </RoundedButton>
+                ) : (
+                  <RoundedButton sx={{ padding: '10px 16px' }} size="small" variant="inactive">
+                    DONE
+                  </RoundedButton>
+                )}
               </Box>
               <Divider />
             </Box>

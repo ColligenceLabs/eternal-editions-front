@@ -536,17 +536,15 @@ Type: Address verification`;
                       </Stack>
                     </Box>
 
-                    {isDesktop ? (
-                      <Stack mt={{ md: '205px' }}>
-                        <ProfileTextAction onClick={() => setIsOpenImportAccountForm(true)}>
-                          Get Existing Account (EE Market)
-                        </ProfileTextAction>
-                        <ProfileTextAction onClick={() => setOpenDeactivateModal(true)}>
-                          Deactivate Account
-                        </ProfileTextAction>
-                        <ProfileTextAction onClick={logout}>Logout</ProfileTextAction>
-                      </Stack>
-                    ) : null}
+                    <Stack mt={'20px'} ml="-5px">
+                      <ProfileTextAction onClick={() => setIsOpenImportAccountForm(true)}>
+                        Get Existing Account (EE Market)
+                      </ProfileTextAction>
+                      <ProfileTextAction onClick={() => setOpenDeactivateModal(true)}>
+                        Deactivate Account
+                      </ProfileTextAction>
+                      <ProfileTextAction onClick={logout}>Logout</ProfileTextAction>
+                    </Stack>
                   </Box>
                 </Stack>
               </Grid>

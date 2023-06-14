@@ -62,7 +62,7 @@ export default function ModalCustom({
       {...props}
     >
       {/* <Fade in={open}> */}
-      <Container sx={{ width: 'min(100%, 400px)', ...containerStyles }} tabIndex="">
+      <Container sx={{ width: 'min(95%, 400px)', ...containerStyles }} tabIndex="">
         <Box
           sx={{
             position: 'absolute',
