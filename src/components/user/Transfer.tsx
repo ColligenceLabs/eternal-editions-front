@@ -20,6 +20,12 @@ import RoundedButton from 'src/components/common/RoundedButton';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import { styled } from '@mui/material/styles';
+import { ethers } from 'ethers';
+import { abcSendMatic, abcSendTx } from 'src/utils/abcTransactions';
+import tokenAbi from 'src/config/abi/ERC20Token.json';
+import contracts from 'src/config/constants/contracts';
+import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
+import { useSelector } from 'react-redux';
 
 const StyledInput = styled(Input)(({}) => ({
   [`.${inputBaseClasses.input}::placeholder`]: {
@@ -81,6 +87,8 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
     twofacode: '',
   };
 
+  const { library, chainId } = useActiveWeb3React();
+  const abcUser = useSelector((state: any) => state.user);
   const [transferData, setTransferData] = useState<TransferData>(defaultValues);
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(StepStatus.step1);
@@ -125,6 +133,36 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
     } else if (step === StepStatus.step2) {
       console.log(value.twofacode);
       setStep(StepStatus.step3);
+
+      const loginBy = window.localStorage.getItem('loginBy') ?? 'sns';
+      if (loginBy === 'sns') {
+        if (value.token === 'usdc') {
+          const to = contracts.usdc[chainId]; // USDC Smart Contract
+          const method = 'transfer';
+          const txArgs = [
+            value.address, // Recipient
+            ethers.utils.parseUnits(value.amount, 6), // Amount, USDC decimal = 6
+          ];
+          const result: any = await abcSendTx(
+            value.twofacode,
+            to,
+            tokenAbi,
+            method,
+            txArgs,
+            abcUser
+          );
+          console.log('== tx result ==', result.status); // 0x1 : 성공
+        } else {
+          const result: any = await abcSendMatic(
+            value.twofacode,
+            value.address,
+            abcUser,
+            ethers.utils.parseEther(value.amount).toString()
+          );
+          console.log('== tx result ==', result.status);
+        }
+      } else {
+      }
     } else {
       console.log(step);
       onClose();

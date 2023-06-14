@@ -222,7 +222,7 @@ export const abcSendMatic = async (
 
   const { blockGasLimit, estimatedGasHex, simulationFails } = await gasService.analyzeGasUsage(
     // payload.params[0],
-    { from: account.ethAddress, to, value: value ? value : '0x0' },
+    { from: account.ethAddress, to, value: value ? BigNumber.from(value).toHexString() : '0x0' },
     latestBlock
   );
 
@@ -239,13 +239,14 @@ export const abcSendMatic = async (
   // 6. unSignedTx 생성
   const txParams: TxParams = {
     chainId: env.REACT_APP_TARGET_NETWORK,
-    value: value ? value : '0x0',
+    value: value ? BigNumber.from(value).toHexString() : '0x0',
     // gasLimit: '0x7a120', //'0x010cd2',
     gasLimit,
     // gasPrice: '0x0ba43b7400',
     gasPrice,
     to,
     nonce: nextNonce,
+    // data: '0x',
   };
   console.log('=== txParams ===>', txParams);
   // const txParams = {
