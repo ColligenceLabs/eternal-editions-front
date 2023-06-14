@@ -1709,11 +1709,13 @@ export async function ethTransfer(
     if (isKaikas) {
       // @ts-ignore : In case of Klaytn Kaikas Wallet
       const caver = new Caver(window.klaytn);
+
       receipt = await caver.klay
-        .sendTransaction({ ...rawTx, overrides })
+        .sendTransaction({ ...rawTx, ...overrides })
         .catch(async (err: any) => {
           return FAILURE;
         });
+
       // @ts-ignore
       if (receipt?.status) {
         return SUCCESS;
@@ -1722,7 +1724,7 @@ export async function ethTransfer(
       // if (library._network.chainId === 8217)
       overrides = { ...overrides, gasPrice };
 
-      receipt = await library?.getSigner().sendTransaction({ ...rawTx, overrides });
+      receipt = await library?.getSigner().sendTransaction({ ...rawTx, ...overrides });
 
       if (receipt.status === 1) {
         return SUCCESS;
