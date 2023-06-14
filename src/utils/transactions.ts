@@ -1670,7 +1670,6 @@ export async function ethTransfer(
   library: any,
   isKaikas: boolean
 ): Promise<number> {
-  const gasPrice = await getGasPriceFromAPI();
   let rawTx: any;
   if (isKaikas) {
     rawTx = {
@@ -1685,6 +1684,7 @@ export async function ethTransfer(
     };
   }
 
+  const gasPrice = await getGasPriceFromAPI();
   let nonce: any;
   let gasLimit: any;
   if (isKaikas) {
@@ -1697,34 +1697,25 @@ export async function ethTransfer(
     gasLimit = await library?.getSigner().estimateGas.sendTransaction(rawTx);
   }
 
+  rawTx = { ...rawTx, from: account, gasPrice, gasLimit, nonce };
+
   // registerItems 요청
   let receipt;
   try {
-    let overrides: Overrides = {
-      from: account,
-      gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
-      nonce,
-    };
-
     if (isKaikas) {
       // @ts-ignore : In case of Klaytn Kaikas Wallet
       const caver = new Caver(window.klaytn);
 
-      receipt = await caver.klay
-        .sendTransaction({ ...rawTx, ...overrides })
-        .catch(async (err: any) => {
-          return FAILURE;
-        });
+      receipt = await caver.klay.sendTransaction(rawTx).catch(async (err: any) => {
+        return FAILURE;
+      });
 
       // @ts-ignore
       if (receipt?.status) {
         return SUCCESS;
       } else return FAILURE;
     } else {
-      // if (library._network.chainId === 8217)
-      overrides = { ...overrides, gasPrice };
-
-      receipt = await library?.getSigner().sendTransaction({ ...rawTx, ...overrides });
+      receipt = await library?.getSigner().sendTransaction(rawTx);
 
       if (receipt.status === 1) {
         return SUCCESS;
