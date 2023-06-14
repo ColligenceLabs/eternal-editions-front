@@ -10,6 +10,7 @@ import {
   Typography,
   formControlLabelClasses,
   svgIconClasses,
+  IconButton,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
@@ -51,6 +52,9 @@ import RegisterAccount from 'src/components/user/RegisterAccount';
 import ImportEETickets from 'src/components/user/ImportEETickets';
 import useUSDC from 'src/hooks/useUSDC';
 import useEDCP from 'src/hooks/useEDCP';
+import SaveAltIcon from '@mui/icons-material/SaveAlt';
+import SendIcon from '@mui/icons-material/Send';
+import Transfer from 'src/components/user/Transfer';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
@@ -110,6 +114,23 @@ const Icon = styled(Box)(({ theme }) => ({
   alignItems: 'center',
 }));
 
+const CryptoButtonsWrapper = styled(Box)`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+`;
+
+const CryptoButtonWrapper = styled(Box)`
+  background-color: #f5f5f5;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 5px;
+  border-radius: 50%;
+  cursor: pointer;
+`;
+
 export default function MyAccountPage() {
   const { usdcBalance } = useUSDC();
   const { edcpPoint } = useEDCP();
@@ -128,6 +149,7 @@ export default function MyAccountPage() {
   const [selectedAccount, setSelectedAccount] = useState(
     user.abc_address || user.eth_address || ''
   );
+  const [isOpenTransfer, setIsOpenTransfer] = useState({ open: false, token: '' });
   const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
   const [isConfirmDeactivate, setIsConfirmDeactivate] = useState(false);
   const [isOpenCreateWalletForm, setIsOpenCreateWalletForm] = useState<boolean>(false);
@@ -209,6 +231,15 @@ export default function MyAccountPage() {
     } finally {
       handleSignUpClose();
     }
+  };
+
+  const handleClickSend = (token: string) => {
+    console.log(`handle click ${token} send.`);
+    setIsOpenTransfer({ open: true, token: token });
+  };
+
+  const handleClickReceive = (token: string) => {
+    console.log(`handle click ${token} receive.`);
   };
 
   useEffect(() => {
@@ -395,21 +426,22 @@ Type: Address verification`;
                               {balance.toFixed(5)} MATIC
                             </Typography>
                           </Box>
-                          {/*<Box*/}
-                          {/*  sx={{*/}
-                          {/*    backgroundColor: '#F5F5F5',*/}
-                          {/*    textAlign: 'center',*/}
-                          {/*    borderRadius: '40px',*/}
-                          {/*    cursor: 'pointer',*/}
-                          {/*    padding: '5px 15px',*/}
-                          {/*  }}*/}
-                          {/*>*/}
-                          {/*  <Typography*/}
-                          {/*    sx={{ fontSize: '13px', fontWeight: '700', color: '#999999' }}*/}
-                          {/*  >*/}
-                          {/*    BUY*/}
-                          {/*  </Typography>*/}
-                          {/*</Box>*/}
+                          <CryptoButtonsWrapper>
+                            <CryptoButtonWrapper>
+                              <SaveAltIcon
+                                fontSize={'small'}
+                                sx={{ color: '#999999' }}
+                                onClick={() => handleClickReceive('matic')}
+                              />
+                            </CryptoButtonWrapper>
+                            <CryptoButtonWrapper>
+                              <SendIcon
+                                fontSize={'small'}
+                                sx={{ color: '#999999' }}
+                                onClick={() => handleClickSend('matic')}
+                              />
+                            </CryptoButtonWrapper>
+                          </CryptoButtonsWrapper>
                         </Box>
                         <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                           <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -424,21 +456,22 @@ Type: Address verification`;
                               {usdcBalance} USDC
                             </Typography>
                           </Box>
-                          {/*<Box*/}
-                          {/*  sx={{*/}
-                          {/*    backgroundColor: '#F5F5F5',*/}
-                          {/*    textAlign: 'center',*/}
-                          {/*    borderRadius: '40px',*/}
-                          {/*    cursor: 'pointer',*/}
-                          {/*    padding: '5px 15px',*/}
-                          {/*  }}*/}
-                          {/*>*/}
-                          {/*  <Typography*/}
-                          {/*    sx={{ fontSize: '13px', fontWeight: '700', color: '#999999' }}*/}
-                          {/*  >*/}
-                          {/*    BUY*/}
-                          {/*  </Typography>*/}
-                          {/*</Box>*/}
+                          <CryptoButtonsWrapper>
+                            <CryptoButtonWrapper>
+                              <SaveAltIcon
+                                fontSize={'small'}
+                                sx={{ color: '#999999' }}
+                                onClick={() => handleClickReceive('usdc')}
+                              />
+                            </CryptoButtonWrapper>
+                            <CryptoButtonWrapper>
+                              <SendIcon
+                                fontSize={'small'}
+                                sx={{ color: '#999999' }}
+                                onClick={() => handleClickSend('usdc')}
+                              />
+                            </CryptoButtonWrapper>
+                          </CryptoButtonsWrapper>
                         </Box>
                       </Stack>
                     </Box>
@@ -672,6 +705,16 @@ Type: Address verification`;
           onClose={() => setIsOpenImportAccountForm(false)}
         >
           <ImportEETickets />
+        </ModalCustom>
+
+        <ModalCustom
+          open={isOpenTransfer.open}
+          onClose={() => setIsOpenTransfer({ open: false, token: '' })}
+        >
+          <Transfer
+            token={isOpenTransfer.token}
+            onClose={() => setIsOpenTransfer({ open: false, token: '' })}
+          />
         </ModalCustom>
 
         <ModalCustom
