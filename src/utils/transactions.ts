@@ -1594,7 +1594,7 @@ export async function getGasPriceFromAPI() {
   return gasPrice;
 }
 
-export async function erc20ransfer(
+export async function erc20Transfer(
   address: string,
   receipient: string,
   amount: string,
@@ -1663,7 +1663,6 @@ export async function erc20ransfer(
 }
 
 export async function ethTransfer(
-  address: string,
   receipient: string,
   amount: string,
   account: string,
@@ -1685,19 +1684,20 @@ export async function ethTransfer(
   }
 
   const gasPrice = await getGasPriceFromAPI();
-  let nonce: any;
-  let gasLimit: any;
-  if (isKaikas) {
-    // @ts-ignore : In case of Klaytn Kaikas Wallet
-    const caver = new Caver(window.klaytn);
-    nonce = await caver.klay.getTransactionCount(account);
-    gasLimit = await caver.klay.estimateGas(rawTx);
-  } else {
-    nonce = await library?.getSigner().getProvider().getTransactionCount(account);
-    gasLimit = await library?.getSigner().estimateGas.sendTransaction(rawTx);
-  }
+  // let nonce: any;
+  // let gasLimit: any;
+  // if (isKaikas) {
+  // @ts-ignore : In case of Klaytn Kaikas Wallet
+  // const caver = new Caver(window.klaytn);
+  // nonce = await caver.klay.getTransactionCount(account);
+  // gasLimit = await caver.klay.estimateGas(rawTx);
+  // } else {
+  // nonce = await library?.getSigner().getProvider().getTransactionCount(account);
+  // gasLimit = await library?.getSigner().estimateGas.sendTransaction(rawTx);
+  // }
 
-  rawTx = { ...rawTx, from: account, gasPrice, gasLimit, nonce };
+  // rawTx = { ...rawTx, from: account, gasPrice, gasLimit, nonce };
+  rawTx = { ...rawTx, from: account, gasPrice };
 
   // registerItems 요청
   let receipt;

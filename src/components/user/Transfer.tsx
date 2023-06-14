@@ -26,6 +26,8 @@ import tokenAbi from 'src/config/abi/ERC20Token.json';
 import contracts from 'src/config/constants/contracts';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import { useSelector } from 'react-redux';
+import { erc20Transfer, ethTransfer } from 'src/utils/transactions';
+import useAccount from 'src/hooks/useAccount';
 
 const StyledInput = styled(Input)(({}) => ({
   [`.${inputBaseClasses.input}::placeholder`]: {
@@ -88,6 +90,7 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
   };
 
   const { library, chainId } = useActiveWeb3React();
+  const { account } = useAccount();
   const abcUser = useSelector((state: any) => state.user);
   const [transferData, setTransferData] = useState<TransferData>(defaultValues);
   const [isLoading, setIsLoading] = useState(false);
@@ -162,6 +165,26 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
           console.log('== tx result ==', result.status);
         }
       } else {
+        let result: any;
+        if (value.token === 'usdc') {
+          result = await erc20Transfer(
+            contracts.usdc[chainId],
+            value.address,
+            ethers.utils.parseUnits(value.amount, 6).toString(),
+            account!,
+            library,
+            false
+          );
+        } else {
+          result = await ethTransfer(
+            value.address,
+            ethers.utils.parseEther(value.amount).toString(),
+            account!,
+            library,
+            false
+          );
+        }
+        console.log('== tx result ==', result.status);
       }
     } else {
       console.log(step);
