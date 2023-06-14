@@ -32,6 +32,7 @@ interface Overrides {
   from: string | null | undefined;
   gasLimit: BigNumber;
   gasPrice?: string;
+  nonce?: any;
 }
 
 export async function registerItems(
@@ -1684,13 +1685,17 @@ export async function ethTransfer(
     };
   }
 
-  // gasLimit 계산
-  let gasLimit;
+  let nonce: any;
+  let gasLimit: any;
   if (isKaikas) {
     // @ts-ignore : In case of Klaytn Kaikas Wallet
     const caver = new Caver(window.klaytn);
+    nonce = await caver.klay.getTransactionCount(account);
     gasLimit = await caver.klay.estimateGas(rawTx);
-  } else gasLimit = await library?.getSigner().estimateGas.sendTransaction(rawTx);
+  } else {
+    nonce = await library?.getSigner().getProvider().getTransactionCount(account);
+    gasLimit = await library?.getSigner().estimateGas.sendTransaction(rawTx);
+  }
 
   // registerItems 요청
   let receipt;
@@ -1698,6 +1703,7 @@ export async function ethTransfer(
     let overrides: Overrides = {
       from: account,
       gasLimit: calculateGasMargin(BigNumber.from(gasLimit)),
+      nonce,
     };
 
     if (isKaikas) {
