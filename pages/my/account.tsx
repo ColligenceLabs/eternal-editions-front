@@ -55,8 +55,6 @@ import useEDCP from 'src/hooks/useEDCP';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import SendIcon from '@mui/icons-material/Send';
 import Transfer from 'src/components/user/Transfer';
-import { isNotOpeningParenToken } from '@typescript-eslint/utils/dist/ast-utils';
-import PhoneNumberChange from 'src/components/user/PhoneNumberChange';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
@@ -158,7 +156,6 @@ export default function MyAccountPage() {
   const [bankAccount, setBankAccount] = useState('');
   const [isOpenBankAccountForm, setIsOpenBankAccountForm] = useState(false);
   const [isOpenImportAccountForm, setIsOpenImportAccountForm] = useState(false);
-  const [isOpenPhoneNumberChange, setIsOpenPhoneNumberChange] = useState(false);
   const onCloseDeactivateModal = () => {
     deactivate();
     setOpenDeactivateModal(false);
@@ -206,6 +203,10 @@ export default function MyAccountPage() {
       await logout();
       router.push('/');
     }
+  };
+
+  const handleClickChangePhonenumber = () => {
+    console.log('handleClickChangePhonenumber');
   };
 
   const connectWallet = async (id: any) => {
@@ -573,13 +574,7 @@ Type: Address verification`;
                     <SectionHeader>Phone Number</SectionHeader>
                     <SectionText>{user.phone && user.phone}</SectionText>
                     <Stack flexDirection="row">
-                      <CButton
-                        onClick={() => {
-                          setIsOpenPhoneNumberChange(true);
-                        }}
-                      >
-                        CHANGE PHONE NUMBER
-                      </CButton>
+                      <CButton onClick={handleClickChangePhonenumber}>CHANGE PHONE NUMBER</CButton>
                     </Stack>
                   </Stack>
 
@@ -727,13 +722,6 @@ Type: Address verification`;
             token={isOpenTransfer.token}
             onClose={() => setIsOpenTransfer({ open: false, token: '' })}
           />
-        </ModalCustom>
-
-        <ModalCustom
-          open={isOpenPhoneNumberChange}
-          onClose={() => setIsOpenPhoneNumberChange(false)}
-        >
-          <PhoneNumberChange />
         </ModalCustom>
 
         <ModalCustom
