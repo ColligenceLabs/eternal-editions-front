@@ -1,4 +1,4 @@
-import { Box, Stack, Grid, Typography, useTheme, Chip } from '@mui/material';
+import { Box, Stack, Grid, Typography, useTheme, Chip, IconButton } from '@mui/material';
 import { m } from 'framer-motion';
 import { Image, TextMaxLine, varHover, varTranHover } from 'src/components';
 import React, { ReactElement, useEffect, useState } from 'react';
@@ -92,16 +92,17 @@ export default function TicketItem({ ticket }: any) {
                   position: 'absolute',
                 }}
               >
-                {ticket.mysteryboxInfo?.projectItems && ticket.mysteryboxInfo?.projectItems[0].title && (
-                  <Chip
-                    label={ticket.mysteryboxInfo.projectItems[0].title}
-                    variant="outlined"
-                    color="primary"
-                    sx={{
-                      fontWeight: theme.typography.fontWeightBold,
-                    }}
-                  />
-                )}
+                {ticket.mysteryboxInfo?.projectItems &&
+                  ticket.mysteryboxInfo?.projectItems[0].title && (
+                    <Chip
+                      label={ticket.mysteryboxInfo.projectItems[0].title}
+                      variant="outlined"
+                      color="primary"
+                      sx={{
+                        fontWeight: theme.typography.fontWeightBold,
+                      }}
+                    />
+                  )}
               </Stack>
               <Stack
                 sx={{
@@ -230,6 +231,24 @@ export default function TicketItem({ ticket }: any) {
                       SELL
                     </RoundedButton>
                   </Link>
+                  <IconButton
+                    sx={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      backgroundColor: '#222222',
+                      width: '56px',
+                      height: '56px',
+                      fontSize: 0,
+                    }}
+                  >
+                    <Image
+                      src="/assets/icons/icon-gift.svg"
+                      alt="gift-icon"
+                      width={24}
+                      height={24}
+                    />
+                  </IconButton>
                 </Stack>
               )}
 
