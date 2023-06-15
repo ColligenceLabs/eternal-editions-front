@@ -240,6 +240,9 @@ export default function TicketItem({ ticket }: any) {
                       width: '56px',
                       height: '56px',
                       fontSize: 0,
+                      [theme.breakpoints.down('md')]: {
+                        display: 'none',
+                      },
                     }}
                   >
                     <Image
@@ -253,7 +256,7 @@ export default function TicketItem({ ticket }: any) {
               )}
 
               {ticketInfo.status === 'MARKET' && (
-                <Stack sx={{ mt: 1 }} direction="row" spacing={2} justifyContent={'flex-end'}>
+                <Stack sx={{ mt: 1 }} direction="row" spacing={2}>
                   <Link
                     href={{
                       pathname: `/my/tickets/${ticketInfo.id}/`,
@@ -261,7 +264,6 @@ export default function TicketItem({ ticket }: any) {
                     passHref
                   >
                     <RoundedButton
-                      sx={{ flexBasis: '50%' }}
                       variant="withImage"
                       size={isMobile ? 'small' : 'large'}
                       fullWidth

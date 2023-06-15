@@ -61,7 +61,15 @@ export default function MyTicketPage() {
               <SideMenu chipLabel={itemCount} />
             </Grid>
 
-            <Grid item md={10}>
+            <Grid
+              item
+              md={10}
+              sx={{
+                [theme.breakpoints.down('md')]: {
+                  width: '100%',
+                },
+              }}
+            >
               <Stack sx={{ mb: 3 }}>
                 <MyTicketList loading={false} />
                 <MyOldTicketList loading={false} />
