@@ -1,9 +1,7 @@
-import React, { SetStateAction, useMemo, useState } from 'react';
+import React, { SetStateAction, useState } from 'react';
 import {
   buttonBaseClasses,
-  Checkbox,
   CircularProgress,
-  FormControlLabel,
   Input,
   InputAdornment,
   inputBaseClasses,
@@ -113,17 +111,7 @@ const Transfer: React.FC<TransferProps> = ({ token, amount: totalBalance, onClos
     },
   ];
 
-  const {
-    control,
-    getValues,
-    handleSubmit,
-    watch,
-    reset,
-    setError,
-    clearErrors,
-    setValue,
-    formState: { errors },
-  } = useForm<TransferData>({
+  const { control, handleSubmit, watch, setValue } = useForm<TransferData>({
     resolver: yupResolver(FormSchema),
     defaultValues: {
       ...defaultValues,
@@ -131,11 +119,15 @@ const Transfer: React.FC<TransferProps> = ({ token, amount: totalBalance, onClos
     },
   });
 
+  const handlePaste = (key: 'address' | 'token' | 'amount' | 'twofacode') => {
+    navigator.clipboard.readText().then((text) => {
+      setValue(key, text);
+    });
+  };
+
   const onSubmit = async (value: TransferData) => {
     const loginBy = window.localStorage.getItem('loginBy') ?? 'sns';
 
-    console.log(value);
-    console.log(step);
     if (step === StepStatus.step1) {
       setTransferData(value);
       if (loginBy === 'sns') setStep(StepStatus.step2);
@@ -322,7 +314,7 @@ const Transfer: React.FC<TransferProps> = ({ token, amount: totalBalance, onClos
                       <InputAdornment position="end">
                         <RoundedButton
                           variant="inactive"
-                          onClick={() => console.log('PASTE')}
+                          onClick={() => handlePaste('address')}
                           sx={{
                             padding: '10px 16px',
                             marginBottom: '24px',
@@ -392,8 +384,7 @@ const Transfer: React.FC<TransferProps> = ({ token, amount: totalBalance, onClos
                       <InputAdornment position="end">
                         <RoundedButton
                           variant="inactive"
-                          disabled={!watch('twofacode')}
-                          onClick={() => console.log('twofacode')}
+                          onClick={() => handlePaste('twofacode')}
                           sx={{
                             padding: '10px 16px',
                             marginBottom: '24px',
