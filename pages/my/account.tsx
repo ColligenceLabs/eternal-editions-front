@@ -1,4 +1,4 @@
-import { ReactElement, useEffect, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import Layout from 'src/layouts';
 import { Page } from 'src/components';
 import {
@@ -61,6 +61,7 @@ import useEDCP from 'src/hooks/useEDCP';
 import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import SendIcon from '@mui/icons-material/Send';
 import Transfer from 'src/components/user/Transfer';
+import CSnackbar from 'src/components/common/CSnackbar';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
@@ -166,6 +167,19 @@ export default function MyAccountPage() {
   const [isOpenBankAccountForm, setIsOpenBankAccountForm] = useState(false);
   const [isOpenImportAccountForm, setIsOpenImportAccountForm] = useState(false);
   const [refetchUserInfo, setRefetchUserInfo] = useState(true);
+  const [openSnackbar, setOpenSnackbar] = useState({
+    open: false,
+    type: '',
+    message: '',
+  });
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar({
+      open: false,
+      type: '',
+      message: '',
+    });
+  };
   const onCloseDeactivateModal = () => {
     deactivate();
     setOpenDeactivateModal(false);
@@ -779,6 +793,12 @@ Type: Address verification`;
                 </Grid>
               </Grid>
             </Box>
+            <CSnackbar
+              open={openSnackbar.open}
+              type={openSnackbar.type}
+              message={openSnackbar.message}
+              handleClose={handleCloseSnackbar}
+            />
           </MyAccountWrapper>
         )}
 
@@ -800,7 +820,7 @@ Type: Address verification`;
             setRefetchUserInfo(true);
           }}
         >
-          <RegisterAccount bankAccount={bankAccount} />
+          <RegisterAccount bankAccount={bankAccount} setOpenSnackbar={setOpenSnackbar} />
         </ModalCustom>
 
         <ModalCustom

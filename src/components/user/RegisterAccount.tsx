@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { SetStateAction, useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -28,11 +28,12 @@ const FormSchema = Yup.object().shape({
 
 interface Props {
   bankAccount: BankAccountTypes | null;
+  setOpenSnackbar: SetStateAction<any>;
 }
 
 const bankOptions = [{ value: 'TCB', label: 'TCB' }];
 
-const RegisterAccount = ({ bankAccount }: Props) => {
+const RegisterAccount = ({ bankAccount, setOpenSnackbar }: Props) => {
   const {
     control,
     setValue,
@@ -52,6 +53,17 @@ const RegisterAccount = ({ bankAccount }: Props) => {
     const res = await saveBankAccount(data);
     if (res.data.status === SUCCESS) {
       await dispatch(setWebUser(res.data.data));
+      setOpenSnackbar({
+        open: true,
+        type: 'success',
+        message: 'Success',
+      });
+    } else {
+      setOpenSnackbar({
+        open: true,
+        type: 'error',
+        message: 'Success',
+      });
     }
   };
 
