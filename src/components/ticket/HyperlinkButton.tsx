@@ -1,19 +1,19 @@
-import { IconButton } from '@mui/material';
+import { IconButton, IconButtonProps, SxProps } from '@mui/material';
 import React from 'react';
 import LaunchIcon from '@mui/icons-material/Launch';
 
-type Props = {
-  href: string;
-  styles: any;
-};
+interface Props extends IconButtonProps {
+  href?: string;
+  styles?: SxProps;
+}
 
-export default function HyperlinkButton({ href, styles }: Props) {
+export default function HyperlinkButton({ styles, href, ...props }: Props) {
   return (
     <IconButton
-      href={href}
-      target="_blank"
       sx={{ borderRadius: '100%', width: '32px', height: '32px', ...styles }}
       aria-label="hyperlink"
+      {...(href ? { target: '_blank' } : {})}
+      {...props}
     >
       <LaunchIcon sx={{ fontSize: '16px' }} />
     </IconButton>
