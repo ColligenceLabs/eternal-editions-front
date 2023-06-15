@@ -28,6 +28,7 @@ import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import { useSelector } from 'react-redux';
 import { erc20Transfer, ethTransfer } from 'src/utils/transactions';
 import useAccount from 'src/hooks/useAccount';
+import { SUCCESS } from 'src/config';
 
 const StyledInput = styled(Input)(({}) => ({
   [`.${inputBaseClasses.input}::placeholder`]: {
@@ -136,6 +137,7 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
       setTransferData(value);
       if (loginBy === 'sns') setStep(StepStatus.step2);
       else {
+        // Metamask
         setIsLoading(true);
         let result: any;
         if (value.token === 'usdc') {
@@ -156,12 +158,17 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
             false
           );
         }
-        console.log('== tx result ==', result.status);
+        console.log('== tx result ==', result);
         setIsLoading(false);
-        setStep(StepStatus.step3);
+        if (result === SUCCESS) setStep(StepStatus.step3);
+        else {
+          // TODO : 화면에 에러 표시
+          console.log('!! transfer failed...');
+        }
       }
     } else if (step === StepStatus.step2) {
       console.log(value.twofacode);
+      let result: any;
       setIsLoading(true);
       if (loginBy === 'sns') {
         if (value.token === 'usdc') {
@@ -171,17 +178,10 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
             value.address, // Recipient
             ethers.utils.parseUnits(value.amount, 6), // Amount, USDC decimal = 6
           ];
-          const result: any = await abcSendTx(
-            value.twofacode,
-            to,
-            tokenAbi,
-            method,
-            txArgs,
-            abcUser
-          );
+          result = await abcSendTx(value.twofacode, to, tokenAbi, method, txArgs, abcUser);
           console.log('== tx result ==', result.status); // 0x1 : 성공
         } else {
-          const result: any = await abcSendMatic(
+          result = await abcSendMatic(
             value.twofacode,
             value.address,
             abcUser,
@@ -191,7 +191,11 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
         }
       }
       setIsLoading(false);
-      setStep(StepStatus.step3);
+      if (result?.status === '0x1') setStep(StepStatus.step3);
+      else {
+        // TODO : 화면에 에러 표시
+        console.log('!! transfer failed...');
+      }
     } else {
       console.log(step);
       onClose();
