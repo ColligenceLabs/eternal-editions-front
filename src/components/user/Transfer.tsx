@@ -29,6 +29,7 @@ import { useSelector } from 'react-redux';
 import { erc20Transfer, ethTransfer } from 'src/utils/transactions';
 import useAccount from 'src/hooks/useAccount';
 import { SUCCESS } from 'src/config';
+import Image from '../Image';
 
 const StyledInput = styled(Input)(({}) => ({
   [`.${inputBaseClasses.input}::placeholder`]: {
@@ -101,12 +102,12 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
     {
       value: 'matic',
       label: 'MATIC',
-      icon: '',
+      icon: '/assets/img/matic-token-icon.png',
     },
     {
       value: 'usdc',
       label: 'USDC',
-      icon: '',
+      icon: '/assets/img/usdc-token-icon.png',
     },
   ];
 
@@ -202,15 +203,14 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
     }
   };
   return (
-    <Stack gap={2} component="form" onSubmit={handleSubmit(onSubmit)}>
+    <Stack gap={3} component="form" onSubmit={handleSubmit(onSubmit)} pt={1}>
       {step === StepStatus.step1 && (
         <>
           <Typography
             sx={{
-              fontSize: { xs: '16px', md: '24px' },
+              fontSize: '32px',
               fontWeight: 'bold',
-              lineHeight: { xs: '24px', md: '28px' },
-              mb: 2,
+              lineHeight: '36px',
             }}
           >
             Transfer
@@ -225,11 +225,20 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
               control={control}
               render={({ field }) => (
                 <Select {...field} variant="standard" sx={{ color: '#000' }} MenuProps={MenuProps}>
-                  {tokens.map(({ value, label }: { value: string; label: string }) => (
-                    <RoundedSelectOption value={value} key={value}>
-                      {label}
-                    </RoundedSelectOption>
-                  ))}
+                  {tokens.map(
+                    ({ value, label, icon }: { value: string; label: string; icon: string }) => (
+                      <RoundedSelectOption value={value} key={value}>
+                        <Stack gap={1} flexDirection={'row'} alignItems={'center'}>
+                          <Image
+                            alt="edcp-logo"
+                            src={icon}
+                            sx={{ width: '24px', height: '24px' }}
+                          />
+                          {label}
+                        </Stack>
+                      </RoundedSelectOption>
+                    )
+                  )}
                 </Select>
               )}
             />
@@ -263,23 +272,25 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
                 )}
               />
             </Stack>
-            <RoundedButton
-              variant="inactive"
-              onClick={() => console.log('Send all')}
-              sx={{
-                padding: '10px 16px',
-                [`&.${buttonBaseClasses.root}`]: {
-                  fontSize: 12,
-                  lineHeight: 13 / 12,
-                },
-              }}
-            >
-              {'SEND ALL'}
-            </RoundedButton>
+            <div>
+              <RoundedButton
+                variant="inactive"
+                onClick={() => console.log('Send all')}
+                sx={{
+                  padding: '10px 16px',
+                  [`&.${buttonBaseClasses.root}`]: {
+                    fontSize: 12,
+                    lineHeight: 13 / 12,
+                  },
+                }}
+              >
+                {'SEND ALL'}
+              </RoundedButton>
+            </div>
           </Section>
           <Section>
             <Label as="label" sx={{ color: palette.dark.black.lighter }}>
-              PHONE NUMBER
+              Recipient wallet address
             </Label>
 
             <Controller
@@ -332,7 +343,7 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
             />
           </Section>
           <RoundedButton type="submit">
-            {isLoading ? <CircularProgress size={15} color="secondary" /> : 'Continue'}
+            {isLoading ? <CircularProgress size={15} color="secondary" /> : 'Next'}
           </RoundedButton>
         </>
       )}
@@ -340,10 +351,9 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
         <>
           <Typography
             sx={{
-              fontSize: { xs: '16px', md: '24px' },
+              fontSize: '32px',
               fontWeight: 'bold',
-              lineHeight: { xs: '24px', md: '28px' },
-              mb: 2,
+              lineHeight: '36px',
             }}
           >
             Transfer
@@ -403,7 +413,7 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
               )}
             />
           </Section>
-          <RoundedButton type="submit">
+          <RoundedButton type="submit" variant={!!watch('twofacode') ? 'default' : 'withImage'}>
             {isLoading ? <CircularProgress size={15} color="secondary" /> : 'SEND'}
           </RoundedButton>
         </>
@@ -412,17 +422,30 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
         <>
           <Typography
             sx={{
-              fontSize: { xs: '16px', md: '24px' },
+              fontSize: '32px',
               fontWeight: 'bold',
-              lineHeight: { xs: '24px', md: '28px' },
-              mb: 2,
+              lineHeight: '36px',
             }}
           >
             Transfer Successful
           </Typography>
+
           <Stack gap="12px">
             <SectionHeader>TOKEN</SectionHeader>
-            <SectionText>{transferData.token}</SectionText>
+            <SectionText>
+              <Stack gap={1} flexDirection={'row'} alignItems={'center'}>
+                <Image
+                  alt="token"
+                  src={
+                    transferData.token === 'matic'
+                      ? '/assets/img/matic-token-icon.png'
+                      : '/assets/img/usdc-token-icon.png'
+                  }
+                  sx={{ width: '24px', height: '24px' }}
+                />
+                {transferData.token}
+              </Stack>
+            </SectionText>
           </Stack>
           <Stack gap="12px">
             <SectionHeader>AMOUNT</SectionHeader>
