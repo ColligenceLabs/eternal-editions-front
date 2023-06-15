@@ -4,6 +4,9 @@ const initialState = {
   user: {
     uid: '',
     provider_id: '',
+    accountHolder: '',
+    accountNumber: '',
+    bank: '',
     auth_type: '',
     provider_data: '',
     eth_address: '',
@@ -32,6 +35,9 @@ const userSlice = createSlice({
       state.user = {
         uid: '',
         provider_id: '',
+        accountHolder: '',
+        accountNumber: '',
+        bank: '',
         auth_type: '',
         provider_data: '',
         eth_address: '',

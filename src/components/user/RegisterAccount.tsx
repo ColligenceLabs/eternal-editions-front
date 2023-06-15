@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -8,6 +8,17 @@ import { Label, Section } from '../my-tickets/StyledComponents';
 import palette from 'src/theme/palette';
 import { MenuProps, RoundedSelectOption } from '../common/Select';
 import RoundedButton from '../common/RoundedButton';
+import { saveBankAccount } from 'src/services/services';
+import { User } from 'src/@types/user';
+import { useDispatch, useSelector } from 'react-redux';
+import { SUCCESS } from 'src/config';
+import { setWebUser } from 'src/store/slices/webUser';
+
+type BankAccountTypes = {
+  accountHolder: string;
+  accountNumber: string;
+  bank: string;
+};
 
 const FormSchema = Yup.object().shape({
   accountHolder: Yup.string().required('Account holder is required'),
@@ -16,37 +27,45 @@ const FormSchema = Yup.object().shape({
 });
 
 interface Props {
-  hasBankAccount: boolean;
+  bankAccount: BankAccountTypes | null;
 }
-
-type Account = {
-  accountHolder: string;
-  bank: string;
-  accountNumber: string;
-};
 
 const bankOptions = [{ value: 'TCB', label: 'TCB' }];
 
-const RegisterAccount = ({ hasBankAccount }: Props) => {
+const RegisterAccount = ({ bankAccount }: Props) => {
   const {
     control,
+    setValue,
     handleSubmit,
     formState: { isValid },
-  } = useForm<Account>({
+  } = useForm<BankAccountTypes>({
     mode: 'onTouched',
     resolver: yupResolver(FormSchema),
     defaultValues: {
       bank: 'default',
     },
   });
-
-  const onSubmit = async (values: Account) => {
-    console.log('values: ', values);
+  const { user }: { user: User } = useSelector((state: any) => state.webUser);
+  const dispatch = useDispatch();
+  const onSubmit = async (values: BankAccountTypes) => {
+    const data = { ...values, uid: user.uid };
+    const res = await saveBankAccount(data);
+    if (res.data.status === SUCCESS) {
+      await dispatch(setWebUser(res.data.data));
+    }
   };
+
+  useEffect(() => {
+    if (bankAccount) {
+      setValue('accountHolder', bankAccount.accountHolder);
+      setValue('bank', bankAccount.bank);
+      setValue('accountNumber', bankAccount.accountNumber);
+    }
+  }, [bankAccount]);
 
   return (
     <Stack gap={2} component="form" onSubmit={handleSubmit(onSubmit)}>
-      <Header>{hasBankAccount ? 'Change Account' : 'Register Account'}</Header>
+      <Header>{bankAccount ? 'Change Account' : 'Register Account'}</Header>
       <SectionText>
         You can only enter an account number in your own name, and you cannot verify with an account
         registered by someone else. The account information you provide will be stored as your basic

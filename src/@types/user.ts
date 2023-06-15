@@ -3,6 +3,9 @@ export interface User {
   provider_id: string;
   auth_type: string;
   provider_data: string;
+  accountHolder: string;
+  accountNumber: string;
+  bank: string;
   eth_address: null;
   role: string;
   name: string;

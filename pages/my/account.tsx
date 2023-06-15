@@ -10,7 +10,6 @@ import {
   Typography,
   formControlLabelClasses,
   svgIconClasses,
-  IconButton,
 } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import {
@@ -32,6 +31,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
   deleteAddress,
   getCertifications,
+  getUser,
   removeUser,
   savePhoneNumber,
   updateAddress,
@@ -137,31 +137,35 @@ const CryptoButtonWrapper = styled(Box)`
   cursor: pointer;
 `;
 
+type BankAccountTypes = {
+  accountHolder: string;
+  accountNumber: string;
+  bank: string;
+};
+
 export default function MyAccountPage() {
   const { usdcBalance } = useUSDC();
   const { edcpPoint } = useEDCP();
   const router = useRouter();
   const isDesktop = useResponsive('up', 'md');
   const { account } = useAccount();
-  const { user }: { user: User } = useSelector((state: any) => state.webUser);
   const abcUser = useSelector((state: any) => state.user);
   const context = useActiveWeb3React();
   const { activate, chainId, deactivate, library } = context;
   const dispatch = useDispatch();
+  const [user, setUser] = useState<User | null>(null);
   const [doAddWallet, setDoAddWallet] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [openSignUp, setOpenSignUp] = useState(false);
   const balance = getBalances(account, library);
-  const [selectedAccount, setSelectedAccount] = useState(
-    user.abc_address || user.eth_address || ''
-  );
   const [isOpenTransfer, setIsOpenTransfer] = useState({ open: false, token: '', amount: 0 });
   const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
   const [isConfirmDeactivate, setIsConfirmDeactivate] = useState(false);
   const [isOpenCreateWalletForm, setIsOpenCreateWalletForm] = useState<boolean>(false);
-  const [bankAccount, setBankAccount] = useState('');
+  const [bankAccount, setBankAccount] = useState<BankAccountTypes | null>(null);
   const [isOpenBankAccountForm, setIsOpenBankAccountForm] = useState(false);
   const [isOpenImportAccountForm, setIsOpenImportAccountForm] = useState(false);
+  const [refetchUserInfo, setRefetchUserInfo] = useState(true);
   const onCloseDeactivateModal = () => {
     deactivate();
     setOpenDeactivateModal(false);
@@ -170,7 +174,6 @@ export default function MyAccountPage() {
 
   const logout = async () => {
     try {
-      // await deactivate();
       window.localStorage.setItem('walletStatus', 'disconnected');
       window.localStorage.removeItem('jwtToken');
       window.localStorage.removeItem('loginBy');
@@ -286,7 +289,7 @@ export default function MyAccountPage() {
       // 본인인증 정보 조회
       const res = await getCertifications(impUid);
       console.log(res);
-      if (res.data?.status === SUCCESS) {
+      if (user && res.data?.status === SUCCESS) {
         // save phone number
         const rst = await savePhoneNumber({ uid: user.uid, phone: res.data.data.phone });
         if (rst.data?.status === SUCCESS) {
@@ -301,7 +304,7 @@ export default function MyAccountPage() {
     };
     const impUid = router.query['imp_uid'];
     const success = router.query['success'];
-    if (user.uid && success === 'true' && impUid) {
+    if (user && user.uid && success === 'true' && impUid) {
       changePhoneNumber(impUid);
     }
   }, [router.isReady]);
@@ -351,404 +354,430 @@ Type: Address verification`;
     saveAddress();
   }, [library]);
 
+  const fetchUser = async () => {
+    const userRes = await getUser();
+    if (userRes.status === 200 && userRes.data.status != 0) {
+      setBankAccount({
+        accountHolder: userRes.data.user.accountHolder,
+        accountNumber: userRes.data.user.accountNumber,
+        bank: userRes.data.user.bank,
+      });
+      dispatch(setWebUser(userRes.data.user));
+      setUser(userRes.data.user);
+      setRefetchUserInfo(false);
+    }
+  };
+
+  useEffect(() => {
+    if (refetchUserInfo) fetchUser();
+  }, [refetchUserInfo]);
+
   return (
     <Page title="Account">
       <RootStyle>
-        <MyAccountWrapper>
-          <Box
-            sx={{
-              bgcolor: '#fff',
-              color: '#000',
-              borderRadius: 3,
-            }}
-          >
-            <Grid container>
-              <Grid item xs={12} md={4} lg={3} borderRight="1px solid rgba(0, 0, 0, 0.04)">
-                <Stack>
-                  <Box
-                    sx={{
-                      borderBottom: '1px solid #0000000A',
-                      padding: {
-                        xs: '19px 16px 24px',
-                        md: '32px 24px',
-                      },
-                    }}
-                  >
-                    <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'flex-end' }}>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          borderRadius: '50%',
-                          backgroundColor: '#F5F5F5',
-                          width: '32px',
-                          height: '32px',
-                          cursor: 'pointer',
-                        }}
-                        onClick={() => ClipboardCopy(account ?? '', '지갑주소가 복사되었습니다.')}
-                      >
-                        <ContentCopyOutlinedIcon sx={{ color: '#999999', fontSize: '14px' }} />
-                      </Box>
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'center',
-                          alignItems: 'center',
-                          borderRadius: '50%',
-                          backgroundColor: '#F5F5F5',
-                          width: '32px',
-                          height: '32px',
-                          cursor: 'pointer',
-                        }}
-                      >
-                        <OpenInNewOutlinedIcon sx={{ color: '#999999', fontSize: '14px' }} />
-                      </Box>
-                    </Box>
+        {user && (
+          <MyAccountWrapper>
+            <Box
+              sx={{
+                bgcolor: '#fff',
+                color: '#000',
+                borderRadius: 3,
+              }}
+            >
+              <Grid container>
+                <Grid item xs={12} md={4} lg={3} borderRight="1px solid rgba(0, 0, 0, 0.04)">
+                  <Stack>
                     <Box
                       sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        mt: {
-                          xs: '8px',
-                          md: '16px',
+                        borderBottom: '1px solid #0000000A',
+                        padding: {
+                          xs: '19px 16px 24px',
+                          md: '32px 24px',
                         },
                       }}
                     >
-                      <Image
-                        alt="avatar"
-                        src={
-                          user.profile_image ? user.profile_image : '/assets/icons/profile-logo.png'
-                        }
-                        sx={{ width: 96 }}
-                      />
-                      <Typography sx={{ fontSize: '16px', fontWeight: '700', mt: '16px' }}>
-                        {user.name}
-                      </Typography>
-                    </Box>
-                  </Box>
-                  <Box
-                    sx={{
-                      padding: {
-                        xs: '24px 16px',
-                        md: '32px 24px',
-                      },
-                    }}
-                  >
-                    <SectionHeader>Title</SectionHeader>
-                    <Box
-                      sx={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '0.7rem',
-                      }}
-                    >
-                      <Stack gap="12px">
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <Box sx={{ width: '20px' }}>
-                              <Image
-                                alt="edcp-logo"
-                                src="/assets/img/ee-logo.svg"
-                                sx={{ width: '100%' }}
-                              />
-                            </Box>
-                            <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
-                              {edcpPoint} EDCP
-                            </Typography>
-                          </Box>
-                          <Box
-                            sx={{
-                              backgroundColor: '#F5F5F5',
-                              textAlign: 'center',
-                              borderRadius: '40px',
-                              cursor: 'pointer',
-                              padding: '5px 15px',
-                            }}
-                          >
-                            <NextLink href={Routes.eternalEditions.payment.point} passHref>
-                              <Typography
-                                sx={{ fontSize: '13px', fontWeight: '700', color: '#999999' }}
-                              >
-                                BUY
-                              </Typography>
-                            </NextLink>
-                          </Box>
+                      <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'flex-end' }}>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: '50%',
+                            backgroundColor: '#F5F5F5',
+                            width: '32px',
+                            height: '32px',
+                            cursor: 'pointer',
+                          }}
+                          onClick={() => ClipboardCopy(account ?? '', '지갑주소가 복사되었습니다.')}
+                        >
+                          <ContentCopyOutlinedIcon sx={{ color: '#999999', fontSize: '14px' }} />
                         </Box>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <Box sx={{ width: '20px' }}>
-                              <Image
-                                alt="matic-token-icon"
-                                src="/assets/img/matic-token-icon.png"
-                                sx={{ width: '100%' }}
-                              />
-                            </Box>
-                            <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
-                              {balance.toFixed(5)} MATIC
-                            </Typography>
-                          </Box>
-                          <CryptoButtonsWrapper>
-                            <CryptoButtonWrapper>
-                              <SaveAltIcon
-                                fontSize={'small'}
-                                sx={{ color: '#999999' }}
-                                onClick={() => handleClickReceive('matic')}
-                              />
-                            </CryptoButtonWrapper>
-                            <CryptoButtonWrapper>
-                              <SendIcon
-                                fontSize={'small'}
-                                sx={{ color: '#999999' }}
-                                onClick={() => handleClickSend('matic', balance)}
-                              />
-                            </CryptoButtonWrapper>
-                          </CryptoButtonsWrapper>
+                        <Box
+                          sx={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: '50%',
+                            backgroundColor: '#F5F5F5',
+                            width: '32px',
+                            height: '32px',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          <OpenInNewOutlinedIcon sx={{ color: '#999999', fontSize: '14px' }} />
                         </Box>
-                        <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                          <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                            <Box sx={{ width: '20px' }}>
-                              <Image
-                                alt="matic-token-icon"
-                                src="/assets/img/usdc-token-icon.png"
-                                sx={{ width: '100%' }}
-                              />
-                            </Box>
-                            <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
-                              {usdcBalance} USDC
-                            </Typography>
-                          </Box>
-                          <CryptoButtonsWrapper>
-                            <CryptoButtonWrapper>
-                              <SaveAltIcon
-                                fontSize={'small'}
-                                sx={{ color: '#999999' }}
-                                onClick={() => handleClickReceive('usdc')}
-                              />
-                            </CryptoButtonWrapper>
-                            <CryptoButtonWrapper>
-                              <SendIcon
-                                fontSize={'small'}
-                                sx={{ color: '#999999' }}
-                                onClick={() => handleClickSend('usdc', usdcBalance)}
-                              />
-                            </CryptoButtonWrapper>
-                          </CryptoButtonsWrapper>
-                        </Box>
-                      </Stack>
-                    </Box>
-
-                    <Stack mt={'20px'} ml="-5px">
-                      <ProfileTextAction onClick={() => setIsOpenImportAccountForm(true)}>
-                        Get Existing Account (EE Market)
-                      </ProfileTextAction>
-                      <ProfileTextAction onClick={() => setOpenDeactivateModal(true)}>
-                        Deactivate Account
-                      </ProfileTextAction>
-                      <ProfileTextAction onClick={logout}>Logout</ProfileTextAction>
-                    </Stack>
-                  </Box>
-                </Stack>
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                md={8}
-                lg={9}
-                padding={{
-                  xs: '0 16px 13px',
-                  md: '32px 24px',
-                }}
-              >
-                <Stack gap="16px">
-                  <Stack gap="12px">
-                    <SectionHeader>SIGNED-IN SOCIAL ACCOUNT</SectionHeader>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                      <Icon>
-                        <Image
-                          alt="google-icon"
-                          src="/assets/icons/google-icon.png"
-                          sx={{ width: '18px' }}
-                        />
-                      </Icon>
-                      <SectionText>{user.email}</SectionText>
-                    </Box>
-                  </Stack>
-
-                  <Divider />
-
-                  <Stack gap="12px">
-                    <SectionHeader>Linking another social account</SectionHeader>
-                    <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      </Box>
                       <Box
                         sx={{
-                          width: '32px',
-                          height: '32px',
-                          backgroundColor: '#F5F5F5',
-                          borderRadius: '50px',
                           display: 'flex',
-                          justifyContent: 'center',
+                          flexDirection: 'column',
                           alignItems: 'center',
+                          justifyContent: 'center',
+                          mt: {
+                            xs: '8px',
+                            md: '16px',
+                          },
                         }}
                       >
                         <Image
-                          alt="google-icon"
-                          src="/assets/icons/google-icon.png"
-                          sx={{ width: '18px' }}
+                          alt="avatar"
+                          src={
+                            user.profile_image
+                              ? user.profile_image
+                              : '/assets/icons/profile-logo.png'
+                          }
+                          sx={{ width: 96 }}
                         />
+                        <Typography sx={{ fontSize: '16px', fontWeight: '700', mt: '16px' }}>
+                          {user.name}
+                        </Typography>
                       </Box>
                     </Box>
-                  </Stack>
-
-                  <Divider />
-
-                  <Stack gap="12px">
-                    <SectionHeader>NAME</SectionHeader>
-                    <SectionText>{user.name && user.name}</SectionText>
-                  </Stack>
-
-                  <Divider />
-                  <Stack gap="12px">
-                    <SectionHeader>Birth Date</SectionHeader>
-                    <SectionText>
-                      {user.birthday && moment(user.birthday).format('MM/DD/YYYY')}
-                    </SectionText>
-                  </Stack>
-
-                  <Divider />
-
-                  <Stack gap="12px">
-                    <SectionHeader>Gender</SectionHeader>
-                    <SectionText>
-                      {user.gender && user.gender.replace(/^[a-z]/, (char) => char.toUpperCase())}
-                    </SectionText>
-                  </Stack>
-
-                  <Divider />
-
-                  <Stack gap="12px">
-                    <SectionHeader>Phone Number</SectionHeader>
-                    <SectionText>{user.phone && user.phone}</SectionText>
-                    <Stack flexDirection="row">
-                      <CButton onClick={handleClickChangePhonenumber}>CHANGE PHONE NUMBER</CButton>
-                    </Stack>
-                  </Stack>
-
-                  <Divider />
-
-                  <Stack gap="12px">
-                    <SectionHeader>bank Account</SectionHeader>
-                    {bankAccount ? <SectionText>{bankAccount}</SectionText> : null}
-                    <Stack flexDirection="row">
-                      <CButton
-                        onClick={() => {
-                          setIsOpenBankAccountForm(true);
-                        }}
-                      >
-                        {bankAccount ? 'Change Account' : 'ADD'}
-                      </CButton>
-                    </Stack>
-                  </Stack>
-
-                  <Divider />
-
-                  <Box>
-                    <SectionHeader>WALLET ADDRESS</SectionHeader>
-
-                    <form>
-                      <Stack gap="12px" sx={{ mt: '12px' }}>
-                        {user.abc_address && (
-                          <Stack direction="row" alignItems="center" gap="4px">
-                            <Image
-                              alt="abc-logo"
-                              src="/assets/icons/abc-logo.png"
-                              sx={{ width: '24px' }}
-                            />
-                            <SectionText flex={1} sx={{ wordBreak: 'break-word' }}>
-                              {user.abc_address}
-                            </SectionText>
-                          </Stack>
-                        )}
-
-                        {user.eth_address && (
-                          <Stack direction="row" alignItems="center" gap="4px">
-                            <Image
-                              alt="metamask-logo"
-                              src="/assets/icons/metamask-logo.png"
-                              sx={{ width: '24px' }}
-                            />
-                            <SectionText flex={1} sx={{ wordBreak: 'break-word' }}>
-                              {user.eth_address}
-                            </SectionText>
-                          </Stack>
-                        )}
-                      </Stack>
-                    </form>
-                  </Box>
-
-                  <Stack gap="16px">
                     <Box
                       sx={{
-                        display: isDesktop ? 'flex' : 'grid',
-                        gridTemplateColumns: isDesktop ? 'unset' : 'repeat(2, 1fr)',
-                        gap: 0.25,
+                        padding: {
+                          xs: '24px 16px',
+                          md: '32px 24px',
+                        },
                       }}
                     >
-                      {!abcUser.twoFactorEnabled && (
-                        <CButton onClick={() => setIsOpenCreateWalletForm(true)}>
-                          Activate Wallet
-                        </CButton>
-                      )}
+                      <SectionHeader>Title</SectionHeader>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          gap: '0.7rem',
+                        }}
+                      >
+                        <Stack gap="12px">
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <Box sx={{ width: '20px' }}>
+                                <Image
+                                  alt="edcp-logo"
+                                  src="/assets/img/ee-logo.svg"
+                                  sx={{ width: '100%' }}
+                                />
+                              </Box>
+                              <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
+                                {edcpPoint} EDCP
+                              </Typography>
+                            </Box>
+                            <Box
+                              sx={{
+                                backgroundColor: '#F5F5F5',
+                                textAlign: 'center',
+                                borderRadius: '40px',
+                                cursor: 'pointer',
+                                padding: '5px 15px',
+                              }}
+                            >
+                              <NextLink href={Routes.eternalEditions.payment.point} passHref>
+                                <Typography
+                                  sx={{ fontSize: '13px', fontWeight: '700', color: '#999999' }}
+                                >
+                                  BUY
+                                </Typography>
+                              </NextLink>
+                            </Box>
+                          </Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <Box sx={{ width: '20px' }}>
+                                <Image
+                                  alt="matic-token-icon"
+                                  src="/assets/img/matic-token-icon.png"
+                                  sx={{ width: '100%' }}
+                                />
+                              </Box>
+                              <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
+                                {balance.toFixed(5)} MATIC
+                              </Typography>
+                            </Box>
+                            <CryptoButtonsWrapper>
+                              <CryptoButtonWrapper>
+                                <SaveAltIcon
+                                  fontSize={'small'}
+                                  sx={{ color: '#999999' }}
+                                  onClick={() => handleClickReceive('matic')}
+                                />
+                              </CryptoButtonWrapper>
+                              <CryptoButtonWrapper>
+                                <SendIcon
+                                  fontSize={'small'}
+                                  sx={{ color: '#999999' }}
+                                  onClick={() => handleClickSend('matic', balance)}
+                                />
+                              </CryptoButtonWrapper>
+                            </CryptoButtonsWrapper>
+                          </Box>
+                          <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                              <Box sx={{ width: '20px' }}>
+                                <Image
+                                  alt="matic-token-icon"
+                                  src="/assets/img/usdc-token-icon.png"
+                                  sx={{ width: '100%' }}
+                                />
+                              </Box>
+                              <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
+                                {usdcBalance} USDC
+                              </Typography>
+                            </Box>
+                            <CryptoButtonsWrapper>
+                              <CryptoButtonWrapper>
+                                <SaveAltIcon
+                                  fontSize={'small'}
+                                  sx={{ color: '#999999' }}
+                                  onClick={() => handleClickReceive('usdc')}
+                                />
+                              </CryptoButtonWrapper>
+                              <CryptoButtonWrapper>
+                                <SendIcon
+                                  fontSize={'small'}
+                                  sx={{ color: '#999999' }}
+                                  onClick={() => handleClickSend('usdc', usdcBalance)}
+                                />
+                              </CryptoButtonWrapper>
+                            </CryptoButtonsWrapper>
+                          </Box>
+                        </Stack>
+                      </Box>
 
-                      {user.eth_address ? (
-                        <CButton onClick={handleDeleteAddressClick}>DELETE External Wallet</CButton>
-                      ) : (
+                      <Stack mt={'20px'} ml="-5px">
+                        <ProfileTextAction onClick={() => setIsOpenImportAccountForm(true)}>
+                          Get Existing Account (EE Market)
+                        </ProfileTextAction>
+                        <ProfileTextAction onClick={() => setOpenDeactivateModal(true)}>
+                          Deactivate Account
+                        </ProfileTextAction>
+                        <ProfileTextAction onClick={logout}>Logout</ProfileTextAction>
+                      </Stack>
+                    </Box>
+                  </Stack>
+                </Grid>
+                <Grid
+                  item
+                  xs={12}
+                  md={8}
+                  lg={9}
+                  padding={{
+                    xs: '0 16px 13px',
+                    md: '32px 24px',
+                  }}
+                >
+                  <Stack gap="16px">
+                    <Stack gap="12px">
+                      <SectionHeader>SIGNED-IN SOCIAL ACCOUNT</SectionHeader>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Icon>
+                          <Image
+                            alt="google-icon"
+                            src="/assets/icons/google-icon.png"
+                            sx={{ width: '18px' }}
+                          />
+                        </Icon>
+                        <SectionText>{user.email}</SectionText>
+                      </Box>
+                    </Stack>
+
+                    <Divider />
+
+                    <Stack gap="12px">
+                      <SectionHeader>Linking another social account</SectionHeader>
+                      <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                        <Box
+                          sx={{
+                            width: '32px',
+                            height: '32px',
+                            backgroundColor: '#F5F5F5',
+                            borderRadius: '50px',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                          }}
+                        >
+                          <Image
+                            alt="google-icon"
+                            src="/assets/icons/google-icon.png"
+                            sx={{ width: '18px' }}
+                          />
+                        </Box>
+                      </Box>
+                    </Stack>
+
+                    <Divider />
+
+                    <Stack gap="12px">
+                      <SectionHeader>NAME</SectionHeader>
+                      <SectionText>{user.name && user.name}</SectionText>
+                    </Stack>
+
+                    <Divider />
+                    <Stack gap="12px">
+                      <SectionHeader>Birth Date</SectionHeader>
+                      <SectionText>
+                        {user.birthday && moment(user.birthday).format('MM/DD/YYYY')}
+                      </SectionText>
+                    </Stack>
+
+                    <Divider />
+
+                    <Stack gap="12px">
+                      <SectionHeader>Gender</SectionHeader>
+                      <SectionText>
+                        {user.gender && user.gender.replace(/^[a-z]/, (char) => char.toUpperCase())}
+                      </SectionText>
+                    </Stack>
+
+                    <Divider />
+
+                    <Stack gap="12px">
+                      <SectionHeader>Phone Number</SectionHeader>
+                      <SectionText>{user.phone && user.phone}</SectionText>
+                      <Stack flexDirection="row">
+                        <CButton onClick={handleClickChangePhonenumber}>
+                          CHANGE PHONE NUMBER
+                        </CButton>
+                      </Stack>
+                    </Stack>
+
+                    <Divider />
+
+                    <Stack gap="12px">
+                      <SectionHeader>bank Account</SectionHeader>
+                      {bankAccount ? <SectionText>{bankAccount.accountNumber}</SectionText> : null}
+                      <Stack flexDirection="row">
                         <CButton
                           onClick={() => {
-                            setDoAddWallet(true);
-                            setOpenSignUp(true);
+                            setIsOpenBankAccountForm(true);
                           }}
                         >
-                          ADD External Wallet
+                          {bankAccount ? 'Change Account' : 'ADD'}
                         </CButton>
-                      )}
+                      </Stack>
+                    </Stack>
 
-                      {/* {user.eth_address ? ( */}
+                    <Divider />
 
-                      {/* ) : null} */}
+                    <Box>
+                      <SectionHeader>WALLET ADDRESS</SectionHeader>
+
+                      <form>
+                        <Stack gap="12px" sx={{ mt: '12px' }}>
+                          {user.abc_address && (
+                            <Stack direction="row" alignItems="center" gap="4px">
+                              <Image
+                                alt="abc-logo"
+                                src="/assets/icons/abc-logo.png"
+                                sx={{ width: '24px' }}
+                              />
+                              <SectionText flex={1} sx={{ wordBreak: 'break-word' }}>
+                                {user.abc_address}
+                              </SectionText>
+                            </Stack>
+                          )}
+
+                          {user.eth_address && (
+                            <Stack direction="row" alignItems="center" gap="4px">
+                              <Image
+                                alt="metamask-logo"
+                                src="/assets/icons/metamask-logo.png"
+                                sx={{ width: '24px' }}
+                              />
+                              <SectionText flex={1} sx={{ wordBreak: 'break-word' }}>
+                                {user.eth_address}
+                              </SectionText>
+                            </Stack>
+                          )}
+                        </Stack>
+                      </form>
                     </Box>
 
-                    {openSignUp && (
-                      <Box sx={{ display: 'flex', gap: 2 }}>
-                        <CButton
-                          onClick={async () => {
-                            await connectWallet(WALLET_METAMASK);
-                          }}
-                        >
-                          Metamask
-                        </CButton>
+                    <Stack gap="16px">
+                      <Box
+                        sx={{
+                          display: isDesktop ? 'flex' : 'grid',
+                          gridTemplateColumns: isDesktop ? 'unset' : 'repeat(2, 1fr)',
+                          gap: 0.25,
+                        }}
+                      >
+                        {!abcUser.twoFactorEnabled && (
+                          <CButton onClick={() => setIsOpenCreateWalletForm(true)}>
+                            Activate Wallet
+                          </CButton>
+                        )}
 
-                        <CButton
-                          onClick={async () => {
-                            await connectWallet(WALLET_WALLECTCONNECT);
-                          }}
-                        >
-                          WalletConnect
-                        </CButton>
+                        {user.eth_address ? (
+                          <CButton onClick={handleDeleteAddressClick}>
+                            DELETE External Wallet
+                          </CButton>
+                        ) : (
+                          <CButton
+                            onClick={() => {
+                              setDoAddWallet(true);
+                              setOpenSignUp(true);
+                            }}
+                          >
+                            ADD External Wallet
+                          </CButton>
+                        )}
+
+                        {/* {user.eth_address ? ( */}
+
+                        {/* ) : null} */}
                       </Box>
-                    )}
+
+                      {openSignUp && (
+                        <Box sx={{ display: 'flex', gap: 2 }}>
+                          <CButton
+                            onClick={async () => {
+                              await connectWallet(WALLET_METAMASK);
+                            }}
+                          >
+                            Metamask
+                          </CButton>
+
+                          <CButton
+                            onClick={async () => {
+                              await connectWallet(WALLET_WALLECTCONNECT);
+                            }}
+                          >
+                            WalletConnect
+                          </CButton>
+                        </Box>
+                      )}
+                    </Stack>
+
+                    <Divider sx={{ display: { xs: 'none', md: 'block' } }} />
+
+                    {!isDesktop ? <RoundedButton onClick={logout}>Disconnect</RoundedButton> : null}
                   </Stack>
-
-                  <Divider sx={{ display: { xs: 'none', md: 'block' } }} />
-
-                  {!isDesktop ? <RoundedButton onClick={logout}>Disconnect</RoundedButton> : null}
-                </Stack>
+                </Grid>
               </Grid>
-            </Grid>
-          </Box>
-        </MyAccountWrapper>
+            </Box>
+          </MyAccountWrapper>
+        )}
 
         <ModalCustom
           aria-labelledby="transition-modal-title"
@@ -761,8 +790,14 @@ Type: Address verification`;
           <CreateWalletForm onClose={() => setIsOpenCreateWalletForm(false)} />
         </ModalCustom>
 
-        <ModalCustom open={isOpenBankAccountForm} onClose={() => setIsOpenBankAccountForm(false)}>
-          <RegisterAccount hasBankAccount={!!bankAccount} />
+        <ModalCustom
+          open={isOpenBankAccountForm}
+          onClose={() => {
+            setIsOpenBankAccountForm(false);
+            setRefetchUserInfo(true);
+          }}
+        >
+          <RegisterAccount bankAccount={bankAccount} />
         </ModalCustom>
 
         <ModalCustom

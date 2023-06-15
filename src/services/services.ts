@@ -170,14 +170,11 @@ export const getProjectCountByCategory = async () =>
   customAxios.get(`/api/service/project/category/count`);
 
 export const getProjectList = async (page: number, perPage: number, category: string) => {
-  console.log(category);
   let url = `/api/service/project?page=${page}&limit=${
     perPage ? perPage : 5
   }&sortBy=createdAt:DESC`;
 
   if (category && category.toLowerCase() !== 'all') url = `${url}&category=${category}`;
-
-  console.log(url);
   return customAxios.get(url);
 };
 export const getProjectInfo = async (id: string) => customAxios.get(`/api/service/project/${id}`);
@@ -195,6 +192,10 @@ export const getCertifications = async (impUid: any) =>
 
 export const importEETicket = async (data: any) =>
   await customAxios.post(`/api/users/ticket/import`, data);
+
+export const saveBankAccount = async (data: any) => {
+  return await apiAuthAxios.post(`/api/users/bank/register`, data);
+};
 //--------------------------- ee Api
 
 export const eeLogin = async (data: any) => {
