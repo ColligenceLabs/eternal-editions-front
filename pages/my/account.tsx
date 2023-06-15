@@ -216,6 +216,7 @@ export default function MyAccountPage() {
 
   const handleClickChangePhonenumber = () => {
     try {
+      // @ts-ignore
       const IMP = window.IMP; // 생략 가능
       IMP.init('imp65486314');
       IMP.certification(
