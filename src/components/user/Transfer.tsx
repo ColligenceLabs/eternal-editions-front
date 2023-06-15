@@ -67,6 +67,7 @@ type TransferData = {
 
 type TransferProps = {
   token: string;
+  amount: number;
   onClose: SetStateAction<any>;
 };
 
@@ -83,7 +84,7 @@ const StepStatus = {
   step3: 'complete',
 };
 
-const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
+const Transfer: React.FC<TransferProps> = ({ token, amount: totalBalance, onClose }) => {
   const defaultValues: TransferData = {
     token: token,
     amount: '',
@@ -98,6 +99,7 @@ const Transfer: React.FC<TransferProps> = ({ token, onClose }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(StepStatus.step1);
 
+  console.log(totalBalance);
   const tokens = [
     {
       value: 'matic',

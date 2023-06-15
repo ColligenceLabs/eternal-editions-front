@@ -155,7 +155,7 @@ export default function MyAccountPage() {
   const [selectedAccount, setSelectedAccount] = useState(
     user.abc_address || user.eth_address || ''
   );
-  const [isOpenTransfer, setIsOpenTransfer] = useState({ open: false, token: '' });
+  const [isOpenTransfer, setIsOpenTransfer] = useState({ open: false, token: '', amount: 0 });
   const [openDeactivateModal, setOpenDeactivateModal] = useState(false);
   const [isConfirmDeactivate, setIsConfirmDeactivate] = useState(false);
   const [isOpenCreateWalletForm, setIsOpenCreateWalletForm] = useState<boolean>(false);
@@ -268,9 +268,13 @@ export default function MyAccountPage() {
     }
   };
 
-  const handleClickSend = (token: string) => {
+  const handleClickSend = (token: string, amount: number | string) => {
     console.log(`handle click ${token} send.`);
-    setIsOpenTransfer({ open: true, token: token });
+    setIsOpenTransfer({
+      open: true,
+      token: token,
+      amount: typeof amount === 'string' ? parseFloat(amount) : amount,
+    });
   };
 
   const handleClickReceive = (token: string) => {
@@ -498,7 +502,7 @@ Type: Address verification`;
                               <SendIcon
                                 fontSize={'small'}
                                 sx={{ color: '#999999' }}
-                                onClick={() => handleClickSend('matic')}
+                                onClick={() => handleClickSend('matic', balance)}
                               />
                             </CryptoButtonWrapper>
                           </CryptoButtonsWrapper>
@@ -528,7 +532,7 @@ Type: Address verification`;
                               <SendIcon
                                 fontSize={'small'}
                                 sx={{ color: '#999999' }}
-                                onClick={() => handleClickSend('usdc')}
+                                onClick={() => handleClickSend('usdc', usdcBalance)}
                               />
                             </CryptoButtonWrapper>
                           </CryptoButtonsWrapper>
@@ -770,11 +774,12 @@ Type: Address verification`;
 
         <ModalCustom
           open={isOpenTransfer.open}
-          onClose={() => setIsOpenTransfer({ open: false, token: '' })}
+          onClose={() => setIsOpenTransfer({ open: false, token: '', amount: 0 })}
         >
           <Transfer
             token={isOpenTransfer.token}
-            onClose={() => setIsOpenTransfer({ open: false, token: '' })}
+            amount={isOpenTransfer.amount}
+            onClose={() => setIsOpenTransfer({ open: false, token: '', amount: 0 })}
           />
         </ModalCustom>
 
