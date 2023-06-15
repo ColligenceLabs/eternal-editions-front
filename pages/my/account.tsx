@@ -820,7 +820,11 @@ Type: Address verification`;
             setRefetchUserInfo(true);
           }}
         >
-          <RegisterAccount bankAccount={bankAccount} setOpenSnackbar={setOpenSnackbar} />
+          <RegisterAccount
+            bankAccount={bankAccount}
+            setOpenSnackbar={setOpenSnackbar}
+            setIsOpenBankAccountForm={setIsOpenBankAccountForm}
+          />
         </ModalCustom>
 
         <ModalCustom

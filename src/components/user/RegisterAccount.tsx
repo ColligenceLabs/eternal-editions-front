@@ -29,11 +29,12 @@ const FormSchema = Yup.object().shape({
 interface Props {
   bankAccount: BankAccountTypes | null;
   setOpenSnackbar: SetStateAction<any>;
+  setIsOpenBankAccountForm: SetStateAction<any>;
 }
 
 const bankOptions = [{ value: 'TCB', label: 'TCB' }];
 
-const RegisterAccount = ({ bankAccount, setOpenSnackbar }: Props) => {
+const RegisterAccount = ({ bankAccount, setOpenSnackbar, setIsOpenBankAccountForm }: Props) => {
   const {
     control,
     setValue,
@@ -171,7 +172,7 @@ const RegisterAccount = ({ bankAccount, setOpenSnackbar }: Props) => {
         }}
         justifyContent="space-between"
       >
-        <RoundedButton fullWidth type="submit" variant="inactive">
+        <RoundedButton fullWidth variant="inactive" onClick={() => setIsOpenBankAccountForm(false)}>
           cancel
         </RoundedButton>
         <RoundedButton fullWidth type="submit" disabled={!isValid}>
