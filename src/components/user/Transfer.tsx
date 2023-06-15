@@ -277,7 +277,12 @@ const Transfer: React.FC<TransferProps> = ({ token, amount: totalBalance, onClos
             <div>
               <RoundedButton
                 variant="inactive"
-                onClick={() => console.log('Send all')}
+                onClick={() =>
+                  setValue(
+                    'amount',
+                    token === 'usdc' ? totalBalance.toString() : (totalBalance - 0.01).toString()
+                  )
+                }
                 sx={{
                   padding: '10px 16px',
                   [`&.${buttonBaseClasses.root}`]: {
