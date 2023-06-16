@@ -22,9 +22,8 @@ import {
   WALLET_METAMASK,
   WALLET_WALLECTCONNECT,
 } from 'src/config';
-import { ClipboardCopy, getShotAddress } from 'src/utils/wallet';
-import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
-import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
+import { getShotAddress } from 'src/utils/wallet';
+import BorderColorIcon from '@mui/icons-material/BorderColor';
 import useAccount from 'src/hooks/useAccount';
 import Image from 'src/components/Image';
 import NextLink from 'next/link';
@@ -473,39 +472,9 @@ Type: Address verification`;
                         },
                       }}
                     >
-                      <Box sx={{ display: 'flex', gap: 0.5, justifyContent: 'flex-end' }}>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: '50%',
-                            backgroundColor: '#F5F5F5',
-                            width: '32px',
-                            height: '32px',
-                            cursor: 'pointer',
-                          }}
-                          onClick={() => ClipboardCopy(account ?? '', '지갑주소가 복사되었습니다.')}
-                        >
-                          <ContentCopyOutlinedIcon sx={{ color: '#999999', fontSize: '14px' }} />
-                        </Box>
-                        <Box
-                          sx={{
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                            borderRadius: '50%',
-                            backgroundColor: '#F5F5F5',
-                            width: '32px',
-                            height: '32px',
-                            cursor: 'pointer',
-                          }}
-                        >
-                          <OpenInNewOutlinedIcon sx={{ color: '#999999', fontSize: '14px' }} />
-                        </Box>
-                      </Box>
                       <Box
                         sx={{
+                          position: 'relative',
                           display: 'flex',
                           flexDirection: 'column',
                           alignItems: 'center',
@@ -528,6 +497,23 @@ Type: Address verification`;
                         <Typography sx={{ fontSize: '16px', fontWeight: '700', mt: '16px' }}>
                           {user.name}
                         </Typography>
+                        <Box
+                          sx={{
+                            position: 'absolute',
+                            top: '45%',
+                            right: '30%',
+                            display: 'flex',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            borderRadius: '50%',
+                            backgroundColor: '#F5F5F5',
+                            width: '32px',
+                            height: '32px',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          <BorderColorIcon sx={{ color: '#999999', fontSize: '14px' }} />
+                        </Box>
                       </Box>
                     </Box>
                     <Box
@@ -538,7 +524,6 @@ Type: Address verification`;
                         },
                       }}
                     >
-                      {/*<SectionHeader>Title</SectionHeader>*/}
                       <Box
                         sx={{
                           display: 'flex',
