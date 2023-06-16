@@ -326,8 +326,14 @@ export default function MyAccountPage() {
   };
 
   const handleClickReceive = (token: string) => {
+    onOpenMyWalletModal({
+      walletAddress: account!,
+      iconSrc:
+        token === 'matic' ? '/assets/img/matic-token-icon.png' : '/assets/img/usdc-token-icon.png',
+    });
     console.log(`handle click ${token} receive.`);
   };
+
   useEffect(() => {
     if (!router.isReady) return;
     const changePhoneNumber = async (impUid: any) => {
@@ -747,13 +753,7 @@ Type: Address verification`;
 
                               <Stack gap={1} flexDirection="row">
                                 <CopyButton content={user.abc_address} />
-                                <HyperlinkButton
-                                  onClick={() =>
-                                    onOpenMyWalletModal({
-                                      walletAddress: user.abc_address,
-                                    })
-                                  }
-                                />
+                                <HyperlinkButton />
                               </Stack>
                             </Stack>
                           )}
@@ -773,13 +773,7 @@ Type: Address verification`;
 
                               <Stack gap={1} flexDirection="row">
                                 <CopyButton content={user.eth_address} />
-                                <HyperlinkButton
-                                  onClick={() =>
-                                    onOpenMyWalletModal({
-                                      walletAddress: user.eth_address,
-                                    })
-                                  }
-                                />
+                                <HyperlinkButton />
                               </Stack>
                             </Stack>
                           )}
