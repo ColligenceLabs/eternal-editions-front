@@ -18,7 +18,7 @@ import Image from 'src/components/Image';
 
 export function getShotAddress(address: string) {
   return address && address.length > 10
-    ? address.substring(0, 5) + '...' + address.substring(address.length - 2, address.length)
+    ? address.substring(0, 6) + '...' + address.substring(address.length - 4, address.length)
     : '';
 }
 

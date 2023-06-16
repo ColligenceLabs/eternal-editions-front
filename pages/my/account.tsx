@@ -22,7 +22,7 @@ import {
   WALLET_METAMASK,
   WALLET_WALLECTCONNECT,
 } from 'src/config';
-import { ClipboardCopy } from 'src/utils/wallet';
+import { ClipboardCopy, getShotAddress } from 'src/utils/wallet';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
 import useAccount from 'src/hooks/useAccount';
@@ -150,6 +150,8 @@ type BankAccountTypes = {
 };
 
 export default function MyAccountPage() {
+  const isMobile = useResponsive('down', 'sm');
+  const isTablet = useResponsive('down', 'lg');
   const { usdcBalance } = useUSDC();
   const { edcpPoint } = useEDCP();
   const router = useRouter();
@@ -769,37 +771,66 @@ Type: Address verification`;
                       <form>
                         <Stack
                           gap="12px"
-                          sx={{ mt: '12px', width: 'max-content', maxWidth: '100%' }}
+                          sx={{
+                            mt: '12px',
+                            width: '100%',
+                            maxWidth: '100%',
+                          }}
                         >
                           {user.abc_address && (
-                            <Stack gap="12px" flexDirection="row" justifyContent="space-between">
-                              <Stack direction="row" alignItems="center" gap="4px">
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'space-between',
+                                gap: '12px',
+                              }}
+                            >
+                              <Stack direction="row" alignItems="center" gap="2px">
                                 <Image
                                   alt="abc-logo"
                                   src="/assets/icons/abc-logo.png"
                                   sx={{ width: '24px' }}
                                 />
                                 <SectionText
-                                  flex={1}
-                                  sx={{ wordBreak: 'break-word', fontFamily: 'Courier New' }}
+                                  sx={{
+                                    wordBreak: 'break-word',
+                                    minWidth: isMobile ? '80px' : '325px',
+                                  }}
                                 >
-                                  {user.abc_address}
+                                  {isMobile ? getShotAddress(user.abc_address) : user.abc_address}
                                 </SectionText>
                               </Stack>
 
-                              <Stack flex={1} gap={1} flexDirection="row">
+                              <Stack
+                                sx={{
+                                  boxSizing: 'border-box',
+                                  display: 'flex',
+                                  flexDirection: 'row',
+                                  width: isMobile ? '100px' : '250px',
+                                }}
+                              >
                                 <CopyButton
                                   content={user.abc_address}
                                   onClick={() => handleClickCopy(user?.abc_address)}
                                 />
                                 <HyperlinkButton />
                               </Stack>
-                            </Stack>
+                            </Box>
                           )}
 
                           {user.eth_address && (
-                            <Stack gap="12px" flexDirection="row" justifyContent="space-between">
-                              <Stack direction="row" alignItems="center" gap="4px">
+                            <Box
+                              sx={{
+                                display: 'flex',
+                                flexDirection: 'row',
+                                justifyContent: 'space-between',
+                                alignItems: 'space-between',
+                                gap: '12px',
+                              }}
+                            >
+                              <Stack direction="row" alignItems="center" gap="2px">
                                 <Image
                                   alt="metamask-logo"
                                   src="/assets/icons/metamask-logo.png"
@@ -807,13 +838,23 @@ Type: Address verification`;
                                 />
                                 <SectionText
                                   flex={1}
-                                  sx={{ wordBreak: 'break-word', fontFamily: 'Courier New' }}
+                                  sx={{
+                                    wordBreak: 'break-word',
+                                    minWidth: isMobile ? '80px' : '325px',
+                                  }}
                                 >
-                                  {user.eth_address}
+                                  {isMobile ? getShotAddress(user.eth_address) : user.eth_address}
                                 </SectionText>
                               </Stack>
 
-                              <Stack flex={1} gap={1} flexDirection="row">
+                              <Stack
+                                sx={{
+                                  boxSizing: 'border-box',
+                                  display: 'flex',
+                                  flexDirection: 'row',
+                                  width: isMobile ? '100px' : '250px',
+                                }}
+                              >
                                 <CopyButton
                                   content={user.eth_address}
                                   onClick={() => handleClickCopy(user?.eth_address)}
@@ -832,7 +873,7 @@ Type: Address verification`;
                                   />
                                 </IconButton>
                               </Stack>
-                            </Stack>
+                            </Box>
                           )}
                         </Stack>
                       </form>
