@@ -536,7 +536,7 @@ Type: Address verification`;
                         },
                       }}
                     >
-                      <SectionHeader>Title</SectionHeader>
+                      {/*<SectionHeader>Title</SectionHeader>*/}
                       <Box
                         sx={{
                           display: 'flex',
