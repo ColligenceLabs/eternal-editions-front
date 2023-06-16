@@ -748,9 +748,12 @@ Type: Address verification`;
                       <SectionHeader>WALLET ADDRESS</SectionHeader>
 
                       <form>
-                        <Stack gap="12px" sx={{ mt: '12px' }}>
+                        <Stack
+                          gap="12px"
+                          sx={{ mt: '12px', width: 'max-content', maxWidth: '100%' }}
+                        >
                           {user.abc_address && (
-                            <Stack gap="12px" flexDirection="row">
+                            <Stack gap="12px" flexDirection="row" justifyContent="space-between">
                               <Stack direction="row" alignItems="center" gap="4px">
                                 <Image
                                   alt="abc-logo"
@@ -773,7 +776,7 @@ Type: Address verification`;
                           )}
 
                           {user.eth_address && (
-                            <Stack gap="12px" flexDirection="row">
+                            <Stack gap="12px" flexDirection="row" justifyContent="space-between">
                               <Stack direction="row" alignItems="center" gap="4px">
                                 <Image
                                   alt="metamask-logo"
