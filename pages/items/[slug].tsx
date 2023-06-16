@@ -50,7 +50,7 @@ import { ArrowDropDown } from '@mui/icons-material';
 import moment from 'moment';
 import FixedBackground from 'src/components/common/FixedBackground';
 import useAccount from 'src/hooks/useAccount';
-import { AbcWeb3Provider } from '@colligence/klip-web3-provider';
+import { AbcWeb3Provider } from '@colligence/abc-web3-provider';
 import Web3Modal from '@colligence/web3modal';
 import secureLocalStorage from 'react-secure-storage';
 import { fullfillment } from 'src/seaport/fullfillment';

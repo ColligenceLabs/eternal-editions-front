@@ -10,7 +10,7 @@ import { getShotAddress } from 'src/utils/wallet';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import useAccount from 'src/hooks/useAccount';
 import { getSession, registerSellbookBuy } from 'src/services/services';
-import { AbcWeb3Provider } from '@colligence/klip-web3-provider';
+import { AbcWeb3Provider } from '@colligence/abc-web3-provider';
 import Web3Modal from '@colligence/web3modal';
 import secureLocalStorage from 'react-secure-storage';
 import { ethers } from 'ethers';

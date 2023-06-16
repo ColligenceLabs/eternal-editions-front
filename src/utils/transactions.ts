@@ -1580,12 +1580,12 @@ export async function getGasPriceFromAPI() {
 
   if (target === 1001 || target === 8217) gasPrice = await caver.rpc.klay.getGasPrice();
   else if (target === 80001) {
-    const result = await axios.get('https://gasstation-mumbai.matic.today/v2');
+    const result = await axios.get('https://gasstation-testnet.polygon.technology/v2');
     gasPrice = ethers.utils
       .parseUnits(result.data.fast.maxFee.toFixed(5).toString(), 'gwei')
       .toHexString();
   } else if (target === 137) {
-    const result = await axios.get('https://gasstation-mainnet.matic.network/v2');
+    const result = await axios.get('https://gasstation.polygon.technology/v2');
     gasPrice = ethers.utils
       .parseUnits(result.data.fast.maxFee.toFixed(5).toString(), 'gwei')
       .toHexString();

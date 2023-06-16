@@ -9,7 +9,7 @@ import { useSelector } from 'react-redux';
 import useAccount from 'src/hooks/useAccount';
 import { getSession, registerSell } from 'src/services/services';
 import { ethers, utils } from 'ethers';
-import { AbcWeb3Provider } from '@colligence/klip-web3-provider';
+import { AbcWeb3Provider } from '@colligence/abc-web3-provider';
 import Web3Modal from '@colligence/web3modal';
 import secureLocalStorage from 'react-secure-storage';
 import { fDate } from 'src/utils/formatTime';
