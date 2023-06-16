@@ -248,8 +248,10 @@ export default function MyAccountPage() {
       localStorage.removeItem('walletconnect');
     } catch (error: any) {
       console.log(error.message);
+    } finally {
+      setIsLoading(false);
+      setRefetchUserInfo(true);
     }
-    setIsLoading(false);
   };
 
   const handleClickDeactivate = async () => {
@@ -303,13 +305,21 @@ export default function MyAccountPage() {
       }
       if (id === WALLET_METAMASK) {
         await activate(injected, undefined, true);
-        // dispatch(setActivatingConnector(injected));
         window.localStorage.setItem('wallet', WALLET_METAMASK);
+        //   // setRefetchUserInfo(true);
+        // });
+        // dispatch(setActivatingConnector(injected));
+        fetchUser();
       } else if (id === WALLET_WALLECTCONNECT) {
         window.localStorage.removeItem('walletconnect');
         const wc = walletconnect(true);
-        await activate(wc, undefined, true);
+
+        const res = await activate(wc, undefined, true);
+        console.log(res);
         window.localStorage.setItem('wallet', WALLET_WALLECTCONNECT);
+        //   // setRefetchUserInfo(true);
+        // });
+        fetchUser();
       }
     } catch (e) {
       console.log('connect wallet error', e);
@@ -421,6 +431,7 @@ Type: Address verification`;
   const fetchUser = async () => {
     const userRes = await getUser();
     if (userRes.status === 200 && userRes.data.status != 0) {
+      console.log(userRes);
       setBankAccount({
         accountHolder: userRes.data.user.accountHolder,
         accountNumber: userRes.data.user.accountNumber,
@@ -433,8 +444,8 @@ Type: Address verification`;
   };
 
   useEffect(() => {
-    if (refetchUserInfo) fetchUser();
-  }, [refetchUserInfo]);
+    if (refetchUserInfo || library?.connection || doAddWallet) fetchUser();
+  }, [refetchUserInfo, library, doAddWallet]);
 
   return (
     <Page title="Account">
@@ -669,37 +680,37 @@ Type: Address verification`;
                       </Box>
                     </Stack>
 
-                    <Divider />
+                    {/*<Divider />*/}
 
-                    <Stack gap="12px">
-                      <SectionHeader>Linking another social account</SectionHeader>
-                      <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <Box
-                          sx={{
-                            width: '32px',
-                            height: '32px',
-                            backgroundColor: '#F5F5F5',
-                            borderRadius: '50px',
-                            display: 'flex',
-                            justifyContent: 'center',
-                            alignItems: 'center',
-                          }}
-                        >
-                          <Image
-                            alt="google-icon"
-                            src="/assets/icons/google-icon.png"
-                            sx={{ width: '18px' }}
-                          />
-                        </Box>
-                      </Box>
-                    </Stack>
+                    {/*<Stack gap="12px">*/}
+                    {/*  <SectionHeader>Linking another social account</SectionHeader>*/}
+                    {/*  <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>*/}
+                    {/*    <Box*/}
+                    {/*      sx={{*/}
+                    {/*        width: '32px',*/}
+                    {/*        height: '32px',*/}
+                    {/*        backgroundColor: '#F5F5F5',*/}
+                    {/*        borderRadius: '50px',*/}
+                    {/*        display: 'flex',*/}
+                    {/*        justifyContent: 'center',*/}
+                    {/*        alignItems: 'center',*/}
+                    {/*      }}*/}
+                    {/*    >*/}
+                    {/*      <Image*/}
+                    {/*        alt="google-icon"*/}
+                    {/*        src="/assets/icons/google-icon.png"*/}
+                    {/*        sx={{ width: '18px' }}*/}
+                    {/*      />*/}
+                    {/*    </Box>*/}
+                    {/*  </Box>*/}
+                    {/*</Stack>*/}
 
-                    <Divider />
+                    {/*<Divider />*/}
 
-                    <Stack gap="12px">
-                      <SectionHeader>NAME</SectionHeader>
-                      <SectionText>{user.name && user.name}</SectionText>
-                    </Stack>
+                    {/*<Stack gap="12px">*/}
+                    {/*  <SectionHeader>NAME</SectionHeader>*/}
+                    {/*  <SectionText>{user.name && user.name}</SectionText>*/}
+                    {/*</Stack>*/}
 
                     <Divider />
                     <Stack gap="12px">
@@ -771,23 +782,12 @@ Type: Address verification`;
                                 </SectionText>
                               </Stack>
 
-                              <Stack gap={1} flexDirection="row">
+                              <Stack flex={1} gap={1} flexDirection="row">
                                 <CopyButton
                                   content={user.abc_address}
                                   onClick={() => handleClickCopy(user?.abc_address)}
                                 />
                                 <HyperlinkButton />
-                                <IconButton
-                                  sx={{
-                                    borderRadius: '100%',
-                                    width: '32px',
-                                    height: '32px',
-                                  }}
-                                >
-                                  <DeleteOutlineIcon
-                                    sx={{ color: palette.dark.black.lighter, fontSize: '18px' }}
-                                  />
-                                </IconButton>
                               </Stack>
                             </Stack>
                           )}
@@ -805,12 +805,24 @@ Type: Address verification`;
                                 </SectionText>
                               </Stack>
 
-                              <Stack gap={1} flexDirection="row">
+                              <Stack flex={1} gap={1} flexDirection="row">
                                 <CopyButton
                                   content={user.eth_address}
                                   onClick={() => handleClickCopy(user?.eth_address)}
                                 />
                                 <HyperlinkButton />
+                                <IconButton
+                                  sx={{
+                                    borderRadius: '100%',
+                                    width: '32px',
+                                    height: '32px',
+                                  }}
+                                >
+                                  <DeleteOutlineIcon
+                                    sx={{ color: palette.dark.black.lighter, fontSize: '18px' }}
+                                    onClick={handleDeleteAddressClick}
+                                  />
+                                </IconButton>
                               </Stack>
                             </Stack>
                           )}
@@ -832,11 +844,7 @@ Type: Address verification`;
                           </CButton>
                         )}
 
-                        {user.eth_address ? (
-                          <CButton onClick={handleDeleteAddressClick}>
-                            DELETE External Wallet
-                          </CButton>
-                        ) : (
+                        {!user.eth_address && (
                           <CButton
                             onClick={() => {
                               setDoAddWallet(true);
@@ -857,6 +865,7 @@ Type: Address verification`;
                           <CButton
                             onClick={async () => {
                               await connectWallet(WALLET_METAMASK);
+                              setRefetchUserInfo(true);
                             }}
                           >
                             Metamask
@@ -865,6 +874,7 @@ Type: Address verification`;
                           <CButton
                             onClick={async () => {
                               await connectWallet(WALLET_WALLECTCONNECT);
+                              setRefetchUserInfo(true);
                             }}
                           >
                             WalletConnect
