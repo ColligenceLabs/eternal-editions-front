@@ -779,7 +779,10 @@ Type: Address verification`;
                                   src="/assets/icons/abc-logo.png"
                                   sx={{ width: '24px' }}
                                 />
-                                <SectionText flex={1} sx={{ wordBreak: 'break-word' }}>
+                                <SectionText
+                                  flex={1}
+                                  sx={{ wordBreak: 'break-word', fontFamily: 'Courier' }}
+                                >
                                   {user.abc_address}
                                 </SectionText>
                               </Stack>
@@ -802,7 +805,10 @@ Type: Address verification`;
                                   src="/assets/icons/metamask-logo.png"
                                   sx={{ width: '24px' }}
                                 />
-                                <SectionText flex={1} sx={{ wordBreak: 'break-word' }}>
+                                <SectionText
+                                  flex={1}
+                                  sx={{ wordBreak: 'break-word', fontFamily: 'Courier' }}
+                                >
                                   {user.eth_address}
                                 </SectionText>
                               </Stack>
