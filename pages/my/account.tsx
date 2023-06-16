@@ -170,6 +170,7 @@ export default function MyAccountPage() {
   const [isOpenBankAccountForm, setIsOpenBankAccountForm] = useState(false);
   const [isOpenImportAccountForm, setIsOpenImportAccountForm] = useState(false);
   const [refetchUserInfo, setRefetchUserInfo] = useState(true);
+  const [isUpdated, setIsUpdated] = useState(false);
   const [openSnackbar, setOpenSnackbar] = useState({
     open: false,
     type: '',
@@ -355,8 +356,9 @@ export default function MyAccountPage() {
     };
     const impUid = router.query['imp_uid'];
     const success = router.query['success'];
-    if (user && user.uid && success === 'true' && impUid) {
+    if (!isUpdated && user && user.uid && success === 'true' && impUid) {
       changePhoneNumber(impUid);
+      setIsUpdated(true);
     }
   }, [router.isReady]);
 
