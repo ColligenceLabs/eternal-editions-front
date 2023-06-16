@@ -56,10 +56,10 @@ const LINKS = [
     title: 'NOTICE',
     route: Routes.eternalEditions.notice,
   },
-  {
-    title: 'CONTACT US',
-    route: Routes.eternalEditions.contact,
-  },
+  // {
+  //   title: 'CONTACT US',
+  //   route: Routes.eternalEditions.contact,
+  // },
 ];
 
 interface LinkTabProps {
