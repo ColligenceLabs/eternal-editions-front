@@ -19,6 +19,7 @@ import {
   HEADER_DESKTOP_HEIGHT,
   HEADER_MOBILE_HEIGHT,
   SUCCESS,
+  targetNetwork,
   WALLET_METAMASK,
   WALLET_WALLECTCONNECT,
 } from 'src/config';
@@ -77,7 +78,7 @@ const RootStyle = styled('div')(({ theme }) => ({
   },
 }));
 
-const CButton = styled('div')(({ theme }) => ({
+const CButton = styled('div')(() => ({
   backgroundColor: '#F5F5F5',
   color: '#999999',
   padding: '10px 16px',
@@ -91,7 +92,7 @@ const CButton = styled('div')(({ theme }) => ({
   fontWeight: 700,
 }));
 
-const ProfileTextAction = styled(Box)(({ theme }) => ({
+const ProfileTextAction = styled(Box)(() => ({
   fontWeight: 700,
   fontSize: 12,
   lineHeight: 13 / 12,
@@ -103,19 +104,19 @@ const ProfileTextAction = styled(Box)(({ theme }) => ({
   cursor: 'pointer',
 }));
 
-const SectionHeader = styled(Typography)(({ theme }) => ({
+const SectionHeader = styled(Typography)(() => ({
   color: palette.dark.black.lighter,
   fontSize: '12px',
   fontWeight: 400,
   textTransform: 'uppercase',
 }));
 
-export const SectionText = styled(Typography)(({ theme }) => ({
+export const SectionText = styled(Typography)(() => ({
   fontSize: '14px',
   lineHeight: 20 / 14,
 }));
 
-const Icon = styled(Box)(({ theme }) => ({
+const Icon = styled(Box)(() => ({
   width: '32px',
   height: '32px',
   backgroundColor: '#F5F5F5',
@@ -150,7 +151,6 @@ type BankAccountTypes = {
 
 export default function MyAccountPage() {
   const isMobile = useResponsive('down', 'sm');
-  const isTablet = useResponsive('down', 'lg');
   const { usdcBalance } = useUSDC();
   const { edcpPoint } = useEDCP();
   const router = useRouter();
@@ -357,6 +357,14 @@ export default function MyAccountPage() {
     }
   };
 
+  const moveToScope = (address: string) => {
+    if (targetNetwork === ChainId.MUMBAI) {
+      window.open(`https://mumbai.polygonscan.com/address/${address}`, '_blank');
+    } else if (targetNetwork === ChainId.POLYGON) {
+      window.open(`https://polygonscan.com/address/${address}`, '_blank');
+    }
+  };
+
   useEffect(() => {
     if (!router.isReady) return;
     const changePhoneNumber = async (impUid: any) => {
@@ -512,7 +520,7 @@ Type: Address verification`;
                             cursor: 'pointer',
                           }}
                         >
-                          <BorderColorIcon sx={{ color: '#999999', fontSize: '14px' }} />
+                          <BorderColorIcon sx={{ color: '#999999', fontSize: '17px' }} />
                         </Box>
                       </Box>
                     </Box>
@@ -579,17 +587,15 @@ Type: Address verification`;
                               </Typography>
                             </Box>
                             <CryptoButtonsWrapper>
-                              <CryptoButtonWrapper>
+                              <CryptoButtonWrapper sx={{ padding: '8px' }}>
                                 <SaveAltIcon
-                                  fontSize={'small'}
-                                  sx={{ color: '#999999' }}
+                                  sx={{ color: '#999999', fontSize: '17px' }}
                                   onClick={() => handleClickReceive('matic')}
                                 />
                               </CryptoButtonWrapper>
-                              <CryptoButtonWrapper>
+                              <CryptoButtonWrapper sx={{ padding: '8px' }}>
                                 <SendIcon
-                                  fontSize={'small'}
-                                  sx={{ color: '#999999' }}
+                                  sx={{ color: '#999999', fontSize: '17px' }}
                                   onClick={() => handleClickSend('matic', balance)}
                                 />
                               </CryptoButtonWrapper>
@@ -611,17 +617,15 @@ Type: Address verification`;
                               </Typography>
                             </Box>
                             <CryptoButtonsWrapper>
-                              <CryptoButtonWrapper>
+                              <CryptoButtonWrapper sx={{ padding: '8px' }}>
                                 <SaveAltIcon
-                                  fontSize={'small'}
-                                  sx={{ color: '#999999' }}
+                                  sx={{ color: '#999999', fontSize: '17px' }}
                                   onClick={() => handleClickReceive('usdc')}
                                 />
                               </CryptoButtonWrapper>
-                              <CryptoButtonWrapper>
+                              <CryptoButtonWrapper sx={{ padding: '8px' }}>
                                 <SendIcon
-                                  fontSize={'small'}
-                                  sx={{ color: '#999999' }}
+                                  sx={{ color: '#999999', fontSize: '17px' }}
                                   onClick={() => handleClickSend('usdc', usdcBalance)}
                                 />
                               </CryptoButtonWrapper>
@@ -666,39 +670,6 @@ Type: Address verification`;
                         <SectionText>{user.email}</SectionText>
                       </Box>
                     </Stack>
-
-                    {/*<Divider />*/}
-
-                    {/*<Stack gap="12px">*/}
-                    {/*  <SectionHeader>Linking another social account</SectionHeader>*/}
-                    {/*  <Box sx={{ display: 'flex', alignItems: 'center', gap: '8px' }}>*/}
-                    {/*    <Box*/}
-                    {/*      sx={{*/}
-                    {/*        width: '32px',*/}
-                    {/*        height: '32px',*/}
-                    {/*        backgroundColor: '#F5F5F5',*/}
-                    {/*        borderRadius: '50px',*/}
-                    {/*        display: 'flex',*/}
-                    {/*        justifyContent: 'center',*/}
-                    {/*        alignItems: 'center',*/}
-                    {/*      }}*/}
-                    {/*    >*/}
-                    {/*      <Image*/}
-                    {/*        alt="google-icon"*/}
-                    {/*        src="/assets/icons/google-icon.png"*/}
-                    {/*        sx={{ width: '18px' }}*/}
-                    {/*      />*/}
-                    {/*    </Box>*/}
-                    {/*  </Box>*/}
-                    {/*</Stack>*/}
-
-                    {/*<Divider />*/}
-
-                    {/*<Stack gap="12px">*/}
-                    {/*  <SectionHeader>NAME</SectionHeader>*/}
-                    {/*  <SectionText>{user.name && user.name}</SectionText>*/}
-                    {/*</Stack>*/}
-
                     <Divider />
                     <Stack gap="12px">
                       <SectionHeader>Birth Date</SectionHeader>
@@ -752,7 +723,6 @@ Type: Address verification`;
 
                     <Box>
                       <SectionHeader>WALLET ADDRESS</SectionHeader>
-
                       <form>
                         <Stack
                           gap="12px"
@@ -800,7 +770,7 @@ Type: Address verification`;
                                   content={user.abc_address}
                                   onClick={() => handleClickCopy(user?.abc_address)}
                                 />
-                                <HyperlinkButton />
+                                <HyperlinkButton onClick={() => moveToScope(user?.abc_address)} />
                               </Stack>
                             </Box>
                           )}
@@ -844,7 +814,7 @@ Type: Address verification`;
                                   content={user.eth_address}
                                   onClick={() => handleClickCopy(user?.eth_address)}
                                 />
-                                <HyperlinkButton />
+                                <HyperlinkButton onClick={() => moveToScope(user?.eth_address)} />
                                 <IconButton
                                   sx={{
                                     borderRadius: '100%',
