@@ -781,7 +781,7 @@ Type: Address verification`;
                                 />
                                 <SectionText
                                   flex={1}
-                                  sx={{ wordBreak: 'break-word', fontFamily: 'Courier' }}
+                                  sx={{ wordBreak: 'break-word', fontFamily: 'Courier New' }}
                                 >
                                   {user.abc_address}
                                 </SectionText>
@@ -807,7 +807,7 @@ Type: Address verification`;
                                 />
                                 <SectionText
                                   flex={1}
-                                  sx={{ wordBreak: 'break-word', fontFamily: 'Courier' }}
+                                  sx={{ wordBreak: 'break-word', fontFamily: 'Courier New' }}
                                 >
                                   {user.eth_address}
                                 </SectionText>
