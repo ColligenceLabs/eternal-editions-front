@@ -39,7 +39,7 @@ import { NavDesktop, NavMobile, navConfig } from '../nav';
 import { ToolbarShadowStyle, ToolbarStyle } from './HeaderToolbarStyle';
 import onLogin, { setOnLogin } from 'src/store/slices/onLogin';
 
-import { AbcWeb3Provider } from '@colligence/klip-web3-provider';
+import { AbcWeb3Provider } from '@colligence/abc-web3-provider';
 import Web3Modal from '@colligence/web3modal';
 
 // TODO : dkeys WASM Go Initialize...
