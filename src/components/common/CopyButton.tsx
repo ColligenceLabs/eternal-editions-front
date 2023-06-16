@@ -1,9 +1,9 @@
 import { ContentCopy } from '@mui/icons-material';
-import { IconButton, SxProps } from '@mui/material';
+import { IconButton, IconButtonProps, SxProps } from '@mui/material';
 import React from 'react';
 import palette from 'src/theme/palette';
 
-interface Props {
+interface Props extends IconButtonProps {
   content: string;
   styles?: SxProps;
 }
