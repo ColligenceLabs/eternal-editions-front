@@ -735,7 +735,9 @@ Type: Address verification`;
                     <Stack gap="12px">
                       <SectionHeader>bank Account</SectionHeader>
                       {bankAccount ? (
-                        <SectionText>{`${bankAccount.bank} ${bankAccount.accountNumber}`}</SectionText>
+                        <SectionText>{`${bankAccount.bank ?? ''} ${
+                          bankAccount.accountNumber ?? ''
+                        }`}</SectionText>
                       ) : null}
                       <Stack flexDirection="row">
                         <CButton
