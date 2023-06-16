@@ -25,7 +25,8 @@ export default function TicketItem({ ticket }: any) {
   const [openTransferItem, setOpenTransferItem] = useState<boolean>(false);
   const [ticketInfo, setTicketInfo] = useState<MyTicketTypes | null>(null);
   const { days, hours, minutes, seconds } = useCountdown(
-    new Date(ticket.sellbook?.endDate ? ticket.sellbook?.endDate : null)
+    new Date(ticket.sellbook?.endDate ? ticket.sellbook?.endDate : null),
+    ticket?.status
   );
 
   useEffect(() => {

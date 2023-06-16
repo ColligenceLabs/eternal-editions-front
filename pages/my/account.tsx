@@ -6,11 +6,13 @@ import {
   Checkbox,
   Divider,
   Grid,
+  IconButton,
   Stack,
   Typography,
   formControlLabelClasses,
   svgIconClasses,
 } from '@mui/material';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { styled } from '@mui/material/styles';
 import {
   ChainId,
@@ -447,7 +449,7 @@ Type: Address verification`;
               }}
             >
               <Grid container>
-                <Grid item xs={12} md={4} lg={3} borderRight="1px solid rgba(0, 0, 0, 0.04)">
+                <Grid item xs={12} md={4} lg={4} borderRight="1px solid rgba(0, 0, 0, 0.04)">
                   <Stack>
                     <Box
                       sx={{
@@ -572,7 +574,9 @@ Type: Address verification`;
                                   sx={{ width: '100%' }}
                                 />
                               </Box>
-                              <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
+                              <Typography
+                                sx={{ fontSize: '13px', fontWeight: '700', paddingRight: '20px' }}
+                              >
                                 {balance.toFixed(5)} MATIC
                               </Typography>
                             </Box>
@@ -602,7 +606,9 @@ Type: Address verification`;
                                   sx={{ width: '100%' }}
                                 />
                               </Box>
-                              <Typography sx={{ fontSize: '13px', fontWeight: '700' }}>
+                              <Typography
+                                sx={{ fontSize: '13px', fontWeight: '700', paddingRight: '20px' }}
+                              >
                                 {usdcBalance} USDC
                               </Typography>
                             </Box>
@@ -642,7 +648,7 @@ Type: Address verification`;
                   item
                   xs={12}
                   md={8}
-                  lg={9}
+                  lg={8}
                   padding={{
                     xs: '0 16px 13px',
                     md: '32px 24px',
@@ -771,6 +777,17 @@ Type: Address verification`;
                                   onClick={() => handleClickCopy(user?.abc_address)}
                                 />
                                 <HyperlinkButton />
+                                <IconButton
+                                  sx={{
+                                    borderRadius: '100%',
+                                    width: '32px',
+                                    height: '32px',
+                                  }}
+                                >
+                                  <DeleteOutlineIcon
+                                    sx={{ color: palette.dark.black.lighter, fontSize: '18px' }}
+                                  />
+                                </IconButton>
                               </Stack>
                             </Stack>
                           )}

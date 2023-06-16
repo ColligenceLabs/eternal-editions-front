@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 
 // ----------------------------------------------------------------------
 
-export default function useCountdown(date: Date) {
+export default function useCountdown(date: Date, status?: string) {
   const [countdown, setCountdown] = useState({
     days: '00',
     hours: '00',
@@ -10,10 +10,16 @@ export default function useCountdown(date: Date) {
     seconds: '00',
     diff: 0,
   });
-
+  const interval = useRef<any>();
   useEffect(() => {
-    const interval = setInterval(() => setNewTime(), 1000);
-    return () => clearInterval(interval);
+    if (date && status === 'MARKET') {
+      interval.current = setInterval(() => setNewTime(), 1000);
+    }
+    return () => {
+      if (interval.current) {
+        clearInterval(interval.current);
+      }
+    };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [date]);
 
