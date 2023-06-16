@@ -6,7 +6,7 @@ export interface User {
   accountHolder: string;
   accountNumber: string;
   bank: string;
-  eth_address: null;
+  eth_address: string;
   role: string;
   name: string;
   email: string;

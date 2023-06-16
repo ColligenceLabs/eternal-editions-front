@@ -62,6 +62,9 @@ import SaveAltIcon from '@mui/icons-material/SaveAlt';
 import SendIcon from '@mui/icons-material/Send';
 import Transfer from 'src/components/user/Transfer';
 import CSnackbar from 'src/components/common/CSnackbar';
+import HyperlinkButton from 'src/components/ticket/HyperlinkButton';
+import MyWalletModal from 'src/components/my-tickets/MyWalletModal';
+import CopyButton from 'src/components/common/CopyButton';
 
 // ----------------------------------------------------------------------
 const RootStyle = styled('div')(({ theme }) => ({
@@ -106,7 +109,7 @@ const SectionHeader = styled(Typography)(({ theme }) => ({
   textTransform: 'uppercase',
 }));
 
-const SectionText = styled(Typography)(({ theme }) => ({
+export const SectionText = styled(Typography)(({ theme }) => ({
   fontSize: '14px',
   lineHeight: 20 / 14,
 }));
@@ -172,6 +175,33 @@ export default function MyAccountPage() {
     type: '',
     message: '',
   });
+  const [myWalletModalState, setMyWalletModalState] = useState({
+    open: false,
+    iconSrc: '',
+    walletAddress: '',
+  });
+
+  const onOpenMyWalletModal = ({
+    walletAddress,
+    iconSrc,
+  }: {
+    walletAddress: string;
+    iconSrc?: string;
+  }) => {
+    setMyWalletModalState({
+      open: true,
+      walletAddress,
+      iconSrc: iconSrc || '',
+    });
+  };
+
+  const resetMyWalletModalState = () => {
+    setMyWalletModalState({
+      open: false,
+      iconSrc: '',
+      walletAddress: '',
+    });
+  };
 
   const handleCloseSnackbar = () => {
     setOpenSnackbar({
@@ -296,8 +326,14 @@ export default function MyAccountPage() {
   };
 
   const handleClickReceive = (token: string) => {
+    onOpenMyWalletModal({
+      walletAddress: account!,
+      iconSrc:
+        token === 'matic' ? '/assets/img/matic-token-icon.png' : '/assets/img/usdc-token-icon.png',
+    });
     console.log(`handle click ${token} receive.`);
   };
+
   useEffect(() => {
     if (!router.isReady) return;
     const changePhoneNumber = async (impUid: any) => {
@@ -703,28 +739,42 @@ Type: Address verification`;
                       <form>
                         <Stack gap="12px" sx={{ mt: '12px' }}>
                           {user.abc_address && (
-                            <Stack direction="row" alignItems="center" gap="4px">
-                              <Image
-                                alt="abc-logo"
-                                src="/assets/icons/abc-logo.png"
-                                sx={{ width: '24px' }}
-                              />
-                              <SectionText flex={1} sx={{ wordBreak: 'break-word' }}>
-                                {user.abc_address}
-                              </SectionText>
+                            <Stack gap="12px" flexDirection="row">
+                              <Stack direction="row" alignItems="center" gap="4px">
+                                <Image
+                                  alt="abc-logo"
+                                  src="/assets/icons/abc-logo.png"
+                                  sx={{ width: '24px' }}
+                                />
+                                <SectionText flex={1} sx={{ wordBreak: 'break-word' }}>
+                                  {user.abc_address}
+                                </SectionText>
+                              </Stack>
+
+                              <Stack gap={1} flexDirection="row">
+                                <CopyButton content={user.abc_address} />
+                                <HyperlinkButton />
+                              </Stack>
                             </Stack>
                           )}
 
                           {user.eth_address && (
-                            <Stack direction="row" alignItems="center" gap="4px">
-                              <Image
-                                alt="metamask-logo"
-                                src="/assets/icons/metamask-logo.png"
-                                sx={{ width: '24px' }}
-                              />
-                              <SectionText flex={1} sx={{ wordBreak: 'break-word' }}>
-                                {user.eth_address}
-                              </SectionText>
+                            <Stack gap="12px" flexDirection="row">
+                              <Stack direction="row" alignItems="center" gap="4px">
+                                <Image
+                                  alt="metamask-logo"
+                                  src="/assets/icons/metamask-logo.png"
+                                  sx={{ width: '24px' }}
+                                />
+                                <SectionText flex={1} sx={{ wordBreak: 'break-word' }}>
+                                  {user.eth_address}
+                                </SectionText>
+                              </Stack>
+
+                              <Stack gap={1} flexDirection="row">
+                                <CopyButton content={user.eth_address} />
+                                <HyperlinkButton />
+                              </Stack>
                             </Stack>
                           )}
                         </Stack>
@@ -801,6 +851,13 @@ Type: Address verification`;
             />
           </MyAccountWrapper>
         )}
+
+        <MyWalletModal
+          open={myWalletModalState.open}
+          onClose={resetMyWalletModalState}
+          walletAddress={myWalletModalState.walletAddress}
+          iconSrc={myWalletModalState.iconSrc}
+        />
 
         <ModalCustom
           aria-labelledby="transition-modal-title"
