@@ -11,6 +11,7 @@ import SaveTicketContent from './SaveTicketContent';
 import { MyTicketTypes } from 'src/@types/my/myTicket';
 import useCountdown from 'src/hooks/useCountdown';
 import { fDate } from 'src/utils/formatTime';
+import TransferItem from 'src/components/user/TransferItem';
 
 type PropertiesType = {
   type: string;
@@ -21,6 +22,7 @@ export default function TicketItem({ ticket }: any) {
   const isXs = useResponsive('down', 'sm');
   const isMobile = useResponsive('down', 'md');
   const [open, setOpen] = useState<boolean>(false);
+  const [openTransferItem, setOpenTransferItem] = useState<boolean>(false);
   const [ticketInfo, setTicketInfo] = useState<MyTicketTypes | null>(null);
   const { days, hours, minutes, seconds } = useCountdown(
     new Date(ticket.sellbook?.endDate ? ticket.sellbook?.endDate : null)
@@ -55,7 +57,6 @@ export default function TicketItem({ ticket }: any) {
       });
     }
   }, [ticket]);
-
   return (
     <>
       {ticketInfo ? (
@@ -244,6 +245,7 @@ export default function TicketItem({ ticket }: any) {
                         display: 'none',
                       },
                     }}
+                    onClick={() => setOpenTransferItem(true)}
                   >
                     <Image
                       src="/assets/icons/icon-gift.svg"
@@ -277,6 +279,9 @@ export default function TicketItem({ ticket }: any) {
           </Stack>
           <ModalCustom open={open} onClose={() => setOpen(false)}>
             <SaveTicketContent ticketInfo={ticketInfo} onClose={() => setOpen(false)} />
+          </ModalCustom>
+          <ModalCustom open={openTransferItem} onClose={() => setOpenTransferItem(false)}>
+            <TransferItem item={ticketInfo} onClose={() => setOpenTransferItem(false)} />
           </ModalCustom>
         </Grid>
       ) : null}

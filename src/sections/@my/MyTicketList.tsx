@@ -22,7 +22,6 @@ export default function MyTicketList({ loading }: Props) {
   useEffect(() => {
     if (user.uid) getMyTicketList();
   }, [user]);
-
   return (
     <>
       {loading ? (

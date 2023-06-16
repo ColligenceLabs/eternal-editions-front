@@ -13,7 +13,6 @@ import {
 import { Label, Section } from 'src/components/my-tickets/StyledComponents';
 import palette from 'src/theme/palette';
 import { Controller, useForm } from 'react-hook-form';
-import { MenuProps, RoundedSelectOption } from 'src/components/common/Select';
 import RoundedButton from 'src/components/common/RoundedButton';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
@@ -27,7 +26,7 @@ import { useSelector } from 'react-redux';
 import { erc20Transfer, ethTransfer } from 'src/utils/transactions';
 import useAccount from 'src/hooks/useAccount';
 import { SUCCESS } from 'src/config';
-import Image from '../Image';
+import { MyTicketTypes } from 'src/@types/my/myTicket';
 import HyperlinkButton from '../ticket/HyperlinkButton';
 
 const StyledInput = styled(Input)(({}) => ({
@@ -58,21 +57,18 @@ const SectionText = styled(Typography)(({ theme }) => ({
 }));
 
 type TransferData = {
-  token: string;
-  amount: string;
+  item: string;
   address: string;
   twofacode: string;
 };
 
-type TransferProps = {
-  token: string;
-  amount: number;
+type TransferItemProps = {
+  item: MyTicketTypes;
   onClose: SetStateAction<any>;
 };
 
 const FormSchema = Yup.object().shape({
-  token: Yup.string().required('Crypto is required'),
-  amount: Yup.string().required('Amount is required'),
+  item: Yup.string().required('Amount is required'),
   address: Yup.string().required('Address is required'),
   twofacode: Yup.string(),
 });
@@ -83,34 +79,18 @@ const StepStatus = {
   step3: 'complete',
 };
 
-const Transfer: React.FC<TransferProps> = ({ token, amount: totalBalance, onClose }) => {
+const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
   const defaultValues: TransferData = {
-    token: token,
-    amount: '',
+    item: item.mysteryboxItem.name,
     address: '',
     twofacode: '',
   };
 
   const { library, chainId } = useActiveWeb3React();
-  const { account } = useAccount();
   const abcUser = useSelector((state: any) => state.user);
   const [transferData, setTransferData] = useState<TransferData>(defaultValues);
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(StepStatus.step1);
-
-  console.log(totalBalance);
-  const tokens = [
-    {
-      value: 'matic',
-      label: 'MATIC',
-      icon: '/assets/img/matic-token-icon.png',
-    },
-    {
-      value: 'usdc',
-      label: 'USDC',
-      icon: '/assets/img/usdc-token-icon.png',
-    },
-  ];
 
   const { control, handleSubmit, watch, setValue } = useForm<TransferData>({
     resolver: yupResolver(FormSchema),
@@ -120,7 +100,7 @@ const Transfer: React.FC<TransferProps> = ({ token, amount: totalBalance, onClos
     },
   });
 
-  const handlePaste = (key: 'address' | 'token' | 'amount' | 'twofacode') => {
+  const handlePaste = (key: 'address' | 'token' | 'item' | 'twofacode') => {
     navigator.clipboard.readText().then((text) => {
       setValue(key, text);
     });
@@ -132,73 +112,16 @@ const Transfer: React.FC<TransferProps> = ({ token, amount: totalBalance, onClos
     if (step === StepStatus.step1) {
       setTransferData(value);
       if (loginBy === 'sns') setStep(StepStatus.step2);
-      else {
-        // Metamask
-        setIsLoading(true);
-        let result: any;
-        if (value.token === 'usdc') {
-          result = await erc20Transfer(
-            contracts.usdc[chainId],
-            value.address,
-            ethers.utils.parseUnits(value.amount, 6).toString(),
-            account!,
-            library,
-            false
-          );
-        } else {
-          result = await ethTransfer(
-            value.address,
-            ethers.utils.parseEther(value.amount).toString(),
-            account!,
-            library,
-            false
-          );
-        }
-        console.log('== tx result ==', result);
-        setIsLoading(false);
-        if (result === SUCCESS) setStep(StepStatus.step3);
-        else {
-          // TODO : 화면에 에러 표시
-          console.log('!! transfer failed...');
-        }
-      }
     } else if (step === StepStatus.step2) {
       console.log(value.twofacode);
-      let result: any;
-      setIsLoading(true);
-      if (loginBy === 'sns') {
-        if (value.token === 'usdc') {
-          const to = contracts.usdc[chainId]; // USDC Smart Contract
-          const method = 'transfer';
-          const txArgs = [
-            value.address, // Recipient
-            ethers.utils.parseUnits(value.amount, 6), // Amount, USDC decimal = 6
-          ];
-          result = await abcSendTx(value.twofacode, to, tokenAbi, method, txArgs, abcUser);
-          console.log('== tx result ==', result.status); // 0x1 : 성공
-        } else {
-          result = await abcSendMatic(
-            value.twofacode,
-            value.address,
-            abcUser,
-            ethers.utils.parseEther(value.amount).toString()
-          );
-          console.log('== tx result ==', result.status);
-        }
-      }
-      setIsLoading(false);
-      if (result?.status === '0x1') setStep(StepStatus.step3);
-      else {
-        // TODO : 화면에 에러 표시
-        console.log('!! transfer failed...');
-      }
+      setStep(StepStatus.step3);
     } else {
       console.log(step);
       onClose();
     }
   };
   return (
-    <Stack gap={3} component="form" onSubmit={handleSubmit(onSubmit)} pt={1}>
+    <Stack gap={2} component="form" onSubmit={handleSubmit(onSubmit)} pt={1}>
       {step === StepStatus.step1 && (
         <>
           <Typography
@@ -208,49 +131,22 @@ const Transfer: React.FC<TransferProps> = ({ token, amount: totalBalance, onClos
               lineHeight: '36px',
             }}
           >
-            Transfer
+            Transfer Item
           </Typography>
-          <Section>
-            <Label as="label" sx={{ color: palette.dark.black.lighter }}>
-              CHOOSE TOKEN
-            </Label>
 
-            <Controller
-              name="token"
-              control={control}
-              render={({ field }) => (
-                <Select {...field} variant="standard" sx={{ color: '#000' }} MenuProps={MenuProps}>
-                  {tokens.map(
-                    ({ value, label, icon }: { value: string; label: string; icon: string }) => (
-                      <RoundedSelectOption value={value} key={value}>
-                        <Stack gap={1} flexDirection={'row'} alignItems={'center'}>
-                          <Image
-                            alt="edcp-logo"
-                            src={icon}
-                            sx={{ width: '24px', height: '24px' }}
-                          />
-                          {label}
-                        </Stack>
-                      </RoundedSelectOption>
-                    )
-                  )}
-                </Select>
-              )}
-            />
-          </Section>
           <Section>
             <Stack>
               <Label as="label" sx={{ color: palette.dark.black.lighter }}>
-                AMOUNT
+                chOOSE Item
               </Label>
 
               <Controller
-                name="amount"
+                name="item"
                 control={control}
                 render={({ field, fieldState: { error } }) => (
                   <StyledTextField
                     {...field}
-                    placeholder="Enter the amount to send"
+                    placeholder="Enter the item to send"
                     variant="standard"
                     size={'small'}
                     inputProps={{
@@ -267,26 +163,6 @@ const Transfer: React.FC<TransferProps> = ({ token, amount: totalBalance, onClos
                 )}
               />
             </Stack>
-            <div>
-              <RoundedButton
-                variant="inactive"
-                onClick={() =>
-                  setValue(
-                    'amount',
-                    token === 'usdc' ? totalBalance.toString() : (totalBalance - 0.01).toString()
-                  )
-                }
-                sx={{
-                  padding: '10px 16px',
-                  [`&.${buttonBaseClasses.root}`]: {
-                    fontSize: 12,
-                    lineHeight: 13 / 12,
-                  },
-                }}
-              >
-                {'SEND ALL'}
-              </RoundedButton>
-            </div>
           </Section>
           <Section>
             <Label as="label" sx={{ color: palette.dark.black.lighter }}>
@@ -370,7 +246,7 @@ const Transfer: React.FC<TransferProps> = ({ token, amount: totalBalance, onClos
                 <>
                   <StyledInput
                     {...field}
-                    placeholder="Please enter code number"
+                    placeholder="Please enter the code"
                     size={'small'}
                     inputProps={{
                       style: {
@@ -430,25 +306,8 @@ const Transfer: React.FC<TransferProps> = ({ token, amount: totalBalance, onClos
           </Typography>
 
           <Stack gap="12px">
-            <SectionHeader>TOKEN</SectionHeader>
-            <SectionText>
-              <Stack gap={1} flexDirection={'row'} alignItems={'center'}>
-                <Image
-                  alt="token"
-                  src={
-                    transferData.token === 'matic'
-                      ? '/assets/img/matic-token-icon.png'
-                      : '/assets/img/usdc-token-icon.png'
-                  }
-                  sx={{ width: '24px', height: '24px' }}
-                />
-                {transferData.token}
-              </Stack>
-            </SectionText>
-          </Stack>
-          <Stack gap="12px">
-            <SectionHeader>AMOUNT</SectionHeader>
-            <SectionText>{transferData.amount}</SectionText>
+            <SectionHeader>ITEM</SectionHeader>
+            <SectionText sx={{ fontWeight: 700 }}>{transferData.item}</SectionText>
           </Stack>
           <Stack gap="12px">
             <SectionHeader>RECIPIENT WALLET ADDRESS</SectionHeader>
@@ -470,4 +329,4 @@ const Transfer: React.FC<TransferProps> = ({ token, amount: totalBalance, onClos
   );
 };
 
-export default Transfer;
+export default TransferItem;
