@@ -334,6 +334,15 @@ export default function MyAccountPage() {
     console.log(`handle click ${token} receive.`);
   };
 
+  const handleClickCopy = async (content: string) => {
+    try {
+      await navigator.clipboard.writeText(content);
+      alert('Copied!');
+    } catch (error) {
+      console.error('Failed to save to clipboard:', error);
+    }
+  };
+
   useEffect(() => {
     if (!router.isReady) return;
     const changePhoneNumber = async (impUid: any) => {
@@ -752,7 +761,10 @@ Type: Address verification`;
                               </Stack>
 
                               <Stack gap={1} flexDirection="row">
-                                <CopyButton content={user.abc_address} />
+                                <CopyButton
+                                  content={user.abc_address}
+                                  onClick={() => handleClickCopy(user?.abc_address)}
+                                />
                                 <HyperlinkButton />
                               </Stack>
                             </Stack>
@@ -772,7 +784,10 @@ Type: Address verification`;
                               </Stack>
 
                               <Stack gap={1} flexDirection="row">
-                                <CopyButton content={user.eth_address} />
+                                <CopyButton
+                                  content={user.eth_address}
+                                  onClick={() => handleClickCopy(user?.eth_address)}
+                                />
                                 <HyperlinkButton />
                               </Stack>
                             </Stack>

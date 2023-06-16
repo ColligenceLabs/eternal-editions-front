@@ -15,6 +15,15 @@ interface Props extends Omit<ModalCustomProps, 'children'> {
 function MyWalletModal({ walletAddress, iconSrc, ...props }: Props) {
   const theme = useTheme();
 
+  const handleClickCopy = async (content: string) => {
+    try {
+      await navigator.clipboard.writeText(content);
+      alert('Copied!');
+    } catch (error) {
+      console.error('Failed to save to clipboard:', error);
+    }
+  };
+
   return (
     <ModalCustom
       {...props}
@@ -38,7 +47,7 @@ function MyWalletModal({ walletAddress, iconSrc, ...props }: Props) {
                 src={iconSrc || '/assets/icons/matic-token-icon.svg'}
               />
             </Box>
-            <CopyButton content={walletAddress} />
+            <CopyButton content={walletAddress} onClick={() => handleClickCopy(walletAddress)} />
           </Stack>
           <Typography variant="h4" sx={{ wordBreak: 'break-all' }}>
             {walletAddress}

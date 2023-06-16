@@ -8,7 +8,7 @@ interface Props {
   styles?: SxProps;
 }
 
-function CopyButton({ content, styles }: Props) {
+function CopyButton({ content, styles, ...props }: Props) {
   const copyText = () => {
     navigator.clipboard.writeText(content);
   };
@@ -17,6 +17,7 @@ function CopyButton({ content, styles }: Props) {
     <IconButton
       onClick={copyText}
       sx={{ borderRadius: '100%', width: '32px', height: '32px', ...styles }}
+      {...props}
     >
       <ContentCopy sx={{ color: palette.dark.black.lighter, fontSize: '14px' }} />
     </IconButton>
