@@ -742,7 +742,7 @@ Type: Address verification`;
                                 gap: '12px',
                               }}
                             >
-                              <Stack direction="row" alignItems="center" gap="2px">
+                              <Stack direction="row" alignItems="center" gap="5px">
                                 <Image
                                   alt="abc-logo"
                                   src="/assets/icons/abc-logo.png"
@@ -751,7 +751,7 @@ Type: Address verification`;
                                 <SectionText
                                   sx={{
                                     wordBreak: 'break-word',
-                                    minWidth: isMobile ? '80px' : '325px',
+                                    minWidth: isMobile ? '80px' : '340px',
                                   }}
                                 >
                                   {isMobile ? getShotAddress(user.abc_address) : user.abc_address}
@@ -785,7 +785,7 @@ Type: Address verification`;
                                 gap: '12px',
                               }}
                             >
-                              <Stack direction="row" alignItems="center" gap="2px">
+                              <Stack direction="row" alignItems="center" gap="5px">
                                 <Image
                                   alt="metamask-logo"
                                   src="/assets/icons/metamask-logo.png"
@@ -795,7 +795,7 @@ Type: Address verification`;
                                   flex={1}
                                   sx={{
                                     wordBreak: 'break-word',
-                                    minWidth: isMobile ? '80px' : '325px',
+                                    minWidth: isMobile ? '80px' : '340px',
                                   }}
                                 >
                                   {isMobile ? getShotAddress(user.eth_address) : user.eth_address}
