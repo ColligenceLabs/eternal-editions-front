@@ -62,11 +62,13 @@ type TransferData = {
   item: string;
   address: string;
   twofacode: string;
+  token: string;
 };
 
 type TransferItemProps = {
   item: MyTicketTypes;
   onClose: SetStateAction<any>;
+  setOpenSnackbar: SetStateAction<any>;
 };
 
 const FormSchema = Yup.object().shape({
@@ -81,7 +83,7 @@ const StepStatus = {
   step3: 'complete',
 };
 
-const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
+const TransferItem: React.FC<TransferItemProps> = ({ item, onClose, setOpenSnackbar }) => {
   const defaultValues: TransferData = {
     item: item.mysteryboxItem.name,
     address: '',
@@ -98,11 +100,11 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
   const [step, setStep] = useState(StepStatus.step1);
   const [isAbc, setIsAbc] = useState(false);
 
-  const [openSnackbar, setOpenSnackbar] = useState({
-    open: false,
-    type: '',
-    message: '',
-  });
+  // const [openSnackbar, setOpenSnackbar] = useState({
+  //   open: false,
+  //   type: '',
+  //   message: '',
+  // });
 
   const { control, handleSubmit, watch, setValue } = useForm<TransferData>({
     resolver: yupResolver(FormSchema),
@@ -422,12 +424,12 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
           </RoundedButton>
         </>
       )}
-      <CSnackbar
-        open={openSnackbar.open}
-        type={openSnackbar.type}
-        message={openSnackbar.message}
-        handleClose={handleCloseSnackbar}
-      />
+      {/*<CSnackbar*/}
+      {/*  open={openSnackbar.open}*/}
+      {/*  type={openSnackbar.type}*/}
+      {/*  message={openSnackbar.message}*/}
+      {/*  handleClose={handleCloseSnackbar}*/}
+      {/*/>*/}
     </Stack>
   );
 };
