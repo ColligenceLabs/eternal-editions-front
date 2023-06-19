@@ -88,6 +88,7 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose, setOpenSnack
     item: item.mysteryboxItem.name,
     address: '',
     twofacode: '',
+    token: '',
   };
 
   const { library, chainId } = useActiveWeb3React();
