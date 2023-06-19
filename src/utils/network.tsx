@@ -51,6 +51,7 @@ const addNetwork = async (chainId: number | undefined) => {
 export const setupNetwork = async (chainId: number | undefined) => {
   provider = await detectEthereumProvider({ mustBeMetaMask: true });
 
+  if (`0x${chainId?.toString(16)}` === provider.chainId) return;
   let result;
   result = await addNetwork(chainId);
 
