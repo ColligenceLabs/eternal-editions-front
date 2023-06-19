@@ -136,9 +136,9 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
     } else if (step === StepStatus.step2) {
       console.log('---------->', value.address, value.twofacode);
       setIsLoading(true);
-      const contract = ticketInfo.mysteryboxInfo.boxContractAddress;
-      const tokenId = ticketInfo.tokenId;
-      const quote = ticketInfo?.quote;
+      const contract = item.mysteryboxInfo.boxContractAddress;
+      const tokenId = item.tokenId;
+      const quote = item?.quote;
       let quoteToken: string;
       if (quote === 'matic' || quote === 'wmatic') {
         // TODO : Quote 가 MATIC 이 아닌 경우는 어떻하지 ?
