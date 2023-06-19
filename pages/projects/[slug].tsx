@@ -107,6 +107,7 @@ export default function ProjectDetailPage() {
                   });
                 }
               }
+
               return {
                 ...item,
                 remain: item.issueAmount - sold,
@@ -189,14 +190,18 @@ export default function ProjectDetailPage() {
                 <Label>Mint Schedule</Label>
 
                 <Stack gap={0.25}>
-                  {projectInfo?.projectItems.map((project: ProjectItemTypes, index) => (
-                    <ScheduleCard
-                      key={index}
-                      title={project.title}
-                      status={getStatus(project)}
-                      date={project.startDate}
-                    />
-                  ))}
+                  {projectInfo?.projectItems
+                    .sort(
+                      (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
+                    )
+                    .map((project: ProjectItemTypes, index) => (
+                      <ScheduleCard
+                        key={index}
+                        title={project.title}
+                        status={getStatus(project)}
+                        date={project.startDate}
+                      />
+                    ))}
                 </Stack>
               </Section>
             </Grid>
