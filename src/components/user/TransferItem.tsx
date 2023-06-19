@@ -179,7 +179,13 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
               message: `Field Transfer.`,
             });
           }
-        } catch (e: any) {}
+        } catch (e: any) {
+          setOpenSnackbar({
+            open: true,
+            type: 'error',
+            message: `Field Transfer.`,
+          });
+        }
       } else {
         // Metamask
         const result = await nftTransferFrom(
@@ -211,7 +217,6 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
       }
       // TODO : 버튼 로딩 끝
       setIsLoading(false);
-      onClose();
     } else {
       console.log(step);
       onClose();
