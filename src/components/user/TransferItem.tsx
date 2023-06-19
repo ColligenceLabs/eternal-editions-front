@@ -1,4 +1,4 @@
-import React, { SetStateAction, useState } from 'react';
+import React, { SetStateAction, useEffect, useState } from 'react';
 import {
   buttonBaseClasses,
   CircularProgress,
@@ -23,11 +23,12 @@ import tokenAbi from 'src/config/abi/ERC20Token.json';
 import contracts from 'src/config/constants/contracts';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import { useSelector } from 'react-redux';
-import { erc20Transfer, ethTransfer } from 'src/utils/transactions';
+import { erc20Transfer, ethTransfer, nftTransferFrom } from 'src/utils/transactions';
 import useAccount from 'src/hooks/useAccount';
 import { SUCCESS } from 'src/config';
 import { MyTicketTypes } from 'src/@types/my/myTicket';
 import HyperlinkButton from '../ticket/HyperlinkButton';
+import { collectionAbi } from 'src/config/abi/Collection';
 
 const StyledInput = styled(Input)(({}) => ({
   [`.${inputBaseClasses.input}::placeholder`]: {
@@ -87,10 +88,20 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
   };
 
   const { library, chainId } = useActiveWeb3React();
+  const { account } = useAccount();
+  const webUser = useSelector((state: any) => state.webUser);
   const abcUser = useSelector((state: any) => state.user);
+
   const [transferData, setTransferData] = useState<TransferData>(defaultValues);
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState(StepStatus.step1);
+  const [isAbc, setIsAbc] = useState(false);
+
+  const [openSnackbar, setOpenSnackbar] = useState({
+    open: false,
+    type: '',
+    message: '',
+  });
 
   const { control, handleSubmit, watch, setValue } = useForm<TransferData>({
     resolver: yupResolver(FormSchema),
@@ -106,6 +117,16 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
     });
   };
 
+  useEffect(() => {
+    if (account === webUser.user.abc_address) {
+      setIsAbc(true);
+      console.log('!! isAbc ? ', true);
+    } else {
+      setIsAbc(false);
+      console.log('!! isAbc ? ', false);
+    }
+  }, [account, webUser]);
+
   const onSubmit = async (value: TransferData) => {
     const loginBy = window.localStorage.getItem('loginBy') ?? 'sns';
 
@@ -113,8 +134,77 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
       setTransferData(value);
       if (loginBy === 'sns') setStep(StepStatus.step2);
     } else if (step === StepStatus.step2) {
-      console.log(value.twofacode);
-      setStep(StepStatus.step3);
+      console.log('---------->', value.address, value.twofacode);
+      setIsLoading(true);
+      const contract = ticketInfo.mysteryboxInfo.boxContractAddress;
+      const tokenId = ticketInfo.tokenId;
+      const quote = ticketInfo?.quote;
+      let quoteToken: string;
+      if (quote === 'matic' || quote === 'wmatic') {
+        // TODO : Quote 가 MATIC 이 아닌 경우는 어떻하지 ?
+        quoteToken = quote === 'matic' ? contracts.matic[chainId] : contracts.wmatic[chainId];
+      }
+
+      // TODO : 버튼 로딩 시작
+      if (isAbc) {
+        const method = 'transferFrom';
+        const txArgs = [account, value.address, tokenId];
+
+        try {
+          const result = await abcSendTx(
+            value.twofacode,
+            contract,
+            collectionAbi,
+            method,
+            txArgs,
+            abcUser
+          );
+
+          if (parseInt(result.status.toString(), 16) === SUCCESS) {
+            setOpenSnackbar({
+              open: true,
+              type: 'success',
+              message: `Success Transfer.`,
+            });
+            // TODO : DB drops 테이블에서 삭제 ?
+          } else {
+            setOpenSnackbar({
+              open: true,
+              type: 'error',
+              message: `Field Transfer.`,
+            });
+          }
+        } catch (e: any) {}
+      } else {
+        // Metamask
+        const result = await nftTransferFrom(
+          contract,
+          value.address,
+          tokenId.toString(),
+          account!,
+          library,
+          false
+        );
+        console.log(result);
+        if (result === SUCCESS) {
+          setOpenSnackbar({
+            open: true,
+            type: 'success',
+            message: `Success Transfer.`,
+          });
+          setStep(StepStatus.step3);
+          // TODO : DB drops 테이블에서 삭제 ?
+        } else {
+          setOpenSnackbar({
+            open: true,
+            type: 'error',
+            message: `Field Transfer.`,
+          });
+        }
+      }
+      // TODO : 버튼 로딩 끝
+      setIsLoading(false);
+      onClose();
     } else {
       console.log(step);
       onClose();
