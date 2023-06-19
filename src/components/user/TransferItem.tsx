@@ -29,6 +29,7 @@ import { SUCCESS } from 'src/config';
 import { MyTicketTypes } from 'src/@types/my/myTicket';
 import HyperlinkButton from '../ticket/HyperlinkButton';
 import { collectionAbi } from 'src/config/abi/Collection';
+import CSnackbar from 'src/components/common/CSnackbar';
 
 const StyledInput = styled(Input)(({}) => ({
   [`.${inputBaseClasses.input}::placeholder`]: {
@@ -111,6 +112,14 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
     },
   });
 
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar({
+      open: false,
+      type: '',
+      message: '',
+    });
+  };
+
   const handlePaste = (key: 'address' | 'token' | 'item' | 'twofacode') => {
     navigator.clipboard.readText().then((text) => {
       setValue(key, text);
@@ -134,16 +143,10 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
       setTransferData(value);
       if (loginBy === 'sns') setStep(StepStatus.step2);
     } else if (step === StepStatus.step2) {
-      console.log('---------->', value.address, value.twofacode);
       setIsLoading(true);
       const contract = item.mysteryboxInfo.boxContractAddress;
       const tokenId = item.tokenId;
-      const quote = item?.quote;
-      let quoteToken: string;
-      if (quote === 'matic' || quote === 'wmatic') {
-        // TODO : Quote 가 MATIC 이 아닌 경우는 어떻하지 ?
-        quoteToken = quote === 'matic' ? contracts.matic[chainId] : contracts.wmatic[chainId];
-      }
+      console.log('!! NFT Transfer = ', value.address, value.twofacode, contract, tokenId);
 
       // TODO : 버튼 로딩 시작
       if (isAbc) {
@@ -166,6 +169,8 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
               type: 'success',
               message: `Success Transfer.`,
             });
+            setIsLoading(false);
+            setStep(StepStatus.step3);
             // TODO : DB drops 테이블에서 삭제 ?
           } else {
             setOpenSnackbar({
@@ -181,6 +186,7 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
           contract,
           value.address,
           tokenId.toString(),
+          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
           account!,
           library,
           false
@@ -192,6 +198,7 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
             type: 'success',
             message: `Success Transfer.`,
           });
+          setIsLoading(false);
           setStep(StepStatus.step3);
           // TODO : DB drops 테이블에서 삭제 ?
         } else {
@@ -415,6 +422,12 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
           </RoundedButton>
         </>
       )}
+      <CSnackbar
+        open={openSnackbar.open}
+        type={openSnackbar.type}
+        message={openSnackbar.message}
+        handleClose={handleCloseSnackbar}
+      />
     </Stack>
   );
 };
