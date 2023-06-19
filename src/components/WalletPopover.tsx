@@ -5,7 +5,7 @@ import { Box, Button, Typography, Stack } from '@mui/material';
 import ContentCopyOutlinedIcon from '@mui/icons-material/ContentCopyOutlined';
 import OpenInNewOutlinedIcon from '@mui/icons-material/OpenInNewOutlined';
 import MenuPopover from './MenuPopover';
-import { ClipboardCopy, getIconByType, getShotAddress } from '../utils/wallet';
+import { ClipboardCopy, getShotAddress } from '../utils/wallet';
 import Image from './Image';
 import Routes from '../routes';
 import { WALLET_ABC, WALLET_METAMASK, WALLET_WALLECTCONNECT } from '../config';
@@ -31,7 +31,7 @@ const MenuItem = styled(Typography)`
   }
 `;
 
-export default function WalletPopover({}) {
+export default function WalletPopover() {
   // const {account, accountShot, type, disconnect, switchChainNetwork, chainId, balance} = useWallets();
   // const abcAccount = useSelector((state: any) => state.user);
   const { user } = useSelector((state: any) => state.webUser);
@@ -96,9 +96,10 @@ export default function WalletPopover({}) {
 
   return (
     <>
-      <Button onClick={handleOpen}>
-        <Typography>{accountShot}</Typography>
-        <Image src={getIconByType(type)} sx={{ width: 23, ml: 1 }} />
+      <Button onClick={handleOpen} sx={{ color: 'white', whiteSpace: 'nowrap', px: 2 }}>
+        {/*<Typography>{accountShot}</Typography>*/}
+        {/*<Image src={getIconByType(type)} sx={{ width: 23, ml: 1 }} />*/}
+        <Typography>MY ACCOUNT</Typography>
       </Button>
 
       <MenuPopover
