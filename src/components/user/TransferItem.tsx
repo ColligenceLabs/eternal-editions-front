@@ -29,6 +29,7 @@ import { SUCCESS } from 'src/config';
 import { MyTicketTypes } from 'src/@types/my/myTicket';
 import HyperlinkButton from '../ticket/HyperlinkButton';
 import { collectionAbi } from 'src/config/abi/Collection';
+import CSnackbar from 'src/components/common/CSnackbar';
 
 const StyledInput = styled(Input)(({}) => ({
   [`.${inputBaseClasses.input}::placeholder`]: {
@@ -110,6 +111,14 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
       ...transferData,
     },
   });
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar({
+      open: false,
+      type: '',
+      message: '',
+    });
+  };
 
   const handlePaste = (key: 'address' | 'token' | 'item' | 'twofacode') => {
     navigator.clipboard.readText().then((text) => {
@@ -413,6 +422,12 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose }) => {
           </RoundedButton>
         </>
       )}
+      <CSnackbar
+        open={openSnackbar.open}
+        type={openSnackbar.type}
+        message={openSnackbar.message}
+        handleClose={handleCloseSnackbar}
+      />
     </Stack>
   );
 };
