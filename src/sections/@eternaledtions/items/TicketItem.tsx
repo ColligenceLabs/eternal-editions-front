@@ -10,6 +10,8 @@ import RoundedButton from 'src/components/common/RoundedButton';
 import ModalCustom from 'src/components/common/ModalCustom';
 import React, { SetStateAction, useEffect, useState } from 'react';
 import TicketItemModal from './TicketItemModal';
+import useAccount from 'src/hooks/useAccount';
+import { SignUp } from 'src/components/user';
 
 // ----------------------------------------------------------------------
 
@@ -43,6 +45,7 @@ export default function TicketItem({
   setOpenSnackbar,
 }: Props) {
   const router = useRouter();
+  const { account } = useAccount();
   const isMobile = useResponsive('down', 'md');
   const { id, name, imageLink, categoriesStr, price, properties } = ticket;
   const [team, setTeam] = useState('');
@@ -50,11 +53,13 @@ export default function TicketItem({
   const [duration, setDuration] = useState('');
   const [location, setLocation] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-
+  const [joinOpen, setJoinOpen] = useState(false);
   const isOnAuction = router.query.status; // TODO: Update value
   const theme = useTheme();
   const [isTicketItemModalOpen, setIsTicketItemModalOpen] = useState(false);
   const [edcpPrice, setEdcpPrice] = useState(0);
+
+  const handleJoinClose = () => setJoinOpen(false);
 
   useEffect(() => {
     if (properties) {
@@ -239,7 +244,10 @@ export default function TicketItem({
               variant="withImage"
               size={isMobile ? 'small' : 'large'}
               sx={{ width: '50%' }}
-              onClick={() => setIsTicketItemModalOpen(true)}
+              onClick={() => {
+                if (account) setIsTicketItemModalOpen(true);
+                else setJoinOpen(true);
+              }}
             >
               MINT
             </RoundedButton>
@@ -264,6 +272,10 @@ export default function TicketItem({
                 setIsLoading={setIsLoading}
                 setOpenSnackbar={setOpenSnackbar}
               />
+            </ModalCustom>
+
+            <ModalCustom open={joinOpen} onClose={handleJoinClose}>
+              <SignUp hideSns={false} onClose={handleJoinClose} />
             </ModalCustom>
           </>
         </Stack>
