@@ -1,5 +1,4 @@
 import React, { PropsWithChildren, ReactElement, useEffect, useState } from 'react';
-// @mui
 import { styled } from '@mui/material/styles';
 import {
   Backdrop,
@@ -58,7 +57,8 @@ import CloseIcon from 'src/assets/icons/close';
 import { IconButtonAnimate } from 'src/components/animate';
 import useActiveWeb3React from 'src/hooks/useActiveWeb3React';
 import { bidOffer } from 'src/seaport/bidOffer';
-import { fixedPriceSell } from 'src/seaport/fixedPriceSell';
+import { SignUp } from 'src/components/user';
+import ModalCustom from 'src/components/common/ModalCustom';
 
 const PAY_TYPE = [
   {
@@ -147,6 +147,8 @@ export default function TicketDetailPage() {
   const [priceError, setPriceError] = useState('');
   const [highestPrice, setHighestPrice] = useState(0);
   const [currentPrice, setCurrentPrice] = useState(0);
+  const [joinOpen, setJoinOpen] = useState(false);
+
   const webUser = useSelector((state: any) => state.webUser);
   const { library, chainId } = useActiveWeb3React();
   const { account } = useAccount();
@@ -162,6 +164,8 @@ export default function TicketDetailPage() {
     setAbcToken('');
     setAbcOpen(false);
   };
+
+  const handleJoinClose = () => setJoinOpen(false);
 
   const fetchSellbookInfo = async () => {
     if (typeof slug === 'string') {
@@ -410,6 +414,11 @@ export default function TicketDetailPage() {
   };
 
   const handleClickBuy = async () => {
+    if (!account) {
+      setJoinOpen(true);
+      return;
+    }
+
     setIsLoading(true);
     console.log('buy now');
     console.log(`pay type :: ${payType}`);
@@ -419,6 +428,11 @@ export default function TicketDetailPage() {
   };
 
   const handleClickBid = async () => {
+    if (!account) {
+      setJoinOpen(true);
+      return;
+    }
+
     console.log('click bid', offer);
     console.log('offer now');
     console.log(`pay type :: ${payType}`);
@@ -867,6 +881,10 @@ export default function TicketDetailPage() {
               </Box>
             </Fade>
           </Modal>
+
+          <ModalCustom open={joinOpen} onClose={handleJoinClose}>
+            <SignUp hideSns={false} onClose={handleJoinClose} />
+          </ModalCustom>
 
           <CSnackbar
             open={openSnackbar.open}
