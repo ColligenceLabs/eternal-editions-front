@@ -145,11 +145,61 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose, setOpenSnack
     if (step === StepStatus.step1) {
       setTransferData(value);
       if (loginBy === 'sns') setStep(StepStatus.step2);
+      else {
+        setIsLoading(true);
+        const contract = item.mysteryboxInfo.boxContractAddress;
+        const tokenId = item.tokenId;
+        console.log(
+          '!! NFT Transfer via metamask = ',
+          value.address,
+          value.twofacode,
+          contract,
+          tokenId
+        );
+
+        try {
+          // Metamask
+          const result = await nftTransferFrom(
+            contract,
+            value.address,
+            tokenId.toString(),
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            account!,
+            library,
+            false
+          );
+          console.log(result);
+          if (result === SUCCESS) {
+            setOpenSnackbar({
+              open: true,
+              type: 'success',
+              message: `Success Transfer.`,
+            });
+            setIsLoading(false);
+            setStep(StepStatus.step3);
+            // TODO : DB drops 테이블에서 삭제 ?
+          } else {
+            setOpenSnackbar({
+              open: true,
+              type: 'error',
+              message: `Field Transfer.`,
+            });
+          }
+        } catch (e: any) {
+          console.log('!! NFT Transfer failed : ', e);
+          setOpenSnackbar({
+            open: true,
+            type: 'error',
+            message: `Field Transfer.`,
+          });
+        }
+        setIsLoading(false);
+      }
     } else if (step === StepStatus.step2) {
       setIsLoading(true);
       const contract = item.mysteryboxInfo.boxContractAddress;
       const tokenId = item.tokenId;
-      console.log('!! NFT Transfer = ', value.address, value.twofacode, contract, tokenId);
+      console.log('!! NFT Transfer via ABC = ', value.address, value.twofacode, contract, tokenId);
 
       // TODO : 버튼 로딩 시작
       if (isAbc) {
@@ -183,34 +233,6 @@ const TransferItem: React.FC<TransferItemProps> = ({ item, onClose, setOpenSnack
             });
           }
         } catch (e: any) {
-          setOpenSnackbar({
-            open: true,
-            type: 'error',
-            message: `Field Transfer.`,
-          });
-        }
-      } else {
-        // Metamask
-        const result = await nftTransferFrom(
-          contract,
-          value.address,
-          tokenId.toString(),
-          // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-          account!,
-          library,
-          false
-        );
-        console.log(result);
-        if (result === SUCCESS) {
-          setOpenSnackbar({
-            open: true,
-            type: 'success',
-            message: `Success Transfer.`,
-          });
-          setIsLoading(false);
-          setStep(StepStatus.step3);
-          // TODO : DB drops 테이블에서 삭제 ?
-        } else {
           setOpenSnackbar({
             open: true,
             type: 'error',
