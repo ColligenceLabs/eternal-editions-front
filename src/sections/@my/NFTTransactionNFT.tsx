@@ -1,10 +1,8 @@
-// ----------------------------------------------------------------------
-import TableBody from '@mui/material/TableBody';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import { Pagination, Stack, Typography, useTheme } from '@mui/material';
+import { Pagination, Stack, useTheme } from '@mui/material';
 import LaunchIcon from '@mui/icons-material/Launch';
 import { ChangeEvent, useEffect, useState } from 'react';
 import { getTransactionsByUID } from '../../services/services';
@@ -40,6 +38,7 @@ type TransactionsType = {
   };
   price: number;
   txHash: string;
+  usePoint: boolean;
 };
 
 export default function NFTTransactionNFT() {
@@ -54,6 +53,7 @@ export default function NFTTransactionNFT() {
     // const res = await getTransactionsByUID('435eTNke', page);
     const res = await getTransactionsByUID(user.uid, page);
     if (res.data.status === 1) {
+      console.log(res.data.data.drops);
       setTransactions(res.data.data.drops);
       setTotalPage(res.data.data.headers.x_pages_count);
     }
@@ -115,7 +115,7 @@ export default function NFTTransactionNFT() {
                       </BodyTableCell>
                       <BodyTableCell>
                         <CellLabel>Type</CellLabel>
-                        <CellValue>NFT</CellValue>
+                        <CellValue>{row.usePoint ? 'POINT' : 'CRYPTO'}</CellValue>
                       </BodyTableCell>
                       <BodyTableCell>
                         <CellLabel>NFT</CellLabel>
@@ -125,7 +125,9 @@ export default function NFTTransactionNFT() {
                       </BodyTableCell>
                       <BodyTableCell>
                         <CellLabel>Price</CellLabel>
-                        <CellValue>{row.price}</CellValue>
+                        <CellValue>
+                          {row.usePoint ? `${row.price * 0.1} EDCP` : `${row.price} USDC`}
+                        </CellValue>
                       </BodyTableCell>
                       <BodyTableCell>
                         <CellLabel>Blockchain</CellLabel>
