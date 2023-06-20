@@ -5,7 +5,7 @@ import Paper from '@mui/material/Paper';
 import { Pagination, Stack, useTheme } from '@mui/material';
 import LaunchIcon from '@mui/icons-material/Launch';
 import { ChangeEvent, useEffect, useState } from 'react';
-import { getTransactionsByUID } from '../../services/services';
+import { getUserTransactionsByUID } from '../../services/services';
 import { useSelector } from 'react-redux';
 import env from '../../env';
 import { IconButton } from '@mui/material';
@@ -22,41 +22,59 @@ import {
   MysteryBoxValue,
 } from 'src/components/StyledTable';
 import HyperlinkButton from 'src/components/ticket/HyperlinkButton';
+import { SUCCESS } from 'src/config';
 
-type TransactionsType = {
-  buyer: string;
-  buyerAddress: string;
-  createdAt: Date;
-  mysteryboxInfo: {
-    title: {
-      ko: string;
-      en: string;
-    };
-  };
-  mysteryboxItem: {
-    name: string;
-  };
+type UserTransactionsType = {
+  id: number;
+  uid: string;
+  dropsId: number;
+  type: string;
   price: number;
   txHash: string;
-  usePoint: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+  drop: {
+    id: number;
+    mysteryBoxId: number;
+    itemId: number;
+    tokenId: number;
+    buyer: string;
+    buyerAddress: string;
+    price: number;
+    fiatPrice: null;
+    txHash: string;
+    iapOrderId: null;
+    isRevealed: boolean;
+    isSent: boolean;
+    usePoint: boolean;
+    status: string;
+    useDate: null | Date;
+    createdAt: Date;
+    updatedAt: Date;
+    mysteryboxInfo: {
+      title: {
+        ko: string;
+        en: string;
+      };
+    };
+    mysteryboxItem: {
+      name: string;
+    };
+  };
 };
 
 export default function NFTTransactionNFT() {
   const theme = useTheme();
   const { user } = useSelector((state: any) => state.webUser);
-  console.log(user);
-  const [transactions, setTransactions] = useState<TransactionsType[] | null>(null);
+  const [userTransactions, setUserTransactions] = useState<UserTransactionsType[] | null>(null);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(0);
 
   const fetchTransaction = async () => {
-    // const res = await getTransactionsByUID('435eTNke', page);
-    const res = await getTransactionsByUID(user.uid, page);
-    if (res.data.status === 1) {
-      console.log(res.data.data.drops);
-      setTransactions(res.data.data.drops);
-      setTotalPage(res.data.data.headers.x_pages_count);
-    }
+    const userTransactionsRes = await getUserTransactionsByUID(user.uid, page);
+    if (userTransactionsRes.data.status === SUCCESS)
+      setUserTransactions(userTransactionsRes.data.data.histories);
+    setTotalPage(userTransactionsRes.data.data.headers.x_pages_count);
   };
 
   const handlePageChange = (event: ChangeEvent<unknown>, value: number) => {
@@ -70,7 +88,6 @@ export default function NFTTransactionNFT() {
     } else {
       url = `https://polygonscan.com/tx/${txHash}`;
     }
-    console.log(url);
     window.open(url, '_blank');
   };
 
@@ -90,14 +107,13 @@ export default function NFTTransactionNFT() {
                   <HeaderTableCell>Type</HeaderTableCell>
                   <HeaderTableCell>NFT</HeaderTableCell>
                   <HeaderTableCell>Price</HeaderTableCell>
-                  <HeaderTableCell>Chain</HeaderTableCell>
+                  <HeaderTableCell>Status</HeaderTableCell>
                   <HeaderTableCell>Confirmation</HeaderTableCell>
-                  {/*<HeaderTableCell >-</HeaderTableCell>*/}
                 </TableRow>
               </TableHead>
               <BodyTable>
-                {transactions &&
-                  transactions.map((row: TransactionsType, index) => (
+                {userTransactions &&
+                  userTransactions.map((row: UserTransactionsType, index) => (
                     <BodyTableRow key={index}>
                       <BodyTableCell
                         sx={{ [theme.breakpoints.down('md')]: { marginBottom: '16px' } }}
@@ -115,39 +131,42 @@ export default function NFTTransactionNFT() {
                       </BodyTableCell>
                       <BodyTableCell>
                         <CellLabel>Type</CellLabel>
-                        <CellValue>{row.usePoint ? 'POINT' : 'CRYPTO'}</CellValue>
+                        <CellValue>{row.drop.usePoint ? 'POINT' : 'CRYPTO'}</CellValue>
                       </BodyTableCell>
                       <BodyTableCell>
                         <CellLabel>NFT</CellLabel>
                         <CellValue>
-                          <MysteryBoxValue>{`${row.mysteryboxInfo.title.en} - ${row.mysteryboxItem?.name}`}</MysteryBoxValue>
+                          <MysteryBoxValue>{`${row.drop.mysteryboxInfo.title.en} - ${row.drop.mysteryboxItem?.name}`}</MysteryBoxValue>
                         </CellValue>
                       </BodyTableCell>
                       <BodyTableCell>
                         <CellLabel>Price</CellLabel>
                         <CellValue>
-                          {row.usePoint ? `${row.price * 0.1} EDCP` : `${row.price} USDC`}
+                          {row.drop.usePoint ? `${row.price * 0.1} EDCP` : `${row.price} USDC`}
                         </CellValue>
                       </BodyTableCell>
                       <BodyTableCell>
-                        <CellLabel>Blockchain</CellLabel>
-                        <CellValue>Polygon</CellValue>
+                        <CellLabel>Status</CellLabel>
+                        <CellValue>{row.type}</CellValue>
                       </BodyTableCell>
                       <BodyTableCell>
                         <CellLabel>Confirmation</CellLabel>
-                        <CellValue>
-                          <LinkColumn>{`${row.txHash.substring(0, 20)}...`}</LinkColumn>
-                        </CellValue>
+                        {row.txHash && (
+                          <CellValue>
+                            <LinkColumn>{`${row.txHash.substring(0, 20)}...`}</LinkColumn>
+                          </CellValue>
+                        )}
                       </BodyTableCell>
                       <BodyTableCell sx={{ [theme.breakpoints.down('md')]: { display: 'none' } }}>
-                        <LinkColumn>
-                          <HyperlinkButton
-                            onClick={() => moveToScope(row.txHash)}
-                            styles={{ backgroundColor: '#F5F5F5' }}
-                          />
-                        </LinkColumn>
+                        {row.txHash && (
+                          <LinkColumn>
+                            <HyperlinkButton
+                              onClick={() => moveToScope(row.txHash)}
+                              styles={{ backgroundColor: '#F5F5F5' }}
+                            />
+                          </LinkColumn>
+                        )}
                       </BodyTableCell>
-                      {/*<BodyTableCell >-</BodyTableCell>*/}
                     </BodyTableRow>
                   ))}
               </BodyTable>
