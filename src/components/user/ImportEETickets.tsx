@@ -17,7 +17,6 @@ import {
 import { useSelector } from 'react-redux';
 import { SUCCESS } from 'src/config';
 import { useRouter } from 'next/router';
-import Link from 'next/link';
 
 type EETicketTypes = {
   id: number;
@@ -99,20 +98,20 @@ const ImportEETickets = () => {
   } = useForm<Account>({
     mode: 'onTouched',
     resolver: yupResolver(FormSchema),
+    defaultValues: {
+      email: 'develop@eternaleditions.io',
+      password: 'EEmm1010!',
+    },
   });
 
   const onSubmit = async (values: Account) => {
     try {
-      const res = await eeLogin({
-        email: 'develop@eternaleditions.io',
-        password: 'EEmm1010!',
-      });
-      console.log(res);
+      const res = await eeLogin(values);
       if (res.status === 200) {
         localStorage.setItem('eeAccessToken', res.data.access_token);
         setIsLogin(true);
       } else {
-        console.log('asdf');
+        console.log(res);
       }
     } catch (e) {
       console.log(e);
@@ -121,17 +120,13 @@ const ImportEETickets = () => {
   };
 
   const handleClickImport = async (ticket: EETicketTypes) => {
-    console.log(ticket.code, ticket.id);
     const res = await migrateTicket(ticket.code, ticket.id);
     if (res.status === 200) {
-      console.log(res);
       const data = {
         uid: webUser.user.uid,
         ticketInfo: res.data,
       };
       const importRes = await importEETicket(data);
-      console.log(importRes);
-
       if (importRes.data.status !== SUCCESS) {
         const cancelRes = await cancelMigrateTicket(ticket.code, ticket.id);
         console.log(cancelRes);
@@ -222,16 +217,16 @@ const ImportEETickets = () => {
           {loginError && (
             <Stack
               mt={2}
-              direction={{ xs: 'column', sm: 'row' }}
+              direction={{ xs: 'column', sm: 'column' }}
               spacing={{
-                md: 2,
+                md: 0.5,
               }}
               justifyContent="space-between"
             >
               <SectionText sx={{ color: 'red' }}>Email and password do not match.</SectionText>
 
               <SectionText
-                sx={{ cursor: 'pointer' }}
+                sx={{ cursor: 'pointer', fontWeight: 700 }}
                 onClick={() =>
                   window.open(
                     'https://market.eternaleditions.io/account/login?rp=%2Fmypage%3Flang%3Dko-KR&lang=ko-KR'
