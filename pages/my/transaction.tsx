@@ -65,18 +65,19 @@ export default function TransactionPage({}) {
       <RootStyle>
         <MyAccountWrapper>
           <Stack>
-            <Box sx={{ borderBottom: 1, borderColor: 'divider' }} component={'div'}>
-              <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">
-                <Tab label="Ticket (NFT)" {...a11yProps(0)} />
-                <Tab label="EDC Point" {...a11yProps(1)} />
-              </Tabs>
-            </Box>
-            <TabPanel value={value} index={0}>
-              <NFTTransactionNFT />
-            </TabPanel>
-            <TabPanel value={value} index={1}>
-              <NFTTransactionPoint />
-            </TabPanel>
+            <NFTTransactionNFT />
+            {/*<Box sx={{ borderBottom: 1, borderColor: 'divider' }} component={'div'}>*/}
+            {/*  <Tabs value={value} onChange={handleChange} aria-label="basic tabs example">*/}
+            {/*    <Tab label="Ticket (NFT)" {...a11yProps(0)} />*/}
+            {/*    <Tab label="EDC Point" {...a11yProps(1)} />*/}
+            {/*  </Tabs>*/}
+            {/*</Box>*/}
+            {/*<TabPanel value={value} index={0}>*/}
+            {/*  <NFTTransactionNFT />*/}
+            {/*</TabPanel>*/}
+            {/*<TabPanel value={value} index={1}>*/}
+            {/*  <NFTTransactionPoint />*/}
+            {/*</TabPanel>*/}
           </Stack>
         </MyAccountWrapper>
       </RootStyle>
