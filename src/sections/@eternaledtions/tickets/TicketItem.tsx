@@ -12,6 +12,7 @@ import { MyTicketTypes } from 'src/@types/my/myTicket';
 import useCountdown from 'src/hooks/useCountdown';
 import { fDate } from 'src/utils/formatTime';
 import TransferItem from 'src/components/user/TransferItem';
+import CSnackbar from 'src/components/common/CSnackbar';
 
 type PropertiesType = {
   type: string;
@@ -24,10 +25,23 @@ export default function TicketItem({ ticket }: any) {
   const [open, setOpen] = useState<boolean>(false);
   const [openTransferItem, setOpenTransferItem] = useState<boolean>(false);
   const [ticketInfo, setTicketInfo] = useState<MyTicketTypes | null>(null);
+  const [openSnackbar, setOpenSnackbar] = useState({
+    open: false,
+    type: '',
+    message: '',
+  });
   const { days, hours, minutes, seconds } = useCountdown(
     new Date(ticket.sellbook?.endDate ? ticket.sellbook?.endDate : null),
     ticket?.status
   );
+
+  const handleCloseSnackbar = () => {
+    setOpenSnackbar({
+      open: false,
+      type: '',
+      message: '',
+    });
+  };
 
   useEffect(() => {
     if (ticket) {
@@ -282,10 +296,20 @@ export default function TicketItem({ ticket }: any) {
             <SaveTicketContent ticketInfo={ticketInfo} onClose={() => setOpen(false)} />
           </ModalCustom>
           <ModalCustom open={openTransferItem} onClose={() => setOpenTransferItem(false)}>
-            <TransferItem item={ticketInfo} onClose={() => setOpenTransferItem(false)} />
+            <TransferItem
+              item={ticketInfo}
+              onClose={() => setOpenTransferItem(false)}
+              setOpenSnackbar={setOpenSnackbar}
+            />
           </ModalCustom>
         </Grid>
       ) : null}
+      <CSnackbar
+        open={openSnackbar.open}
+        type={openSnackbar.type}
+        message={openSnackbar.message}
+        handleClose={handleCloseSnackbar}
+      />
     </>
   );
 }

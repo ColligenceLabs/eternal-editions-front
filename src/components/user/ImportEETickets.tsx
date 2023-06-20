@@ -121,19 +121,26 @@ const ImportEETickets = () => {
   };
 
   const handleClickImport = async (ticket: EETicketTypes) => {
+    console.log(ticket.code, ticket.id);
     const res = await migrateTicket(ticket.code, ticket.id);
     if (res.status === 200) {
-      console.log(res.data);
+      console.log(res);
       const data = {
         uid: webUser.user.uid,
         ticketInfo: res.data,
       };
       const importRes = await importEETicket(data);
+      console.log(importRes);
+
       if (importRes.data.status !== SUCCESS) {
         const cancelRes = await cancelMigrateTicket(ticket.code, ticket.id);
         console.log(cancelRes);
+      } else {
+        console.log('insert failed');
       }
       setRefetch(true);
+    } else {
+      console.log('migrate failed');
     }
   };
 

@@ -191,7 +191,7 @@ export const getCertifications = async (impUid: any) =>
   await customAxios.get(`/api/users/certifications/${impUid}`);
 
 export const importEETicket = async (data: any) =>
-  await customAxios.post(`/api/users/ticket/import`, data);
+  await apiAuthAxios.post(`/api/users/ticket/import`, data);
 
 export const saveBankAccount = async (data: any) => {
   return await apiAuthAxios.post(`/api/users/bank/register`, data);
