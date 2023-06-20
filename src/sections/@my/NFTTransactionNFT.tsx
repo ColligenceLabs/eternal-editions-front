@@ -63,14 +63,15 @@ export default function NFTTransactionNFT() {
     setPage(value);
   };
 
-  const getExternalUrl = (txHash: string) => {
+  const moveToScope = (txHash: string) => {
     let url = '';
     if (env.REACT_APP_TARGET_NETWORK === 80001) {
       url = `https://mumbai.polygonscan.com/tx/${txHash}`;
     } else {
       url = `https://polygonscan.com/tx/${txHash}`;
     }
-    return url;
+    console.log(url);
+    window.open(url, '_blank');
   };
 
   useEffect(() => {
@@ -104,8 +105,7 @@ export default function NFTTransactionNFT() {
                         <DateValue>{new Date(row.createdAt).toLocaleString()}</DateValue>
                         <LinkColumn sx={{ [theme.breakpoints.up('md')]: { display: 'none' } }}>
                           <IconButton
-                            href={getExternalUrl(row.txHash)}
-                            target="_blank"
+                            onClick={() => moveToScope(row.txHash)}
                             sx={{ backgroundColor: '#F5F5F5', borderRadius: '100%' }}
                             aria-label="hyperlink"
                           >
@@ -136,16 +136,13 @@ export default function NFTTransactionNFT() {
                       <BodyTableCell>
                         <CellLabel>Confirmation</CellLabel>
                         <CellValue>
-                          <LinkColumn
-                            href={getExternalUrl(row.txHash)}
-                            target="_blank"
-                          >{`${row.txHash.substring(0, 20)}...`}</LinkColumn>
+                          <LinkColumn>{`${row.txHash.substring(0, 20)}...`}</LinkColumn>
                         </CellValue>
                       </BodyTableCell>
                       <BodyTableCell sx={{ [theme.breakpoints.down('md')]: { display: 'none' } }}>
                         <LinkColumn>
                           <HyperlinkButton
-                            href={getExternalUrl(row.txHash)}
+                            onClick={() => moveToScope(row.txHash)}
                             styles={{ backgroundColor: '#F5F5F5' }}
                           />
                         </LinkColumn>
