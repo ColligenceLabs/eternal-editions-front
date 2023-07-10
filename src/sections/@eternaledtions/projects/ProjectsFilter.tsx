@@ -43,10 +43,12 @@ export default function ProjectsFilter({ categories: originCategories }: Props) 
       const temp =
         res.data.list &&
         res.data.list.map((item: ProjectTypes) => {
-          const sortedTemp = item.projectItems.sort(
-            (a: ProjectItemTypes, b: ProjectItemTypes) =>
-              new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
-          );
+          const sortedTemp =
+            item.projectItems &&
+            item.projectItems.sort(
+              (a: ProjectItemTypes, b: ProjectItemTypes) =>
+                new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+            );
           const latestItem = sortedTemp.find(
             (item: ProjectItemTypes) => new Date(item.startDate) <= currentDate
           );
@@ -55,20 +57,24 @@ export default function ProjectsFilter({ categories: originCategories }: Props) 
         });
 
       setProjectList(temp);
+      setLastPage(res.data.headers.x_pages_count);
     }
   };
 
   const getMoreProjects = async () => {
-    const res = await getTicketsService(curPage, perPage, selected);
+    const res = await getProjectList(curPage, perPage, selected);
     if (res.status === 200) {
       const currentDate = new Date();
+
       const temp =
         res.data.list &&
         res.data.list.map((item: ProjectTypes) => {
-          const sortedTemp = item.projectItems.sort(
-            (a: ProjectItemTypes, b: ProjectItemTypes) =>
-              new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
-          );
+          const sortedTemp =
+            item.projectItems &&
+            item.projectItems.sort(
+              (a: ProjectItemTypes, b: ProjectItemTypes) =>
+                new Date(b.startDate).getTime() - new Date(a.startDate).getTime()
+            );
           const latestItem = sortedTemp.find(
             (item: ProjectItemTypes) => new Date(item.startDate) <= currentDate
           );
@@ -77,6 +83,7 @@ export default function ProjectsFilter({ categories: originCategories }: Props) 
         });
 
       setProjectList((cur) => [...cur, ...temp]);
+      setLastPage(res.data.headers.x_pages_count);
     }
   };
 
