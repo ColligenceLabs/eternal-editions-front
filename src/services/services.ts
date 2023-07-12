@@ -199,6 +199,11 @@ export const importEETicket = async (data: any) =>
 export const saveBankAccount = async (data: any) => {
   return await apiAuthAxios.post(`/api/users/bank/register`, data);
 };
+
+export const cancelSell = async (id: any) => {
+  return await apiAuthAxios.delete(`/api/service/sellbook/${id}`);
+};
+
 //--------------------------- ee Api
 
 export const eeLogin = async (data: any) => {

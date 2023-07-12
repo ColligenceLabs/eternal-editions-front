@@ -1,9 +1,14 @@
 import {
   Box,
+  Checkbox,
+  Divider,
   FormControl,
+  FormControlLabel,
+  formControlLabelClasses,
   InputAdornment,
   SelectChangeEvent,
   Stack,
+  svgIconClasses,
   Typography,
   useTheme,
 } from '@mui/material';
@@ -22,6 +27,13 @@ import RoundedButton from '../common/RoundedButton';
 import { RoundedSelect, RoundedSelectOption } from '../common/Select';
 import TicketSalesInfo from './TicketSalesInfo';
 import { MyTicketTypes } from 'src/@types/my/myTicket';
+import { cancelSell } from 'src/services/services';
+import { PriorityHigh } from '@mui/icons-material';
+import palette from 'src/theme/palette';
+import ModalCustom from 'src/components/common/ModalCustom';
+import { SectionText } from '../../../pages/my/account';
+import { SUCCESS } from 'src/config';
+import { router } from 'next/client';
 
 const TYPES_OF_SALE = [
   {
@@ -79,7 +91,15 @@ export default function TicketSellForm({
   const [potentialEarning, setPotentialEarning] = useState(0);
   const [minInc, setMinInc] = useState('');
   const [payType, setPayType] = useState(sellTicketInfo.usePoint ? 'edcp' : 'usdc');
+  const [cancelAlert, setCancelAlert] = useState(false);
 
+  useEffect(() => {
+    console.log(cancelAlert);
+  }, [cancelAlert]);
+
+  const closeCancelAlert = () => {
+    setCancelAlert(false);
+  };
   const onSubmit = () => {
     setIsSubmitting(true);
   };
@@ -130,9 +150,22 @@ export default function TicketSellForm({
   }, []);
 
   const onCancelSales = async () => {
-    console.log('!! Cancel Sales ... Clicked : ', sellTicketInfo);
-
-    // TODO : DB 에서 Sell 관련 정보 전체 삭제 API 호출
+    const res = await cancelSell(sellTicketInfo.sellbook?.id);
+    if (res.data.status === SUCCESS) {
+      setOpenSnackbar({
+        open: open,
+        type: 'success',
+        message: 'Success Cancel Sell.',
+      });
+      router.push('/my/tickets');
+    } else {
+      setOpenSnackbar({
+        open: open,
+        type: 'error',
+        message: 'Failed.',
+      });
+    }
+    setCancelAlert(false);
   };
 
   const onChangeMinInc = (e: ChangeEvent<HTMLInputElement>) => {
@@ -145,20 +178,41 @@ export default function TicketSellForm({
 
   if (isSubmitting) {
     return (
-      <TicketSalesInfo
-        day={day}
-        team={team}
-        sellTicketInfo={sellTicketInfo}
-        amount={amount}
-        typeOfSale={typeOfSale}
-        creatorEarnings={creatorEarnings}
-        startDate={startDate}
-        endDate={endDate}
-        minInc={minInc}
-        isForSale={isForSale}
-        setOpenSnackbar={setOpenSnackbar}
-        onCancel={onCancelSales}
-      />
+      <>
+        <TicketSalesInfo
+          day={day}
+          team={team}
+          sellTicketInfo={sellTicketInfo}
+          amount={amount}
+          typeOfSale={typeOfSale}
+          creatorEarnings={creatorEarnings}
+          startDate={startDate}
+          endDate={endDate}
+          minInc={minInc}
+          isForSale={isForSale}
+          setOpenSnackbar={setOpenSnackbar}
+          onCancel={() => setCancelAlert(true)}
+        />
+        <ModalCustom open={cancelAlert} onClose={() => setCancelAlert(false)}>
+          <Stack gap={3}>
+            <PriorityHigh sx={{ fontSize: '36px' }} />
+            <Stack gap={1}>
+              <SectionText>Are you sure want to cancel the sale?</SectionText>
+            </Stack>
+
+            <Box sx={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '4px' }}>
+              <RoundedButton onClick={closeCancelAlert}>Cancel</RoundedButton>
+              <RoundedButton
+                variant="inactive"
+                sx={{ color: palette.dark.common.black }}
+                onClick={onCancelSales}
+              >
+                Confirm
+              </RoundedButton>
+            </Box>
+          </Stack>
+        </ModalCustom>
+      </>
     );
   }
 
